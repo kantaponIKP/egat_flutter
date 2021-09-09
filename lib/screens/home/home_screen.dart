@@ -1,9 +1,12 @@
 import 'package:egat_flutter/constant.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
-class LoginScreen extends StatelessWidget {
-  const LoginScreen({Key? key}) : super(key: key);
+import 'package:egat_flutter/screens/login/login_screen.dart';
+
+class HomeScreen extends StatelessWidget {
+  const HomeScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -20,9 +23,9 @@ class LoginScreen extends StatelessWidget {
       child: Column(
         children: [
           Spacer(flex: 2),
-          _buildLogoImage(),
+          // _buildLogoImage(),
           Spacer(),
-          _buildLoginButton(),
+          _buildLoginButton(context),
           _buildRegisterButton(context),
           Spacer(flex: 3),
         ],
@@ -52,11 +55,13 @@ class LoginScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildLoginButton() {
+  Widget _buildLoginButton(BuildContext context) {
     return SizedBox(
       width: double.infinity,
       child: ElevatedButton(
-        onPressed: () {},
+        onPressed: () {
+          _onLogin(context);
+        },
         child: const Text("เข้าสู่ระบบ"),
         style: ElevatedButton.styleFrom(
           elevation: 0,
@@ -66,10 +71,14 @@ class LoginScreen extends StatelessWidget {
     );
   }
 
-  void _onRegister(BuildContext context) {
-  }
+  void _onRegister(BuildContext context) {}
 
   void _onLogin(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (BuildContext context) {
+         return LoginScreen();
+      })
+    );
   }
 
   _buildLogoImage() {

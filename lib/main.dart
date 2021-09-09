@@ -1,5 +1,6 @@
 import 'package:egat_flutter/constant.dart';
-import 'package:egat_flutter/screens/home/login_screen.dart';
+import 'package:egat_flutter/screens/login/login_screen.dart';
+import 'package:egat_flutter/screens/home/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
@@ -40,6 +41,6 @@ class EgatHomePage extends StatefulWidget {
 class _EgatHomePageState extends State<EgatHomePage> {
   @override
   Widget build(BuildContext context) {
-    return LoginScreen();
+    return HomeScreen();
   }
 }
