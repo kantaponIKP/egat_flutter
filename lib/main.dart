@@ -4,63 +4,85 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
 
+import 'package:egat_flutter/i18n/app_localizations.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+
+import 'package:egat_flutter/i18n/app_language.dart';
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   Provider.debugCheckInvalidValueType = null;
-
-  runApp(EgatApp());
+  AppLanguage appLanguage = AppLanguage();
+  await appLanguage.fetchLocale();
+  runApp(EgatApp(appLanguage: appLanguage));
 }
 
 class EgatApp extends StatelessWidget {
+  final AppLanguage appLanguage;
+
+  EgatApp({required this.appLanguage});
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: appTitle,
-      theme: ThemeData(
-          // brightness: Brightness.dark,
-          // primarySwatch: primaryColor,
-          backgroundColor: backgroundColor,
-          primaryColor: primaryColor,
-          elevatedButtonTheme: ElevatedButtonThemeData(
-            style: ElevatedButton.styleFrom(
-              onPrimary: textButtonTheme,
-              primary: primaryColor,
-            ),
-          ),
-          buttonTheme: ButtonThemeData(
-            buttonColor: primaryColor,
-            shape: RoundedRectangleBorder(),
-            textTheme: ButtonTextTheme.accent,
-          ),
-          textTheme: TextTheme(
-            bodyText2: TextStyle(color: textTheme),
-            button: TextStyle(color: primaryColor),
-            subtitle1: TextStyle(color: textTheme), //TextFormField textStyle
-          ),
-          textButtonTheme: TextButtonThemeData(
-            style: ButtonStyle(
-                foregroundColor: MaterialStateProperty.all(primaryColor)),
-          ),
-          inputDecorationTheme: InputDecorationTheme(
-              labelStyle: TextStyle(
-                color: textTheme,
-              ),
-              fillColor: textTheme,
-              // inputBorder:
-              enabledBorder: UnderlineInputBorder(
-                borderSide: BorderSide(
-                  color: textTheme,
+    return ChangeNotifierProvider<AppLanguage>(
+      create: (_) => appLanguage,
+      child: Consumer<AppLanguage>(builder: (context, model, child) {
+        return MaterialApp(
+          supportedLocales: [
+            Locale('en', 'US'), 
+            Locale('th')],
+          debugShowCheckedModeBanner: false,
+          title: appTitle,
+          theme: ThemeData(
+              // brightness: Brightness.dark,
+              // primarySwatch: primaryColor,
+              backgroundColor: backgroundColor,
+              primaryColor: primaryColor,
+              elevatedButtonTheme: ElevatedButtonThemeData(
+                style: ElevatedButton.styleFrom(
+                  onPrimary: textButtonTheme,
+                  primary: primaryColor,
                 ),
               ),
-              focusedBorder: UnderlineInputBorder(
-                borderSide: BorderSide(
-                  color: primaryColor,
-                ),
-              ))),
-      home: EgatHomePage(title: appTitle),
-      builder: EasyLoading.init(),
+              buttonTheme: ButtonThemeData(
+                buttonColor: primaryColor,
+                shape: RoundedRectangleBorder(),
+                textTheme: ButtonTextTheme.accent,
+              ),
+              textTheme: TextTheme(
+                bodyText2: TextStyle(color: white),
+                button: TextStyle(color: primaryColor),
+                subtitle1: TextStyle(color: white), //TextFormField textStyle
+              ),
+              textButtonTheme: TextButtonThemeData(
+                style: ButtonStyle(
+                    foregroundColor: MaterialStateProperty.all(primaryColor)),
+              ),
+              inputDecorationTheme: InputDecorationTheme(
+                  labelStyle: TextStyle(
+                    color: white,
+                  ),
+                  fillColor: white,
+                  // inputBorder:
+                  enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(
+                      color: white,
+                    ),
+                  ),
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(
+                      color: primaryColor,
+                    ),
+                  ))),
+          home: EgatHomePage(title: appTitle),
+          builder: EasyLoading.init(),
+          localizationsDelegates: [
+            AppLocalizations.delegate,
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+          ],
+        );
+      }),
     );
   }
 }

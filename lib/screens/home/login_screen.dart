@@ -1,7 +1,10 @@
-// import 'package:egat_flutter/constant.dart';
+import 'package:egat_flutter/constant.dart';
+import 'package:egat_flutter/screens/privacy_detail/privacy_detail_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+
+import 'package:egat_flutter/screens/forgot_password/forgot_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -19,7 +22,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
-      resizeToAvoidBottomInset: false ,
+      resizeToAvoidBottomInset: false,
       body: SafeArea(
         child: _buildAction(context),
       ),
@@ -47,7 +50,6 @@ class _LoginScreenState extends State<LoginScreen> {
       key: _formKey,
       child: Column(
         children: [
-          
           Container(
             padding: const EdgeInsets.symmetric(vertical: 4),
             child: TextFormField(
@@ -94,8 +96,9 @@ class _LoginScreenState extends State<LoginScreen> {
     return SizedBox(
       width: double.infinity,
       child: ElevatedButton(
-        onPressed: () {
-          _onLogin(context);
+        onPressed: () async {
+          // _onLogin(context);
+          await _openDialog();
         },
         child: const Text("Login"),
         style: ElevatedButton.styleFrom(
@@ -119,22 +122,88 @@ class _LoginScreenState extends State<LoginScreen> {
             children: <Widget>[
               Text("Don't have an account ? "),
               TextButton(
-                onPressed: () {},
+                onPressed: () {
+                  _onRegister(context);
+                },
                 child: const Text('Sign Up'),
               )
             ],
           ),
-          onTap: () {
-            _onRegister(context);
-          },
+          onTap: () {},
         ),
       ),
     );
   }
 
-  void _onLogin(BuildContext context) {}
+  void _onLogin(BuildContext context) {
+    // Navigator.of(context).push(
+    //   MaterialPageRoute(
+    //     builder: (BuildContext context)
+    //     {
+    //       // return PrivacyDetails();
+    //     }
+    //   )
+    // )
+  }
+// Future<void> _openDialog() async {
+//     return await showDialog(
+//         context: context,
+//         builder: (context) {
+//           return Dialog(
+//             backgroundColor: contentBgColor ,
+//             child: Container(
+//               padding: EdgeInsets.all(10),
+//               child: Column(
+//                 children: [
+//                   RichText(
+//                   text: TextSpan(
+//                       style: DefaultTextStyle.of(context).style,
+//                       children: <TextSpan>[
+//                     TextSpan(text: 'Privacy ', style: TextStyle(fontSize: 30)),
+//                     TextSpan(
+//                         text: 'Policy',
+//                         style: TextStyle(fontSize: 30, color: primaryColor)),
+//                   ]))
+//                 ],),
+//             ),
+//           );
+//               // title: RichText(
+//               //     text: TextSpan(
+//               //         style: DefaultTextStyle.of(context).style,
+//               //         children: <TextSpan>[
+//               //       TextSpan(text: 'Forget ', style: TextStyle(fontSize: 30)),
+//               //       TextSpan(
+//               //           text: 'Password',
+//               //           style: TextStyle(fontSize: 30, color: primaryColor)),
+//               //     ])),
+//               // children: <Widget>[
+//               //   SimpleDialogOption(
+//               //     padding: EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+//               //   ),
+//               //   PrivacyDetails()
+//               // ]);
+//         }
+//         );
+//   }
 
-  void _onRegister(BuildContext context) {}
+  Future<void> _openDialog() async {
+    return await showDialog(
+        context: context,
+        builder: (context) {
+          return PrivacyDetails();
+        
+        });
+  }
+
+  void _onRegister(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (BuildContext context) {
+          return ForgotScreen();
+        },
+      ),
+    );
+  }
 
   _buildLogoImage() {
     return AspectRatio(
