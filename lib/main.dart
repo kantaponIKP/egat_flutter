@@ -26,7 +26,7 @@ class EgatApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<AppLanguage>(
       create: (_) => appLanguage,
-      child: Consumer<AppLanguage>(builder: (context, model, child) {
+      child: Consumer<AppLanguage>(builder: (context, provider, child) {
         return MaterialApp(
           supportedLocales: [
             Locale('en', 'US'), 
@@ -76,6 +76,7 @@ class EgatApp extends StatelessWidget {
                   ))),
           home: EgatHomePage(title: appTitle),
           builder: EasyLoading.init(),
+          locale: provider.appLocal ,
           localizationsDelegates: [
             AppLocalizations.delegate,
             GlobalMaterialLocalizations.delegate,

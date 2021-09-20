@@ -88,8 +88,8 @@ class _ForgotScreenState extends State<ForgotScreen> {
             style: DefaultTextStyle.of(context).style,
             children: <TextSpan>[
           TextSpan(
-              // text: AppLocalizations.of(context).translate("forget"),
-              text: "Forget",
+              text: AppLocalizations.of(context).translate("forget"),
+              // text: "Forget",
               style: TextStyle(fontSize: 30)),
           TextSpan(
               text: 'Password',

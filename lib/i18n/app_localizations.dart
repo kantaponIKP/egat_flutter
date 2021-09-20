@@ -55,7 +55,6 @@ class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> 
 
   @override
   Future<AppLocalizations> load(Locale locale) async {
-    log('load Json File with ($locale) language');
     // AppLocalizations class is where the JSON loading actually runs
     AppLocalizations localizations = new AppLocalizations(locale);
     await localizations.loadJSONFile();
@@ -63,5 +62,5 @@ class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> 
   }
 
   @override
-  bool shouldReload(_AppLocalizationsDelegate old) => true;
+  bool shouldReload(_AppLocalizationsDelegate old) => false;
 }

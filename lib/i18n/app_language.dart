@@ -4,13 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AppLanguage extends ChangeNotifier {
-  // var prefs ;
-  // constructor() async {
-  //   // prefs = await SharedPreferences.getInstance();
-  // }
+  
   Locale _appLocale = Locale('en');
 
-  Locale get appLocal => _appLocale ?? Locale("en");
+  Locale get appLocal => _appLocale  ;
 
   fetchLocale() async {
     var prefs = await SharedPreferences.getInstance();
