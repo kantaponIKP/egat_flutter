@@ -4,21 +4,36 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
 
+import 'package:egat_flutter/i18n/app_localizations.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+
+import 'package:egat_flutter/i18n/app_language.dart';
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   Provider.debugCheckInvalidValueType = null;
-
-  runApp(EgatApp());
+  AppLanguage appLanguage = AppLanguage();
+  await appLanguage.fetchLocale();
+  runApp(EgatApp(appLanguage: appLanguage));
 }
 
 class EgatApp extends StatelessWidget {
+  final AppLanguage appLanguage;
+
+  EgatApp({required this.appLanguage});
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: appTitle,
-      theme: ThemeData(
+    return ChangeNotifierProvider<AppLanguage>(
+      create: (_) => appLanguage,
+      child: Consumer<AppLanguage>(builder: (context, provider, child) {
+        return MaterialApp(
+      supportedLocales: [
+            Locale('en', 'US'), 
+            Locale('th')],
+          debugShowCheckedModeBanner: false,
+          title: appTitle,
+          theme: ThemeData(
           // brightness: Brightness.dark,
           // primarySwatch: primaryColor,
           backgroundColor: backgroundColor,
@@ -82,6 +97,14 @@ class EgatApp extends StatelessWidget {
           )),
       home: EgatHomePage(title: appTitle),
       builder: EasyLoading.init(),
+                locale: provider.appLocal ,
+          localizationsDelegates: [
+            AppLocalizations.delegate,
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+          ],
+        );
+      }),
     );
   }
 }

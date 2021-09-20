@@ -10,6 +10,11 @@ const dangerColor = Colors.red;
 const textButtonTheme = Colors.black;
 const textColor = Colors.white;
 const textButton = Color(0xff0DA6FC);
+const white = Colors.white;
+
+final contentBgColor = HexColor("#262729");
+
+
 final appTitle = 'EGAT P2P';
 
 final apiBaseUrl = "";
