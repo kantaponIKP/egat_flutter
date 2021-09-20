@@ -1,6 +1,6 @@
 import 'package:egat_flutter/screens/registration/registration_action.dart';
 import 'package:egat_flutter/screens/registration/state/meter.dart';
-import 'package:egat_flutter/screens/registration/widgets/login_button.dart';
+import 'package:egat_flutter/screens/registration/widgets/login_text_button.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -33,14 +33,14 @@ class _MeterScreenState extends State<MeterScreen> {
           backgroundColor: Colors.transparent,
           resizeToAvoidBottomInset: false,
           extendBodyBehindAppBar: true,
-          appBar: _buildAppbar(context),
+          appBar: _buildAppBar(context),
           body: SafeArea(
             child: _buildAction(context),
           ),
         ));
   }
 
-  AppBar _buildAppbar(BuildContext context) {
+  AppBar _buildAppBar(BuildContext context) {
     return AppBar(
       title: Text("Back",
           style: TextStyle(
@@ -51,7 +51,7 @@ class _MeterScreenState extends State<MeterScreen> {
       leading: IconButton(
           icon: Icon(Icons.arrow_back_ios,
               color: Theme.of(context).textTheme.bodyText2!.color),
-          onPressed: () => Navigator.pop(context)),
+          onPressed: () => _onBackPressed()),
       centerTitle: false,
       titleSpacing: 0.0,
       leadingWidth: 32,
@@ -90,7 +90,7 @@ class _MeterScreenState extends State<MeterScreen> {
             actionLabel: const Text("Next"),
             onAction: _onNextPressed,
           ),
-          LoginButton()
+          LoginTextButton()
         ],
       ),
     );
@@ -146,9 +146,9 @@ class _MeterScreenState extends State<MeterScreen> {
     return Column(
       children: <Widget>[
         Container(
-            padding: const EdgeInsets.only(top: 16, bottom: 16),
+            padding: const EdgeInsets.only(top: 16, bottom: 8),
             alignment: Alignment.centerLeft,
-            child: Text("Role")),
+            child: Text("Role", style: TextStyle(fontSize: 20))),
         Row(children: <Widget>[
           SizedBox(
             height: 20.0,
@@ -210,6 +210,11 @@ class _MeterScreenState extends State<MeterScreen> {
   void _onNextPressed() {
     var model = Provider.of<Meter>(context, listen: false);
     model.nextPage();
+  }
+
+  void _onBackPressed() {
+    var model = Provider.of<Meter>(context, listen: false);
+    model.backPage();
   }
 
   void _onProsumerChanged(bool newValue) => setState(() {

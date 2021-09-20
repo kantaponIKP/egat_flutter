@@ -1,8 +1,9 @@
 import 'package:egat_flutter/constant.dart';
+import 'package:egat_flutter/screens/registration/consent/privacy_policy_screen.dart';
 import 'package:egat_flutter/screens/registration/registration_action.dart';
 import 'package:egat_flutter/screens/registration/registration_model.dart';
 import 'package:egat_flutter/screens/registration/state/user_info.dart';
-import 'package:egat_flutter/screens/registration/widgets/login_button.dart';
+import 'package:egat_flutter/screens/registration/widgets/login_text_button.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -33,14 +34,14 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
           backgroundColor: Colors.transparent,
           resizeToAvoidBottomInset: false,
           extendBodyBehindAppBar: true,
-          appBar: _buildAppbar(context),
+          appBar: _buildAppBar(context),
           body: SafeArea(
             child: _buildAction(context),
           ),
         ));
   }
 
-  AppBar _buildAppbar(BuildContext context) {
+  AppBar _buildAppBar(BuildContext context) {
     return AppBar(
       title: Text("Back",
           style: TextStyle(
@@ -51,7 +52,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
       leading: IconButton(
           icon: Icon(Icons.arrow_back_ios,
               color: Theme.of(context).textTheme.bodyText2!.color),
-          onPressed: () => Navigator.pop(context)),
+          onPressed: () => _onBackPressed()),
       centerTitle: false,
       titleSpacing: 0.0,
       leadingWidth: 32,
@@ -91,7 +92,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
               actionLabel: const Text("Next"),
               onAction: _onNextPressed,
             ),
-            LoginButton()
+            LoginTextButton()
           ],
         ),
       ]),
@@ -219,16 +220,89 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
         );
   }
 
+  Widget _buildPrivacyPolicy(BuildContext context) {
+    return Dialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(0),
+      ),
+      elevation: 0,
+      backgroundColor: Colors.transparent,
+      child: contentBox(context),
+    );
+  }
+
+  Widget contentBox(context) {
+    return Stack(
+      children: <Widget>[
+        Container(child: Text("test")), // bottom part
+        // Positioned(),// top part
+      ],
+    );
+  }
+
   void _onNextPressed() {
     var model = Provider.of<UserInfo>(context, listen: false);
     model.nextPage();
   }
 
-  void _onBackPress() {
-    
+  void _onBackPressed() {
+    Navigator.pop(context);
+    // TODO
   }
 
-  void _onPrivacyPolicyPressed(BuildContext context) {}
+  _displayDialog(BuildContext context) {
+    showGeneralDialog(
+      context: context,
+      barrierDismissible: false,
+      transitionDuration: Duration(milliseconds: 200),
+      transitionBuilder: (context, animation, secondaryAnimation, child) {
+        return FadeTransition(
+          opacity: animation,
+          child: ScaleTransition(
+            scale: animation,
+            child: child,
+          ),
+        );
+      },
+      pageBuilder: (context, animation, secondaryAnimation) {
+        return SafeArea(
+          child: Container(
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height,
+            padding: EdgeInsets.all(20),
+            color: Colors.white,
+            child: Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  // PrivacyPolicy(),
+                  // Text('Hai This Is Full Screen Dialog', style: TextStyle(color: Colors.red, fontSize: 20.0),),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Text(
+                      "DISMISS",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  )
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void _onPrivacyPolicyPressed(BuildContext context) {
+    // _displayDialog(context);
+    showDialog(
+        context: context,
+        builder: (context) {
+          return PrivacyPolicy();
+        });
+  }
 
   void _onPrivacyPolicyChanged(bool newValue) => setState(() {
         privacyPolicy = newValue;

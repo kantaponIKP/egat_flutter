@@ -48,7 +48,7 @@ class _SuccessScreenState extends State<SuccessScreen> {
             _buildForm(context),
             Spacer(),
             RegistrationAction(
-              actionLabel: const Text("Next"),
+              actionLabel: const Text("Back to Login"),
               onAction: _onBackToLoginPressed,
             ),
           ],

@@ -7,7 +7,7 @@ import 'package:egat_flutter/screens/registration/registration_screen.dart';
 import 'package:egat_flutter/screens/registration/registration_step_indicator.dart';
 import 'package:egat_flutter/screens/registration/state/otp.dart';
 import 'package:egat_flutter/screens/registration/state/registration_session.dart';
-import 'package:egat_flutter/screens/registration/widgets/login_button.dart';
+import 'package:egat_flutter/screens/registration/widgets/login_text_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
@@ -26,6 +26,16 @@ class _OtpMobileNumberScreenState extends State<OtpMobileNumberScreen> {
   TextEditingController? _pinController;
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Container(
         decoration: BoxDecoration(
@@ -37,46 +47,14 @@ class _OtpMobileNumberScreenState extends State<OtpMobileNumberScreen> {
           backgroundColor: Colors.transparent,
           resizeToAvoidBottomInset: false,
           extendBodyBehindAppBar: true,
-          appBar: _buildAppbar(context),
+          appBar: _buildAppBar(context),
           body: SafeArea(
             child: _buildAction(context),
           ),
         ));
   }
 
-  Padding _buildAction(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 32, right: 32, bottom: 16),
-      child: Column(
-        children: [
-          _buildForm(),
-          Spacer(),
-          _buildTimer(),
-          SizedBox(height: 16),
-          _buildOTPPin(),
-          _buildResendOTP(),
-          Spacer(),
-          RegistrationAction(
-            actionLabel: const Text("Sign up"),
-            onAction: _onSubmit,
-          ),
-          LoginButton()
-        ],
-      ),
-    );
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  AppBar _buildAppbar(BuildContext context) {
+  AppBar _buildAppBar(BuildContext context) {
     return AppBar(
       title: Text("Back",
           style: TextStyle(
@@ -87,7 +65,7 @@ class _OtpMobileNumberScreenState extends State<OtpMobileNumberScreen> {
       leading: IconButton(
           icon: Icon(Icons.arrow_back_ios,
               color: Theme.of(context).textTheme.bodyText2!.color),
-          onPressed: () => Navigator.pop(context)),
+          onPressed: () => _onBackPressed()),
       centerTitle: false,
       titleSpacing: 0.0,
       leadingWidth: 32,
@@ -111,6 +89,28 @@ class _OtpMobileNumberScreenState extends State<OtpMobileNumberScreen> {
                 ),
               )),
           preferredSize: Size.fromHeight(50)),
+    );
+  }
+
+  Padding _buildAction(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 32, right: 32, bottom: 16),
+      child: Column(
+        children: [
+          _buildForm(),
+          Spacer(),
+          _buildTimer(),
+          SizedBox(height: 16),
+          _buildOTPPin(),
+          _buildResendOTP(),
+          Spacer(),
+          RegistrationAction(
+            actionLabel: const Text("Sign up"),
+            onAction: _onSubmit,
+          ),
+          LoginTextButton()
+        ],
+      ),
     );
   }
 
@@ -216,10 +216,6 @@ class _OtpMobileNumberScreenState extends State<OtpMobileNumberScreen> {
     ));
   }
 
-  Widget _buildMobilePhoneLogo() {
-    return FittedBox(child: Icon(Icons.sms, color: Colors.indigo.shade700));
-  }
-
   bool _isNumeric(String string) {
     final numericRegex = RegExp(r'^-?(([0-9]*)|(([0-9]*)\.([0-9]*)))$');
 
@@ -246,5 +242,10 @@ class _OtpMobileNumberScreenState extends State<OtpMobileNumberScreen> {
     } finally {
       await hideLoading();
     }
+  }
+
+  void _onBackPressed() {
+    var model = Provider.of<Otp>(context, listen: false);
+    model.backPage();
   }
 }

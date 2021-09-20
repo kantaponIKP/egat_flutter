@@ -1,4 +1,5 @@
 import 'package:egat_flutter/constant.dart';
+import 'package:egat_flutter/screens/forgot_password/forgot_screen.dart';
 import 'package:egat_flutter/screens/registration/registration.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -260,7 +261,15 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  void _onForgotPasswordPressed(BuildContext context) {}
+  void _onForgotPasswordPressed(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (BuildContext context) {
+          return ForgotScreen();
+        },
+      ),
+    );
+  }
 
   _buildLogoImage() {
     return Padding(

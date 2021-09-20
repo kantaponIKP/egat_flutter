@@ -1,14 +1,14 @@
 import 'package:egat_flutter/screens/login/login.dart';
 import 'package:flutter/material.dart';
 
-class LoginButton extends StatefulWidget {
-  const LoginButton({ Key? key }) : super(key: key);
+class LoginTextButton extends StatefulWidget {
+  const LoginTextButton({ Key? key }) : super(key: key);
 
   @override
-  _LoginButtonState createState() => _LoginButtonState();
+  _LoginTextButtonState createState() => _LoginTextButtonState();
 }
 
-class _LoginButtonState extends State<LoginButton> {
+class _LoginTextButtonState extends State<LoginTextButton> {
   @override
   Widget build(BuildContext context) {
     return Container(

@@ -12,6 +12,10 @@ const textColor = Colors.white;
 const textButton = Color(0xff0DA6FC);
 const white = Colors.white;
 
+const onBackGroundColor = Colors.white;
+final surfaceColor = HexColor("#262729");
+const onSurfaceColor = Colors.white;
+
 final contentBgColor = HexColor("#262729");
 
 

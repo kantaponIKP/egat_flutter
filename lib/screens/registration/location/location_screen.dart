@@ -1,7 +1,7 @@
 import 'package:egat_flutter/constant.dart';
 import 'package:egat_flutter/screens/registration/registration_action.dart';
 import 'package:egat_flutter/screens/registration/state/location.dart';
-import 'package:egat_flutter/screens/registration/widgets/login_button.dart';
+import 'package:egat_flutter/screens/registration/widgets/login_text_button.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -52,7 +52,7 @@ class _LocationScreenState extends State<LocationScreen> {
             leading: IconButton(
                 icon: Icon(Icons.arrow_back_ios,
                     color: Theme.of(context).textTheme.bodyText2!.color),
-                onPressed: () => Navigator.pop(context)),
+                onPressed: () => _onBackPressed()),
             centerTitle: false,
             titleSpacing: 0.0,
             leadingWidth: 32,
@@ -92,7 +92,7 @@ class _LocationScreenState extends State<LocationScreen> {
             actionLabel: const Text("Next"),
             onAction: _onNextPressed,
           ),
-          LoginButton()
+          LoginTextButton()
         ],
       ),
     );
@@ -163,6 +163,11 @@ class _LocationScreenState extends State<LocationScreen> {
   void _onNextPressed() {
     var model = Provider.of<Location>(context, listen: false);
     model.nextPage();
+  }
+
+  void _onBackPressed() {
+    var model = Provider.of<Location>(context, listen: false);
+    model.backPage();
   }
 
   void _onClickPressed() {
