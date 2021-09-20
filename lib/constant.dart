@@ -1,12 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:logger/logger.dart';
 
-final primaryColor = HexColor("#FEC908");
+const primaryColor = Color(0xffFEC908);
 const backgroundColor = Colors.black;
 const secondaryColor = Colors.indigo;
 const neutralColor = Colors.grey;
 const dangerColor = Colors.red;
 const textButtonTheme = Colors.black;
-const textTheme = Colors.white;
-
+const textColor = Colors.white;
+const textButton = Color(0xff0DA6FC);
 final appTitle = 'EGAT P2P';
+
+final apiBaseUrl = "";
+
+final loggerPrinter = PrettyPrinter();
+final loggerLevel = Level.debug;
+
+final Logger logger = Logger(
+  printer: loggerPrinter,
+  level: loggerLevel,
+);
