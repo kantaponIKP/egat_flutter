@@ -3,41 +3,75 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class AppLanguage extends ChangeNotifier {
-  
+import '../constant.dart';
+
+class AppLocale extends ChangeNotifier {
   Locale _appLocale = Locale('en');
 
-  Locale get appLocal => _appLocale  ;
+  Locale get locale => _appLocale;
 
-  fetchLocale() async {
-    var prefs = await SharedPreferences.getInstance();
-    var lngCode = prefs.getString('language_code');
-    log('call fetchLocale language Code on load: $lngCode');
-    if (prefs.getString('language_code') == null) {
-      _appLocale = Locale('en');
-      return Null;
-    }
-    _appLocale = Locale(prefs.getString('language_code')!);
-    return Null;
+  AppLocale.fromPreferredAppLanguage(PreferredAppLanguage preferedAppLanguage) {
+    this.fromPreferredAppLanguage(preferedAppLanguage);
   }
 
-  void changeLanguage(Locale type) async {
-    var prefs = await SharedPreferences.getInstance();
-    log('call changeLanguage method old languade code : $_appLocale new language code $type');
+  setLocale(Locale type) {
+    logger.d(
+        'call changeLanguage method old languade code : $_appLocale new language code $type');
     if (_appLocale == type) {
       return;
     }
 
     if (type == Locale('en')) {
       _appLocale = type;
+    } else {
+      _appLocale = type;
+    }
+    logger.d('after change Language app language : $_appLocale');
+    notifyListeners();
+  }
+
+  void changeLanguage(Locale type) async {
+    var prefs = await SharedPreferences.getInstance();
+    logger.d(
+        'call changeLanguage method old languade code : $locale new language code $type');
+    if (locale == type) {
+      return;
+    }
+
+    if (type == Locale('en')) {
+      setLocale(type);
       await prefs.setString('language_code', 'en');
       await prefs.setString('countryCode', 'US');
     } else {
-      _appLocale = type;
+      setLocale(type);
       await prefs.setString('language_code', 'th');
       await prefs.setString('countryCode', '');
     }
-    log('after change Language app language : $_appLocale');
-    notifyListeners();
+    logger.d('after change Language app language : $locale');
+  }
+
+  void fromPreferredAppLanguage(PreferredAppLanguage preferedAppLanguage) {
+    setLocale(preferedAppLanguage.locale);
+  }
+}
+
+class PreferredAppLanguage {
+  Locale _appLocale = Locale('en');
+
+  Locale get locale => _appLocale;
+
+  PreferredAppLanguage._();
+
+  static createInstance() async {
+    var instance = new PreferredAppLanguage._();
+    var prefs = await SharedPreferences.getInstance();
+    var lngCode = prefs.getString('language_code');
+    logger.d('call fetchLocale language Code on load: $lngCode');
+    if (prefs.getString('language_code') == null) {
+      instance._appLocale = Locale('en');
+      return instance;
+    }
+    instance._appLocale = Locale(prefs.getString('language_code')!);
+    return instance;
   }
 }

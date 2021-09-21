@@ -62,11 +62,19 @@ class _ForgotScreenState extends State<ForgotScreen> {
                   // style: DefaultTextStyle.of(context).style,
                   style: TextStyle(fontSize: 30),
                   children: <TextSpan>[
-                    TextSpan(text: 'Create'),
                     TextSpan(
-                        text: ' Account',
-                        style:
-                            TextStyle(color: Theme.of(context).primaryColor)),
+                      text: 'Forgot',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w300,
+                      ),
+                    ),
+                    TextSpan(
+                      text: ' Password',
+                      style: TextStyle(
+                        color: Theme.of(context).primaryColor,
+                        fontWeight: FontWeight.w300,
+                      ),
+                    ),
                   ],
                 ),
               )),

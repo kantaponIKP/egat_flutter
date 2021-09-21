@@ -27,7 +27,8 @@ dependencies:
   flutter_svg: ^0.22.0
   logger: ^1.0.0
   pin_code_fields: ^7.3.0
-  # google_maps_flutter: ^2.0.10
+  get_it: ^7.2.0
+  google_maps_flutter: ^2.0.10
   flutter:
     sdk: flutter
   flutter_localizations:
@@ -75,6 +76,9 @@ flutter:
     - family: Montserrat
       fonts:
         - asset: assets/fonts/Montserrat-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/Montserrat-Light.ttf
+          weight: 300
 
   # fonts:
   #   - family: Schyler

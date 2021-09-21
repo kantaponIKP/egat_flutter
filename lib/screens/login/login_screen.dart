@@ -152,47 +152,52 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Widget _buildAdditionalSection(BuildContext context) {
-    return Row(children: <Widget>[
-      SizedBox(
-        height: 20.0,
-        width: 20.0,
-        child: Checkbox(
-          value: rememberMe,
-          onChanged: (newValue) {
-            if (newValue != null) {
-              _onRememberMeChanged(newValue);
-            }
-          },
+    return OverflowBar(
+      alignment: MainAxisAlignment.spaceBetween,
+      children: <Widget>[
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            SizedBox(
+              height: 20.0,
+              width: 20.0,
+              child: Checkbox(
+                value: rememberMe,
+                onChanged: (newValue) {
+                  if (newValue != null) {
+                    _onRememberMeChanged(newValue);
+                  }
+                },
+              ),
+            ),
+            Container(
+              padding: const EdgeInsets.all(8.0),
+              child: Text('Remember me'),
+            ),
+          ],
         ),
-      ),
-      Container(
-        padding: const EdgeInsets.all(8.0),
-        child: Text('Remember me'),
-      ),
-      Spacer(),
-      Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8),
-        child: InkWell(
-            child: TextButton(
-          onPressed: () {
-            _onForgotPasswordPressed(context);
-          },
-          child: const Text('Forgot password ?'),
-        )),
-      ),
-    ]
-        // ),
-        );
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8),
+          child: InkWell(
+              child: TextButton(
+            onPressed: () {
+              _onForgotPasswordPressed(context);
+            },
+            child: const Text('Forgot password ?'),
+          )),
+        ),
+      ],
+      // ),
+    );
   }
 
-    Widget _buildAlertSection(BuildContext context) {
-    return
-      Container(
-        alignment: Alignment.centerLeft,
-        padding: const EdgeInsets.only(bottom:8.0),
-        child: Text('Email or password incorrect.',style: TextStyle(color: Theme.of(context).errorColor)),
-      );
-  
+  Widget _buildAlertSection(BuildContext context) {
+    return Container(
+      alignment: Alignment.centerLeft,
+      padding: const EdgeInsets.only(bottom: 8.0),
+      child: Text('Email or password incorrect.',
+          style: TextStyle(color: Theme.of(context).errorColor)),
+    );
   }
 
   Widget _buildLoginButton(BuildContext context) {
