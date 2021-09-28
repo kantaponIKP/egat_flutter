@@ -6,7 +6,7 @@ enum RegistrationState {
   Consent,
   Meter,
   Location,
-  OtpMobileNumber,
+  Otp,
   OtpPin,
   Password,
   Success,
@@ -36,8 +36,8 @@ class RegistrationStatus extends ChangeNotifier {
     _setState(RegistrationState.Location);
   }
 
-  setStateOtpMobileNumber() {
-    _setState(RegistrationState.OtpMobileNumber);
+  setStateOtp() {
+    _setState(RegistrationState.Otp);
   }
 
   setStateOtpPin() {

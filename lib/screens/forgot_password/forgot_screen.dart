@@ -65,14 +65,14 @@ class _ForgotScreenState extends State<ForgotScreen> {
                     TextSpan(
                       text: 'Forgot',
                       style: TextStyle(
-                        fontWeight: FontWeight.w300,
+                        // fontWeight: FontWeight.w300,
                       ),
                     ),
                     TextSpan(
                       text: ' Password',
                       style: TextStyle(
                         color: Theme.of(context).primaryColor,
-                        fontWeight: FontWeight.w300,
+                        // fontWeight: FontWeight.w300,
                       ),
                     ),
                   ],
@@ -133,16 +133,28 @@ class _ForgotScreenState extends State<ForgotScreen> {
   // }
 
   Padding _buildAction(BuildContext context) {
-    return Padding(
+
+
+        return Padding(
       padding: const EdgeInsets.only(left: 32, right: 32, bottom: 16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // _buildTitle(context),
-          _buildContent(context),
-          _buildForm(context),
-          _buildResetButton(context),
-        ],
+      child: LayoutBuilder(
+        builder: (BuildContext context, BoxConstraints constraints) {
+          return SingleChildScrollView(
+            child: Container(
+              constraints: BoxConstraints(
+                minHeight: constraints.maxHeight,
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  _buildContent(context),
+                  _buildForm(context),
+                  _buildResetButton(context),
+                ],
+              ),
+            ),
+          );
+        },
       ),
     );
   }

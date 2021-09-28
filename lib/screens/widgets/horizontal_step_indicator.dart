@@ -13,14 +13,19 @@ class HorizontalStepIndicator extends StatelessWidget {
     required this.steps,
     this.scrollable = true,
     this.highlightDoneStep = false,
-    this.index = 1,
+    this.index = 0,
     this.theme = HorizontalStepIndicatorTheme.White,
     Key? key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return _buildStepper();
+    return 
+    // Padding(
+      // padding: const EdgeInsets.only(left:60,right:60,),
+      // child: 
+      _buildStepper();
+    // );
   }
 
   Widget _buildStep(
@@ -65,37 +70,19 @@ class HorizontalStepIndicator extends StatelessWidget {
   }) {
     return Row(
       children: [
-        Container(
-          width: 24,
-          height: 24,
-          decoration: BoxDecoration(
-            color: theme == HorizontalStepIndicatorTheme.White
-                ? neutralColor
-                : neutralColor.withOpacity(0.7),
-            borderRadius: BorderRadius.circular(10000),
-          ),
-          child: Align(
-            alignment: Alignment.center,
-            child: const Icon(
-              Icons.done,
-              color: Colors.white,
-              size: 16,
-            ),
-          ),
-        ),
-        Align(
+        AnimatedContainer(
+          width: 20.0,
+          height: 12.0,
           alignment: Alignment.center,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: Text(
-              step.title,
-              style: TextStyle(
-                fontSize: 13,
-                color: theme == HorizontalStepIndicatorTheme.White
-                    ? Colors.black
-                    : Colors.white70,
-              ),
-            ),
+          duration: const Duration(seconds: 2),
+          curve: Curves.fastOutSlowIn,
+          child: Container(
+            decoration: BoxDecoration(
+                color: Colors.grey,
+                border: Border.all(
+                  color: Colors.grey,
+                ),
+                borderRadius: BorderRadius.all(Radius.circular(20))),
           ),
         ),
       ],
@@ -108,37 +95,19 @@ class HorizontalStepIndicator extends StatelessWidget {
   }) {
     return Row(
       children: [
-        Container(
-          width: 24,
-          height: 24,
-          decoration: BoxDecoration(
-            color: theme == HorizontalStepIndicatorTheme.White
-                ? primaryColor
-                : primaryColor.withOpacity(0.7),
-            borderRadius: BorderRadius.circular(10000),
-          ),
-          child: Align(
-            alignment: Alignment.center,
-            child: const Icon(
-              Icons.done,
-              color: Colors.white,
-              size: 16,
-            ),
-          ),
-        ),
-        Align(
+         AnimatedContainer(
+          width: 20.0,
+          height: 12.0,
           alignment: Alignment.center,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: Text(
-              step.title,
-              style: TextStyle(
-                fontSize: 13,
-                color: theme == HorizontalStepIndicatorTheme.White
-                    ? Colors.black
-                    : Colors.white70,
-              ),
-            ),
+          duration: const Duration(seconds: 2),
+          curve: Curves.fastOutSlowIn,
+          child: Container(
+            decoration: BoxDecoration(
+                color: Colors.grey,
+                border: Border.all(
+                  color: Colors.grey,
+                ),
+                borderRadius: BorderRadius.all(Radius.circular(20))),
           ),
         ),
       ],
@@ -152,41 +121,19 @@ class HorizontalStepIndicator extends StatelessWidget {
   }) {
     return Row(
       children: [
-        Container(
-          width: 24,
-          height: 24,
-          decoration: BoxDecoration(
-            color: neutralColor.withOpacity(0.7),
-            borderRadius: BorderRadius.circular(10000),
-            border: Border.all(
-              width: 0,
-              color: neutralColor.withOpacity(0.6),
-            ),
-          ),
-          child: Align(
-            alignment: Alignment.center,
-            child: Text(
-              "$stepIndex",
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 12,
-              ),
-            ),
-          ),
-        ),
-        Align(
+        AnimatedContainer(
+          width: 20.0,
+          height: 12.0,
           alignment: Alignment.center,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: Text(
-              step.title,
-              style: TextStyle(
-                fontSize: 13,
-                color: theme == HorizontalStepIndicatorTheme.White
-                    ? Colors.black
-                    : Colors.white70,
-              ),
-            ),
+          duration: const Duration(seconds: 2),
+          curve: Curves.fastOutSlowIn,
+          child: Container(
+            decoration: BoxDecoration(
+                color: Colors.grey,
+                border: Border.all(
+                  color: Colors.grey,
+                ),
+                borderRadius: BorderRadius.all(Radius.circular(20))),
           ),
         ),
       ],
@@ -205,9 +152,9 @@ class HorizontalStepIndicator extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10),
       child: SizedBox(
-        height: 40,
+        height: 30,
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             ..._loopSteps(
               selectedStep: index,
@@ -223,7 +170,7 @@ class HorizontalStepIndicator extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10),
       child: SizedBox(
-        height: 40,
+        height: 30,
         child: LayoutBuilder(
           builder: (BuildContext context, BoxConstraints constraints) {
             return SingleChildScrollView(
@@ -231,7 +178,7 @@ class HorizontalStepIndicator extends StatelessWidget {
               child: ConstrainedBox(
                 constraints: BoxConstraints(minWidth: constraints.maxWidth),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     ..._loopSteps(
                       selectedStep: index,
@@ -254,41 +201,19 @@ class HorizontalStepIndicator extends StatelessWidget {
   }) {
     return Row(
       children: [
-        Container(
-          width: 24,
-          height: 24,
-          decoration: BoxDecoration(
-            color: primaryColor,
-            borderRadius: BorderRadius.circular(10000),
-            border: Border.all(
-              width: 1,
-              color: primaryColor,
-            ),
-          ),
-          child: Align(
-            alignment: Alignment.center,
-            child: Text(
-              "$stepIndex",
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 12,
-              ),
-            ),
-          ),
-        ),
-        Align(
+        AnimatedContainer(
+          width: 40.0,
+          height: 12.0,
           alignment: Alignment.center,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: Text(
-              step.title,
-              style: TextStyle(
-                fontSize: 13,
-                color: theme == HorizontalStepIndicatorTheme.White
-                    ? Colors.black
-                    : Colors.white70,
-              ),
-            ),
+          duration: const Duration(seconds: 2),
+          curve: Curves.fastOutSlowIn,
+          child: Container(
+            decoration: BoxDecoration(
+                color: Colors.white,
+                border: Border.all(
+                  color: Colors.white,
+                ),
+                borderRadius: BorderRadius.all(Radius.circular(20))),
           ),
         ),
       ],
@@ -300,7 +225,7 @@ class HorizontalStepIndicator extends StatelessWidget {
     required HorizontalStepIndicatorTheme theme,
   }) {
     var list = <Widget>[];
-    var index = 1;
+    var index = 0;
 
     for (var step in steps) {
       bool done = false;

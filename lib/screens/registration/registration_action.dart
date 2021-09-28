@@ -17,51 +17,15 @@ class RegistrationAction extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 8, right: 8, bottom: 8),
-      child: Column(
-        children: [
-          _buildActionButton(),
-        ],
-      ),
+    return Column(
+      children: [
+        _buildActionButton(),
+      ],
     );
   }
 
   Widget _buildActionButton() {
-    if (direction == RegistrationActionDirection.Next) {
-      return _buildActionButtonNext();
-    }
-
-    return _buildActionButtonBack();
-  }
-
-  Widget _buildActionButtonBack() {
-    return SizedBox(
-      width: double.infinity,
-      child: ElevatedButton(
-        onPressed: onAction,
-        child: Row(
-          children: [
-            Flexible(
-              flex: 1,
-              child: Align(
-                alignment: Alignment.centerRight,
-                child: Padding(
-                  padding: const EdgeInsets.only(right: 4),
-                  child: const Icon(
-                    Icons.arrow_back_ios_new_outlined,
-                    size: 16,
-                  ),
-                ),
-              ),
-            ),
-            actionLabel,
-            Spacer(flex: 1),
-          ],
-        ),
-        style: ElevatedButton.styleFrom(elevation: 0),
-      ),
-    );
+    return _buildActionButtonNext();
   }
 
   Widget _buildActionButtonNext() {

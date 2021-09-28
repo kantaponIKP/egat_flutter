@@ -56,20 +56,49 @@ class _LoginScreenState extends State<LoginScreen> {
   Padding _buildAction(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(left: 32, right: 32, bottom: 16),
-      child: Column(
-        children: [
-          _buildLanguageButton(context),
-          Spacer(),
-          _buildLogoImage(),
-          _buildForm(context),
-          _buildAdditionalSection(context),
-          _buildAlertSection(context),
-          _buildLoginButton(context),
-          Spacer(),
-          _buildRegisterButton(context),
-        ],
+      child: LayoutBuilder(
+        builder: (BuildContext context, BoxConstraints constraints) {
+          return SingleChildScrollView(
+            child: Container(
+              constraints: BoxConstraints(
+                minHeight: constraints.maxHeight,
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  _buildLanguageButton(context),
+                  Column(children: [
+                    _buildLogoImage(),
+                    _buildForm(context),
+                    _buildAdditionalSection(context),
+                    _buildAlertSection(context),
+                    _buildLoginButton(context),
+                  ]),
+                  _buildRegisterButton(context),
+                ],
+              ),
+            ),
+          );
+        },
       ),
     );
+    // return Padding(
+    //   padding: const EdgeInsets.only(left: 32, right: 32, bottom: 16),
+    //   child: Column(
+    //     children: [
+    //       _buildLanguageButton(context),
+    //       Spacer(),
+    //       _buildLogoImage(),
+    //       _buildForm(context),
+    //       _buildAdditionalSection(context),
+    //       _buildAlertSection(context),
+    //       _buildLoginButton(context),
+    //       Spacer(),
+    //       _buildRegisterButton(context),
+    //     ],
+    //   ),
+    // );
   }
 
   Widget _buildLanguageButton(BuildContext context) {

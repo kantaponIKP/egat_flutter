@@ -1,12 +1,12 @@
 import 'dart:math';
 
 import 'package:egat_flutter/constant.dart';
-import 'package:egat_flutter/screens/registration/otp/otp_pin_screen.dart';
 import 'package:egat_flutter/screens/registration/registration_action.dart';
 import 'package:egat_flutter/screens/registration/registration_screen.dart';
 import 'package:egat_flutter/screens/registration/registration_step_indicator.dart';
 import 'package:egat_flutter/screens/registration/state/otp.dart';
 import 'package:egat_flutter/screens/registration/state/registration_session.dart';
+import 'package:egat_flutter/screens/registration/widgets/signup_appbar.dart';
 import 'package:egat_flutter/screens/registration/widgets/login_text_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -14,14 +14,14 @@ import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
-class OtpMobileNumberScreen extends StatefulWidget {
-  OtpMobileNumberScreen({Key? key}) : super(key: key);
+class OtpScreen extends StatefulWidget {
+  OtpScreen({Key? key}) : super(key: key);
 
   @override
-  _OtpMobileNumberScreenState createState() => _OtpMobileNumberScreenState();
+  _OtpScreenState createState() => _OtpScreenState();
 }
 
-class _OtpMobileNumberScreenState extends State<OtpMobileNumberScreen> {
+class _OtpScreenState extends State<OtpScreen> {
   final _formKey = GlobalKey<FormState>();
   TextEditingController? _pinController;
 
@@ -39,6 +39,9 @@ class _OtpMobileNumberScreenState extends State<OtpMobileNumberScreen> {
   Widget build(BuildContext context) {
     return Container(
         decoration: BoxDecoration(
+          // TODO
+          // backgroundBlendMode: ,
+          image: DecorationImage(image: AssetImage("assets/images/register_background.png")),
             gradient: RadialGradient(colors: [
           Color(0xFF303030),
           Colors.black,
@@ -47,7 +50,7 @@ class _OtpMobileNumberScreenState extends State<OtpMobileNumberScreen> {
           backgroundColor: Colors.transparent,
           resizeToAvoidBottomInset: false,
           extendBodyBehindAppBar: true,
-          appBar: _buildAppBar(context),
+          appBar: SignupAppbar(firstTitle: 'Create', secondTitle: 'Account', onAction: _onBackPressed),
           body: SafeArea(
             child: _buildAction(context),
           ),
@@ -95,23 +98,73 @@ class _OtpMobileNumberScreenState extends State<OtpMobileNumberScreen> {
   Padding _buildAction(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(left: 32, right: 32, bottom: 16),
-      child: Column(
-        children: [
-          _buildForm(),
-          Spacer(),
-          _buildTimer(),
-          SizedBox(height: 16),
-          _buildOTPPin(),
-          _buildResendOTP(),
-          Spacer(),
-          RegistrationAction(
-            actionLabel: const Text("Sign up"),
-            onAction: _onSubmit,
-          ),
-          LoginTextButton()
-        ],
+      child: LayoutBuilder(
+        builder: (BuildContext context, BoxConstraints constraints) {
+          return SingleChildScrollView(
+            child: Container(
+              constraints: BoxConstraints(
+                minHeight: constraints.maxHeight,
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Column(
+                    children: [
+                      _buildForm(),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 48.0),
+                        child: _buildTimer(),
+                      ),
+                          Padding(
+                            padding: EdgeInsets.only(top: 16.0),
+                            child: _buildOTPPin(),
+                          ),
+                          _buildResendOTP(),
+                    ],
+                  ),
+                  Column(
+                    children: [
+                      RegistrationAction(
+                        actionLabel: const Text("Sign up"),
+                        onAction: _onSubmit,
+                      ),
+                      SizedBox(
+                        height: 30.0,
+                        child: RegistrationStepIndicator(),
+                      ),
+                      SizedBox(
+                        height: 20.0,
+                        child: LoginTextButton(),
+                      ),
+                    ],
+                  )
+                ],
+              ),
+            ),
+          );
+        },
       ),
     );
+    // return Padding(
+    //   padding: const EdgeInsets.only(left: 32, right: 32, bottom: 16),
+    //   child: Column(
+    //     children: [
+    //       _buildForm(),
+    //       Spacer(),
+    //       _buildTimer(),
+    //       SizedBox(height: 16),
+    //       _buildOTPPin(),
+    //       _buildResendOTP(),
+    //       Spacer(),
+    //       RegistrationAction(
+    //         actionLabel: const Text("Sign up"),
+    //         onAction: _onSubmit,
+    //       ),
+    //       LoginTextButton()
+    //     ],
+    //   ),
+    // );
   }
 
   Widget _buildOTPPin() {
@@ -185,7 +238,7 @@ class _OtpMobileNumberScreenState extends State<OtpMobileNumberScreen> {
               ),
             ),
           ),
-          SizedBox(height: 16),
+          // SizedBox(height: 16),
           Align(
             alignment: Alignment.centerLeft,
             child: Text.rich(

@@ -12,11 +12,13 @@ const textColor = Colors.white;
 const textButton = Color(0xff0DA6FC);
 const white = Colors.white;
 
-const onBackGroundColor = Colors.white;
+const onBgColor = Colors.white;
 final surfaceColor = HexColor("#262729");
 const onSurfaceColor = Colors.white;
-
 final contentBgColor = HexColor("#262729");
+const onPrimaryBgColor = Colors.black;
+
+final successColor = Colors.green.shade400;
 
 
 final appTitle = 'EGAT P2P';

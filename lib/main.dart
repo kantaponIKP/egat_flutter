@@ -60,7 +60,7 @@ class EgatApp extends StatelessWidget {
                   foregroundColor: MaterialStateProperty.all(backgroundColor),
                   shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                     RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(9.0),
+                      borderRadius: BorderRadius.circular(10.0),
                     ),
                   ),
                 ),
@@ -68,7 +68,7 @@ class EgatApp extends StatelessWidget {
               buttonTheme: ButtonThemeData(
                 buttonColor: primaryColor,
                 shape: RoundedRectangleBorder(),
-                textTheme: ButtonTextTheme.accent,
+                // textTheme: ButtonTextTheme.accent,
               ),
               checkboxTheme: CheckboxThemeData(
                 checkColor: MaterialStateProperty.all(backgroundColor),
@@ -83,10 +83,10 @@ class EgatApp extends StatelessWidget {
               ),
               iconTheme: IconThemeData(color: textColor),
               textTheme: TextTheme(
-                bodyText2: TextStyle(color: textColor),
+                bodyText2: TextStyle(color: textColor,),
                 subtitle1:
                     //TextFormField textStyle
-                    TextStyle(color: textColor),
+                    TextStyle(color: textColor,),
               ),
               textButtonTheme: TextButtonThemeData(
                 style: ButtonStyle(

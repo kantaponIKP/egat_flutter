@@ -1,6 +1,9 @@
+import 'package:egat_flutter/constant.dart';
 import 'package:egat_flutter/screens/registration/registration_action.dart';
+import 'package:egat_flutter/screens/registration/registration_step_indicator.dart';
 import 'package:egat_flutter/screens/registration/state/meter.dart';
 import 'package:egat_flutter/screens/registration/widgets/login_text_button.dart';
+import 'package:egat_flutter/screens/registration/widgets/signup_appbar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -13,10 +16,9 @@ class MeterScreen extends StatefulWidget {
 
 class _MeterScreenState extends State<MeterScreen> {
   final _formKey = GlobalKey<FormState>();
-  TextEditingController? _fullNameController;
-  TextEditingController? _phoneNumberController;
-  TextEditingController? _emailController;
-  TextEditingController? _passwordController;
+  TextEditingController? _meterController;
+  TextEditingController? _meterIDController;
+  TextEditingController? _locationController;
   bool prosumer = false;
   bool aggregator = false;
   bool consumer = false;
@@ -33,65 +35,55 @@ class _MeterScreenState extends State<MeterScreen> {
           backgroundColor: Colors.transparent,
           resizeToAvoidBottomInset: false,
           extendBodyBehindAppBar: true,
-          appBar: _buildAppBar(context),
+          // appBar: _buildAppBar(context),
+          appBar: SignupAppbar(firstTitle: 'Create', secondTitle: 'Account', onAction: _onBackPressed),
           body: SafeArea(
             child: _buildAction(context),
           ),
         ));
   }
 
-  AppBar _buildAppBar(BuildContext context) {
-    return AppBar(
-      title: Text("Back",
-          style: TextStyle(
-            color: Theme.of(context).textTheme.bodyText2!.color,
-            fontSize: 16,
-          ),
-          textAlign: TextAlign.left),
-      leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios,
-              color: Theme.of(context).textTheme.bodyText2!.color),
-          onPressed: () => _onBackPressed()),
-      centerTitle: false,
-      titleSpacing: 0.0,
-      leadingWidth: 32,
-      elevation: 0,
-      backgroundColor: Colors.transparent,
-      bottom: PreferredSize(
-          child: Container(
-              padding: const EdgeInsets.only(left: 32, right: 32, bottom: 16),
-              alignment: Alignment.centerLeft,
-              child: RichText(
-                text: TextSpan(
-                  // style: DefaultTextStyle.of(context).style,
-                  style: TextStyle(fontSize: 30),
-                  children: <TextSpan>[
-                    TextSpan(text: 'Create'),
-                    TextSpan(
-                        text: ' Account',
-                        style:
-                            TextStyle(color: Theme.of(context).primaryColor)),
-                  ],
-                ),
-              )),
-          preferredSize: Size.fromHeight(50)),
-    );
-  }
-
   Padding _buildAction(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(left: 32, right: 32, bottom: 16),
-      child: Column(
-        children: [
-          _buildForm(context),
-          _buildAdditionalSection(context),
-          Spacer(),
-          RegistrationAction(
-            actionLabel: const Text("Next"),
-            onAction: _onNextPressed,
-          ),
-          LoginTextButton()
-        ],
+      child: LayoutBuilder(
+        builder: (BuildContext context, BoxConstraints constraints) {
+          return SingleChildScrollView(
+            child: Container(
+              constraints: BoxConstraints(
+                minHeight: constraints.maxHeight,
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Column(
+                    children: [
+                      _buildForm(context),
+                      _buildAdditionalSection(context),
+                    ],
+                  ),
+                  Column(
+                    children: [
+                      RegistrationAction(
+                        actionLabel: const Text("Next"),
+                        onAction: _onNextPressed,
+                      ),
+                      SizedBox(
+                        height: 30.0,
+                        child: RegistrationStepIndicator(),
+                      ),
+                      SizedBox(
+                        height: 20.0,
+                        child: LoginTextButton(),
+                      ),
+                    ],
+                  )
+                ],
+              ),
+            ),
+          );
+        },
       ),
     );
   }
@@ -104,7 +96,7 @@ class _MeterScreenState extends State<MeterScreen> {
           Container(
             padding: const EdgeInsets.symmetric(vertical: 8),
             child: TextFormField(
-              controller: _fullNameController,
+              controller: _meterController,
               decoration: InputDecoration(
                 counterText: '',
                 labelText: 'Meter',
@@ -113,32 +105,62 @@ class _MeterScreenState extends State<MeterScreen> {
               maxLength: 24,
             ),
           ),
-          Container(
-            padding: const EdgeInsets.symmetric(vertical: 8),
-            child: TextFormField(
-              controller: _phoneNumberController,
-              decoration: InputDecoration(
-                counterText: '',
-                labelText: 'Meter id',
+          Stack(
+            children: [
+              Container(
+                padding: const EdgeInsets.symmetric(vertical: 8),
+                child: TextFormField(
+                  controller: _meterIDController,
+                  decoration: InputDecoration(
+                    counterText: '',
+                    labelText: 'Meter id',
+                    errorText: "Already used"
+                  ),
+                  keyboardType: TextInputType.text,
+                  maxLength: 24,
+                ),
               ),
-              keyboardType: TextInputType.phone,
-              maxLength: 24,
-            ),
+              Positioned.fill(
+                  top: 16,
+                  child: Align(
+                alignment: Alignment.topRight,
+                child: _checkButton(),
+              ))
+            ],
           ),
           Container(
             padding: const EdgeInsets.symmetric(vertical: 8),
             child: TextFormField(
-              controller: _emailController,
+              controller: _locationController,
               decoration: InputDecoration(
                 counterText: '',
                 labelText: 'Location',
               ),
-              keyboardType: TextInputType.emailAddress,
+              keyboardType: TextInputType.text,
               maxLength: 24,
             ),
           ),
         ],
       ),
+    );
+  }
+
+    Widget _checkButton() {
+    return ElevatedButton(
+      style: TextButton.styleFrom(
+      ),
+      onPressed: () {},
+      child: const Text('Check')
+    );
+  }
+
+  Widget _successButton() {
+    return ElevatedButton(
+      style: TextButton.styleFrom(
+        backgroundColor: Colors.lightGreenAccent.shade400,
+      ),
+      onPressed: () {},
+      child: const Icon(Icons.check, color: Colors.white, size: 30),
     );
   }
 

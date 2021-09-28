@@ -7,7 +7,7 @@ class Location extends ChangeNotifier {
   Location(this.parent);
 
   nextPage() {
-    parent.status.setStateOtpMobileNumber();
+    parent.status.setStateOtp();
   }
 
   backPage() {

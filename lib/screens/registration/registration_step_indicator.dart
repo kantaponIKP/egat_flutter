@@ -17,21 +17,19 @@ class RegistrationStepIndicator extends StatelessWidget {
     switch (status.state) {
       case RegistrationState.UserInfo:
       case RegistrationState.Password:
-        stepIndex = 0;
-        break;
       case RegistrationState.Dismiss:
       case RegistrationState.Consent:
-        stepIndex = 1;
+        stepIndex = 0;
         break;
       case RegistrationState.Meter:
-        stepIndex = 2;
+        stepIndex = 1;
         break;
       case RegistrationState.Location:
-        stepIndex = 3;
+        stepIndex = 2;
         break;
-      case RegistrationState.OtpMobileNumber:
+      case RegistrationState.Otp:
       case RegistrationState.OtpPin:
-        stepIndex = 4;
+        stepIndex = 3;
         break;
       case RegistrationState.Success:
         stepIndex = 5;

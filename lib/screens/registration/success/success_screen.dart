@@ -22,6 +22,7 @@ class _SuccessScreenState extends State<SuccessScreen> {
   Widget build(BuildContext context) {
     return Container(
         decoration: BoxDecoration(
+          image: DecorationImage(image: AssetImage("assets/images/register_background.png")),
             gradient: RadialGradient(colors: [
           Color(0xFF303030),
           Colors.black,
@@ -39,21 +40,35 @@ class _SuccessScreenState extends State<SuccessScreen> {
   Padding _buildAction(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(left: 32, right: 32, bottom: 16),
-      child: Stack(children: <Widget>[
-        Column(
-          children: [
-            Spacer(),
-            _buildSuccessLogo(context),
-            SizedBox(height: 32),
-            _buildForm(context),
-            Spacer(),
-            RegistrationAction(
-              actionLabel: const Text("Back to Login"),
-              onAction: _onBackToLoginPressed,
+      child: LayoutBuilder(
+        builder: (BuildContext context, BoxConstraints constraints) {
+          return SingleChildScrollView(
+            child: Container(
+              constraints: BoxConstraints(
+                minHeight: constraints.maxHeight,
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(),
+                  Column(
+                    children: [
+                      _buildSuccessLogo(context),
+                      SizedBox(height: 32),
+                      _buildForm(context),
+                    ],
+                  ),
+                  RegistrationAction(
+                    actionLabel: const Text("Back to Login"),
+                    onAction: _onBackToLoginPressed,
+                  ),
+                ],
+              ),
             ),
-          ],
-        ),
-      ]),
+          );
+        },
+      ),
     );
   }
 

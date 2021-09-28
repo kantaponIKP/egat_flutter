@@ -1,8 +1,7 @@
 import 'package:egat_flutter/screens/registration/consent/consent_screen.dart';
 import 'package:egat_flutter/screens/registration/location/location_screen.dart';
 import 'package:egat_flutter/screens/registration/meter/meter_screen.dart';
-import 'package:egat_flutter/screens/registration/otp/otp_mobilenumber_screen.dart';
-import 'package:egat_flutter/screens/registration/otp/otp_pin_screen.dart';
+import 'package:egat_flutter/screens/registration/otp/otp_screen.dart';
 import 'package:egat_flutter/screens/registration/state/registration_status.dart';
 import 'package:egat_flutter/screens/registration/success/success_screen.dart';
 import 'package:egat_flutter/screens/registration/user_info/user_info_screen.dart';
@@ -141,13 +140,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       duration = Duration(milliseconds: 200);
     }
 
-    if (registration.state == RegistrationState.OtpMobileNumber) {
-      screen = OtpMobileNumberScreen(key: Key('otp_mobilenumber'));
-      duration = Duration(milliseconds: 200);
-    }
-
-    if (registration.state == RegistrationState.OtpPin) {
-      screen = OtpPinScreen(key: Key('otp_pin'));
+    if (registration.state == RegistrationState.Otp) {
+      screen = OtpScreen(key: Key('otp_mobilenumber'));
       duration = Duration(milliseconds: 200);
     }
 

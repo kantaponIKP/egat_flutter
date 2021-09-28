@@ -1,7 +1,11 @@
+import 'dart:async';
 import 'package:egat_flutter/constant.dart';
+import 'package:egat_flutter/screens/registration/location/contact_us_screen.dart';
 import 'package:egat_flutter/screens/registration/registration_action.dart';
+import 'package:egat_flutter/screens/registration/registration_step_indicator.dart';
 import 'package:egat_flutter/screens/registration/state/location.dart';
 import 'package:egat_flutter/screens/registration/widgets/login_text_button.dart';
+import 'package:egat_flutter/screens/registration/widgets/signup_appbar.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -20,6 +24,7 @@ class _LocationScreenState extends State<LocationScreen> {
   bool privacyPolicy = false;
 
   // Completer<GoogleMapController> _controller = Completer();
+  Completer<GoogleMapController> _controller = Completer();
 
   static final CameraPosition _kGooglePlex = CameraPosition(
     target: LatLng(37.42796133580664, -122.085749655962),
@@ -47,51 +52,14 @@ class _LocationScreenState extends State<LocationScreen> {
         backgroundColor: Colors.transparent,
         resizeToAvoidBottomInset: false,
         extendBodyBehindAppBar: true,
-        appBar: _buildAppbar(context),
+        // appBar: _buildAppbar(context),
+        appBar: SignupAppbar(
+            firstTitle: 'Create',
+            secondTitle: 'Account',
+            onAction: _onBackPressed),
         body: SafeArea(
           child: _buildAction(context),
         ),
-      ),
-    );
-  }
-
-  AppBar _buildAppbar(BuildContext context) {
-    return AppBar(
-      title: Text(
-        "Back",
-        style: TextStyle(
-          color: Theme.of(context).textTheme.bodyText2!.color,
-          fontSize: 16,
-        ),
-        textAlign: TextAlign.left,
-      ),
-      leading: IconButton(
-        icon: Icon(Icons.arrow_back_ios,
-            color: Theme.of(context).textTheme.bodyText2!.color),
-        onPressed: () => _onBackPressed(),
-      ),
-      centerTitle: false,
-      titleSpacing: 0.0,
-      leadingWidth: 32,
-      elevation: 0,
-      backgroundColor: Colors.transparent,
-      bottom: PreferredSize(
-        child: Container(
-            padding: const EdgeInsets.only(left: 32, right: 32, bottom: 16),
-            alignment: Alignment.centerLeft,
-            child: RichText(
-              text: TextSpan(
-                // style: DefaultTextStyle.of(context).style,
-                style: TextStyle(fontSize: 30),
-                children: <TextSpan>[
-                  TextSpan(text: 'Create'),
-                  TextSpan(
-                      text: ' Account',
-                      style: TextStyle(color: Theme.of(context).primaryColor)),
-                ],
-              ),
-            )),
-        preferredSize: Size.fromHeight(50),
       ),
     );
   }
@@ -129,7 +97,14 @@ class _LocationScreenState extends State<LocationScreen> {
                         actionLabel: const Text("Next"),
                         onAction: _onNextPressed,
                       ),
-                      LoginTextButton(),
+                      SizedBox(
+                        height: 30.0,
+                        child: RegistrationStepIndicator(),
+                      ),
+                      SizedBox(
+                        height: 20.0,
+                        child: LoginTextButton(),
+                      ),
                     ],
                   )
                 ],
@@ -166,14 +141,14 @@ class _LocationScreenState extends State<LocationScreen> {
   Widget _buildMap(BuildContext context) {
     return AspectRatio(
       aspectRatio: 1 / 1,
-      child: Placeholder(),
-      // child: GoogleMap(
-      //   mapType: MapType.hybrid,
-      //   initialCameraPosition: _kGooglePlex,
-      //   onMapCreated: (GoogleMapController controller) {
-      //     // _controller.complete(controller);
-      //   },
-      // ),
+      // child: Placeholder(),
+      child: GoogleMap(
+        mapType: MapType.normal,
+        initialCameraPosition: _kGooglePlex,
+        onMapCreated: (GoogleMapController controller) {
+          _controller.complete(controller);
+        },
+      ),
     );
   }
 
@@ -194,7 +169,7 @@ class _LocationScreenState extends State<LocationScreen> {
                     style: TextStyle(color: textButton),
                     recognizer: TapGestureRecognizer()
                       ..onTap = () {
-                        _onClickPressed();
+                        _onClickPressed(context);
                       },
                   ),
                 ],
@@ -207,6 +182,14 @@ class _LocationScreenState extends State<LocationScreen> {
     // ),
   }
 
+  void _onClickPressed(BuildContext context) {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return ContactUs();
+        });
+  }
+
   void _onNextPressed() {
     var model = Provider.of<Location>(context, listen: false);
     model.nextPage();
@@ -215,9 +198,5 @@ class _LocationScreenState extends State<LocationScreen> {
   void _onBackPressed() {
     var model = Provider.of<Location>(context, listen: false);
     model.backPage();
-  }
-
-  void _onClickPressed() {
-    logger.i("${DateTime.now()}tap");
   }
 }

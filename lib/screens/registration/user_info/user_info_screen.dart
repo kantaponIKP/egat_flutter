@@ -2,8 +2,10 @@ import 'package:egat_flutter/constant.dart';
 import 'package:egat_flutter/screens/registration/consent/privacy_policy_screen.dart';
 import 'package:egat_flutter/screens/registration/registration_action.dart';
 import 'package:egat_flutter/screens/registration/registration_model.dart';
+import 'package:egat_flutter/screens/registration/registration_step_indicator.dart';
 import 'package:egat_flutter/screens/registration/state/user_info.dart';
 import 'package:egat_flutter/screens/registration/widgets/login_text_button.dart';
+import 'package:egat_flutter/screens/registration/widgets/signup_appbar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -34,68 +36,58 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
           backgroundColor: Colors.transparent,
           resizeToAvoidBottomInset: false,
           extendBodyBehindAppBar: true,
-          appBar: _buildAppBar(context),
+          appBar: SignupAppbar(
+              firstTitle: 'Create',
+              secondTitle: 'Account',
+              onAction: _onBackPressed),
           body: SafeArea(
             child: _buildAction(context),
           ),
         ));
   }
 
-  AppBar _buildAppBar(BuildContext context) {
-    return AppBar(
-      title: Text("Back",
-          style: TextStyle(
-            color: Theme.of(context).textTheme.bodyText2!.color,
-            fontSize: 16,
-          ),
-          textAlign: TextAlign.left),
-      leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios,
-              color: Theme.of(context).textTheme.bodyText2!.color),
-          onPressed: () => _onBackPressed()),
-      centerTitle: false,
-      titleSpacing: 0.0,
-      leadingWidth: 32,
-      elevation: 0,
-      backgroundColor: Colors.transparent,
-      bottom: PreferredSize(
-          child: Container(
-              padding: const EdgeInsets.only(left: 32, right: 32, bottom: 16),
-              alignment: Alignment.centerLeft,
-              child: RichText(
-                text: TextSpan(
-                  // style: DefaultTextStyle.of(context).style,
-                  style: TextStyle(fontSize: 30),
-                  children: <TextSpan>[
-                    TextSpan(text: 'Create'),
-                    TextSpan(
-                        text: ' Account',
-                        style:
-                            TextStyle(color: Theme.of(context).primaryColor)),
-                  ],
-                ),
-              )),
-          preferredSize: Size.fromHeight(50)),
-    );
-  }
-
   Padding _buildAction(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(left: 32, right: 32, bottom: 16),
-      child: Stack(children: <Widget>[
-        Column(
-          children: [
-            _buildForm(context),
-            _buildAdditionalSection(context),
-            Spacer(),
-            RegistrationAction(
-              actionLabel: const Text("Next"),
-              onAction: _onNextPressed,
+      child: LayoutBuilder(
+        builder: (BuildContext context, BoxConstraints constraints) {
+          return SingleChildScrollView(
+            child: Container(
+              constraints: BoxConstraints(
+                minHeight: constraints.maxHeight,
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Column(
+                    children: [
+                      _buildForm(context),
+                      _buildAdditionalSection(context),
+                    ],
+                  ),
+                  Column(
+                    children: [
+                      RegistrationAction(
+                        actionLabel: const Text("Next"),
+                        onAction: _onNextPressed,
+                      ),
+                      SizedBox(
+                        height: 30.0,
+                        child: RegistrationStepIndicator(),
+                      ),
+                      SizedBox(
+                        height: 20.0,
+                        child: LoginTextButton(),
+                      ),
+                    ],
+                  )
+                ],
+              ),
             ),
-            LoginTextButton()
-          ],
-        ),
-      ]),
+          );
+        },
+      ),
     );
   }
 
@@ -220,26 +212,6 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
         );
   }
 
-  Widget _buildPrivacyPolicy(BuildContext context) {
-    return Dialog(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(0),
-      ),
-      elevation: 0,
-      backgroundColor: Colors.transparent,
-      child: contentBox(context),
-    );
-  }
-
-  Widget contentBox(context) {
-    return Stack(
-      children: <Widget>[
-        Container(child: Text("test")), // bottom part
-        // Positioned(),// top part
-      ],
-    );
-  }
-
   void _onNextPressed() {
     var model = Provider.of<UserInfo>(context, listen: false);
     model.nextPage();
@@ -248,51 +220,6 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
   void _onBackPressed() {
     Navigator.pop(context);
     // TODO
-  }
-
-  _displayDialog(BuildContext context) {
-    showGeneralDialog(
-      context: context,
-      barrierDismissible: false,
-      transitionDuration: Duration(milliseconds: 200),
-      transitionBuilder: (context, animation, secondaryAnimation, child) {
-        return FadeTransition(
-          opacity: animation,
-          child: ScaleTransition(
-            scale: animation,
-            child: child,
-          ),
-        );
-      },
-      pageBuilder: (context, animation, secondaryAnimation) {
-        return SafeArea(
-          child: Container(
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height,
-            padding: EdgeInsets.all(20),
-            color: Colors.white,
-            child: Center(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  // PrivacyPolicy(),
-                  // Text('Hai This Is Full Screen Dialog', style: TextStyle(color: Colors.red, fontSize: 20.0),),
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    child: Text(
-                      "DISMISS",
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  )
-                ],
-              ),
-            ),
-          ),
-        );
-      },
-    );
   }
 
   void _onPrivacyPolicyPressed(BuildContext context) {
@@ -306,7 +233,6 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
 
   void _onPrivacyPolicyChanged(bool newValue) => setState(() {
         privacyPolicy = newValue;
-
         if (privacyPolicy) {
           // TODO: Here goes your functionality that remembers the user.
         } else {
