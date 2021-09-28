@@ -2,6 +2,7 @@ import 'package:egat_flutter/constant.dart';
 import 'package:egat_flutter/i18n/app_language.dart';
 import 'package:egat_flutter/i18n/app_localizations.dart';
 import 'package:egat_flutter/screens/login/login_screen.dart';
+import 'package:egat_flutter/screens/splash_screen/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -149,6 +150,6 @@ class EgatHomePage extends StatefulWidget {
 class _EgatHomePageState extends State<EgatHomePage> {
   @override
   Widget build(BuildContext context) {
-    return LoginScreen();
+    return SplashScreen();
   }
 }
