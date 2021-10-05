@@ -1,6 +1,6 @@
-import 'package:egat_flutter/constant.dart';
+import 'package:egat_flutter/i18n/app_language.dart';
+import 'package:egat_flutter/i18n/app_localizations.dart';
 import 'package:egat_flutter/screens/forgot_password/forgot_screen.dart';
-import 'package:egat_flutter/screens/login/login.dart';
 import 'package:egat_flutter/screens/login/state/login_model.dart';
 import 'package:egat_flutter/screens/registration/registration.dart';
 import 'package:egat_flutter/screens/widgets/show_exception.dart';
@@ -9,6 +9,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:egat_flutter/screens/widgets/loading_dialog.dart';
 import 'package:provider/provider.dart';
+import 'package:egat_flutter/screens/widgets/language_button.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -115,35 +116,41 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Widget _buildLanguageButton(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.end,
-      children: <Widget>[
-        Icon(Icons.language),
-        ToggleButtons(
-          renderBorder: false,
-          children: <Widget>[
-            Text('TH'),
-            Text('EN'),
-            // Text('TH', style: TextStyle(color: Theme.of(context).primaryColor)),
-          ],
-          onPressed: (int index) {
-            setState(() {
-              for (int buttonIndex = 0;
-                  buttonIndex < isSelected.length;
-                  buttonIndex++) {
-                if (buttonIndex == index) {
-                  isSelected[buttonIndex] = true;
-                } else {
-                  isSelected[buttonIndex] = false;
-                }
-              }
-            });
-          },
-          isSelected: isSelected,
-        ),
-      ],
-    );
+    AppLocale locale = Provider.of<AppLocale>(context);
+    return LanguageButton();
   }
+  //   return Row(
+  //     mainAxisAlignment: MainAxisAlignment.end,
+  //     children: <Widget>[
+  //       Icon(Icons.language),
+  //       ToggleButtons(
+  //         renderBorder: false,
+  //         children: <Widget>[
+  //           Text('TH'),
+  //           Text('EN'),
+  //           // Text('TH', style: TextStyle(color: Theme.of(context).primaryColor)),
+  //         ],
+  //         onPressed: (int index) {
+  //           // appLanguage.changeLanguage(Locale("en"));
+  //           locale.changeLanguage(Locale("th"));
+  //           setState(() {
+  //             for (int buttonIndex = 0;
+  //                 buttonIndex < isSelected.length;
+  //                 buttonIndex++) {
+  //               if (buttonIndex == index) {
+  //                 isSelected[buttonIndex] = true;
+  //               } else {
+  //                 isSelected[buttonIndex] = false;
+  //               }
+  //             }
+  //           });
+
+  //         },
+  //         isSelected: isSelected,
+  //       ),
+  //     ],
+  //   );
+  // }
 
   Widget _buildForm(BuildContext context) {
     return Form(
@@ -156,7 +163,7 @@ class _LoginScreenState extends State<LoginScreen> {
               controller: _emailController,
               decoration: InputDecoration(
                 counterText: '',
-                labelText: 'Email',
+                labelText: AppLocalizations.of(context).translate('email'),
                 hintText: 'example@email.com',
               ),
               validator: (value) {
@@ -176,7 +183,7 @@ class _LoginScreenState extends State<LoginScreen> {
               controller: _passwordController,
               decoration: InputDecoration(
                 counterText: '',
-                labelText: 'Password',
+                labelText: AppLocalizations.of(context).translate('password'),
               ),
               validator: (value) {
                 if (value == null || value.trim().length == 0) {
@@ -214,7 +221,7 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
             Container(
               padding: const EdgeInsets.all(8.0),
-              child: Text('Remember me'),
+              child: Text('${AppLocalizations.of(context).translate('remember-me')}'),
             ),
           ],
         ),
@@ -225,7 +232,9 @@ class _LoginScreenState extends State<LoginScreen> {
             onPressed: () {
               _onForgotPasswordPressed(context);
             },
-            child: const Text('Forgot password ?'),
+            child: Text(
+              '${AppLocalizations.of(context).translate('forgot-password')}',
+            ),
           )),
         ),
       ],
@@ -234,16 +243,12 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Widget _buildAlertSection(BuildContext context) {
-    if (_isError() == true) {
-      return Container(
-        alignment: Alignment.centerLeft,
-        padding: const EdgeInsets.only(bottom: 8.0),
-        child: Text('Email or password incorrect.',
-            style: TextStyle(color: Theme.of(context).errorColor)),
-      );
-    } else {
-      return Container();
-    }
+    return Container(
+      alignment: Alignment.centerLeft,
+      padding: const EdgeInsets.only(bottom: 8.0),
+      child: Text('${AppLocalizations.of(context).translate('email-or-password-incorrect')}',
+          style: TextStyle(color: Theme.of(context).errorColor)),
+    );
   }
 
   Widget _buildLoginButton(BuildContext context) {
@@ -255,7 +260,7 @@ class _LoginScreenState extends State<LoginScreen> {
           onPressed: () {
             _onLogin();
           },
-          child: const Text("Login"),
+          child: Text('${AppLocalizations.of(context).translate('login')}'),
           style: ElevatedButton.styleFrom(
             elevation: 0,
             padding: EdgeInsets.all(12),
@@ -276,12 +281,12 @@ class _LoginScreenState extends State<LoginScreen> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text("Don't have an account ?"),
+            Text('${AppLocalizations.of(context).translate('dont-have-an-account')}'),
             TextButton(
               onPressed: () {
                 _onRegister(context);
               },
-              child: Text('Sign Up',
+              child: Text('${AppLocalizations.of(context).translate('sign-up')}',
                   style: TextStyle(color: Theme.of(context).primaryColor)),
             )
           ],

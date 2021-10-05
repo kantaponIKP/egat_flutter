@@ -38,7 +38,7 @@ class _ForgotScreenState extends State<ForgotScreen> {
 
   AppBar _buildAppBar(BuildContext context) {
     return AppBar(
-      title: Text("Back",
+      title: Text(AppLocalizations.of(context).translate('back'),
           style: TextStyle(
             color: Theme.of(context).textTheme.bodyText2!.color,
             fontSize: 16,
@@ -63,13 +63,15 @@ class _ForgotScreenState extends State<ForgotScreen> {
                   style: TextStyle(fontSize: 30),
                   children: <TextSpan>[
                     TextSpan(
-                      text: 'Forgot',
+                      text:
+                          '${AppLocalizations.of(context).translate('forgot')}',
                       style: TextStyle(
-                        // fontWeight: FontWeight.w300,
-                      ),
+                          // fontWeight: FontWeight.w300,
+                          ),
                     ),
                     TextSpan(
-                      text: ' Password',
+                      text:
+                          '${AppLocalizations.of(context).translate('password')}',
                       style: TextStyle(
                         color: Theme.of(context).primaryColor,
                         // fontWeight: FontWeight.w300,
@@ -133,9 +135,7 @@ class _ForgotScreenState extends State<ForgotScreen> {
   // }
 
   Padding _buildAction(BuildContext context) {
-
-
-        return Padding(
+    return Padding(
       padding: const EdgeInsets.only(left: 32, right: 32, bottom: 16),
       child: LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) {
@@ -177,7 +177,7 @@ class _ForgotScreenState extends State<ForgotScreen> {
   Widget _buildContent(BuildContext context) {
     return Container(
       child: Text(
-          'Enter the email associated with your account and we’ll send an email with structions to reset your password. ',
+          '${AppLocalizations.of(context).translate('forgot-password-paragraph')}',
           style: TextStyle(fontSize: 16)),
     );
   }
@@ -193,7 +193,7 @@ class _ForgotScreenState extends State<ForgotScreen> {
               controller: _emailController,
               decoration: InputDecoration(
                 counterText: '',
-                labelText: 'Email',
+                labelText: '${AppLocalizations.of(context).translate('email')}',
               ),
               validator: (value) {
                 if (value == null || value.trim().length == 0) {
@@ -217,7 +217,7 @@ class _ForgotScreenState extends State<ForgotScreen> {
         onPressed: () async {
           // _onLogin(context);
         },
-        child: const Text("Reset Password"),
+        child: Text('${AppLocalizations.of(context).translate('reset-password')}'),
         style: ElevatedButton.styleFrom(
           elevation: 0,
           padding: EdgeInsets.all(12),
