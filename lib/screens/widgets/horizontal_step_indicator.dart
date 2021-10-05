@@ -240,12 +240,15 @@ class HorizontalStepIndicator extends StatelessWidget {
       }
 
       list.add(
-        _buildStep(
-          step,
-          stepIndex: index,
-          done: done,
-          selected: selected,
-          theme: theme,
+        Padding(
+          padding: const EdgeInsets.only(left:5.0,right:5.0),
+          child: _buildStep(
+            step,
+            stepIndex: index,
+            done: done,
+            selected: selected,
+            theme: theme,
+          ),
         ),
       );
 

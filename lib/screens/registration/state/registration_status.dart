@@ -56,9 +56,6 @@ class RegistrationStatus extends ChangeNotifier {
     _setState(RegistrationState.Success);
   }
 
-
-
-
   _setState(RegistrationState state) {
     if (this.previousState != this.state) {
       this.previousState = this.state;

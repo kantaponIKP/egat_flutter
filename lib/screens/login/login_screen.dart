@@ -1,9 +1,14 @@
 import 'package:egat_flutter/constant.dart';
 import 'package:egat_flutter/screens/forgot_password/forgot_screen.dart';
+import 'package:egat_flutter/screens/login/login.dart';
+import 'package:egat_flutter/screens/login/state/login_model.dart';
 import 'package:egat_flutter/screens/registration/registration.dart';
+import 'package:egat_flutter/screens/widgets/show_exception.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:egat_flutter/screens/widgets/loading_dialog.dart';
+import 'package:provider/provider.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -18,6 +23,14 @@ class _LoginScreenState extends State<LoginScreen> {
   TextEditingController? _passwordController;
   bool rememberMe = false;
   List<bool> isSelected = [true, false];
+  // bool _isLoginError = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _emailController = TextEditingController();
+    _passwordController = TextEditingController();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -221,12 +234,16 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Widget _buildAlertSection(BuildContext context) {
-    return Container(
-      alignment: Alignment.centerLeft,
-      padding: const EdgeInsets.only(bottom: 8.0),
-      child: Text('Email or password incorrect.',
-          style: TextStyle(color: Theme.of(context).errorColor)),
-    );
+    if (_isError() == true) {
+      return Container(
+        alignment: Alignment.centerLeft,
+        padding: const EdgeInsets.only(bottom: 8.0),
+        child: Text('Email or password incorrect.',
+            style: TextStyle(color: Theme.of(context).errorColor)),
+      );
+    } else {
+      return Container();
+    }
   }
 
   Widget _buildLoginButton(BuildContext context) {
@@ -236,7 +253,7 @@ class _LoginScreenState extends State<LoginScreen> {
         padding: const EdgeInsets.symmetric(vertical: 8),
         child: ElevatedButton(
           onPressed: () {
-            _onLogin(context);
+            _onLogin();
           },
           child: const Text("Login"),
           style: ElevatedButton.styleFrom(
@@ -283,7 +300,25 @@ class _LoginScreenState extends State<LoginScreen> {
         }
       });
 
-  void _onLogin(BuildContext context) {}
+  bool _isError() {
+    var login = Provider.of<LoginModel>(context, listen: true);
+    // logger.d(login.isError);
+    return login.isError;
+  }
+
+  void _onLogin() async {
+    FocusScope.of(context).unfocus();
+
+    await showLoading();
+    try {
+      var login = Provider.of<LoginModel>(context, listen: false);
+      await login.processLogin(email: _emailController!.text, password: _passwordController!.text);
+    } catch (e) {
+      showException(context, e.toString());
+    } finally {
+      await hideLoading();
+    }
+  }
 
   void _onRegister(BuildContext context) {
     Navigator.of(context).push(

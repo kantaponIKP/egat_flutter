@@ -1,25 +1,22 @@
 import 'dart:convert';
 
 class OtpSubmitRequest {
-  String registrationId;
-  String registrationToken;
+  String sessionId;
   String otp;
-  String otpReference;
+  String reference;
 
   OtpSubmitRequest({
-    required this.registrationId,
-    required this.registrationToken,
+    required this.sessionId,
     required this.otp,
-    required this.otpReference,
+    required this.reference,
   });
 
   String toJSON() {
     Map<String, dynamic> jsonMap = Map<String, dynamic>();
 
-    jsonMap['registrationId'] = this.registrationId;
-    jsonMap['registrationToken'] = this.registrationToken;
+    jsonMap['sessionId'] = this.sessionId;
     jsonMap['otp'] = this.otp;
-    jsonMap['otpReference'] = this.otpReference;
+    jsonMap['reference'] = this.reference;
 
     return jsonEncode(jsonMap);
   }

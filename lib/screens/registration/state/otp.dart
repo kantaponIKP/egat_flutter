@@ -1,8 +1,12 @@
 import 'package:egat_flutter/constant.dart';
 import 'package:egat_flutter/screens/registration/api/model/OtpRequest.dart';
 import 'package:egat_flutter/screens/registration/api/model/OtpSubmitRequest.dart';
+import 'package:egat_flutter/screens/registration/api/model/RegistrationRequest.dart';
+import 'package:egat_flutter/screens/registration/api/model/RegistrationStatus.dart';
+import 'package:egat_flutter/screens/registration/api/model/Role.dart';
 import 'package:egat_flutter/screens/registration/registration_model.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 
 class Otp extends ChangeNotifier {
   RegistrationModel parent;
@@ -17,26 +21,25 @@ class Otp extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> submitFirstTimeOtp() async {
-    // TODO
-    // if (parent.session.info == null) {
-    //   // This must not happened.
+  // Future<void> submitFirstTimeOtp() async {
+  //   // TODO
+  //   if (parent.session.info == null) {
+  //     // This must not happened.
 
-    //   return;
-    // }
+  //     return;
+  //   }
 
-    // var result = await parent.api.sendOtp(
-    //   OtpRequest(
-    //     registrationId: parent.session.info!.sessionId,
-    //     registrationToken: parent.session.info!.sessionToken,
-    //   ),
-    // );
+  //   var result = await parent.api.sendOtp(
+  //     OtpRequest(
+  //       sessionId: parent.session.info!.sessionId,
+  //     ),
+  //   );
 
-    // setReference(result.reference ?? "ERROR: No reference returned.");
-    
-    // parent.status.setStateOtpPin();
-    nextPage();
-  }
+  //   setReference(result.reference ?? "ERROR: No reference returned.");
+
+  //   parent.status.setStateOtpPin();
+  //   nextPage();
+  // }
 
   Future<void> sendOtp() async {
     if (parent.session.info == null) {
@@ -47,8 +50,7 @@ class Otp extends ChangeNotifier {
 
     var result = await parent.api.sendOtp(
       OtpRequest(
-        registrationId: parent.session.info!.sessionId,
-        registrationToken: parent.session.info!.sessionToken,
+        sessionId: parent.session.info!.sessionId,
       ),
     );
 
@@ -56,28 +58,60 @@ class Otp extends ChangeNotifier {
   }
 
   Future<bool> submitOtp(String otp) async {
-    if (parent.session.info == null) {
-      // This must not happened.
-      return false;
-    }
+    print("testtttttttttttttttttttt");
+    // if (parent.session.info == null) {
+    //   // This must not happened.
+    //   return false;
+    // }
 
     var result = await parent.api.submitOtp(
-      OtpSubmitRequest(
-        registrationId: parent.session.info!.sessionId,
-        registrationToken: parent.session.info!.sessionToken,
-        otp: otp,
-        otpReference: reference ?? "",
-      ),
-    );
+        OtpSubmitRequest(
+          sessionId: parent.session.info!.sessionId,
+          otp: otp,
+          reference: reference ?? "",
+        ),
+        RegistrationRequest(
+            fullName: parent.userInfo.info.fullName!,
+            phoneNumber: parent.userInfo.info.phoneNumber!,
+            email: parent.userInfo.info.email!,
+            password: parent.userInfo.info.password!,
+            meterId: parent.meter.info.meterId!,
+            meterName: parent.meter.info.meterName!,
+            role: parent.meter.info.role!.text));
+    logger.d(" " +
+        parent.userInfo.info.fullName! +
+        " " +
+        parent.userInfo.info.phoneNumber! +
+        " " +
+        parent.userInfo.info.email! +
+        " " +
+        parent.userInfo.info.password! +
+        " " +
+        parent.meter.info.meterName! +
+        " " +
+        parent.meter.info.meterId!);
+    // logger.d(Role.Aggregator.text);
 
-    if (result.valid ?? false) {
-      parent.status.setStateSuccess();
-      return true;
-    }
+    // .meter.info.role
+    // if (result.valid ?? false) {
+    //   var registrationResult = await parent.api.registration(
+    //   RegistrationRequest(
+    //     sessionId: parent.session.info!.sessionId,
+    //     fullName: parent.userInfo.info.fullName!,
+    //     phoneNumber: parent.userInfo.info.phoneNumber!,
+    //     email: parent.userInfo.info.email!,
+    //     password: parent.userInfo.info.password!,
+    //   ));
+
+    //   if(registrationResult.status == RestRegistrationStatus.Success){
+    //      parent.status.setStateSuccess();
+    //     return true;
+    //   }
+
+    // }
 
     return false;
   }
-
 
   nextPage() {
     parent.status.setStateSuccess();

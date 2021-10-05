@@ -17,7 +17,7 @@ extension RestLoginStatusExtension on RestLoginStatus {
   }
 }
 
-class RestRegistrationStatuses {
+class RestLoginStatuses {
   static RestLoginStatus fromText(String text) {
     switch (text) {
       case "REQUIRE_EMAIL":

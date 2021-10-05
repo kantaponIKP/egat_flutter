@@ -4,6 +4,8 @@ import 'package:egat_flutter/screens/registration/registration_step_indicator.da
 import 'package:egat_flutter/screens/registration/state/meter.dart';
 import 'package:egat_flutter/screens/registration/widgets/login_text_button.dart';
 import 'package:egat_flutter/screens/registration/widgets/signup_appbar.dart';
+import 'package:egat_flutter/screens/widgets/loading_dialog.dart';
+import 'package:egat_flutter/screens/widgets/show_exception.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -16,12 +18,62 @@ class MeterScreen extends StatefulWidget {
 
 class _MeterScreenState extends State<MeterScreen> {
   final _formKey = GlobalKey<FormState>();
-  TextEditingController? _meterController;
+  TextEditingController? _meterNameController;
   TextEditingController? _meterIDController;
   TextEditingController? _locationController;
-  bool prosumer = false;
-  bool aggregator = false;
-  bool consumer = false;
+  int? _role;
+
+  void _handleRadioValueChange(int? value) {
+    setState(() {
+      _role = value!;
+
+      switch (_role) {
+        case 0:
+          break;
+        case 1:
+          break;
+        case 2:
+          break;
+      }
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _meterNameController = TextEditingController();
+    _meterIDController = TextEditingController();
+    _locationController = TextEditingController();
+    getInfo();
+  }
+
+  void getInfo() {
+    var meter = Provider.of<Meter>(context, listen: false);
+    print("GET INFO ********");
+    if (meter.info.meterName != null) {
+      _meterNameController!.text = meter.info.meterName!;
+    }
+    if (meter.info.meterId != null) {
+      _meterIDController!.text = meter.info.meterId!;
+      logger.d("here");
+    }
+    if (meter.info.location != null) {
+      _locationController!.text = meter.info.location!;
+    }
+    if (meter.info.roleIndex != null) {
+      _role = meter.info.roleIndex!;
+    } else {
+      _role = 0;
+    }
+    if (_formKey.currentState != null) {
+      print("yes");
+    } else {
+      print("no");
+    }
+    // if (meter.info.status != null) {
+    //   meter.updateInfo(status: MeterStatus.Uncheck);
+    // }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +88,10 @@ class _MeterScreenState extends State<MeterScreen> {
           resizeToAvoidBottomInset: false,
           extendBodyBehindAppBar: true,
           // appBar: _buildAppBar(context),
-          appBar: SignupAppbar(firstTitle: 'Create', secondTitle: 'Account', onAction: _onBackPressed),
+          appBar: SignupAppbar(
+              firstTitle: 'Create',
+              secondTitle: 'Account',
+              onAction: _onBackPressed),
           body: SafeArea(
             child: _buildAction(context),
           ),
@@ -44,6 +99,7 @@ class _MeterScreenState extends State<MeterScreen> {
   }
 
   Padding _buildAction(BuildContext context) {
+    var meter = Provider.of<Meter>(context, listen: true);
     return Padding(
       padding: const EdgeInsets.only(left: 32, right: 32, bottom: 16),
       child: LayoutBuilder(
@@ -67,7 +123,12 @@ class _MeterScreenState extends State<MeterScreen> {
                     children: [
                       RegistrationAction(
                         actionLabel: const Text("Next"),
-                        onAction: _onNextPressed,
+                        onAction: (_formKey.currentState != null &&
+                                meter.info.status == MeterStatus.Checked)
+                            ? (_formKey.currentState!.validate())
+                                ? _onNextPressed
+                                : null
+                            : null,
                       ),
                       SizedBox(
                         height: 30.0,
@@ -89,20 +150,28 @@ class _MeterScreenState extends State<MeterScreen> {
   }
 
   Widget _buildForm(BuildContext context) {
+    var meter = Provider.of<Meter>(context, listen: true);
     return Form(
+      autovalidateMode: AutovalidateMode.onUserInteraction,
       key: _formKey,
       child: Column(
         children: [
           Container(
             padding: const EdgeInsets.symmetric(vertical: 8),
             child: TextFormField(
-              controller: _meterController,
+              controller: _meterNameController,
               decoration: InputDecoration(
                 counterText: '',
-                labelText: 'Meter',
+                labelText: 'Meter name',
               ),
               keyboardType: TextInputType.text,
               maxLength: 24,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return "Require";
+                }
+                return null;
+              },
             ),
           ),
           Stack(
@@ -112,29 +181,49 @@ class _MeterScreenState extends State<MeterScreen> {
                 child: TextFormField(
                   controller: _meterIDController,
                   decoration: InputDecoration(
-                    counterText: '',
-                    labelText: 'Meter id',
-                    errorText: "Already used"
-                  ),
+                      counterText: '',
+                      labelText: 'Meter id',
+                      errorText: meter.info.errorText),
                   keyboardType: TextInputType.text,
                   maxLength: 24,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Require";
+                    }
+                    return null;
+                  },
+                  onChanged: (text) {
+                    if (meter.info.status == MeterStatus.Checked) {
+                      meter.updateInfo(
+                          // errorText: 'Already used',
+                          status: MeterStatus.Uncheck,
+                          location: '');
+                    }
+                    _locationController!.text = '';
+                  },
                 ),
               ),
               Positioned.fill(
                   top: 16,
                   child: Align(
-                alignment: Alignment.topRight,
-                child: _checkButton(),
-              ))
+                    alignment: Alignment.topRight,
+                    child: _checkButton(),
+                  ))
             ],
           ),
           Container(
             padding: const EdgeInsets.symmetric(vertical: 8),
             child: TextFormField(
+              enabled: false,
               controller: _locationController,
               decoration: InputDecoration(
                 counterText: '',
                 labelText: 'Location',
+                disabledBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(
+                    color: Theme.of(context).textTheme.bodyText2!.color!,
+                  ),
+                ),
               ),
               keyboardType: TextInputType.text,
               maxLength: 24,
@@ -145,23 +234,24 @@ class _MeterScreenState extends State<MeterScreen> {
     );
   }
 
-    Widget _checkButton() {
-    return ElevatedButton(
-      style: TextButton.styleFrom(
-      ),
-      onPressed: () {},
-      child: const Text('Check')
-    );
-  }
-
-  Widget _successButton() {
-    return ElevatedButton(
-      style: TextButton.styleFrom(
-        backgroundColor: Colors.lightGreenAccent.shade400,
-      ),
-      onPressed: () {},
-      child: const Icon(Icons.check, color: Colors.white, size: 30),
-    );
+  Widget _checkButton() {
+    var meter = Provider.of<Meter>(context, listen: true);
+    if (meter.info.status == MeterStatus.Checked) {
+      return ElevatedButton(
+        style: TextButton.styleFrom(
+          backgroundColor: Colors.lightGreenAccent.shade400,
+        ),
+        onPressed: () {},
+        child: const Icon(Icons.check, color: Colors.white, size: 30),
+      );
+    } else {
+      return ElevatedButton(
+          style: TextButton.styleFrom(),
+          onPressed: () {
+            _onCheckPressed();
+          },
+          child: const Text('Check'));
+    }
   }
 
   Widget _buildAdditionalSection(BuildContext context) {
@@ -175,13 +265,10 @@ class _MeterScreenState extends State<MeterScreen> {
           SizedBox(
             height: 20.0,
             width: 20.0,
-            child: Checkbox(
-              value: prosumer,
-              onChanged: (newValue) {
-                if (newValue != null) {
-                  _onProsumerChanged(newValue);
-                }
-              },
+            child: new Radio(
+              value: 0,
+              groupValue: _role,
+              onChanged: _handleRadioValueChange,
             ),
           ),
           Container(
@@ -193,13 +280,10 @@ class _MeterScreenState extends State<MeterScreen> {
           SizedBox(
             height: 20.0,
             width: 20.0,
-            child: Checkbox(
-              value: aggregator,
-              onChanged: (newValue) {
-                if (newValue != null) {
-                  _onAggregatorChanged(newValue);
-                }
-              },
+            child: new Radio(
+              value: 1,
+              groupValue: _role,
+              onChanged: _handleRadioValueChange,
             ),
           ),
           Container(
@@ -211,13 +295,10 @@ class _MeterScreenState extends State<MeterScreen> {
           SizedBox(
             height: 20.0,
             width: 20.0,
-            child: Checkbox(
-              value: consumer,
-              onChanged: (newValue) {
-                if (newValue != null) {
-                  _onConsumerChanged(newValue);
-                }
-              },
+            child: new Radio(
+              value: 2,
+              groupValue: _role,
+              onChanged: _handleRadioValueChange,
             ),
           ),
           Container(
@@ -229,26 +310,51 @@ class _MeterScreenState extends State<MeterScreen> {
     );
   }
 
+  void _onCheckPressed() async {
+    FocusScope.of(context).unfocus();
+    print(_meterIDController!.text);
+    await showLoading();
+    try {
+      var model = Provider.of<Meter>(context, listen: false);
+
+      await model.getLocation(meterId: _meterIDController!.text);
+      if (_locationController == null) {
+      } else {
+        _locationController!.text = model.info.location!;
+      }
+      //  }else{
+      //    logger.d(null);
+      //  }
+      // logger.d(model.info.status);
+
+    } catch (e) {
+      logger.d("wtf");
+      showException(context, e.toString());
+      logger.d(e.toString());
+    } finally {
+      await hideLoading();
+    }
+  }
+
   void _onNextPressed() {
     var model = Provider.of<Meter>(context, listen: false);
+    model.setInfo(
+      MeterModel(
+        meterName: _meterNameController!.text,
+        meterId: _meterIDController!.text,
+        location: _locationController!.text,
+        roleIndex: _role,
+        role: model.getRoleFromIndex(_role!),
+        status: model.info.status,
+      ),
+    );
+
     model.nextPage();
+    // logger.d("nextPagePressed");
   }
 
   void _onBackPressed() {
     var model = Provider.of<Meter>(context, listen: false);
     model.backPage();
   }
-
-  void _onProsumerChanged(bool newValue) => setState(() {
-        prosumer = newValue;
-        // TODO
-      });
-  void _onAggregatorChanged(bool newValue) => setState(() {
-        aggregator = newValue;
-        // TODO
-      });
-  void _onConsumerChanged(bool newValue) => setState(() {
-        consumer = newValue;
-        // TODO
-      });
 }

@@ -1,7 +1,7 @@
 import 'package:egat_flutter/constant.dart';
 import 'package:egat_flutter/i18n/app_language.dart';
 import 'package:egat_flutter/i18n/app_localizations.dart';
-import 'package:egat_flutter/screens/login/login_screen.dart';
+import 'package:egat_flutter/screens/login/login.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -54,10 +54,27 @@ class EgatApp extends StatelessWidget {
               backgroundColor: backgroundColor,
               primaryColor: primaryColor,
               fontFamily: 'Montserrat',
+              unselectedWidgetColor: Colors.white,
+              radioTheme: RadioThemeData(fillColor: MaterialStateProperty.all(primaryColor)),
               elevatedButtonTheme: ElevatedButtonThemeData(
                 style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all(primaryColor),
-                  foregroundColor: MaterialStateProperty.all(backgroundColor),
+                  backgroundColor: MaterialStateProperty.resolveWith<Color>(
+                (Set<MaterialState> states) {
+                  if (states.contains(MaterialState.pressed))
+                    return primaryColor.withOpacity(0.5);
+                  else if (states.contains(MaterialState.disabled))
+                    return disabledColor;
+                  return primaryColor;
+                },),
+                foregroundColor: MaterialStateProperty.resolveWith<Color>(
+                (Set<MaterialState> states) {
+                  if (states.contains(MaterialState.pressed))
+                    return textButtonTheme.withOpacity(0.5);
+                  else 
+                  if (states.contains(MaterialState.disabled))
+                    return textColor;
+                  return textButtonTheme;
+                },),
                   shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                     RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10.0),
@@ -149,6 +166,6 @@ class EgatHomePage extends StatefulWidget {
 class _EgatHomePageState extends State<EgatHomePage> {
   @override
   Widget build(BuildContext context) {
-    return LoginScreen();
+    return Login();
   }
 }

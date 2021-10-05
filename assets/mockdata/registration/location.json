@@ -1,0 +1,8 @@
+{
+  "location": "123 street",
+  "position":
+  { 
+    "lat": "123",
+    "lng": "123"
+  } 
+}

@@ -4,6 +4,7 @@ import 'package:egat_flutter/screens/registration/location/contact_us_screen.dar
 import 'package:egat_flutter/screens/registration/registration_action.dart';
 import 'package:egat_flutter/screens/registration/registration_step_indicator.dart';
 import 'package:egat_flutter/screens/registration/state/location.dart';
+import 'package:egat_flutter/screens/registration/state/meter.dart';
 import 'package:egat_flutter/screens/registration/widgets/login_text_button.dart';
 import 'package:egat_flutter/screens/registration/widgets/signup_appbar.dart';
 import 'package:flutter/gestures.dart';
@@ -31,11 +32,17 @@ class _LocationScreenState extends State<LocationScreen> {
     zoom: 14.4746,
   );
 
-  static final CameraPosition _kLake = CameraPosition(
-      bearing: 192.8334901395799,
-      target: LatLng(37.43296265331129, -122.08832357078792),
-      tilt: 59.440717697143555,
-      zoom: 19.151926040649414);
+  void initState() {
+    super.initState();
+
+    _locationController = TextEditingController();
+    getInfo();
+  }
+
+  void getInfo() {
+    var meter = Provider.of<Meter>(context, listen: false);
+    _locationController!.text = meter.info.location!;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -124,10 +131,16 @@ class _LocationScreenState extends State<LocationScreen> {
           Container(
             padding: const EdgeInsets.symmetric(vertical: 8),
             child: TextFormField(
+              enabled: false,
               controller: _locationController,
               decoration: InputDecoration(
                 counterText: '',
                 labelText: 'Location',
+                disabledBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(
+                    color: Theme.of(context).textTheme.bodyText2!.color!,
+                  ),
+                ),
               ),
               keyboardType: TextInputType.text,
               maxLength: 24,

@@ -31,7 +31,7 @@ class RegistrationAction extends StatelessWidget {
   Widget _buildActionButtonNext() {
     return SizedBox(
       child: ElevatedButton(
-        onPressed: onAction,
+        onPressed: onAction, // null return disabled
         child: Row(
           children: [
             Spacer(),
@@ -39,7 +39,7 @@ class RegistrationAction extends StatelessWidget {
             Spacer(),
           ],
         ),
-        style: ElevatedButton.styleFrom(elevation: 0),
+        style: ElevatedButton.styleFrom(elevation: 0,),
       ),
     );
   }

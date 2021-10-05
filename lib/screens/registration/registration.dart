@@ -51,7 +51,7 @@ class _RegistrationState extends State<Registration> {
             return model.consent;
           },
         ),
-                ChangeNotifierProxyProvider<RegistrationModel, UserInfo>(
+        ChangeNotifierProxyProvider<RegistrationModel, UserInfo>(
           create: (context) {
             var model = Provider.of<RegistrationModel>(context, listen: false);
             return model.userInfo;
@@ -64,7 +64,7 @@ class _RegistrationState extends State<Registration> {
             return model.userInfo;
           },
         ),
-                        ChangeNotifierProxyProvider<RegistrationModel, Meter>(
+        ChangeNotifierProxyProvider<RegistrationModel, Meter>(
           create: (context) {
             var model = Provider.of<RegistrationModel>(context, listen: false);
             return model.meter;
@@ -77,7 +77,7 @@ class _RegistrationState extends State<Registration> {
             return model.meter;
           },
         ),
-                        ChangeNotifierProxyProvider<RegistrationModel, Location>(
+        ChangeNotifierProxyProvider<RegistrationModel, Location>(
           create: (context) {
             var model = Provider.of<RegistrationModel>(context, listen: false);
             return model.location;

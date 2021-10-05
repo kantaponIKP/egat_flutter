@@ -33,6 +33,7 @@ class _OtpScreenState extends State<OtpScreen> {
   @override
   void initState() {
     super.initState();
+     _pinController = TextEditingController();
   }
 
   @override
@@ -127,7 +128,7 @@ class _OtpScreenState extends State<OtpScreen> {
                     children: [
                       RegistrationAction(
                         actionLabel: const Text("Sign up"),
-                        onAction: _onSubmit,
+                        onAction: _onSignUpPressed,
                       ),
                       SizedBox(
                         height: 30.0,
@@ -275,7 +276,9 @@ class _OtpScreenState extends State<OtpScreen> {
     return numericRegex.hasMatch(string);
   }
 
-  void _onResendOTPPressed(context) {}
+  void _onResendOTPPressed(context) {
+    _onSubmit();
+  }
 
   void _onSubmit() async {
     if (!_formKey.currentState!.validate()) {
@@ -289,7 +292,9 @@ class _OtpScreenState extends State<OtpScreen> {
     try {
       var otp = Provider.of<Otp>(context, listen: false);
 
-      await otp.submitFirstTimeOtp();
+      // await otp.submitFirstTimeOtp();
+      await otp.sendOtp();
+      
     } catch (e) {
       showException(context, e.toString());
     } finally {
@@ -297,8 +302,29 @@ class _OtpScreenState extends State<OtpScreen> {
     }
   }
 
+    void _onSignUpPressed() async {
+    if (!_formKey.currentState!.validate()) {
+      return;
+    }
+
+    FocusScope.of(context).unfocus();
+
+    await showLoading();
+
+    try {
+      var otp = Provider.of<Otp>(context, listen: false);
+      // await otp.submitFirstTimeOtp();
+      await otp.submitOtp(_pinController!.text);
+      
+    } catch (e) {
+      showException(context, e.toString());
+    } finally {
+      await hideLoading();
+    }
+  }
   void _onBackPressed() {
     var model = Provider.of<Otp>(context, listen: false);
     model.backPage();
   }
+
 }

@@ -19,11 +19,12 @@ final contentBgColor = HexColor("#262729");
 const onPrimaryBgColor = Colors.black;
 
 final successColor = Colors.green.shade400;
+const disabledColor = Color(0xffC0C0C0);
 
 
 final appTitle = 'EGAT P2P';
 
-final apiBaseUrl = "";
+final apiBaseUrl = "https://egat-p2p-register.di.iknowplus.co.th";
 
 final loggerPrinter = PrettyPrinter();
 final loggerLevel = Level.debug;

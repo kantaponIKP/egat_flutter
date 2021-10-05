@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 
 class Location extends ChangeNotifier {
   final RegistrationModel parent;
-
+  
   Location(this.parent);
 
   nextPage() {

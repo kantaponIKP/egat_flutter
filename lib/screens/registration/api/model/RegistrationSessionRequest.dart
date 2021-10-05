@@ -2,11 +2,11 @@ import 'dart:convert';
 
 import 'dart:typed_data';
 
-class GetSessionStatusRequest {
+class RegistrationSessionRequest {
   String email;
   String phoneNumber;
-
-  GetSessionStatusRequest({
+  
+  RegistrationSessionRequest({
     required this.email,
     required this.phoneNumber,
   });
@@ -16,7 +16,7 @@ class GetSessionStatusRequest {
 
     jsonMap['email'] = this.email;
     jsonMap['phoneNumber'] = this.phoneNumber;
-
+    
     return jsonEncode(jsonMap);
   }
 }
