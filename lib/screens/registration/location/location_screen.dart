@@ -28,14 +28,13 @@ class _LocationScreenState extends State<LocationScreen> {
   // Completer<GoogleMapController> _controller = Completer();
   Completer<GoogleMapController> _controller = Completer();
 
-  static final CameraPosition _kGooglePlex = CameraPosition(
-    target: LatLng(37.42796133580664, -122.085749655962),
-    zoom: 14.4746,
-  );
+  // CameraPosition? _kGooglePlex;
+  //  = CameraPosition(target: LatLng(13.736717, 100.523186), zoom: 14.4746);
+  // static final CameraPosition _kGooglePlex =
+  //     CameraPosition(target: LatLng(13.736717, 100.523186), zoom: 14.4746);
 
   void initState() {
     super.initState();
-
     _locationController = TextEditingController();
     getInfo();
   }
@@ -43,6 +42,14 @@ class _LocationScreenState extends State<LocationScreen> {
   void getInfo() {
     var meter = Provider.of<Meter>(context, listen: false);
     _locationController!.text = meter.info.location!;
+    // if(meter.info.latitude != null && meter.info.longtitude != null){
+    //    _kGooglePlex = CameraPosition(
+    //   // target: LatLng(meter.info.latitude!, meter.info.longtitude!),
+    //   target: LatLng(meter.info.latitude!, meter.info.longtitude!),
+    //   zoom: 14.4746,
+    // );
+    // }
+   
   }
 
   @override
@@ -63,7 +70,7 @@ class _LocationScreenState extends State<LocationScreen> {
         // appBar: _buildAppbar(context),
         appBar: SignupAppbar(
             firstTitle: '${AppLocalizations.of(context).translate('create')}',
-              secondTitle:'${AppLocalizations.of(context).translate('account')}',
+            secondTitle: '${AppLocalizations.of(context).translate('account')}',
             onAction: _onBackPressed),
         body: SafeArea(
           child: _buildAction(context),
@@ -102,7 +109,8 @@ class _LocationScreenState extends State<LocationScreen> {
                   Column(
                     children: [
                       RegistrationAction(
-                        actionLabel: Text('${AppLocalizations.of(context).translate('next')}'),
+                        actionLabel: Text(
+                            '${AppLocalizations.of(context).translate('next')}'),
                         onAction: _onNextPressed,
                       ),
                       SizedBox(
@@ -136,7 +144,8 @@ class _LocationScreenState extends State<LocationScreen> {
               controller: _locationController,
               decoration: InputDecoration(
                 counterText: '',
-                labelText: '${AppLocalizations.of(context).translate('location')}',
+                labelText:
+                    '${AppLocalizations.of(context).translate('location')}',
                 disabledBorder: UnderlineInputBorder(
                   borderSide: BorderSide(
                     color: Theme.of(context).textTheme.bodyText2!.color!,
@@ -153,17 +162,35 @@ class _LocationScreenState extends State<LocationScreen> {
   }
 
   Widget _buildMap(BuildContext context) {
-    return AspectRatio(
+    var meter = Provider.of<Meter>(context, listen: false);
+    if(meter.info.latitude != null || meter.info.longtitude != null){
+       return AspectRatio(
       aspectRatio: 1 / 1,
-      // child: Placeholder(),
       child: GoogleMap(
         mapType: MapType.normal,
-        initialCameraPosition: _kGooglePlex,
+        initialCameraPosition: CameraPosition(target: LatLng(meter.info.latitude!, meter.info.longtitude!), zoom: 16),
         onMapCreated: (GoogleMapController controller) {
           _controller.complete(controller);
         },
+        markers: Set<Marker>.of(
+          <Marker>[
+            Marker(
+              draggable: true,
+              markerId: MarkerId("1"),
+              position: LatLng(meter.info.latitude!, meter.info.longtitude!),
+              icon: BitmapDescriptor.defaultMarker,
+              infoWindow: const InfoWindow(
+                title: 'Your location',
+              ),
+            )
+          ],
+        ),
       ),
     );
+    }else{
+      return Placeholder();
+    }
+   
   }
 
   Widget _buildContactUsText(BuildContext context) {
@@ -175,9 +202,8 @@ class _LocationScreenState extends State<LocationScreen> {
               text: TextSpan(
                 children: [
                   TextSpan(
-                    text:  '${AppLocalizations.of(context).translate('map-contacted')} '
-                        
-                  ),
+                      text:
+                          '${AppLocalizations.of(context).translate('map-contacted')} '),
                   TextSpan(
                     text: '${AppLocalizations.of(context).translate('click')} ',
                     style: TextStyle(color: textButton),

@@ -15,8 +15,8 @@ class MeterModel {
   final String? location;
   final int? roleIndex;
   final Role? role;
-  final String? latitude;
-  final String? longtitude;
+  final double? latitude;
+  final double? longtitude;
   final MeterStatus? status;
   final String? errorText;
 
@@ -44,8 +44,8 @@ class Meter extends ChangeNotifier {
   String? location;
   int? roleIndex;
   Role? role;
-  String? latitude;
-  String? longtitude;
+  double? latitude;
+  double? longtitude;
   MeterStatus? status;
   String? errorText;
 
@@ -68,8 +68,8 @@ class Meter extends ChangeNotifier {
     String? meterID,
     String? location,
     int? roleIndex,
-    String? latitude,
-    String? longtitude,
+    double? latitude,
+    double? longtitude,
     MeterStatus? status,
     String? errorText,
   }) {
@@ -116,6 +116,8 @@ class Meter extends ChangeNotifier {
       role: role,
       status: status,
       errorText: errorText,
+      latitude: latitude,
+      longtitude: longtitude,
     );
 
     setInfo(newInfo);
@@ -169,13 +171,16 @@ class Meter extends ChangeNotifier {
         sessionId: parent.session.info!.sessionId,
       ),
     );
+
     // TODO
     // Success
     if(true){
-      updateInfo(location: response.location, status: MeterStatus.Checked);
+      updateInfo(location: response.location, status: MeterStatus.Checked, latitude: response.position!.lat, longtitude: response.position!.lng);
     }
-    else{
+    else if(false){
       updateInfo(errorText: 'Already used');
+    }else if(false){
+      updateInfo(errorText: 'Invalid meter id');
     }
 
   }

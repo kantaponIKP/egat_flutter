@@ -244,10 +244,11 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Widget _buildAlertSection(BuildContext context) {
     return Container(
-      alignment: Alignment.centerLeft,
-      padding: const EdgeInsets.only(bottom: 8.0),
-      child: Text('${AppLocalizations.of(context).translate('email-or-password-incorrect')}',
-          style: TextStyle(color: Theme.of(context).errorColor)),
+      // TODO
+      // alignment: Alignment.centerLeft,
+      // padding: const EdgeInsets.only(bottom: 8.0),
+      // child: Text('${AppLocalizations.of(context).translate('email-or-password-incorrect')}',
+      //     style: TextStyle(color: Theme.of(context).errorColor)),
     );
   }
 

@@ -46,7 +46,7 @@
   "enter-OTP-code": "กรอกรหัส OTP",
   "otp-has-been-sent": "รหัส OTP ได้ถูกส่งไปที่หมายเลขโทรศัพท์ของคุณแล้ว (xxx-xxx-xxxx)",
   "resend-OTP": "ส่งรหัส OTP อีกครั้ง",
-  "otp-sent": "ส่งรหัส OTP แล้ว (20 วินาที)",
+  "otp-sent": "ส่งรหัส OTP แล้ว",
   "thanks-created-account": "ขอบคุณ! สร้างบัญชีของคุณสำเร็จแล้ว",
   "back-to-login": "กลับไปหน้าเข้าสู่ระบบ"
 }

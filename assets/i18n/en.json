@@ -46,7 +46,7 @@
   "enter-OTP-code": "Enter OTP code",
   "otp-has-been-sent": "One Time Password (OTP) has been sent to your mobile number (xxx-xxx-xxxx)",
   "resend-OTP": "Resend OTP",
-  "otp-sent": "OTP sent (20s)",
+  "otp-sent": "OTP sent",
   "thanks-created-account": "Thanks! Your account has been successfully created. ",
   "back-to-login": "Back to Login"
 }

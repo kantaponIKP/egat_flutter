@@ -1,6 +1,4 @@
-// import 'package:egat_flutter/screens/registration/api/registration_api.dart';
 import 'package:egat_flutter/screens/registration/api/registration_api_mock.dart';
-import 'package:egat_flutter/screens/registration/state/consent.dart';
 import 'package:egat_flutter/screens/registration/state/location.dart';
 import 'package:egat_flutter/screens/registration/state/meter.dart';
 import 'package:egat_flutter/screens/registration/state/otp.dart';
@@ -10,7 +8,6 @@ import 'package:egat_flutter/screens/registration/state/user_info.dart';
 import 'package:flutter/widgets.dart';
 
 class RegistrationModel extends ChangeNotifier {
-  late final Consent consent;
   late final RegistrationStatus status;
   late final UserInfo userInfo;
   late final RegistrationSession session;
@@ -20,7 +17,6 @@ class RegistrationModel extends ChangeNotifier {
   // late final Password password;
 
   RegistrationModel() {
-    consent = Consent(this);
     status = RegistrationStatus(this);
     userInfo = UserInfo(this);
     session = RegistrationSession(this);
@@ -37,12 +33,6 @@ class RegistrationModel extends ChangeNotifier {
 
   Future<void> cancelRegistration() async {
     status.setStateDismiss();
-  }
-
-  Future<void> whenConsentChanged() async {
-    if (consent.state == ConsentState.Unknown) {
-      status.setStateConsent();
-    }
   }
 
   void requestFaceNextState() {

@@ -20,10 +20,6 @@ class RegistrationStatus extends ChangeNotifier {
 
   RegistrationStatus(this._parent);
 
-  setStateConsent() {
-    _setState(RegistrationState.Consent);
-  }
-
   setStateDismiss() {
     _setState(RegistrationState.Dismiss);
   }

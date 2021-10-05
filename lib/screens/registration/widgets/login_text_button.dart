@@ -1,5 +1,6 @@
 import 'package:egat_flutter/i18n/app_localizations.dart';
 import 'package:egat_flutter/screens/login/login.dart';
+import 'package:egat_flutter/screens/registration/widgets/registration_cancellation_dialog.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
@@ -32,7 +33,7 @@ class _LoginTextButtonState extends State<LoginTextButton> {
                       color: Theme.of(context).primaryColor, fontSize: 16),
                   recognizer: TapGestureRecognizer()
                     ..onTap = () {
-                      _onRegister(context);
+                      _onLoginPressed(context);
                     },
                 ),
               ],
@@ -43,14 +44,12 @@ class _LoginTextButtonState extends State<LoginTextButton> {
     );
   }
 
-  void _onRegister(BuildContext context) {
-    // Navigator.of(context).popUntil((route) => false);
-    Navigator.pushAndRemoveUntil(
-      context,
-      MaterialPageRoute(
-        builder: (BuildContext context) => Login(),
-      ),
-      (route) => false,
-    );
+  void _onLoginPressed(BuildContext context) {
+    _onCancel();
+
+  }
+
+    void _onCancel() {
+    askForRegistrationCancelConfirmation(context);
   }
 }

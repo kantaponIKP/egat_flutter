@@ -58,11 +58,10 @@ class Otp extends ChangeNotifier {
   }
 
   Future<bool> submitOtp(String otp) async {
-    print("testtttttttttttttttttttt");
-    // if (parent.session.info == null) {
-    //   // This must not happened.
-    //   return false;
-    // }
+    if (parent.session.info == null) {
+      // This must not happened.
+      return false;
+    }
 
     var result = await parent.api.submitOtp(
         OtpSubmitRequest(
@@ -92,6 +91,7 @@ class Otp extends ChangeNotifier {
         parent.meter.info.meterId!);
     // logger.d(Role.Aggregator.text);
 
+    nextPage();
     // .meter.info.role
     // if (result.valid ?? false) {
     //   var registrationResult = await parent.api.registration(

@@ -1,5 +1,4 @@
 import 'package:egat_flutter/screens/registration/registration_model.dart';
-import 'package:egat_flutter/screens/registration/state/consent.dart';
 import 'package:egat_flutter/screens/registration/state/location.dart';
 import 'package:egat_flutter/screens/registration/state/meter.dart';
 import 'package:egat_flutter/screens/registration/state/otp.dart';
@@ -38,19 +37,6 @@ class _RegistrationState extends State<Registration> {
         ChangeNotifierProvider(create: (context) {
           return RegistrationModel();
         }),
-        ChangeNotifierProxyProvider<RegistrationModel, Consent>(
-          create: (context) {
-            var model = Provider.of<RegistrationModel>(context, listen: false);
-            return model.consent;
-          },
-          update: (
-            BuildContext context,
-            RegistrationModel model,
-            Consent? previous,
-          ) {
-            return model.consent;
-          },
-        ),
         ChangeNotifierProxyProvider<RegistrationModel, UserInfo>(
           create: (context) {
             var model = Provider.of<RegistrationModel>(context, listen: false);

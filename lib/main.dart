@@ -55,26 +55,28 @@ class EgatApp extends StatelessWidget {
               primaryColor: primaryColor,
               fontFamily: 'Montserrat',
               unselectedWidgetColor: Colors.white,
-              radioTheme: RadioThemeData(fillColor: MaterialStateProperty.all(primaryColor)),
+              radioTheme: RadioThemeData(
+                  fillColor: MaterialStateProperty.all(primaryColor)),
               elevatedButtonTheme: ElevatedButtonThemeData(
                 style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.resolveWith<Color>(
-                (Set<MaterialState> states) {
-                  if (states.contains(MaterialState.pressed))
-                    return primaryColor.withOpacity(0.5);
-                  else if (states.contains(MaterialState.disabled))
-                    return disabledColor;
-                  return primaryColor;
-                },),
-                foregroundColor: MaterialStateProperty.resolveWith<Color>(
-                (Set<MaterialState> states) {
-                  if (states.contains(MaterialState.pressed))
-                    return textButtonTheme.withOpacity(0.5);
-                  else 
-                  if (states.contains(MaterialState.disabled))
-                    return textColor;
-                  return textButtonTheme;
-                },),
+                    (Set<MaterialState> states) {
+                      if (states.contains(MaterialState.pressed))
+                        return primaryColor.withOpacity(0.5);
+                      else if (states.contains(MaterialState.disabled))
+                        return disabledColor;
+                      return primaryColor;
+                    },
+                  ),
+                  foregroundColor: MaterialStateProperty.resolveWith<Color>(
+                    (Set<MaterialState> states) {
+                      if (states.contains(MaterialState.pressed))
+                        return textButtonTheme.withOpacity(0.5);
+                      else if (states.contains(MaterialState.disabled))
+                        return textColor;
+                      return textButtonTheme;
+                    },
+                  ),
                   shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                     RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10.0),
@@ -98,12 +100,25 @@ class EgatApp extends StatelessWidget {
                   },
                 ),
               ),
-              iconTheme: IconThemeData(color: textColor),
+              dialogTheme: DialogTheme(
+                backgroundColor: surfaceColor,
+                titleTextStyle: TextStyle(
+                  color: primaryColor,
+                  fontSize: 16,
+                ),
+              ),
+              iconTheme: IconThemeData(
+                color: textColor,
+              ),
               textTheme: TextTheme(
-                bodyText2: TextStyle(color: textColor,),
+                bodyText2: TextStyle(
+                  color: textColor,
+                ),
                 subtitle1:
                     //TextFormField textStyle
-                    TextStyle(color: textColor,),
+                    TextStyle(
+                  color: textColor,
+                ),
               ),
               textButtonTheme: TextButtonThemeData(
                 style: ButtonStyle(

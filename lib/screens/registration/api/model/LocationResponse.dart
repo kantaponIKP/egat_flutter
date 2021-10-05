@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 class LocationResponse {
   String? location;
   Position? position;
@@ -24,8 +22,8 @@ class LocationResponse {
 }
 
 class Position {
-  String? lat;
-  String? lng;
+  double? lat;
+  double? lng;
 
   Position({this.lat, this.lng});
 

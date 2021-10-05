@@ -50,13 +50,11 @@ class _MeterScreenState extends State<MeterScreen> {
 
   void getInfo() {
     var meter = Provider.of<Meter>(context, listen: false);
-    print("GET INFO ********");
     if (meter.info.meterName != null) {
       _meterNameController!.text = meter.info.meterName!;
     }
     if (meter.info.meterId != null) {
       _meterIDController!.text = meter.info.meterId!;
-      logger.d("here");
     }
     if (meter.info.location != null) {
       _locationController!.text = meter.info.location!;
@@ -66,11 +64,9 @@ class _MeterScreenState extends State<MeterScreen> {
     } else {
       _role = 0;
     }
-    if (_formKey.currentState != null) {
-      print("yes");
-    } else {
-      print("no");
-    }
+    // if (meter.info.status != null) {
+    //   _locationController!.text = meter.info.status;
+    // }
     // if (meter.info.status != null) {
     //   meter.updateInfo(status: MeterStatus.Uncheck);
     // }
@@ -91,7 +87,8 @@ class _MeterScreenState extends State<MeterScreen> {
           // appBar: _buildAppBar(context),
           appBar: SignupAppbar(
               firstTitle: '${AppLocalizations.of(context).translate('create')}',
-              secondTitle:'${AppLocalizations.of(context).translate('account')}',
+              secondTitle:
+                  '${AppLocalizations.of(context).translate('account')}',
               onAction: _onBackPressed),
           body: SafeArea(
             child: _buildAction(context),
@@ -100,7 +97,7 @@ class _MeterScreenState extends State<MeterScreen> {
   }
 
   Padding _buildAction(BuildContext context) {
-    var meter = Provider.of<Meter>(context, listen: true);
+    var meter = Provider.of<Meter>(context, listen: false);
     return Padding(
       padding: const EdgeInsets.only(left: 32, right: 32, bottom: 16),
       child: LayoutBuilder(
@@ -123,10 +120,12 @@ class _MeterScreenState extends State<MeterScreen> {
                   Column(
                     children: [
                       RegistrationAction(
-                        actionLabel: Text('${AppLocalizations.of(context).translate('next')}'),
-                        onAction: (_formKey.currentState != null &&
+                        actionLabel: Text(
+                            '${AppLocalizations.of(context).translate('next')}'),
+                        //todo: bug
+                        onAction: (_formKey.currentState != null)
+                            ? (_formKey.currentState!.validate() &&
                                 meter.info.status == MeterStatus.Checked)
-                            ? (_formKey.currentState!.validate())
                                 ? _onNextPressed
                                 : null
                             : null,
@@ -183,7 +182,8 @@ class _MeterScreenState extends State<MeterScreen> {
                   controller: _meterIDController,
                   decoration: InputDecoration(
                       counterText: '',
-                      labelText: '${AppLocalizations.of(context).translate('meter-id')}',
+                      labelText:
+                          '${AppLocalizations.of(context).translate('meter-id')}',
                       errorText: meter.info.errorText),
                   keyboardType: TextInputType.text,
                   maxLength: 24,
@@ -219,7 +219,8 @@ class _MeterScreenState extends State<MeterScreen> {
               controller: _locationController,
               decoration: InputDecoration(
                 counterText: '',
-                labelText: '${AppLocalizations.of(context).translate('location')}',
+                labelText:
+                    '${AppLocalizations.of(context).translate('location')}',
                 disabledBorder: UnderlineInputBorder(
                   borderSide: BorderSide(
                     color: Theme.of(context).textTheme.bodyText2!.color!,
@@ -261,7 +262,8 @@ class _MeterScreenState extends State<MeterScreen> {
         Container(
             padding: const EdgeInsets.only(top: 16, bottom: 8),
             alignment: Alignment.centerLeft,
-            child: Text('${AppLocalizations.of(context).translate('role')}', style: TextStyle(fontSize: 20))),
+            child: Text('${AppLocalizations.of(context).translate('role')}',
+                style: TextStyle(fontSize: 20))),
         Row(children: <Widget>[
           SizedBox(
             height: 20.0,
@@ -274,7 +276,8 @@ class _MeterScreenState extends State<MeterScreen> {
           ),
           Container(
             padding: const EdgeInsets.all(8.0),
-            child: Text('${AppLocalizations.of(context).translate('prosumer')}'),
+            child:
+                Text('${AppLocalizations.of(context).translate('prosumer')}'),
           ),
         ]),
         Row(children: <Widget>[
@@ -289,7 +292,8 @@ class _MeterScreenState extends State<MeterScreen> {
           ),
           Container(
             padding: const EdgeInsets.all(8.0),
-            child: Text('${AppLocalizations.of(context).translate('aggregator')}'),
+            child:
+                Text('${AppLocalizations.of(context).translate('aggregator')}'),
           ),
         ]),
         Row(children: <Widget>[
@@ -304,7 +308,8 @@ class _MeterScreenState extends State<MeterScreen> {
           ),
           Container(
             padding: const EdgeInsets.all(8.0),
-            child: Text('${AppLocalizations.of(context).translate('consumer')}'),
+            child:
+                Text('${AppLocalizations.of(context).translate('consumer')}'),
           ),
         ]),
       ],
@@ -312,13 +317,14 @@ class _MeterScreenState extends State<MeterScreen> {
   }
 
   void _onCheckPressed() async {
-    FocusScope.of(context).unfocus();
-    print(_meterIDController!.text);
+    // FocusScope.of(context).unfocus();
+    // print(_meterIDController!.text);
     await showLoading();
     try {
       var model = Provider.of<Meter>(context, listen: false);
 
       await model.getLocation(meterId: _meterIDController!.text);
+      // Todo
       if (_locationController == null) {
       } else {
         _locationController!.text = model.info.location!;
@@ -346,10 +352,11 @@ class _MeterScreenState extends State<MeterScreen> {
         location: _locationController!.text,
         roleIndex: _role,
         role: model.getRoleFromIndex(_role!),
+        latitude: model.info.latitude,
+        longtitude: model.info.longtitude,
         status: model.info.status,
       ),
     );
-
     model.nextPage();
     // logger.d("nextPagePressed");
   }
