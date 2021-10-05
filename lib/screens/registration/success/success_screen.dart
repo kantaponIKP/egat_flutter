@@ -1,3 +1,4 @@
+import 'package:egat_flutter/i18n/app_localizations.dart';
 import 'package:egat_flutter/screens/registration/registration_action.dart';
 import 'package:egat_flutter/screens/registration/registration_model.dart';
 import 'package:egat_flutter/screens/registration/state/meter.dart';
@@ -60,7 +61,7 @@ class _SuccessScreenState extends State<SuccessScreen> {
                     ],
                   ),
                   RegistrationAction(
-                    actionLabel: const Text("Back to Login"),
+                    actionLabel:  Text('${AppLocalizations.of(context).translate('back-to-login')}'),
                     onAction: _onBackToLoginPressed,
                   ),
                 ],
@@ -78,7 +79,7 @@ class _SuccessScreenState extends State<SuccessScreen> {
       alignment: Alignment.center,
       child: Text.rich(
         TextSpan(
-            text: "Thanks! Your account has been successfully created.",
+            text: '${AppLocalizations.of(context).translate('thanks-created-account')}',
             style: TextStyle(fontSize: 20, color: Colors.green.shade400)),
       ),
     ));

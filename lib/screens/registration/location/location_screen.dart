@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:egat_flutter/constant.dart';
+import 'package:egat_flutter/i18n/app_localizations.dart';
 import 'package:egat_flutter/screens/registration/location/contact_us_screen.dart';
 import 'package:egat_flutter/screens/registration/registration_action.dart';
 import 'package:egat_flutter/screens/registration/registration_step_indicator.dart';
@@ -54,8 +55,8 @@ class _LocationScreenState extends State<LocationScreen> {
         extendBodyBehindAppBar: true,
         // appBar: _buildAppbar(context),
         appBar: SignupAppbar(
-            firstTitle: 'Create',
-            secondTitle: 'Account',
+            firstTitle: '${AppLocalizations.of(context).translate('create')}',
+              secondTitle:'${AppLocalizations.of(context).translate('account')}',
             onAction: _onBackPressed),
         body: SafeArea(
           child: _buildAction(context),
@@ -94,7 +95,7 @@ class _LocationScreenState extends State<LocationScreen> {
                   Column(
                     children: [
                       RegistrationAction(
-                        actionLabel: const Text("Next"),
+                        actionLabel: Text('${AppLocalizations.of(context).translate('next')}'),
                         onAction: _onNextPressed,
                       ),
                       SizedBox(
@@ -127,7 +128,7 @@ class _LocationScreenState extends State<LocationScreen> {
               controller: _locationController,
               decoration: InputDecoration(
                 counterText: '',
-                labelText: 'Location',
+                labelText: '${AppLocalizations.of(context).translate('location')}',
               ),
               keyboardType: TextInputType.text,
               maxLength: 24,
@@ -161,11 +162,11 @@ class _LocationScreenState extends State<LocationScreen> {
               text: TextSpan(
                 children: [
                   TextSpan(
-                    text: 'if your location does not match in map,' +
-                        ' please contact us ',
+                    text:  '${AppLocalizations.of(context).translate('map-contacted')} '
+                        
                   ),
                   TextSpan(
-                    text: 'Click',
+                    text: '${AppLocalizations.of(context).translate('click')} ',
                     style: TextStyle(color: textButton),
                     recognizer: TapGestureRecognizer()
                       ..onTap = () {

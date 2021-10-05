@@ -1,4 +1,5 @@
 import 'package:egat_flutter/constant.dart';
+import 'package:egat_flutter/i18n/app_localizations.dart';
 import 'package:egat_flutter/screens/registration/registration_action.dart';
 import 'package:egat_flutter/screens/registration/registration_step_indicator.dart';
 import 'package:egat_flutter/screens/registration/state/meter.dart';
@@ -36,7 +37,10 @@ class _MeterScreenState extends State<MeterScreen> {
           resizeToAvoidBottomInset: false,
           extendBodyBehindAppBar: true,
           // appBar: _buildAppBar(context),
-          appBar: SignupAppbar(firstTitle: 'Create', secondTitle: 'Account', onAction: _onBackPressed),
+          appBar: SignupAppbar(
+              firstTitle: '${AppLocalizations.of(context).translate('create')}',
+              secondTitle:'${AppLocalizations.of(context).translate('account')}',
+              onAction: _onBackPressed),
           body: SafeArea(
             child: _buildAction(context),
           ),
@@ -66,7 +70,7 @@ class _MeterScreenState extends State<MeterScreen> {
                   Column(
                     children: [
                       RegistrationAction(
-                        actionLabel: const Text("Next"),
+                        actionLabel: Text('${AppLocalizations.of(context).translate('next')}'),
                         onAction: _onNextPressed,
                       ),
                       SizedBox(
@@ -99,7 +103,7 @@ class _MeterScreenState extends State<MeterScreen> {
               controller: _meterController,
               decoration: InputDecoration(
                 counterText: '',
-                labelText: 'Meter',
+                labelText: '${AppLocalizations.of(context).translate('meter')}',
               ),
               keyboardType: TextInputType.text,
               maxLength: 24,
@@ -112,10 +116,9 @@ class _MeterScreenState extends State<MeterScreen> {
                 child: TextFormField(
                   controller: _meterIDController,
                   decoration: InputDecoration(
-                    counterText: '',
-                    labelText: 'Meter id',
-                    errorText: "Already used"
-                  ),
+                      counterText: '',
+                      labelText: '${AppLocalizations.of(context).translate('meter-id')}',
+                      errorText: "Already used"),
                   keyboardType: TextInputType.text,
                   maxLength: 24,
                 ),
@@ -123,9 +126,9 @@ class _MeterScreenState extends State<MeterScreen> {
               Positioned.fill(
                   top: 16,
                   child: Align(
-                alignment: Alignment.topRight,
-                child: _checkButton(),
-              ))
+                    alignment: Alignment.topRight,
+                    child: _checkButton(),
+                  ))
             ],
           ),
           Container(
@@ -134,7 +137,7 @@ class _MeterScreenState extends State<MeterScreen> {
               controller: _locationController,
               decoration: InputDecoration(
                 counterText: '',
-                labelText: 'Location',
+                labelText: '${AppLocalizations.of(context).translate('location')}',
               ),
               keyboardType: TextInputType.text,
               maxLength: 24,
@@ -145,13 +148,11 @@ class _MeterScreenState extends State<MeterScreen> {
     );
   }
 
-    Widget _checkButton() {
+  Widget _checkButton() {
     return ElevatedButton(
-      style: TextButton.styleFrom(
-      ),
-      onPressed: () {},
-      child: const Text('Check')
-    );
+        style: TextButton.styleFrom(),
+        onPressed: () {},
+        child: Text('${AppLocalizations.of(context).translate('check')}'));
   }
 
   Widget _successButton() {
@@ -170,7 +171,7 @@ class _MeterScreenState extends State<MeterScreen> {
         Container(
             padding: const EdgeInsets.only(top: 16, bottom: 8),
             alignment: Alignment.centerLeft,
-            child: Text("Role", style: TextStyle(fontSize: 20))),
+            child: Text('${AppLocalizations.of(context).translate('role')}', style: TextStyle(fontSize: 20))),
         Row(children: <Widget>[
           SizedBox(
             height: 20.0,
@@ -186,7 +187,7 @@ class _MeterScreenState extends State<MeterScreen> {
           ),
           Container(
             padding: const EdgeInsets.all(8.0),
-            child: Text('Prosumer'),
+            child: Text('${AppLocalizations.of(context).translate('prosumer')}'),
           ),
         ]),
         Row(children: <Widget>[
@@ -204,7 +205,7 @@ class _MeterScreenState extends State<MeterScreen> {
           ),
           Container(
             padding: const EdgeInsets.all(8.0),
-            child: Text('Aggregator'),
+            child: Text('${AppLocalizations.of(context).translate('aggregator')}'),
           ),
         ]),
         Row(children: <Widget>[
@@ -222,7 +223,7 @@ class _MeterScreenState extends State<MeterScreen> {
           ),
           Container(
             padding: const EdgeInsets.all(8.0),
-            child: Text('Consumer'),
+            child: Text('${AppLocalizations.of(context).translate('consumer')}'),
           ),
         ]),
       ],
