@@ -1,3 +1,4 @@
+import 'package:egat_flutter/i18n/app_localizations.dart';
 import 'package:egat_flutter/screens/login/login.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -20,14 +21,15 @@ class _LoginTextButtonState extends State<LoginTextButton> {
             text: TextSpan(
               children: [
                 TextSpan(
-                  text: 'Already have an account ?', style: TextStyle(fontSize: 16),
+                  text:
+                      '${AppLocalizations.of(context).translate('already-have-an-account')}',
+                  style: TextStyle(fontSize: 16),
                 ),
-                WidgetSpan(
-                    child: Container(
-                        padding: EdgeInsets.only(left:8))),
+                WidgetSpan(child: Container(padding: EdgeInsets.only(left: 8))),
                 TextSpan(
-                  text: 'Login',
-                  style: TextStyle(color: Theme.of(context).primaryColor, fontSize: 16),
+                  text: '${AppLocalizations.of(context).translate('login')}',
+                  style: TextStyle(
+                      color: Theme.of(context).primaryColor, fontSize: 16),
                   recognizer: TapGestureRecognizer()
                     ..onTap = () {
                       _onRegister(context);

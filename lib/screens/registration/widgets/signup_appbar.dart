@@ -1,3 +1,4 @@
+import 'package:egat_flutter/i18n/app_localizations.dart';
 import 'package:flutter/material.dart';
 
 class SignupAppbar extends StatelessWidget with PreferredSizeWidget{
@@ -23,7 +24,7 @@ class SignupAppbar extends StatelessWidget with PreferredSizeWidget{
                 icon: Icon(Icons.arrow_back_ios),
                 onPressed: () => onAction(),
               ),
-              Text("Back",
+              Text('${AppLocalizations.of(context).translate('back')}',
                   style: TextStyle(
                     color: Theme.of(context).textTheme.bodyText2!.color,
                     fontSize: 16,

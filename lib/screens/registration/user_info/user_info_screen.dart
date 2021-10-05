@@ -1,15 +1,14 @@
-import 'dart:developer';
-
 import 'package:egat_flutter/constant.dart';
+import 'package:egat_flutter/i18n/app_localizations.dart';
 import 'package:egat_flutter/screens/registration/consent/privacy_policy_screen.dart';
 import 'package:egat_flutter/screens/registration/registration_action.dart';
-import 'package:egat_flutter/screens/registration/registration_model.dart';
 import 'package:egat_flutter/screens/registration/registration_step_indicator.dart';
 import 'package:egat_flutter/screens/registration/state/user_info.dart';
 import 'package:egat_flutter/screens/registration/widgets/login_text_button.dart';
 import 'package:egat_flutter/screens/registration/widgets/signup_appbar.dart';
 import 'package:egat_flutter/screens/widgets/loading_dialog.dart';
 import 'package:egat_flutter/screens/widgets/show_exception.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -36,12 +35,6 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
     _phoneNumberController = TextEditingController();
     _emailController = TextEditingController();
     _passwordController = TextEditingController();
-    // final FormState? form = _formKey.currentState;
-    //  if (form!.validate()) {
-    //   print('Form is valid');
-    // } else {
-    //   print('Form is invalid');
-    // }
   }
 
   @override
@@ -57,8 +50,9 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
           resizeToAvoidBottomInset: false,
           extendBodyBehindAppBar: true,
           appBar: SignupAppbar(
-              firstTitle: 'Create',
-              secondTitle: 'Account',
+              firstTitle: '${AppLocalizations.of(context).translate('create')}',
+              secondTitle:
+                  '${AppLocalizations.of(context).translate('account')}',
               onAction: _onBackPressed),
           body: SafeArea(
             child: _buildAction(context),
@@ -89,8 +83,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                   Column(
                     children: [
                       RegistrationAction(
-                        //todo:
-                        actionLabel: const Text("Next"),
+                        actionLabel: Text('${AppLocalizations.of(context).translate('next')}'),
                         onAction:
                             (privacyPolicy && _formKey.currentState!.validate())
                                 ? _onNextPressed
@@ -127,7 +120,8 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
               controller: _fullNameController,
               decoration: InputDecoration(
                 counterText: '',
-                labelText: 'Full name',
+                labelText:
+                    '${AppLocalizations.of(context).translate('full-name')}',
               ),
               validator: (value) {
                 if (value == null || value.isEmpty) {
@@ -145,7 +139,8 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
               controller: _phoneNumberController,
               decoration: InputDecoration(
                 counterText: '',
-                labelText: 'Phone number',
+                labelText:
+                    '${AppLocalizations.of(context).translate('phone-number')}',
               ),
               validator: (value) {
                 if (value == null || value.trim().length == 0) {
@@ -163,7 +158,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
               controller: _emailController,
               decoration: InputDecoration(
                 counterText: '',
-                labelText: 'Email',
+                labelText: '${AppLocalizations.of(context).translate('email')}',
               ),
               validator: (value) {
                 if (value == null || value.trim().length == 0) {
@@ -182,7 +177,8 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
               controller: _passwordController,
               decoration: InputDecoration(
                 counterText: '',
-                labelText: 'Password',
+                labelText:
+                    '${AppLocalizations.of(context).translate('password')}',
               ),
               validator: (value) {
                 if (value == null || value.trim().length == 0) {
@@ -200,41 +196,81 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
   }
 
   Widget _buildAdditionalSection(BuildContext context) {
-    return Row(children: <Widget>[
-      SizedBox(
-        height: 20.0,
-        width: 20.0,
-        child: Checkbox(
-          value: privacyPolicy,
-          onChanged: (newValue) {
-            if (newValue != null) {
-              _onPrivacyPolicyChanged(newValue);
-            }
-          },
-        ),
-      ),
-      Container(
-        padding: const EdgeInsets.all(8.0),
-        child: Row(
-          children: <Widget>[
-            Text('I agree to the'),
-            TextButton(
-              onPressed: () {
-                _onPrivacyPolicyPressed(context);
-              },
-              child: const Text(
-                'Privacy Policy',
-                style: TextStyle(
-                  decoration: TextDecoration.underline,
+    return Container(
+      child: Row(children: <Widget>[
+        Expanded(
+          child: RichText(
+            text: TextSpan(
+              children: [
+                WidgetSpan(
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(0,0,8.0,0),
+                    child: SizedBox(
+                        height: 20.0,
+                        width: 20.0,
+                        child: Checkbox(
+                            value: privacyPolicy,
+                            onChanged: (newValue) {
+                              if (newValue != null) {
+                                _onPrivacyPolicyChanged(newValue);
+                              }
+                            })),
+                  ),
                 ),
-              ),
-            )
-          ],
+                TextSpan(
+                    text:
+                        '${AppLocalizations.of(context).translate('I-agree-to')}'),
+                TextSpan(
+                  text:
+                      '${AppLocalizations.of(context).translate('privacy')}${AppLocalizations.of(context).translate('policy')}',
+                  style: TextStyle(
+                    decoration: TextDecoration.underline,
+                    color: textButton,
+                  ),
+                  recognizer: TapGestureRecognizer()
+                    ..onTap = () {
+                      _onPrivacyPolicyPressed(context);
+                    },
+                ),
+              ],
+            ),
+          ),
         ),
-      ),
-    ]
+        // Container(
+        //   padding: const EdgeInsets.all(8.0),
+        //   child: Row(
+        //     children: <Widget>[
+        //       Text('I agree to the'),
+        //       TextButton(
+        //         onPressed: () {
+        //           _onPrivacyPolicyPressed(context);
+        //         },
+        //         child: const Text(
+        //           'Privacy Policy',
+        //           style: TextStyle(
+        //             decoration: TextDecoration.underline,
+        //       ),
+        //       //  children: []
+        //       // Text('${AppLocalizations.of(context).translate('I-agree-to')}'),
+        //       // TextButton(
+        //       //   onPressed: () {
+        //       //     _onPrivacyPolicyPressed(context);
+        //       //   },
+        //       //   child: Text(
+        //       //     '${AppLocalizations.of(context).translate('privacy-policy')}',
+        //       //     overflow: TextOverflow.clip,
+        //       //     style: TextStyle(
+        //       //       decoration: TextDecoration.underline,
+        //       //     ),
+        //       //   ),
+        //       // )
+        //     ],
+        //   ),
         // ),
-        );
+      ]
+          // ),
+          ),
+    );
   }
 
   void _onNextPressed() async {
@@ -297,4 +333,6 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
           // TODO: Forget the user
         }
       });
+
+  _onPrivacyRecognizer(BuildContext context) {}
 }

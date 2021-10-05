@@ -73,20 +73,20 @@ class _PrivacyPolicyState extends State<PrivacyPolicy> {
   //   );
   // }
   Widget _buildTitle(context) {
-    return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-      RichText(
-          text: TextSpan(
-              style: DefaultTextStyle.of(context).style,
-              children: <TextSpan>[
-            TextSpan(
-                // text: AppLocalizations.of(context).translate('privacy') + ' ',
-                text: "Privacy",
-                style: TextStyle(fontSize: 20)),
-            TextSpan(
-                // text: AppLocalizations.of(context).translate('policy') + ' ',
-                text: "Policy",
-                style: TextStyle(fontSize: 20, color: primaryColor)),
-          ])),
+    return Row(children: [
+      Expanded(
+        child: RichText(
+            text: TextSpan(
+                style: DefaultTextStyle.of(context).style,
+                children: <TextSpan>[
+              TextSpan(
+                  text: AppLocalizations.of(context).translate('privacy'),
+                  style: TextStyle(fontSize: 20)),
+              TextSpan(
+                  text: AppLocalizations.of(context).translate('policy'),
+                  style: TextStyle(fontSize: 20, color: primaryColor)),
+            ])),
+      ),
       IconButton(
           onPressed: () {
             Navigator.pop(context);
@@ -119,8 +119,7 @@ class _PrivacyPolicyState extends State<PrivacyPolicy> {
   _buildParagraph(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(0, 0, 0, 16),
-      child: Text(
-          'We want you to know exactly how EGAT P2P app work and why we need your details, Reviewing our policy will help you continue using the app with peace of mind.'),
+      child: Text('${AppLocalizations.of(context).translate('aggrement-1')}'),
     );
   }
 
@@ -128,12 +127,12 @@ class _PrivacyPolicyState extends State<PrivacyPolicy> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        for (var i = 0; i < privacyContents.length; i++)
-          _buildCard(privacyContents[i]),
+        for (var i = 1; i <= 5; i++)
+          _buildCard(i),
         Padding(
           padding: const EdgeInsets.fromLTRB(0, 16.0, 0, 0),
           child: Text(
-            'Effective from August 2021',
+            '${AppLocalizations.of(context).translate('effective-date')}',
             style: TextStyle(fontSize: 10),
           ),
         )
@@ -141,7 +140,7 @@ class _PrivacyPolicyState extends State<PrivacyPolicy> {
     );
   }
 
-  _buildCard(Map<String, String> privacyContent) {
+  _buildCard(var privacyNumber) {
     return Card(
       color: primaryColor,
       shape: RoundedRectangleBorder(
@@ -151,20 +150,21 @@ class _PrivacyPolicyState extends State<PrivacyPolicy> {
           physics: BouncingScrollPhysics(),
           child: Column(
             children: [
-              _buildCardContent(privacyContent),
+              _buildCardContent(privacyNumber),
             ],
           )),
     );
   }
 
-  _buildCardContent(Map<String, String> privacyContent) {
+  // _buildCardContent(Map<String, String> privacyContent) {
+    _buildCardContent(var number){
     return ExpansionTile(
       trailing: Icon(
         Icons.add,
         color: Colors.black,
       ),
       title: Text(
-        'What information do we collect about you ?',
+        '${AppLocalizations.of(context).translate('privacy-$number')}',
         style: TextStyle(fontSize: 15, color: Colors.black),
       ),
       children: [

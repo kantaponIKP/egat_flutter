@@ -29,9 +29,9 @@ class _ContactUsState extends State<ContactUs> {
           text: TextSpan(
               style: DefaultTextStyle.of(context).style,
               children: <TextSpan>[
-            TextSpan(text: "Contact", style: TextStyle(fontSize: 20)),
+            TextSpan(text: AppLocalizations.of(context).translate('contact'), style: TextStyle(fontSize: 20)),
             TextSpan(
-                text: " Us",
+                text: AppLocalizations.of(context).translate('us'),
                 style: TextStyle(fontSize: 20, color: primaryColor)),
           ])),
       IconButton(
