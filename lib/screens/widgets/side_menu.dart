@@ -1,13 +1,17 @@
-import 'dart:io' show Platform;
-
+// import 'dart:io' show Platform;
 import 'package:egat_flutter/constant.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 
-class NavigationMenuWidget extends StatelessWidget {
+class NavigationMenuWidget extends StatefulWidget {
   const NavigationMenuWidget({Key? key}) : super(key: key);
 
+  @override
+  _NavigationMenuWidgetState createState() => _NavigationMenuWidgetState();
+}
+
+class _NavigationMenuWidgetState extends State<NavigationMenuWidget> {
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -65,11 +69,30 @@ class NavigationMenuWidget extends StatelessWidget {
   Widget _buildUserHeader(BuildContext context) {
     return InkWell(
       child: Container(
+        color: HexColor('#262729'),
         height: 80,
-        padding: EdgeInsets.symmetric(vertical: 10),
+        padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
         child: Row(
           children: [
-            Placeholder(),
+            CircleAvatar(
+              radius: 30,
+              // backgroundImage: ,
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
+              child: SizedBox(
+                child: Center(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text('UserName Lastname'),
+                      Text('email@email.com')
+                    ],
+                  ),
+                ),
+              ),
+            )
           ],
         ),
       ),
@@ -146,12 +169,12 @@ class NavigationMenuWidget extends StatelessWidget {
   void onLogout(BuildContext context) {
     Color color = HexColor('#F6645A');
     const hoverColor = Colors.white70;
-    
+
     // if (Platform.isIOS) {
     //   logger.d(Platform.operatingSystem);
     //   showIOSActionSheet(context);
     // } else {
-      showAndriodActionSheet(context);
+    showAndriodActionSheet(context);
     // }
   }
 
@@ -163,16 +186,19 @@ class NavigationMenuWidget extends StatelessWidget {
       builder: (context) {
         return Wrap(
           children: <Widget>[
-            ListTile(
-              title: Center(
-                child: Text(
-                  'Are you sure you want to sign out ?',
-                  style: TextStyle(
-                    color: textButtonTheme,
+            SizedBox(
+              height: 40,
+              child: ListTile(
+                title: Center(
+                  child: Text(
+                    'Are you sure you want to sign out ?',
+                    style: TextStyle(
+                      color: textButtonTheme,
+                    ),
                   ),
                 ),
+                hoverColor: hoverColor,
               ),
-              hoverColor: hoverColor,
             ),
             Divider(
               indent: 10,
@@ -224,7 +250,6 @@ class NavigationMenuWidget extends StatelessWidget {
           },
           child: Text(
             'Logout',
-            
           ),
           isDestructiveAction: true,
         )
@@ -236,3 +261,8 @@ class NavigationMenuWidget extends StatelessWidget {
     );
   }
 }
+
+// class NavigationMenuWidget extends StatelessWidget {
+//   const NavigationMenuWidget({Key? key}) : super(key: key);
+
+// }
