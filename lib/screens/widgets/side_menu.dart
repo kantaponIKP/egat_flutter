@@ -11,7 +11,17 @@ class NavigationMenuWidget extends StatefulWidget {
   _NavigationMenuWidgetState createState() => _NavigationMenuWidgetState();
 }
 
+class UserInfoMockUp {
+  final String firstName;
+  final String lastName;
+  final String email;
+
+  const UserInfoMockUp(this.firstName,this.lastName,this.email);
+}
+
 class _NavigationMenuWidgetState extends State<NavigationMenuWidget> {
+  final UserInfoMockUp _userInfo = new UserInfoMockUp('Firstname','Lastname','email@email.com');
+  
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -29,7 +39,7 @@ class _NavigationMenuWidgetState extends State<NavigationMenuWidget> {
   _buildMenu(BuildContext context) {
     return Column(
       children: [
-        _buildUserHeader(context),
+        _buildUserHeader(context,_userInfo),
         _buildMenuItem(
           context: context,
           text: 'Home',
@@ -66,7 +76,7 @@ class _NavigationMenuWidgetState extends State<NavigationMenuWidget> {
     );
   }
 
-  Widget _buildUserHeader(BuildContext context) {
+  Widget _buildUserHeader(BuildContext context,UserInfoMockUp userInfo) {
     return InkWell(
       child: Container(
         color: HexColor('#262729'),
@@ -86,8 +96,8 @@ class _NavigationMenuWidgetState extends State<NavigationMenuWidget> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text('UserName Lastname'),
-                      Text('email@email.com')
+                      Text(userInfo.firstName + " " + userInfo.lastName),
+                      Text(userInfo.email),
                     ],
                   ),
                 ),
