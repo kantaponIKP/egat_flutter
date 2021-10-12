@@ -4,6 +4,7 @@ import 'package:egat_flutter/screens/forgot_password/forgot_screen.dart';
 import 'package:egat_flutter/screens/login/state/login_model.dart';
 import 'package:egat_flutter/screens/registration/registration.dart';
 import 'package:egat_flutter/screens/widgets/show_exception.dart';
+import 'package:egat_flutter/screens/widgets/side_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -59,6 +60,8 @@ class _LoginScreenState extends State<LoginScreen> {
           // backgroundColor: Theme.of(context).backgroundColor,
           // backgroundColor: backgroundColor,
           // backgroundColor: LinearGradient(colors: [Colors.red, Colors.blue]),
+          appBar: AppBar(),
+          drawer: NavigationMenuWidget(),
           backgroundColor: Colors.transparent,
           resizeToAvoidBottomInset: false,
           body: SafeArea(
