@@ -62,6 +62,9 @@ flutter:
     - assets/mockdata/registration/location.json
     - assets/mockdata/registration/otp.json
     - assets/mockdata/registration/register.json
+    - assets/mockdata/forgot_password/session.json
+    - assets/mockdata/forgot_password/otp.json
+    - assets/mockdata/forgot_password/change_password.json
     - assets/i18n/en.json
     - assets/i18n/th.json
   # An image asset can refer to one or more resolution-specific "variants", see

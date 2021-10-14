@@ -1,3 +1,4 @@
+import 'package:egat_flutter/screens/registration/api/registration_api.dart';
 import 'package:egat_flutter/screens/registration/api/registration_api_mock.dart';
 import 'package:egat_flutter/screens/registration/state/location.dart';
 import 'package:egat_flutter/screens/registration/state/meter.dart';
@@ -26,7 +27,7 @@ class RegistrationModel extends ChangeNotifier {
     // password = Password(this);
   }
 
-  // TODO
+  // TODO : API
   // RegistrationApi api = RegistrationApi();
   RegistrationApiMock api = RegistrationApiMock();
 

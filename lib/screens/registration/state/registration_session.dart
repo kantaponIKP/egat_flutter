@@ -6,11 +6,13 @@ import 'package:flutter/cupertino.dart';
 
 class RegistrationSessionInfo {
   final String sessionId;
+  final String sessionToken;
 
   // final RestRegistrationStatus status;
 
   const RegistrationSessionInfo({
     required this.sessionId,
+    required this.sessionToken,
   });
 }
 
@@ -28,17 +30,19 @@ class RegistrationSession extends ChangeNotifier {
     _setSession(null);
   }
 
-  Future<void> requestNewRegistrationSession({required String email, required String phoneNumber}) async {
+  Future<void> requestNewRegistrationSession({required String email, required String phoneNumber, required String password}) async {
     var response = await parent.api.createRegistrationSession(
       RegistrationSessionRequest(
         email: email,
         phoneNumber: phoneNumber,
+        password: password
       ),
     );
 
     setSession(
       RegistrationSessionInfo(
         sessionId: response.sessionId ?? "",
+        sessionToken: response.sessionToken ?? "",
       ),
     );
   }

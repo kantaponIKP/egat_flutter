@@ -10,6 +10,9 @@ class RegistrationRequest {
   String meterId;
   String meterName;
   String role;
+  String sessionId;
+  String otp;
+  String reference;
 
   RegistrationRequest({
     required this.fullName,
@@ -19,6 +22,9 @@ class RegistrationRequest {
     required this.meterId,
     required this.meterName,
     required this.role,
+    required this.sessionId,
+    required this.otp,
+    required this.reference,
   });
 
   String toJSON() {
@@ -31,6 +37,9 @@ class RegistrationRequest {
     jsonMap['meterId'] = this.meterId;
     jsonMap['meterName'] = this.meterName;
     jsonMap['role'] = this.role;
+    jsonMap['sessionId'] = this.sessionId;
+    jsonMap['otp'] = this.otp;
+    jsonMap['reference'] = this.reference;
 
     return jsonEncode(jsonMap);
   }

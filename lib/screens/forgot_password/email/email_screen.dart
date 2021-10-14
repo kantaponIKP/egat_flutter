@@ -1,21 +1,33 @@
 import 'package:egat_flutter/i18n/app_language.dart';
 import 'package:egat_flutter/i18n/app_localizations.dart';
+import 'package:egat_flutter/screens/forgot_password/forgot_password_step_indicator.dart';
+import 'package:egat_flutter/screens/forgot_password/state/email.dart';
+import 'package:egat_flutter/screens/forgot_password/state/otp.dart';
+import 'package:egat_flutter/screens/registration/widgets/login_text_button.dart';
+import 'package:egat_flutter/screens/registration/widgets/registration_action.dart';
+import 'package:egat_flutter/screens/widgets/loading_dialog.dart';
+import 'package:egat_flutter/screens/widgets/show_exception.dart';
 import 'package:flutter/material.dart';
 import 'package:egat_flutter/constant.dart';
 import 'package:provider/provider.dart';
 
-class ForgotScreen extends StatefulWidget {
-  const ForgotScreen({Key? key}) : super(key: key);
+class EmailScreen extends StatefulWidget {
+  const EmailScreen({Key? key}) : super(key: key);
 
   @override
-  _ForgotScreenState createState() => _ForgotScreenState();
+  _EmailScreenState createState() => _EmailScreenState();
 }
 
-class _ForgotScreenState extends State<ForgotScreen> {
+class _EmailScreenState extends State<EmailScreen> {
   final _formKey = GlobalKey<FormState>();
   TextEditingController? _emailController;
+  bool _isValidated = false;
 
-  // TextEditingController? _passwordController;
+  @override
+  void initState() {
+    super.initState();
+    _emailController = TextEditingController();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -84,56 +96,6 @@ class _ForgotScreenState extends State<ForgotScreen> {
     );
   }
 
-  // @override
-  // Widget build(BuildContext context) {
-  //   var appLanguage = Provider.of<AppLanguage>(context);
-  //   return Scaffold(
-  //     backgroundColor: Theme.of(context).backgroundColor,
-  //     appBar: _buildAppBar(context, appLanguage),
-  //     resizeToAvoidBottomInset: false,
-  //     body: SafeArea(
-  //       child: _buildAction(context),
-  //     ),
-  //   );
-  // }
-
-  // AppBar _buildAppBar(BuildContext context, appLanguage) {
-  //   var appLanguage = Provider.of<AppLanguage>(context);
-  //   return AppBar(
-  //     backgroundColor: backgroundColor,
-  //     leading: Row(
-  //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //       children: [
-  //         IconButton(
-  //           icon: Icon(Icons.arrow_back, color: primaryColor),
-  //           onPressed: () => Navigator.of(context).pop(),
-  //         ),
-  //       ],
-  //     ),
-  //     title: Text(
-  //       "Track your Shipment",
-  //     ),
-  //     actions: [
-  //       Row(
-  //         children: [
-  //           IconButton(
-  //             icon: Icon(Icons.access_alarm, color: primaryColor),
-  //             onPressed: () {
-  //               appLanguage.changeLanguage(Locale("en"));
-  //             },
-  //           ),
-  //           IconButton(
-  //             icon: Icon(Icons.all_inbox, color: primaryColor),
-  //             onPressed: () {
-  //               appLanguage.changeLanguage(Locale("th"));
-  //             },
-  //           ),
-  //         ],
-  //       ),
-  //     ],
-  //   );
-  // }
-
   Padding _buildAction(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(left: 32, right: 32, bottom: 16),
@@ -145,11 +107,32 @@ class _ForgotScreenState extends State<ForgotScreen> {
                 minHeight: constraints.maxHeight,
               ),
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  _buildContent(context),
-                  _buildForm(context),
-                  _buildResetButton(context),
+                  Column(
+                    children: [
+                      _buildContent(context),
+                      _buildForm(context),
+                    ],
+                  ),
+                  Column(
+                    children: [
+                      RegistrationAction(
+                        actionLabel: Text(
+                            '${AppLocalizations.of(context).translate('send-otp')}'),
+                        onAction: _isValidated ? _onSendOtpPressed : null,
+                      ),
+                      SizedBox(
+                        height: 30.0,
+                        child: ForgotPasswordStepIndicator(),
+                      ),
+                      SizedBox(
+                        height: 20.0,
+                        child: LoginTextButton(),
+                      ),
+                    ],
+                  )
                 ],
               ),
             ),
@@ -158,21 +141,6 @@ class _ForgotScreenState extends State<ForgotScreen> {
       ),
     );
   }
-
-  // Widget _buildTitle(BuildContext context) {
-  //   return RichText(
-  //       text: TextSpan(
-  //           style: DefaultTextStyle.of(context).style,
-  //           children: <TextSpan>[
-  //         TextSpan(
-  //             text: AppLocalizations.of(context).translate("forget"),
-  //             // text: "Forget",
-  //             style: TextStyle(fontSize: 30)),
-  //         TextSpan(
-  //             text: 'Password',
-  //             style: TextStyle(fontSize: 30, color: primaryColor)),
-  //       ]));
-  // }
 
   Widget _buildContent(BuildContext context) {
     return Container(
@@ -195,9 +163,14 @@ class _ForgotScreenState extends State<ForgotScreen> {
                 counterText: '',
                 labelText: '${AppLocalizations.of(context).translate('email')}',
               ),
+              onChanged: (newValue) {
+                _setValidated();
+              },
               validator: (value) {
                 if (value == null || value.trim().length == 0) {
                   return "Require email";
+                } else if (!_isEmailValid(value)) {
+                  return "Invalid email address";
                 }
                 return null;
               },
@@ -217,7 +190,8 @@ class _ForgotScreenState extends State<ForgotScreen> {
         onPressed: () async {
           // _onLogin(context);
         },
-        child: Text('${AppLocalizations.of(context).translate('reset-password')}'),
+        child:
+            Text('${AppLocalizations.of(context).translate('reset-password')}'),
         style: ElevatedButton.styleFrom(
           elevation: 0,
           padding: EdgeInsets.all(12),
@@ -226,5 +200,49 @@ class _ForgotScreenState extends State<ForgotScreen> {
         ),
       ),
     );
+  }
+
+  void _setValidated() {
+    if (_formKey.currentState!.validate()) {
+      setState(() {
+        _isValidated = true;
+      });
+    } else {
+      setState(() {
+        _isValidated = false;
+      });
+    }
+  }
+
+  bool _isEmailValid(String email) {
+    return RegExp(
+            r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+        .hasMatch(email);
+  }
+
+  void _onSendOtpPressed() async {
+    await showLoading();
+    try {
+      var model = Provider.of<Email>(context, listen: false);
+
+      model.setInfo(EmailModel(email: _emailController!.text));
+      // model.nextPage();
+      // await model.submitUserInfo(
+      //   fullName: _fullNameController!.text,
+      //   phoneNumber: _phoneNumberController!.text,
+      //   email: _emailController!.text,
+      //   password: _passwordController!.text,
+      // );
+      await model.sendOtp(email: _emailController!.text);
+    } catch (e) {
+      showException(context, e.toString());
+    } finally {
+      await hideLoading();
+    }
+  }
+
+  void _onBackPressed() {
+    var model = Provider.of<Email>(context, listen: false);
+    model.backPage();
   }
 }

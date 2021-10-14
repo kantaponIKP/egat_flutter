@@ -24,7 +24,8 @@ const disabledColor = Color(0xffC0C0C0);
 
 final appTitle = 'EGAT P2P';
 
-final apiBaseUrl = "https://egat-p2p-register.di.iknowplus.co.th";
+final apiBaseUrlRegister = "https://egat-p2p-register.di.iknowplus.co.th";
+final apiBaseUrlLogin = "https://egat-p2p-login.di.iknowplus.co.th";
 
 final loggerPrinter = PrettyPrinter();
 final loggerLevel = Level.debug;

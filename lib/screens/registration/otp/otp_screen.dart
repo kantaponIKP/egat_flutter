@@ -2,9 +2,10 @@ import 'dart:async';
 
 import 'package:egat_flutter/constant.dart';
 import 'package:egat_flutter/i18n/app_localizations.dart';
-import 'package:egat_flutter/screens/registration/registration_action.dart';
-import 'package:egat_flutter/screens/registration/registration_step_indicator.dart';
 import 'package:egat_flutter/screens/registration/state/otp.dart';
+import 'package:egat_flutter/screens/registration/state/user_info.dart';
+import 'package:egat_flutter/screens/registration/widgets/registration_action.dart';
+import 'package:egat_flutter/screens/registration/registration_step_indicator.dart';
 import 'package:egat_flutter/screens/registration/widgets/signup_appbar.dart';
 import 'package:egat_flutter/screens/registration/widgets/login_text_button.dart';
 import 'package:egat_flutter/screens/widgets/loading_dialog.dart';
@@ -40,11 +41,11 @@ class _OtpScreenState extends State<OtpScreen> {
     super.initState();
     _pinController = TextEditingController();
     _sendOTP();
-    startTimer();
+    _startTimer();
   }
 
-  void startTimer() {
-    //todo: memory leak
+  void _startTimer() {
+    //todo: memory leak?
     const tenSecond = const Duration(seconds: 1);
     _timer = new Timer.periodic(
       tenSecond,
@@ -54,9 +55,14 @@ class _OtpScreenState extends State<OtpScreen> {
             timer.cancel();
           });
         } else {
-          setState(() {
+          if(mounted){
+             setState(() {
             _countdown--;
           });
+          }else{
+            _timer!.cancel();
+          }
+         
         }
       },
     );
@@ -279,8 +285,8 @@ class _OtpScreenState extends State<OtpScreen> {
     } else {
       containerWidth = constraints.maxWidth;
     }
-    logger.d(
-        'constraints max width: ${constraints.maxWidth} | containerWidth: ${containerWidth}, constraints minx width: ${constraints.minWidth} , otpFieldWidth : ${otpFieldWidth}');
+    // logger.d(
+    //     'constraints max width: ${constraints.maxWidth} | containerWidth: ${containerWidth}, constraints minx width: ${constraints.minWidth} , otpFieldWidth : ${otpFieldWidth}');
     // logger.d('width size ${MediaQuery.of(context).size.width} constraints : ${constraints.maxWidth}');
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8),
@@ -329,7 +335,7 @@ class _OtpScreenState extends State<OtpScreen> {
               return null;
             },
             controller: _pinController,
-            onChanged: (String value) {},
+            onChanged: (value) {},
             appContext: context,
           ),
         ),
@@ -356,8 +362,7 @@ class _OtpScreenState extends State<OtpScreen> {
   }
 
   Widget _buildForm() {
-    // var session = Provider.of<RegistrationSession>(context);
-
+    var userInfo = Provider.of<UserInfo>(context, listen: false);
     return Column(
       children: [
         Align(
@@ -374,9 +379,15 @@ class _OtpScreenState extends State<OtpScreen> {
           alignment: Alignment.centerLeft,
           child: Text.rich(
             TextSpan(
-              text:
-                  '${AppLocalizations.of(context).translate('otp-has-been-sent')}',
-              // TODO
+              children: [
+                TextSpan(
+                  text:
+                      '${AppLocalizations.of(context).translate('otp-has-been-sent')}',
+                ),
+                TextSpan(
+                  text: ' (${userInfo.info.phoneNumber})',
+                )
+              ],
             ),
           ),
         ),
@@ -432,7 +443,7 @@ class _OtpScreenState extends State<OtpScreen> {
     setState(() {
       _countdown = 20;
     });
-    startTimer();
+    _startTimer();
 
     await showLoading();
 
@@ -461,6 +472,7 @@ class _OtpScreenState extends State<OtpScreen> {
       var otp = Provider.of<Otp>(context, listen: false);
       // await otp.submitFirstTimeOtp();
       await otp.submitOtp(_pinController!.text);
+      _timer!.cancel();
     } catch (e) {
       showException(context, e.toString());
     } finally {

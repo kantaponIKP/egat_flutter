@@ -1,6 +1,6 @@
 import 'package:egat_flutter/constant.dart';
 import 'package:egat_flutter/i18n/app_localizations.dart';
-import 'package:egat_flutter/screens/registration/registration_action.dart';
+import 'package:egat_flutter/screens/registration/widgets/registration_action.dart';
 import 'package:egat_flutter/screens/registration/registration_step_indicator.dart';
 import 'package:egat_flutter/screens/registration/state/meter.dart';
 import 'package:egat_flutter/screens/registration/widgets/login_text_button.dart';
@@ -23,6 +23,7 @@ class _MeterScreenState extends State<MeterScreen> {
   TextEditingController? _meterIDController;
   TextEditingController? _locationController;
   int? _role;
+  bool _isValidated = false;
 
   void _handleRadioValueChange(int? value) {
     setState(() {
@@ -45,10 +46,10 @@ class _MeterScreenState extends State<MeterScreen> {
     _meterNameController = TextEditingController();
     _meterIDController = TextEditingController();
     _locationController = TextEditingController();
-    getInfo();
+    _getInfo();
   }
 
-  void getInfo() {
+  void _getInfo() {
     var meter = Provider.of<Meter>(context, listen: false);
     if (meter.info.meterName != null) {
       _meterNameController!.text = meter.info.meterName!;
@@ -63,6 +64,9 @@ class _MeterScreenState extends State<MeterScreen> {
       _role = meter.info.roleIndex!;
     } else {
       _role = 0;
+    }
+    if(meter.info.meterName != null && meter.info.meterId != null && meter.info.location != null){
+      _isValidated = true;
     }
     // if (meter.info.status != null) {
     //   _locationController!.text = meter.info.status;
@@ -122,12 +126,9 @@ class _MeterScreenState extends State<MeterScreen> {
                       RegistrationAction(
                         actionLabel: Text(
                             '${AppLocalizations.of(context).translate('next')}'),
-                        //todo: bug
-                        onAction: (_formKey.currentState != null)
-                            ? (_formKey.currentState!.validate() &&
-                                meter.info.status == MeterStatus.Checked)
-                                ? _onNextPressed
-                                : null
+                        onAction: _isValidated &&
+                                meter.info.status == MeterStatus.Checked
+                            ? _onNextPressed
                             : null,
                       ),
                       SizedBox(
@@ -166,9 +167,12 @@ class _MeterScreenState extends State<MeterScreen> {
               ),
               keyboardType: TextInputType.text,
               maxLength: 24,
+              onChanged: (newValue) {
+                _setValidated();
+              },
               validator: (value) {
                 if (value == null || value.isEmpty) {
-                  return "Require";
+                  return "Required";
                 }
                 return null;
               },
@@ -186,10 +190,12 @@ class _MeterScreenState extends State<MeterScreen> {
                           '${AppLocalizations.of(context).translate('meter-id')}',
                       errorText: meter.info.errorText),
                   keyboardType: TextInputType.text,
-                  maxLength: 24,
+                  maxLength: 10,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return "Require";
+                      return "Required";
+                    } else if (value.length != 8 && value.length != 10) {
+                      return "Must be contain 8 or 10 digits";
                     }
                     return null;
                   },
@@ -216,6 +222,7 @@ class _MeterScreenState extends State<MeterScreen> {
             padding: const EdgeInsets.symmetric(vertical: 8),
             child: TextFormField(
               enabled: false,
+              maxLines: null,
               controller: _locationController,
               decoration: InputDecoration(
                 counterText: '',
@@ -316,9 +323,24 @@ class _MeterScreenState extends State<MeterScreen> {
     );
   }
 
+  void _setValidated() {
+    if (_formKey.currentState!.validate()) {
+      setState(() {
+        _isValidated = true;
+      });
+    } else {
+      setState(() {
+        _isValidated = false;
+      });
+    }
+  }
+
   void _onCheckPressed() async {
     // FocusScope.of(context).unfocus();
     // print(_meterIDController!.text);
+    if(_meterIDController!.text.length != 8 && _meterIDController!.text.length != 10) {
+      return; //validate meter id
+    }
     await showLoading();
     try {
       var model = Provider.of<Meter>(context, listen: false);
@@ -329,13 +351,8 @@ class _MeterScreenState extends State<MeterScreen> {
       } else {
         _locationController!.text = model.info.location!;
       }
-      //  }else{
-      //    logger.d(null);
-      //  }
-      // logger.d(model.info.status);
-
+      _setValidated();
     } catch (e) {
-      logger.d("wtf");
       showException(context, e.toString());
       logger.d(e.toString());
     } finally {
@@ -352,6 +369,7 @@ class _MeterScreenState extends State<MeterScreen> {
         location: _locationController!.text,
         roleIndex: _role,
         role: model.getRoleFromIndex(_role!),
+        zoomLevel: model.info.zoomLevel,
         latitude: model.info.latitude,
         longtitude: model.info.longtitude,
         status: model.info.status,

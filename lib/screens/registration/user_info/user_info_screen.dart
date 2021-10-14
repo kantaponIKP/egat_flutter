@@ -1,7 +1,7 @@
 import 'package:egat_flutter/constant.dart';
 import 'package:egat_flutter/i18n/app_localizations.dart';
 import 'package:egat_flutter/screens/registration/consent/privacy_policy_screen.dart';
-import 'package:egat_flutter/screens/registration/registration_action.dart';
+import 'package:egat_flutter/screens/registration/widgets/registration_action.dart';
 import 'package:egat_flutter/screens/registration/registration_step_indicator.dart';
 import 'package:egat_flutter/screens/registration/state/user_info.dart';
 import 'package:egat_flutter/screens/registration/widgets/login_text_button.dart';
@@ -25,7 +25,11 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
   TextEditingController? _phoneNumberController;
   TextEditingController? _emailController;
   TextEditingController? _passwordController;
+  TextEditingController? _confirmPasswordController;
   bool privacyPolicy = false;
+  bool _isPasswordObscure = true;
+  bool _isConfirmPasswordObscure = true;
+  bool _isValidated = false;
 
   @override
   void initState() {
@@ -83,11 +87,11 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                   Column(
                     children: [
                       RegistrationAction(
-                        actionLabel: Text('${AppLocalizations.of(context).translate('next')}'),
-                        onAction:
-                            (privacyPolicy && _formKey.currentState!.validate())
-                                ? _onNextPressed
-                                : null,
+                        actionLabel: Text(
+                            '${AppLocalizations.of(context).translate('next')}'),
+                        onAction: (privacyPolicy && _isValidated)
+                            ? _onNextPressed
+                            : null,
                       ),
                       SizedBox(
                         height: 30.0,
@@ -123,9 +127,12 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                 labelText:
                     '${AppLocalizations.of(context).translate('full-name')}',
               ),
+              onChanged: (newValue) {
+                _setValidated();
+              },
               validator: (value) {
                 if (value == null || value.isEmpty) {
-                  return "Require";
+                  return "Required";
                 }
                 return null;
               },
@@ -142,14 +149,21 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                 labelText:
                     '${AppLocalizations.of(context).translate('phone-number')}',
               ),
+              onChanged: (newValue) {
+                _setValidated();
+              },
               validator: (value) {
                 if (value == null || value.trim().length == 0) {
-                  return "Require";
+                  return "Required";
+                } else if (!_isNumeric(value)) {
+                  return "Must be number 10 digits";
+                } else if (value.length != 10) {
+                  return "Must be number 10 digits";
                 }
                 return null;
               },
               keyboardType: TextInputType.phone,
-              maxLength: 24,
+              maxLength: 10,
             ),
           ),
           Container(
@@ -160,9 +174,14 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                 counterText: '',
                 labelText: '${AppLocalizations.of(context).translate('email')}',
               ),
+              onChanged: (newValue) {
+                _setValidated();
+              },
               validator: (value) {
                 if (value == null || value.trim().length == 0) {
-                  return "Require";
+                  return "Required";
+                } else if (!_isEmailValid(value)) {
+                  return "Invalid email address";
                 }
                 return null;
               },
@@ -173,18 +192,75 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
           Container(
             padding: const EdgeInsets.symmetric(vertical: 8),
             child: TextFormField(
-              obscureText: true,
+              obscureText: _isPasswordObscure,
               controller: _passwordController,
               decoration: InputDecoration(
+                suffixIcon: IconButton(
+                  icon: Icon(
+                    _isPasswordObscure
+                        ? Icons.visibility
+                        : Icons.visibility_off,
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      _isPasswordObscure = !_isPasswordObscure;
+                    });
+                  },
+                ),
                 counterText: '',
                 labelText:
                     '${AppLocalizations.of(context).translate('password')}',
               ),
+              onChanged: (newValue) {
+                _setValidated();
+              },
               validator: (value) {
                 if (value == null || value.trim().length == 0) {
-                  return "Require";
+                  return "Required";
+                } else if (value.length < 8) {
+                  return "Must be contain at least 8 digits";
                 }
                 return null;
+              },
+              keyboardType: TextInputType.visiblePassword,
+              maxLength: 24,
+            ),
+          ),
+          Container(
+            padding: const EdgeInsets.symmetric(vertical: 8),
+            child: TextFormField(
+              obscureText: _isConfirmPasswordObscure,
+              controller: _confirmPasswordController,
+              decoration: InputDecoration(
+                suffixIcon: IconButton(
+                  icon: Icon(
+                    _isConfirmPasswordObscure
+                        ? Icons.visibility
+                        : Icons.visibility_off,
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      _isConfirmPasswordObscure = !_isConfirmPasswordObscure;
+                    });
+                  },
+                ),
+                counterText: '',
+                labelText:
+                    '${AppLocalizations.of(context).translate('confirm-password')}',
+              ),
+              onChanged: (newValue) {
+                _setValidated();
+              },
+              validator: (value) {
+                if (value == null || value.trim().length == 0) {
+                  return "Required";
+                } else if (value.length < 8) {
+                  return "Must be contain at least 8 digits";
+                } else if (value != _passwordController!.text) {
+                  return "Password do not match";
+                } else {
+                  return null;
+                }
               },
               keyboardType: TextInputType.visiblePassword,
               maxLength: 24,
@@ -197,6 +273,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
 
   Widget _buildAdditionalSection(BuildContext context) {
     return Container(
+      padding: const EdgeInsets.symmetric(vertical: 8),
       child: Row(children: <Widget>[
         Expanded(
           child: RichText(
@@ -204,7 +281,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
               children: [
                 WidgetSpan(
                   child: Padding(
-                    padding: const EdgeInsets.fromLTRB(0,0,8.0,0),
+                    padding: const EdgeInsets.fromLTRB(0, 0, 8.0, 0),
                     child: SizedBox(
                         height: 20.0,
                         width: 20.0,
@@ -271,6 +348,30 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
           // ),
           ),
     );
+  }
+
+  void _setValidated() {
+    if (_formKey.currentState!.validate()) {
+      setState(() {
+        _isValidated = true;
+      });
+    } else {
+      setState(() {
+        _isValidated = false;
+      });
+    }
+  }
+
+  bool _isEmailValid(String email) {
+    return RegExp(
+            r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+        .hasMatch(email);
+  }
+
+  bool _isNumeric(String string) {
+    final numericRegex = RegExp(r'^-?(([0-9]*)|(([0-9]*)\.([0-9]*)))$');
+
+    return numericRegex.hasMatch(string);
   }
 
   void _onNextPressed() async {

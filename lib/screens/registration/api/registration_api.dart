@@ -21,7 +21,7 @@ class RegistrationApi {
     RegistrationSessionRequest request,
   ) async {
     var url = Uri.parse(
-      "$apiBaseUrl/registration-sessions",
+      "$apiBaseUrlRegister/registration-sessions",
     );
 
     var requestJson = request.toJSON();
@@ -73,7 +73,7 @@ class RegistrationApi {
     logger.d(request.sessionId);
     logger.d(request.meterId);
     var url = Uri.parse(
-      "$apiBaseUrl/registration-sessions/${request.sessionId}/meter/${request.meterId}",
+      "$apiBaseUrlRegister/registration-sessions/${request.sessionId}/meter/${request.meterId}",
     );
 
     var response = await http.get(url);
@@ -99,7 +99,7 @@ class RegistrationApi {
   ) async {
     logger.d(request.sessionId);
     var url = Uri.parse(
-      "$apiBaseUrl/registration-sessions/${request.sessionId}/otp-send",
+      "$apiBaseUrlRegister/registration-sessions/${request.sessionId}/otp-send",
     );
 
     var requestJson = request.toJSON();
@@ -129,21 +129,11 @@ class RegistrationApi {
   }
 
   Future<OtpSubmitResponse> submitOtp(
-      OtpSubmitRequest otpRequest, RegistrationRequest regisRequest) async {
-    logger.d("API");
+      RegistrationRequest request) async {
     var url = Uri.parse(
-      "$apiBaseUrl/registration-sessions/${otpRequest.sessionId}/otp-submit",
+      "$apiBaseUrlRegister/registration-sessions/${request.sessionId}/otp-submit",
     );
-    // logger.d(otpRequest);
-    // logger.d(regisRequest);
-    var requestOtpJson = otpRequest.toJSON();
-    // var requestOtpJson = otpRequest;
-    var requestRegisJson = regisRequest.toJSON();
-    // var requestRegisJson = regisRequest;
-
-    var requestJson = '{ "otpSubmitRequest":'+requestOtpJson+', "userInfoRequest":'+requestRegisJson+'}';
-
-    logger.d(requestJson);
+    var requestJson = request.toJSON();
 
     var response = await http.post(
       url,
@@ -171,7 +161,7 @@ class RegistrationApi {
     RegistrationRequest request,
   ) async {
     var url = Uri.parse(
-      "$apiBaseUrl/registration-sessions",
+      "$apiBaseUrlRegister/registration-sessions",
     );
 
     var requestJson = request.toJSON();

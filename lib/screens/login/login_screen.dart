@@ -1,6 +1,7 @@
 import 'package:egat_flutter/i18n/app_language.dart';
 import 'package:egat_flutter/i18n/app_localizations.dart';
-import 'package:egat_flutter/screens/forgot_password/forgot_screen.dart';
+import 'package:egat_flutter/screens/forgot_password/forgot_password.dart';
+import 'package:egat_flutter/screens/forgot_password/email/email_screen.dart';
 import 'package:egat_flutter/screens/login/state/login_model.dart';
 import 'package:egat_flutter/screens/registration/registration.dart';
 import 'package:egat_flutter/screens/widgets/show_exception.dart';
@@ -24,6 +25,7 @@ class _LoginScreenState extends State<LoginScreen> {
   TextEditingController? _passwordController;
   bool rememberMe = false;
   List<bool> isSelected = [true, false];
+  bool _isPasswordObscure = true;
   // bool _isLoginError = false;
 
   @override
@@ -179,9 +181,21 @@ class _LoginScreenState extends State<LoginScreen> {
           Container(
             padding: const EdgeInsets.symmetric(vertical: 8),
             child: TextFormField(
-              obscureText: true,
+              obscureText: _isPasswordObscure,
               controller: _passwordController,
               decoration: InputDecoration(
+                                suffixIcon: IconButton(
+                  icon: Icon(
+                    _isPasswordObscure
+                        ? Icons.visibility
+                        : Icons.visibility_off,
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      _isPasswordObscure = !_isPasswordObscure;
+                    });
+                  },
+                ),
                 counterText: '',
                 labelText: AppLocalizations.of(context).translate('password'),
               ),
@@ -318,7 +332,7 @@ class _LoginScreenState extends State<LoginScreen> {
     await showLoading();
     try {
       var login = Provider.of<LoginModel>(context, listen: false);
-      await login.processLogin(email: _emailController!.text, password: _passwordController!.text);
+      await login.processLogin(email: _emailController!.text, password: _passwordController!.text, rememberMe: rememberMe);
     } catch (e) {
       showException(context, e.toString());
     } finally {
@@ -340,7 +354,7 @@ class _LoginScreenState extends State<LoginScreen> {
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (BuildContext context) {
-          return ForgotScreen();
+          return ForgotPassword();
         },
       ),
     );

@@ -2,6 +2,7 @@
   "email": "Email",
   "forgot": "Forgot",
   "password": " Password",
+  "confirm-password": "Confirm Password",
   "remember-me": "Remember me",
   "forgot-password": "Forgot Passwod ?",
   "login": "Login",
@@ -34,7 +35,7 @@
   "check": "Check",
   "location": "Location",
   "meter": "Meter",
-  "meter-id": "Meter-id",
+  "meter-id": "Meter id",
   "role": "Role",
   "prosumer": "Prosumer",
   "aggregator": "Aggregator (Agent)",
@@ -44,9 +45,11 @@
   "contact": "Contact",
   "us": "Us",
   "enter-OTP-code": "Enter OTP code",
-  "otp-has-been-sent": "One Time Password (OTP) has been sent to your mobile number (xxx-xxx-xxxx)",
+  "otp-has-been-sent": "One Time Password (OTP) has been sent to your mobile number",
+  "otp-has-been-sent-email": "One Time Password (OTP) has been sent to your email",
   "resend-OTP": "Resend OTP",
   "otp-sent": "OTP sent",
   "thanks-created-account": "Thanks! Your account has been successfully created. ",
-  "back-to-login": "Back to Login"
+  "back-to-login": "Back to Login",
+  "send-otp" : "Send OTP"
 }

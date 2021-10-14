@@ -2,6 +2,7 @@
   "email": "อีเมล",
   "forgot": "ลืม",
   "password": "รหัสผ่าน",
+  "confirm-password": "ยืนยันรหัสผ่าน",
   "remember-me": "จดจำฉันในระบบ",
   "forgot-password": "ลืมรหัสผ่าน ?",
   "login": "เข้าสู่ระบบ",
@@ -44,9 +45,11 @@
   "contact": "ติดต่อ",
   "us": "เรา",
   "enter-OTP-code": "กรอกรหัส OTP",
-  "otp-has-been-sent": "รหัส OTP ได้ถูกส่งไปที่หมายเลขโทรศัพท์ของคุณแล้ว (xxx-xxx-xxxx)",
+  "otp-has-been-sent": "รหัส OTP ได้ถูกส่งไปที่หมายเลขโทรศัพท์ของคุณแล้ว",
+  "otp-has-been-sent-email": "รหัส OTP ได้ถูกส่งไปที่อีเมลของคุณแล้ว",
   "resend-OTP": "ส่งรหัส OTP อีกครั้ง",
   "otp-sent": "ส่งรหัส OTP แล้ว",
   "thanks-created-account": "ขอบคุณ! สร้างบัญชีของคุณสำเร็จแล้ว",
-  "back-to-login": "กลับไปหน้าเข้าสู่ระบบ"
+  "back-to-login": "กลับไปหน้าเข้าสู่ระบบ",
+  "send-otp" : "ส่งรหัส OTP"
 }

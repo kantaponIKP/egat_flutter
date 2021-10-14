@@ -9,7 +9,7 @@ import 'package:http/http.dart' as http;
 class LoginApi {
   Future<LoginResponse> requestLogin(LoginRequest request) async {
     var url = Uri.parse(
-      "$apiBaseUrl/login",
+      "$apiBaseUrlLogin/login",
     );
 
     var requestJson = request.toJSON();
@@ -31,6 +31,8 @@ class LoginApi {
     if (response.statusCode >= 300) {
       throw "ปฎิเสธ server ตอบกลับด้วยสถานะ ${response.statusCode}";
     }
+
+    logger.d(response.body);
 
     return LoginResponse.fromJSON(response.body);
   }

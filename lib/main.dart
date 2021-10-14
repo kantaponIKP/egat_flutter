@@ -49,7 +49,7 @@ class EgatApp extends StatelessWidget {
             debugShowCheckedModeBanner: false,
             title: appTitle,
             theme: ThemeData(
-              // brightness: Brightness.dark,
+              brightness: Brightness.dark,
               // primarySwatch: primaryColor,
               backgroundColor: backgroundColor,
               primaryColor: primaryColor,

@@ -24,33 +24,11 @@ class _LoginState extends State<Login> {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        // Provider<LoginModel>(create: (_) => LoginModel()),
-        // ChangeNotifierProvider<LoginModel>(create: (context) => LoginModel())
-        // ChangeNotifierProvider<LoginModel>(create: (context) {
-        //   return LoginModel();
-        // }),
-        //     ChangeNotifierProvider<LoginModel>(
-        //       create: (context) {
-        //   return LoginModel();
-        // }),
               ChangeNotifierProvider(create: (context) {
           return LoginModel();
         }),
       ],
       child: LoginScreen(),
-
-      // ChangeNotifierProxyProvider<LoginModel>(
-      //   create: (context) {
-      //     var model = Provider.of<LoginModel>(context, listen: false);
-      //     return model.isError;
-      //   },
-      //   update: (
-      //     BuildContext context,
-      //     LoginModel model,
-      //   ) {
-      //     return model.userInfo;
-      //   },
-      // ),
     );
   }
 }

@@ -21,36 +21,16 @@ class Otp extends ChangeNotifier {
     notifyListeners();
   }
 
-  // Future<void> submitFirstTimeOtp() async {
-  //   // TODO
-  //   if (parent.session.info == null) {
-  //     // This must not happened.
-
-  //     return;
-  //   }
-
-  //   var result = await parent.api.sendOtp(
-  //     OtpRequest(
-  //       sessionId: parent.session.info!.sessionId,
-  //     ),
-  //   );
-
-  //   setReference(result.reference ?? "ERROR: No reference returned.");
-
-  //   parent.status.setStateOtpPin();
-  //   nextPage();
-  // }
-
   Future<void> sendOtp() async {
     if (parent.session.info == null) {
       // This must not happened.
-
       return;
     }
 
     var result = await parent.api.sendOtp(
       OtpRequest(
         sessionId: parent.session.info!.sessionId,
+        sessionToken: parent.session.info!.sessionToken,
       ),
     );
 
@@ -64,19 +44,19 @@ class Otp extends ChangeNotifier {
     }
 
     var result = await parent.api.submitOtp(
-        OtpSubmitRequest(
+        RegistrationRequest(
+          fullName: parent.userInfo.info.fullName!,
+          phoneNumber: parent.userInfo.info.phoneNumber!,
+          email: parent.userInfo.info.email!,
+          password: parent.userInfo.info.password!,
+          meterId: parent.meter.info.meterId!,
+          meterName: parent.meter.info.meterName!,
+          role: parent.meter.info.role!.text,
           sessionId: parent.session.info!.sessionId,
           otp: otp,
           reference: reference ?? "",
-        ),
-        RegistrationRequest(
-            fullName: parent.userInfo.info.fullName!,
-            phoneNumber: parent.userInfo.info.phoneNumber!,
-            email: parent.userInfo.info.email!,
-            password: parent.userInfo.info.password!,
-            meterId: parent.meter.info.meterId!,
-            meterName: parent.meter.info.meterName!,
-            role: parent.meter.info.role!.text));
+        ));
+
     logger.d(" " +
         parent.userInfo.info.fullName! +
         " " +

@@ -49,9 +49,9 @@ class RegistrationStepIndicator extends StatelessWidget {
 
     return HorizontalStepIndicator(
       steps: [
-        HorizontalStepItem(title: 'ระบุ\nตัวตน'),
-        HorizontalStepItem(title: 'ตรวจสอบ\nบุคคล'),
-        HorizontalStepItem(title: 'รหัสผ่าน'),
+        HorizontalStepItem(title: 'UserInfo'),
+        HorizontalStepItem(title: 'Meter'),
+        HorizontalStepItem(title: 'Location'),
         HorizontalStepItem(title: 'OTP')
       ],
       theme: theme,

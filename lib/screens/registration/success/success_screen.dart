@@ -1,5 +1,5 @@
 import 'package:egat_flutter/i18n/app_localizations.dart';
-import 'package:egat_flutter/screens/registration/registration_action.dart';
+import 'package:egat_flutter/screens/registration/widgets/registration_action.dart';
 import 'package:egat_flutter/screens/registration/registration_model.dart';
 import 'package:egat_flutter/screens/registration/state/meter.dart';
 import 'package:flutter/material.dart';

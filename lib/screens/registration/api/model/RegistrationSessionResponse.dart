@@ -4,12 +4,12 @@ import 'package:egat_flutter/screens/registration/api/model/RegistrationStatus.d
 
 class RegistrationResponse {
   String? sessionId;
-  // String? sessionToken;
+  String? sessionToken;
   // RestRegistrationStatus? status;
 
   RegistrationResponse({
     this.sessionId,
-    // this.sessionToken,
+    this.sessionToken,
     // this.status,
   });
 
@@ -17,6 +17,7 @@ class RegistrationResponse {
     Map<String, dynamic> jsonMap = jsonDecode(jsonString);
 
     this.sessionId = jsonMap["sessionId"];
+    this.sessionToken = jsonMap["sessionToken"];
     // this.sessionToken = jsonMap["sessionToken"];
     // this.status = RestRegistrationStatuses.fromText(jsonMap["status"]);
   }

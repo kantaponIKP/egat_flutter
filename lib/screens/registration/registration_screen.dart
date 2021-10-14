@@ -17,12 +17,11 @@ class RegistrationScreen extends StatefulWidget {
 }
 
 class _RegistrationScreenState extends State<RegistrationScreen> {
-  bool _isIdCardIntroductionIntroduced = false;
-  bool _isIdCardIntroductionNeedSlideTransition = false;
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(backgroundColor: Theme.of(context).backgroundColor,body: _buildBody(context));
+    return Scaffold(
+        backgroundColor: Theme.of(context).backgroundColor,
+        body: _buildBody(context));
   }
 
   Widget _buildBody(BuildContext context) {
@@ -32,22 +31,14 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     Duration duration = Duration.zero;
 
     if (registration.state == RegistrationState.UserInfo) {
-      screen = UserInfoScreen(key: Key('information_screen'));
+      screen = UserInfoScreen(key: Key('user_info_screen'));
       duration = Duration(milliseconds: 200);
     }
 
     if (registration.state == RegistrationState.Meter) {
-      screen =
-          MeterScreen(key: Key('meter_screen'));
-
-      if (_isIdCardIntroductionNeedSlideTransition) {
-        duration = Duration(milliseconds: 300);
-      } else {
-        duration = Duration(milliseconds: 100);
-      }
+      screen = MeterScreen(key: Key('meter_screen'));
+      duration = Duration(milliseconds: 200);
     }
-
-
 
     if (registration.state == RegistrationState.Location) {
       screen = LocationScreen(key: Key('location_screen'));
@@ -55,7 +46,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     }
 
     if (registration.state == RegistrationState.Otp) {
-      screen = OtpScreen(key: Key('otp_mobilenumber'));
+      screen = OtpScreen(key: Key('otp_screen'));
       duration = Duration(milliseconds: 200);
     }
 
@@ -101,18 +92,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   void _whenStateChanged() {
     RegistrationStatus registration =
         Provider.of<RegistrationStatus>(context, listen: false);
-
-    if (registration.state == RegistrationState.Meter) {
-      if (!_isIdCardIntroductionIntroduced) {
-        _isIdCardIntroductionIntroduced = true;
-        _isIdCardIntroductionNeedSlideTransition = true;
-      } else if (_isIdCardIntroductionIntroduced) {
-        if (_isIdCardIntroductionNeedSlideTransition) {
-          _isIdCardIntroductionNeedSlideTransition = false;
-        }
-      }
-    }
-
     if (registration.state == RegistrationState.Dismiss) {
       Navigator.of(context).pop();
     }

@@ -112,7 +112,7 @@ class RegistrationApiMock {
   }
 
   Future<OtpSubmitResponse> submitOtp(
-      OtpSubmitRequest otpRequest, RegistrationRequest regisRequest) async {
+      RegistrationRequest regisRequest) async {
     // logger.d("API");
     // var url = Uri.parse(
     //   "$apiBaseUrl/registration-sessions/${otpRequest.sessionId}/otp-submit",

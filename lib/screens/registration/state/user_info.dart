@@ -85,7 +85,7 @@ class UserInfo extends ChangeNotifier {
   Future<void> submitUserInfo({fullName, phoneNumber, email, password}) async {
     // setInfo(UserInfoModel(fullName: fullName, phoneNumber: phoneNumber, email: email, password: password));
     var response = await parent.session
-        .requestNewRegistrationSession(email: email, phoneNumber: phoneNumber);
+        .requestNewRegistrationSession(email: email, phoneNumber: phoneNumber,password: password);
     if (parent.session.info == null) {
       throw "Unable to submit new registration session.";
     }

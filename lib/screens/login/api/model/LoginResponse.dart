@@ -1,15 +1,15 @@
 import 'dart:convert';
 
 class LoginResponse {
-  String? status;
+  String? accessToken;
 
   LoginResponse({
-    this.status,
+    this.accessToken,
   });
 
   LoginResponse.fromJSON(String jsonString) {
     Map<String, dynamic> jsonMap = jsonDecode(jsonString);
 
-    this.status = jsonMap["status"];
+    this.accessToken = jsonMap["accessToken"];
   }
 }

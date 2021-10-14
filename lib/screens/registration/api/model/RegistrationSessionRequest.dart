@@ -5,10 +5,12 @@ import 'dart:typed_data';
 class RegistrationSessionRequest {
   String email;
   String phoneNumber;
+  String password;
   
   RegistrationSessionRequest({
     required this.email,
     required this.phoneNumber,
+    required this.password
   });
 
   String toJSON() {
@@ -16,6 +18,7 @@ class RegistrationSessionRequest {
 
     jsonMap['email'] = this.email;
     jsonMap['phoneNumber'] = this.phoneNumber;
+    jsonMap['password'] = this.password;
     
     return jsonEncode(jsonMap);
   }

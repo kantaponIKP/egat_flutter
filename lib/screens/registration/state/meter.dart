@@ -15,6 +15,7 @@ class MeterModel {
   final String? location;
   final int? roleIndex;
   final Role? role;
+  final double? zoomLevel;
   final double? latitude;
   final double? longtitude;
   final MeterStatus? status;
@@ -26,6 +27,7 @@ class MeterModel {
     this.location,
     this.roleIndex,
     this.role,
+    this.zoomLevel,
     this.latitude,
     this.longtitude,
     this.status,
@@ -34,9 +36,7 @@ class MeterModel {
 }
 
 class Meter extends ChangeNotifier {
-  // MeterModel _info = MeterModel(status: MeterStatus.Uncheck);
   MeterModel _info = MeterModel(status: MeterStatus.Uncheck, errorText: null, location: '');
-  // status: MeterStatus.Uncheck
 
   final RegistrationModel parent;
   String? meterName;
@@ -44,16 +44,12 @@ class Meter extends ChangeNotifier {
   String? location;
   int? roleIndex;
   Role? role;
+  double? zoomLevel;
   double? latitude;
   double? longtitude;
   MeterStatus? status;
   String? errorText;
-
-  // initializer(){
-  //   updateInfo(status: MeterStatus.Uncheck);
-  //   // _info.status = MeterStatus.Uncheck;
-  //   //  = Role.Prosumer;
-  // }
+  
   MeterModel get info => _info;
 
   Meter(this.parent);
@@ -68,6 +64,7 @@ class Meter extends ChangeNotifier {
     String? meterID,
     String? location,
     int? roleIndex,
+    double? zoomLevel,
     double? latitude,
     double? longtitude,
     MeterStatus? status,
@@ -90,6 +87,10 @@ class Meter extends ChangeNotifier {
       role = info.role;
     } else {
       role = getRoleFromIndex(roleIndex);
+    }
+
+    if (zoomLevel == null) {
+      zoomLevel = info.zoomLevel;
     }
 
     if (latitude == null) {
@@ -116,6 +117,7 @@ class Meter extends ChangeNotifier {
       role: role,
       status: status,
       errorText: errorText,
+      zoomLevel: zoomLevel,
       latitude: latitude,
       longtitude: longtitude,
     );
@@ -159,7 +161,7 @@ class Meter extends ChangeNotifier {
   Future<void> getLocation({String? meterId}) async {
     logger.d(meterId);
     if(meterId == '' || meterId == null){
-      updateInfo(errorText: 'Require');
+      updateInfo(errorText: 'Required');
       return;
     }else{
       updateInfo(errorText: null);
@@ -174,9 +176,12 @@ class Meter extends ChangeNotifier {
 
     // TODO
     // Success
+ 
     if(true){
-      updateInfo(location: response.location, status: MeterStatus.Checked, latitude: response.position!.lat, longtitude: response.position!.lng);
+      updateInfo(location: response.location, zoomLevel: response.zoomLevel!.toDouble(), status: MeterStatus.Checked, latitude: response.position!.lat!.toDouble(), longtitude: response.position!.lng!.toDouble());
+      logger.d(info.zoomLevel);
     }
+    
     else if(false){
       updateInfo(errorText: 'Already used');
     }else if(false){

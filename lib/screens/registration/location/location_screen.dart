@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:egat_flutter/constant.dart';
 import 'package:egat_flutter/i18n/app_localizations.dart';
 import 'package:egat_flutter/screens/registration/location/contact_us_screen.dart';
-import 'package:egat_flutter/screens/registration/registration_action.dart';
+import 'package:egat_flutter/screens/registration/widgets/registration_action.dart';
 import 'package:egat_flutter/screens/registration/registration_step_indicator.dart';
 import 'package:egat_flutter/screens/registration/state/location.dart';
 import 'package:egat_flutter/screens/registration/state/meter.dart';
@@ -140,6 +140,7 @@ class _LocationScreenState extends State<LocationScreen> {
           Container(
             padding: const EdgeInsets.symmetric(vertical: 8),
             child: TextFormField(
+              maxLines: null,
               enabled: false,
               controller: _locationController,
               decoration: InputDecoration(
@@ -163,12 +164,13 @@ class _LocationScreenState extends State<LocationScreen> {
 
   Widget _buildMap(BuildContext context) {
     var meter = Provider.of<Meter>(context, listen: false);
-    if(meter.info.latitude != null || meter.info.longtitude != null){
+    logger.d(meter.info.zoomLevel);
+    if(meter.info.latitude != null || meter.info.longtitude != null || meter.info.zoomLevel != null){
        return AspectRatio(
       aspectRatio: 1 / 1,
       child: GoogleMap(
         mapType: MapType.normal,
-        initialCameraPosition: CameraPosition(target: LatLng(meter.info.latitude!, meter.info.longtitude!), zoom: 16),
+        initialCameraPosition: CameraPosition(target: LatLng(meter.info.latitude!, meter.info.longtitude!), zoom: meter.info.zoomLevel!),
         onMapCreated: (GoogleMapController controller) {
           _controller.complete(controller);
         },
