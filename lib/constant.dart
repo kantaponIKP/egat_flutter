@@ -21,6 +21,8 @@ const onPrimaryBgColor = Colors.black;
 final successColor = Colors.green.shade400;
 const disabledColor = Color(0xffC0C0C0);
 
+final  menuBgColor = HexColor("#3E3E3E"); //
+
 
 final appTitle = 'EGAT P2P';
 
