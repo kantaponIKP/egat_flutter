@@ -18,7 +18,7 @@ class RegistrationSessionInfo {
 
 class RegistrationSession extends ChangeNotifier {
   RegistrationSessionInfo? info;
-  RegistrationModel parent;
+  PageModel parent;
 
   RegistrationSession(this.parent);
 

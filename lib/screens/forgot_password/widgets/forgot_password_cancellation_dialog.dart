@@ -4,7 +4,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
 
 void askForForgotPasswordCancelConfirmation(BuildContext context) {
-  var model = Provider.of<RegistrationModel>(context, listen: false);
+  var model = Provider.of<PageModel>(context, listen: false);
 
   showDialog(
     context: context,
@@ -46,7 +46,7 @@ class RegistrationCancellationConfirmDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    RegistrationModel model = Provider.of<RegistrationModel>(context);
+    PageModel model = Provider.of<PageModel>(context);
 
     return AlertDialog(
       title: const Text("ยกเลิกการลืมรหัสผ่าน"),

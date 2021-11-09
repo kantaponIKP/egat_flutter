@@ -187,8 +187,8 @@ class _PasswordScreenState extends State<PasswordScreen> {
               validator: (value) {
                 if (value == null || value.trim().length == 0) {
                   return "Required";
-                } else if (value.length < 8) {
-                  return "Must be contain at least 8 digits";
+                } else if (value.length < 6) {
+                  return "Must be contain at least 6 digits";
                 }
                 return null;
               },
@@ -224,8 +224,8 @@ class _PasswordScreenState extends State<PasswordScreen> {
               validator: (value) {
                 if (value == null || value.trim().length == 0) {
                   return "Required";
-                } else if (value.length < 8) {
-                  return "Must be contain at least 8 digits";
+                } else if (value.length < 6) {
+                  return "Must be contain at least 6 digits";
                 } else if (value != _passwordController!.text) {
                   return "Password do not match";
                 } else {
@@ -265,6 +265,11 @@ class _PasswordScreenState extends State<PasswordScreen> {
       await hideLoading();
       var forgotPasswordModel =
           Provider.of<ForgotPasswordModel>(context, listen: false);
+    String message = 'Your password has been changed successfully.';
+    ScaffoldMessenger.of(context).clearSnackBars();
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text(message),
+    ));
       forgotPasswordModel.finish();
     }
   }

@@ -35,81 +35,81 @@ class _RegistrationState extends State<Registration> {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) {
-          return RegistrationModel();
+          return PageModel();
         }),
-        ChangeNotifierProxyProvider<RegistrationModel, UserInfo>(
+        ChangeNotifierProxyProvider<PageModel, UserInfo>(
           create: (context) {
-            var model = Provider.of<RegistrationModel>(context, listen: false);
+            var model = Provider.of<PageModel>(context, listen: false);
             return model.userInfo;
           },
           update: (
             BuildContext context,
-            RegistrationModel model,
+            PageModel model,
             UserInfo? previous,
           ) {
             return model.userInfo;
           },
         ),
-        ChangeNotifierProxyProvider<RegistrationModel, Meter>(
+        ChangeNotifierProxyProvider<PageModel, Meter>(
           create: (context) {
-            var model = Provider.of<RegistrationModel>(context, listen: false);
+            var model = Provider.of<PageModel>(context, listen: false);
             return model.meter;
           },
           update: (
             BuildContext context,
-            RegistrationModel model,
+            PageModel model,
             Meter? previous,
           ) {
             return model.meter;
           },
         ),
-        ChangeNotifierProxyProvider<RegistrationModel, Location>(
+        ChangeNotifierProxyProvider<PageModel, Location>(
           create: (context) {
-            var model = Provider.of<RegistrationModel>(context, listen: false);
+            var model = Provider.of<PageModel>(context, listen: false);
             return model.location;
           },
           update: (
             BuildContext context,
-            RegistrationModel model,
+            PageModel model,
             Location? previous,
           ) {
             return model.location;
           },
         ),
-        ChangeNotifierProxyProvider<RegistrationModel, RegistrationSession>(
+        ChangeNotifierProxyProvider<PageModel, RegistrationSession>(
           create: (context) {
-            var model = Provider.of<RegistrationModel>(context, listen: false);
+            var model = Provider.of<PageModel>(context, listen: false);
             return model.session;
           },
           update: (
             BuildContext context,
-            RegistrationModel model,
+            PageModel model,
             RegistrationSession? previous,
           ) {
             return model.session;
           },
         ),
-        ChangeNotifierProxyProvider<RegistrationModel, RegistrationStatus>(
+        ChangeNotifierProxyProvider<PageModel, RegistrationStatus>(
           create: (context) {
-            var model = Provider.of<RegistrationModel>(context, listen: false);
+            var model = Provider.of<PageModel>(context, listen: false);
             return model.status;
           },
           update: (
             BuildContext context,
-            RegistrationModel model,
+            PageModel model,
             RegistrationStatus? previous,
           ) {
             return model.status;
           },
         ),
-        ChangeNotifierProxyProvider<RegistrationModel, Otp>(
+        ChangeNotifierProxyProvider<PageModel, Otp>(
           create: (context) {
-            var model = Provider.of<RegistrationModel>(context, listen: false);
+            var model = Provider.of<PageModel>(context, listen: false);
             return model.otp;
           },
           update: (
             BuildContext context,
-            RegistrationModel model,
+            PageModel model,
             Otp? previous,
           ) {
             return model.otp;

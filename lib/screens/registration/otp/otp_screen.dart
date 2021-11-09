@@ -292,6 +292,7 @@ class _OtpScreenState extends State<OtpScreen> {
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: Form(
         key: _formKey,
+        autovalidateMode: AutovalidateMode.onUserInteraction,
         child: Container(
           constraints: BoxConstraints(
             minWidth: containerWidth,

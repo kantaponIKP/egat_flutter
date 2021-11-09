@@ -115,7 +115,7 @@ class _NavigationMenuWidgetState extends State<NavigationMenuWidget> {
       required String text,
       required IconData icon,
       required String destination}) {
-    Color color = white;
+    Color color = whiteColor;
     const hoverColor = Colors.white70;
     return SizedBox(
       // height: 24,

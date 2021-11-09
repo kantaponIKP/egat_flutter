@@ -1,5 +1,6 @@
 import 'package:egat_flutter/constant.dart';
 import 'package:egat_flutter/screens/login/api/login_api.dart';
+import 'package:egat_flutter/screens/login/api/login_api_mock.dart';
 import 'package:egat_flutter/screens/login/api/model/LoginRequest.dart';
 import 'package:egat_flutter/screens/login/api/model/LoginStatusState.dart';
 import 'package:egat_flutter/screens/login/login.dart';
@@ -13,7 +14,8 @@ class LoginModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  LoginApi api = LoginApi();
+  // LoginApi api = LoginApi();
+  LoginApiMock api = LoginApiMock();
 
   Future<void> processLogin({
     required String email,

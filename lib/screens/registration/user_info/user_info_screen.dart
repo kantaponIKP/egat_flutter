@@ -137,7 +137,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                 return null;
               },
               keyboardType: TextInputType.text,
-              maxLength: 24,
+              maxLength: 120,
             ),
           ),
           Container(
@@ -217,8 +217,10 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
               validator: (value) {
                 if (value == null || value.trim().length == 0) {
                   return "Required";
-                } else if (value.length < 8) {
-                  return "Must be contain at least 8 digits";
+                } else if (value.length < 6) {
+                  return "Must be contain at least 6 digits";
+                } else if (!_isPasswordValid(value)) {
+                  return "Password must be including UPPER/lowercase and the number";
                 }
                 return null;
               },
@@ -254,16 +256,16 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
               validator: (value) {
                 if (value == null || value.trim().length == 0) {
                   return "Required";
-                } else if (value.length < 8) {
-                  return "Must be contain at least 8 digits";
+                } else if (value.length < 6) {
+                  return "Must be contain at least 6 digits";
                 } else if (value != _passwordController!.text) {
-                  return "Password do not match";
+                  return "Password doesn't match";
                 } else {
                   return null;
                 }
               },
               keyboardType: TextInputType.visiblePassword,
-              maxLength: 24,
+              maxLength: 120,
             ),
           ),
         ],
@@ -372,6 +374,12 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
     final numericRegex = RegExp(r'^-?(([0-9]*)|(([0-9]*)\.([0-9]*)))$');
 
     return numericRegex.hasMatch(string);
+  }
+
+  bool _isPasswordValid(String password){
+    return RegExp(
+            r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{6,}$")
+        .hasMatch(password);
   }
 
   void _onNextPressed() async {

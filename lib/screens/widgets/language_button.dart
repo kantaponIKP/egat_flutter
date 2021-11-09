@@ -17,7 +17,7 @@ class _LanguageButtonState extends State<LanguageButton> {
   @override
   Widget build(BuildContext context) {
     Locale _nowLocale = Localizations.localeOf(context);
-    logger.d('hello ${_nowLocale.toString()}' );
+    // logger.d('hello ${_nowLocale.toString()}' );
     AppLocale locale = Provider.of<AppLocale>(context);
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,

@@ -40,7 +40,7 @@ class _ContactUsState extends State<ContactUs> {
           },
           icon: Icon(
             Icons.close,
-            color: white,
+            color: whiteColor,
           ))
     ]);
   }

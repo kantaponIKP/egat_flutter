@@ -101,7 +101,7 @@ class _SuccessScreenState extends State<SuccessScreen> {
   }
 
   void _onBackToLoginPressed() {
-    var model = Provider.of<RegistrationModel>(context, listen: false);
+    var model = Provider.of<PageModel>(context, listen: false);
     model.finish();
   }
 }

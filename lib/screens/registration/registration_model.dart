@@ -8,7 +8,7 @@ import 'package:egat_flutter/screens/registration/state/registration_status.dart
 import 'package:egat_flutter/screens/registration/state/user_info.dart';
 import 'package:flutter/widgets.dart';
 
-class RegistrationModel extends ChangeNotifier {
+class PageModel extends ChangeNotifier {
   late final RegistrationStatus status;
   late final UserInfo userInfo;
   late final RegistrationSession session;
@@ -17,7 +17,7 @@ class RegistrationModel extends ChangeNotifier {
   late final Otp otp;
   // late final Password password;
 
-  RegistrationModel() {
+  PageModel() {
     status = RegistrationStatus(this);
     userInfo = UserInfo(this);
     session = RegistrationSession(this);
