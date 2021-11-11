@@ -12,6 +12,7 @@ const textColor = Colors.white;
 const textButton = Color(0xff0DA6FC);
 const whiteColor = Colors.white;
 const greyColor = Colors.grey;
+final orangeColor = Colors.orange[500];
 
 const onBgColor = Colors.white;
 final surfaceColor = HexColor("#262729");

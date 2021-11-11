@@ -1,20 +1,33 @@
 import 'package:egat_flutter/i18n/app_localizations.dart';
+import 'package:egat_flutter/screens/page/state/page_status.dart';
+import 'package:egat_flutter/screens/page/state/trading_tabbar.dart';
 import 'package:flutter/material.dart';
 import 'package:egat_flutter/constant.dart';
+import 'package:provider/provider.dart';
 
-class Tapbar extends StatelessWidget {
-  Tapbar({Key? key}) : super(key: key);
+class Tabbar extends StatefulWidget {
+  Tabbar({Key? key}) : super(key: key);
+
+  @override
+  _TabbarState createState() => _TabbarState();
+}
+
+class _TabbarState extends State<Tabbar> {
 
   @override
   Widget build(BuildContext context) {
+    PageStatus model = Provider.of<PageStatus>(context);
+    // TradingTabbar model = Provider.of<TradingTabbar>(context, listen: false);
     return Row(
       children: [
         Expanded(
           child: Stack(children: [
             Container(
-              color: primaryColor,
+              color: model.state == PageState.Forecast? primaryColor:greyColor,
               child: InkWell(
-                onTap: () {},
+                onTap: () {
+                  _onForecastTabPressed();
+                },
                 child: Container(
                   height: 32,
                   child: Center(
@@ -24,11 +37,11 @@ class Tapbar extends StatelessWidget {
                         children: [
                           WidgetSpan(
                             child: Icon(Icons.home,
-                                size: 18, color: onPrimaryBgColor),
+                                size: 18, color: model.state == PageState.Forecast? onPrimaryBgColor: whiteColor),
                           ),
                           TextSpan(
                               text: " Forecast",
-                              style: TextStyle(color: onPrimaryBgColor)),
+                              style: TextStyle(color: model.state == PageState.Forecast? onPrimaryBgColor: whiteColor)),
                         ],
                       ),
                     ),
@@ -40,7 +53,7 @@ class Tapbar extends StatelessWidget {
               right: 0,
               child: CustomPaint(
                 painter: TrianglePainter(
-                  strokeColor: greyColor,
+                  strokeColor: model.state == PageState.BilateralTrade? primaryColor:greyColor,
                   strokeWidth: 10,
                   paintingStyle: PaintingStyle.fill,
                 ),
@@ -55,9 +68,11 @@ class Tapbar extends StatelessWidget {
         Expanded(
           child: Stack(children: [
             Container(
-              color: greyColor,
+              color: model.state == PageState.BilateralTrade? primaryColor:greyColor,
               child: InkWell(
-                onTap: () {},
+                onTap: () {
+                  _onBilateralTabPressed();
+                },
                 child: Container(
                   height: 32,
                   child: Center(
@@ -67,15 +82,15 @@ class Tapbar extends StatelessWidget {
                         children: [
                           WidgetSpan(
                             child: Icon(Icons.handyman,
-                                size: 18, color: whiteColor),
+                                size: 18, color: model.state == PageState.BilateralTrade? onPrimaryBgColor: whiteColor),
                           ),
                           TextSpan(
                               text: " Bilateral",
-                              style: TextStyle(color: whiteColor)),
+                              style: TextStyle(color: model.state == PageState.BilateralTrade? onPrimaryBgColor: whiteColor)),
                           TextSpan(
                               text: "\nTrade",
                               style:
-                                  TextStyle(color: whiteColor, fontSize: 12)),
+                                  TextStyle(color: model.state == PageState.BilateralTrade? onPrimaryBgColor: whiteColor, fontSize: 12)),
                         ],
                       ),
                     ),
@@ -87,7 +102,7 @@ class Tapbar extends StatelessWidget {
               right: 0,
               child: CustomPaint(
                 painter: TrianglePainter(
-                  strokeColor: greyColor,
+                  strokeColor: model.state == PageState.PoolMarketTrade? primaryColor:greyColor,
                   strokeWidth: 10,
                   paintingStyle: PaintingStyle.fill,
                 ),
@@ -101,9 +116,11 @@ class Tapbar extends StatelessWidget {
         ),
         Expanded(
           child: Container(
-            color: greyColor,
+            color: model.state == PageState.PoolMarketTrade? primaryColor:greyColor,
             child: InkWell(
-              onTap: () {},
+              onTap: () {
+                _onPoolMarketTabPressed();
+              },
               child: Container(
                 height: 32,
                 child: Center(
@@ -113,15 +130,15 @@ class Tapbar extends StatelessWidget {
                       children: [
                         WidgetSpan(
                           child:
-                              Icon(Icons.refresh, size: 18, color: whiteColor),
+                              Icon(Icons.refresh, size: 18, color: model.state == PageState.PoolMarketTrade? onPrimaryBgColor: whiteColor),
                         ),
                         TextSpan(
                           text: " Pool Market",
-                          style: TextStyle(color: whiteColor),
+                          style: TextStyle(color: model.state == PageState.PoolMarketTrade? onPrimaryBgColor: whiteColor),
                         ),
                         TextSpan(
                           text: "\nTrade",
-                          style: TextStyle(color: whiteColor, fontSize: 12),
+                          style: TextStyle(color: model.state == PageState.PoolMarketTrade? onPrimaryBgColor: whiteColor, fontSize: 12),
                         ),
                       ],
                     ),
@@ -133,6 +150,22 @@ class Tapbar extends StatelessWidget {
         ),
       ],
     );
+  }
+
+
+  void _onForecastTabPressed() {
+    TradingTabbar tradingTabbar = Provider.of<TradingTabbar>(context, listen: false);
+    tradingTabbar.setPageForecast();
+  }
+
+  void _onBilateralTabPressed() {
+    TradingTabbar tradingTabbar = Provider.of<TradingTabbar>(context, listen: false);
+    tradingTabbar.setPageBilateralTrade();
+  }
+
+  void _onPoolMarketTabPressed() {
+    TradingTabbar tradingTabbar = Provider.of<TradingTabbar>(context, listen: false);
+    tradingTabbar.setPagePoolMarketTrade();
   }
 }
 

@@ -49,37 +49,37 @@ class _NavigationMenuWidgetState extends State<NavigationMenuWidget> {
           context: context,
           text: '${AppLocalizations.of(context).translate('home')}',
           icon: Icons.home,
-          onAction: onPressedHomeMenu,
+          onAction: _onHomeMenuPressed,
         ),
         _buildMenuItem(
           context: context,
           text: '${AppLocalizations.of(context).translate('personal-info')}',
           icon: Icons.account_circle,
-          onAction: onPressedPersonalInfoMenu,
+          onAction: _onPersonalInfoMenuPressed,
         ),
         _buildMenuItem(
           context: context,
           text: '${AppLocalizations.of(context).translate('change-password')}',
           icon: Icons.lock_sharp,
-          onAction: onPressedChangePasswordMenu,
+          onAction: _onChangePasswordMenuPressed,
         ),
         _buildMenuItem(
           context: context,
           text: '${AppLocalizations.of(context).translate('contact-us')}',
           icon: Icons.contact_page,
-          onAction: onPressedContactUsMenu,
+          onAction: _onContactUsMenuPressed,
         ),
         _buildMenuItem(
           context: context,
           text: '${AppLocalizations.of(context).translate('news')}',
           icon: Icons.campaign_sharp,
-          onAction: onPressedNewsMenu,
+          onAction: _onNewsMenuPressed,
         ),
         _buildMenuItem(
           context: context,
           text: '${AppLocalizations.of(context).translate('setting')}',
           icon: Icons.settings,
-          onAction: onPressedSettingMenu,
+          onAction: _onSettingMenuPressed,
         ),
       ],
     );
@@ -277,32 +277,32 @@ class _NavigationMenuWidgetState extends State<NavigationMenuWidget> {
     );
   }
 
-  void onPressedHomeMenu() {
+  void _onHomeMenuPressed() {
     Sidebar sidebar = Provider.of<Sidebar>(context, listen: false);
     sidebar.setPageHome();
   }
 
-  void onPressedPersonalInfoMenu() {
+  void _onPersonalInfoMenuPressed() {
     Sidebar sidebar = Provider.of<Sidebar>(context, listen: false);
     sidebar.setPagePersonalInfo();
   }
 
-  void onPressedChangePasswordMenu() {
+  void _onChangePasswordMenuPressed() {
     Sidebar sidebar = Provider.of<Sidebar>(context, listen: false);
     sidebar.setPageChangePassword();
   }
 
-  void onPressedContactUsMenu() {
+  void _onContactUsMenuPressed() {
     Sidebar sidebar = Provider.of<Sidebar>(context, listen: false);
     sidebar.setPageContactUs();
   }
 
-  void onPressedNewsMenu() {
+  void _onNewsMenuPressed() {
     Sidebar sidebar = Provider.of<Sidebar>(context, listen: false);
     sidebar.setPageNews();
   }
 
-  void onPressedSettingMenu() {
+  void _onSettingMenuPressed() {
     Sidebar sidebar = Provider.of<Sidebar>(context, listen: false);
     sidebar.setPageSetting();
   }

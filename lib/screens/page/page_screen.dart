@@ -6,7 +6,9 @@ import 'package:egat_flutter/screens/page/news/news_screen.dart';
 import 'package:egat_flutter/screens/page/personal_info/personal_info_screen.dart';
 import 'package:egat_flutter/screens/page/setting/setting_screen.dart';
 import 'package:egat_flutter/screens/page/state/page_status.dart';
-import 'package:egat_flutter/screens/page/trade/trade_screen.dart';
+import 'package:egat_flutter/screens/page/trade/bilateral_trade_screen.dart';
+import 'package:egat_flutter/screens/page/trade/forecast_screen.dart';
+import 'package:egat_flutter/screens/page/trade/pool_market_trade_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
@@ -65,8 +67,18 @@ class _PageScreenState extends State<PageScreen> {
       duration = Duration(milliseconds: 200);
     }
 
-    if (page.state == PageState.Trade) {
-      screen = TradeScreen(key: Key('trade_screen'));
+    if (page.state == PageState.Forecast) {
+      screen = ForecastScreen(key: Key('forecast_screen'));
+      // duration = Duration(milliseconds: 200);
+    }
+
+    if (page.state == PageState.BilateralTrade) {
+      screen = BilateralTradeScreen(key: Key('forecast_screen'));
+      // duration = Duration(milliseconds: 200);
+    }
+
+    if (page.state == PageState.PoolMarketTrade) {
+      screen = PoolMarketTradeScreen(key: Key('forecast_screen'));
       // duration = Duration(milliseconds: 200);
     }
     // if (page.state == PageState.Detail) {

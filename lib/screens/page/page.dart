@@ -1,10 +1,14 @@
 import 'package:egat_flutter/screens/page/page_model.dart';
+import 'package:egat_flutter/screens/page/state/bilateral_trade.dart';
 import 'package:egat_flutter/screens/page/state/bottom_navigation_bar.dart';
 import 'package:egat_flutter/screens/page/state/change_password.dart';
+import 'package:egat_flutter/screens/page/state/forecast.dart';
 import 'package:egat_flutter/screens/page/state/home.dart';
 import 'package:egat_flutter/screens/page/state/page_status.dart';
 import 'package:egat_flutter/screens/page/state/personal_info.dart';
+import 'package:egat_flutter/screens/page/state/pool_market_trade.dart';
 import 'package:egat_flutter/screens/page/state/sidebar.dart';
+import 'package:egat_flutter/screens/page/state/trading_tabbar.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 
@@ -102,8 +106,7 @@ class _ManagePageState extends State<ManagePage> {
             return model.changePassword;
           },
         ),
-
-                ChangeNotifierProxyProvider<PageModel, BottomNavigationBarPage>(
+        ChangeNotifierProxyProvider<PageModel, BottomNavigationBarPage>(
           create: (context) {
             var model = Provider.of<PageModel>(context, listen: false);
             return model.bottomNavigation;
@@ -114,6 +117,58 @@ class _ManagePageState extends State<ManagePage> {
             BottomNavigationBarPage? previous,
           ) {
             return model.bottomNavigation;
+          },
+        ),
+        ChangeNotifierProxyProvider<PageModel, Forecast>(
+          create: (context) {
+            var model = Provider.of<PageModel>(context, listen: false);
+            return model.forecast;
+          },
+          update: (
+            BuildContext context,
+            PageModel model,
+            Forecast? previous,
+          ) {
+            return model.forecast;
+          },
+        ),
+        ChangeNotifierProxyProvider<PageModel, BilateralTrade>(
+          create: (context) {
+            var model = Provider.of<PageModel>(context, listen: false);
+            return model.bilateralTrade;
+          },
+          update: (
+            BuildContext context,
+            PageModel model,
+            BilateralTrade? previous,
+          ) {
+            return model.bilateralTrade;
+          },
+        ),
+        ChangeNotifierProxyProvider<PageModel, PoolMarketTrade>(
+          create: (context) {
+            var model = Provider.of<PageModel>(context, listen: false);
+            return model.poolMarketTrade;
+          },
+          update: (
+            BuildContext context,
+            PageModel model,
+            PoolMarketTrade? previous,
+          ) {
+            return model.poolMarketTrade;
+          },
+        ),
+        ChangeNotifierProxyProvider<PageModel, TradingTabbar>(
+          create: (context) {
+            var model = Provider.of<PageModel>(context, listen: false);
+            return model.tradingTabbar;
+          },
+          update: (
+            BuildContext context,
+            PageModel model,
+            TradingTabbar? previous,
+          ) {
+            return model.tradingTabbar;
           },
         ),
       ],

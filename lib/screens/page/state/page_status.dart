@@ -9,7 +9,9 @@ enum PageState {
   ContactUs,
   News,
   Graph,
-  Trade,
+  Forecast,
+  BilateralTrade,
+  PoolMarketTrade,
 }
 
 class PageStatus extends ChangeNotifier {
@@ -47,10 +49,18 @@ class PageStatus extends ChangeNotifier {
     _setState(PageState.Graph);
   }
 
-  setStateTrade() {
-    _setState(PageState.Trade);
+  setStateForecast() {
+    _setState(PageState.Forecast);
   }
 
+  setStateBilateralTrade() {
+    _setState(PageState.BilateralTrade);
+  }
+
+  setStatePoolMarketTrade() {
+    _setState(PageState.PoolMarketTrade);
+  }
+  
   _setState(PageState state) {
     if (this.previousState != this.state) {
       this.previousState = this.state;

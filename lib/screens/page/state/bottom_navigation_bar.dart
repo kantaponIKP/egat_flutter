@@ -37,6 +37,6 @@ class BottomNavigationBarPage extends ChangeNotifier {
 
   setPageTrade() {
     setIndex(1);
-    parent.status.setStateTrade();
+    parent.status.setStateForecast();
   }
 }
