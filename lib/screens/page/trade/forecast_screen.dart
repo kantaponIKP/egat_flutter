@@ -27,16 +27,9 @@ class ForecastScreen extends StatefulWidget {
 
 class _ForecastScreenState extends State<ForecastScreen>
     with TickerProviderStateMixin {
-  final _formKey = GlobalKey<FormState>();
   TextEditingController? _fullNameController;
   TextEditingController? _phoneNumberController;
   TextEditingController? _emailController;
-  String? _fullName;
-  String? _phoneNumber;
-  String? _email;
-  bool _isValidated = false;
-  bool _isFormChanged = false;
-  String? _imageBase64;
 
   @override
   void initState() {
@@ -45,37 +38,6 @@ class _ForecastScreenState extends State<ForecastScreen>
     _fullNameController = TextEditingController();
     _phoneNumberController = TextEditingController();
     _emailController = TextEditingController();
-
-    _getPersonalInformation();
-  }
-
-  void _getPersonalInformation() async {
-    var model = Provider.of<PersonalInfo>(context, listen: false);
-    await showLoading();
-    try {
-      await model.getPersonalInformation();
-    } catch (e) {
-      showException(context, e.toString());
-    } finally {
-      if (model.info.fullName != null) {
-        _fullNameController!.text = model.info.fullName!;
-        _fullName = model.info.fullName!;
-      }
-      if (model.info.phoneNumber != null) {
-        _phoneNumberController!.text = model.info.phoneNumber!;
-        _phoneNumber = model.info.phoneNumber!;
-      }
-      if (model.info.email != null) {
-        _emailController!.text = model.info.email!;
-        _email = model.info.email!;
-      }
-      if (model.info.photo != null) {
-        setState(() {
-          _imageBase64 = model.info.photo!;
-        });
-      }
-      await hideLoading();
-    }
   }
 
   @override
@@ -92,33 +54,23 @@ class _ForecastScreenState extends State<ForecastScreen>
 
   Padding _buildAction(BuildContext context) {
     return Padding(
-      // padding: const EdgeInsets.only(left: 12, right: 12, top: 12, bottom: 6),
       padding: const EdgeInsets.only(top: 12, bottom: 6),
       child: LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) {
-          return
-              // _buildTapbar();
-
-              SingleChildScrollView(
+          return SingleChildScrollView(
             child: Container(
               constraints: BoxConstraints(
                 minHeight: constraints.maxHeight,
               ),
               child: Column(
-                // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Tabbar(),
                   _buildEnergyBalance(),
                   _buildEnergyWidgetList(),
-                  // _buildEnergyWidget(),
                   Container(height: 300, child: Placeholder()),
                   _buildHeaderWidget(),
                   _buildListTile(),
-                  // _buildAvatarSection(),
-                  // _buildNameSection(),
-                  // SizedBox(height: 12),
-                  // _buildInformationSection(),
                 ],
               ),
             ),
@@ -200,71 +152,10 @@ class _ForecastScreenState extends State<ForecastScreen>
         ],
       ),
     );
-    // return Padding(
-    //   padding:
-    //       const EdgeInsets.only(left: 16.0, right: 16.0, top: 8, bottom: 8),
-    //   child: Row(
-    //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    //     children: [
-    //       Row(
-    //         children: [
-    //           SizedBox(
-    //             height: 24.0,
-    //             width: 24.0,
-    //             child: Checkbox(value: false, onChanged: (null)),
-    //           ),
-    //           Padding(
-    //             padding: const EdgeInsets.only(left: 2.0),
-    //             child: RichText(
-    //               overflow: TextOverflow.ellipsis,
-    //               text: TextSpan(text: "All"),
-    //             ),
-    //           ),
-    //         ],
-    //       ),
-    //       RichText(
-    //         overflow: TextOverflow.ellipsis,
-    //         text: TextSpan(text: "Period"),
-    //       ),
-    //       Row(
-    //         children: [
-    //           Container(width: 12, height: 12, color: primaryColor),
-    //           Padding(
-    //             padding: const EdgeInsets.only(left: 8.0),
-    //             child: RichText(
-    //               overflow: TextOverflow.ellipsis,
-    //               text: TextSpan(text: "Can Sell"),
-    //             ),
-    //           ),
-    //         ],
-    //       ),
-    //       Row(
-    //         children: [
-    //           Container(width: 12, height: 12, color: orangeColor),
-    //           Padding(
-    //             padding: const EdgeInsets.only(left: 8.0),
-    //             child: RichText(
-    //               overflow: TextOverflow.ellipsis,
-    //               text: TextSpan(text: "Must buy"),
-    //             ),
-    //           ),
-    //         ],
-    //       ),
-    //     ],
-    //   ),
-    // );
   }
 
   Widget _buildEnergyWidgetList() {
-    return
-        // ListView(
-        //   shrinkWrap: true,
-        //   children: <Widget>[
-        // _buildEnergyWidget(),
-        // _buildEnergyWidget(),
-        // _buildEnergyWidget(),
-        // _buildEnergyWidget(),
-        new Container(
+    return new Container(
       height: 84,
       child: new ListView(
           scrollDirection: Axis.horizontal,
@@ -274,21 +165,8 @@ class _ForecastScreenState extends State<ForecastScreen>
             _buildEnergyWidget("20 August 2021", "12.5", 0.3),
             _buildEnergyWidget("19 August 2021", "7.43", 0.3),
             _buildEnergyWidget("18 August 2021", "6.1", 0.3),
-          ]
-          // new List.generate(10, (int index) {
-          //   return new Card(
-          //     color: Colors.blue[index * 100],
-          //     child: new Container(
-          //       width: 50.0,
-          //       height: 50.0,
-          //       child: new Text("$index"),
-          //     ),
-          //   );
-          // }
-          ),
+          ]),
     );
-    // ),
-    // ],
   }
 
   Widget _buildListTile() {
@@ -298,13 +176,6 @@ class _ForecastScreenState extends State<ForecastScreen>
         shrinkWrap: true,
         // scrollDirection: Axis.horizontal,
         children: <Widget>[
-          //       Expanded(
-          //   child: ListTile(
-          //     leading: FlutterLogo(),
-          //     title: Text('These ListTiles are expanded '),
-          //     trailing: Container(child: Row())
-          //   ),
-          // ),
 
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
@@ -313,8 +184,9 @@ class _ForecastScreenState extends State<ForecastScreen>
                 Expanded(
                   child: Container(
                     decoration: BoxDecoration(
-                        color: Colors.grey[800],
-                        borderRadius: BorderRadius.circular(5),),
+                      color: Colors.grey[800],
+                      borderRadius: BorderRadius.circular(5),
+                    ),
                     height: 50,
                     // color: Colors.grey[800],
                     child: Row(
@@ -364,8 +236,9 @@ class _ForecastScreenState extends State<ForecastScreen>
                 Expanded(
                   child: Container(
                     decoration: BoxDecoration(
-                        color: Colors.grey[800],
-                        borderRadius: BorderRadius.circular(5),),
+                      color: Colors.grey[800],
+                      borderRadius: BorderRadius.circular(5),
+                    ),
                     height: 50,
                     // color: Colors.grey[800],
                     child: Row(
@@ -408,64 +281,6 @@ class _ForecastScreenState extends State<ForecastScreen>
               ],
             ),
           )
-          // CheckboxListTile(
-          //   // tristate: true,
-          //   title: Text('14:00-15:00'),
-          //   secondary: Table(
-          //     children: [
-          //       TableRow(
-          //         children: <Widget>[
-          //           Container(
-          //             height: 32,
-          //             color: Colors.green,
-          //           ),
-          //           TableCell(
-          //             verticalAlignment: TableCellVerticalAlignment.top,
-          //             child: Container(
-          //               height: 32,
-          //               width: 32,
-          //               color: Colors.red,
-          //             ),
-          //           ),
-          //           Container(
-          //             height: 64,
-          //             color: Colors.blue,
-          //           ),
-          //         ],
-          //       ),
-          //     ],
-          //   ),
-          //   controlAffinity: ListTileControlAffinity.leading,
-          //   value: false,
-          //   onChanged: null,
-          // ),
-          // Card(
-          //   child: CheckboxListTile(
-          //     // tristate: true,
-          //     title: Text('14:00-15:00'),
-          //     secondary: Container(
-          //       child: Expanded(
-          //         child: Row(
-          //           children: [
-          //             // RichText(
-          //             // overflow: TextOverflow.ellipsis,
-          //             // text: TextSpan(
-          //             //   style: TextStyle(fontSize: 16),
-          //             //   children: <TextSpan>[
-          //             //     TextSpan(text: "4.3 kWh"),
-          //             //     // TextSpan(text: "0"),
-          //             //   ],
-          //             // ),
-          //             // ),
-          //           ],
-          //         ),
-          //       ),
-          //     ),
-          //     controlAffinity: ListTileControlAffinity.leading,
-          //     value: false,
-          //     onChanged: null,
-          //   ),
-          // ),
         ],
       ),
     );
