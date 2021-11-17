@@ -11,12 +11,20 @@ enum PageState {
   Graph,
   Forecast,
   BilateralTrade,
+  BilateralBuy,
+  BilateralSell,
+  BilateralLongTermBuy,
+  BilateralLongTermSell,
+  BilateralShortTermSell,
   PoolMarketTrade,
+  PoolMarketShortTermBuy,
+  PoolMarketShortTermSell,
 }
 
 class PageStatus extends ChangeNotifier {
   PageState previousState = PageState.Home;
   PageState state = PageState.Home;
+  List<PageState> stateList = [];
   final PageModel _parent;
 
   PageStatus(this._parent);
@@ -51,16 +59,62 @@ class PageStatus extends ChangeNotifier {
 
   setStateForecast() {
     _setState(PageState.Forecast);
+    stateList = [];
+    stateList.add(PageState.Forecast);
   }
 
   setStateBilateralTrade() {
     _setState(PageState.BilateralTrade);
+    stateList = [];
+    stateList.add(PageState.BilateralTrade);
+  }
+
+  setStateBilateralBuy() {
+    _setState(PageState.BilateralBuy);
+    stateList.add(PageState.BilateralBuy);
+  }
+
+  setStateBilateralSell() {
+    _setState(PageState.BilateralSell);
+    stateList.add(PageState.BilateralSell);
+  }
+
+  setStateBilateralLongTermBuy() {
+    _setState(PageState.BilateralLongTermBuy);
+    stateList.add(PageState.BilateralLongTermBuy);
+  }
+
+  setStateBilateralLongTermSell() {
+    _setState(PageState.BilateralLongTermSell);
+    stateList.add(PageState.BilateralLongTermSell);
+  }
+
+  setStateBilateralShortTermSell() {
+    _setState(PageState.BilateralShortTermSell);
+    stateList.add(PageState.BilateralShortTermSell);
   }
 
   setStatePoolMarketTrade() {
     _setState(PageState.PoolMarketTrade);
+    stateList = [];
+    stateList.add(PageState.PoolMarketTrade);
   }
-  
+
+  setStatePoolMarketShortTermBuy() {
+    _setState(PageState.PoolMarketShortTermBuy);
+    stateList.add(PageState.PoolMarketShortTermBuy);
+  }
+
+  setStatePoolMarketShortTermSell() {
+    _setState(PageState.PoolMarketShortTermSell);
+    stateList.add(PageState.PoolMarketShortTermSell);
+  }
+
+  setStatePrevious() {
+    stateList.removeLast();
+    _setState(stateList.last);
+  }
+
   _setState(PageState state) {
     if (this.previousState != this.state) {
       this.previousState = this.state;

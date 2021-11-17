@@ -1,12 +1,19 @@
 import 'package:egat_flutter/screens/page/page_model.dart';
-import 'package:egat_flutter/screens/page/state/bilateral_trade.dart';
+import 'package:egat_flutter/screens/page/state/bilateral/bilateral_buy.dart';
+import 'package:egat_flutter/screens/page/state/bilateral/bilateral_long_term_buy.dart';
+import 'package:egat_flutter/screens/page/state/bilateral/bilateral_long_term_sell.dart';
+import 'package:egat_flutter/screens/page/state/bilateral/bilateral_short_term_sell.dart';
+import 'package:egat_flutter/screens/page/state/bilateral/bilateral_sell.dart';
+import 'package:egat_flutter/screens/page/state/bilateral/bilateral_trade.dart';
 import 'package:egat_flutter/screens/page/state/bottom_navigation_bar.dart';
 import 'package:egat_flutter/screens/page/state/change_password.dart';
 import 'package:egat_flutter/screens/page/state/forecast.dart';
 import 'package:egat_flutter/screens/page/state/home.dart';
 import 'package:egat_flutter/screens/page/state/page_status.dart';
 import 'package:egat_flutter/screens/page/state/personal_info.dart';
-import 'package:egat_flutter/screens/page/state/pool_market_trade.dart';
+import 'package:egat_flutter/screens/page/state/pool_market/pool_market_short_term_buy.dart';
+import 'package:egat_flutter/screens/page/state/pool_market/pool_market_short_term_sell.dart';
+import 'package:egat_flutter/screens/page/state/pool_market/pool_market_trade.dart';
 import 'package:egat_flutter/screens/page/state/sidebar.dart';
 import 'package:egat_flutter/screens/page/state/trading_tabbar.dart';
 import 'package:flutter/widgets.dart';
@@ -132,6 +139,19 @@ class _ManagePageState extends State<ManagePage> {
             return model.forecast;
           },
         ),
+        ChangeNotifierProxyProvider<PageModel, TradingTabbar>(
+          create: (context) {
+            var model = Provider.of<PageModel>(context, listen: false);
+            return model.tradingTabbar;
+          },
+          update: (
+            BuildContext context,
+            PageModel model,
+            TradingTabbar? previous,
+          ) {
+            return model.tradingTabbar;
+          },
+        ),
         ChangeNotifierProxyProvider<PageModel, BilateralTrade>(
           create: (context) {
             var model = Provider.of<PageModel>(context, listen: false);
@@ -143,6 +163,71 @@ class _ManagePageState extends State<ManagePage> {
             BilateralTrade? previous,
           ) {
             return model.bilateralTrade;
+          },
+        ),
+        ChangeNotifierProxyProvider<PageModel, BilateralBuy>(
+          create: (context) {
+            var model = Provider.of<PageModel>(context, listen: false);
+            return model.bilateralBuy;
+          },
+          update: (
+            BuildContext context,
+            PageModel model,
+            BilateralBuy? previous,
+          ) {
+            return model.bilateralBuy;
+          },
+        ),
+        ChangeNotifierProxyProvider<PageModel, BilateralLongTermBuy>(
+          create: (context) {
+            var model = Provider.of<PageModel>(context, listen: false);
+            return model.bilateralLongTermBuy;
+          },
+          update: (
+            BuildContext context,
+            PageModel model,
+            BilateralLongTermBuy? previous,
+          ) {
+            return model.bilateralLongTermBuy;
+          },
+        ),
+        ChangeNotifierProxyProvider<PageModel, BilateralLongTermSell>(
+          create: (context) {
+            var model = Provider.of<PageModel>(context, listen: false);
+            return model.bilateralLongTermSell;
+          },
+          update: (
+            BuildContext context,
+            PageModel model,
+            BilateralLongTermSell? previous,
+          ) {
+            return model.bilateralLongTermSell;
+          },
+        ),
+        ChangeNotifierProxyProvider<PageModel, BilateralShortTermSell>(
+          create: (context) {
+            var model = Provider.of<PageModel>(context, listen: false);
+            return model.bilateralOrderSell;
+          },
+          update: (
+            BuildContext context,
+            PageModel model,
+            BilateralShortTermSell? previous,
+          ) {
+            return model.bilateralOrderSell;
+          },
+        ),
+        ChangeNotifierProxyProvider<PageModel, BilateralSell>(
+          create: (context) {
+            var model = Provider.of<PageModel>(context, listen: false);
+            return model.bilateralSell;
+          },
+          update: (
+            BuildContext context,
+            PageModel model,
+            BilateralSell? previous,
+          ) {
+            return model.bilateralSell;
           },
         ),
         ChangeNotifierProxyProvider<PageModel, PoolMarketTrade>(
@@ -158,17 +243,43 @@ class _ManagePageState extends State<ManagePage> {
             return model.poolMarketTrade;
           },
         ),
-        ChangeNotifierProxyProvider<PageModel, TradingTabbar>(
+        ChangeNotifierProxyProvider<PageModel, PoolMarketShortTermBuy>(
           create: (context) {
             var model = Provider.of<PageModel>(context, listen: false);
-            return model.tradingTabbar;
+            return model.poolMarketOrderBuy;
           },
           update: (
             BuildContext context,
             PageModel model,
-            TradingTabbar? previous,
+            PoolMarketShortTermBuy? previous,
           ) {
-            return model.tradingTabbar;
+            return model.poolMarketOrderBuy;
+          },
+        ),
+        ChangeNotifierProxyProvider<PageModel, PoolMarketShortTermSell>(
+          create: (context) {
+            var model = Provider.of<PageModel>(context, listen: false);
+            return model.poolMarketOrderSell;
+          },
+          update: (
+            BuildContext context,
+            PageModel model,
+            PoolMarketShortTermSell? previous,
+          ) {
+            return model.poolMarketOrderSell;
+          },
+        ),
+        ChangeNotifierProxyProvider<PageModel, BilateralSell>(
+          create: (context) {
+            var model = Provider.of<PageModel>(context, listen: false);
+            return model.bilateralSell;
+          },
+          update: (
+            BuildContext context,
+            PageModel model,
+            BilateralSell? previous,
+          ) {
+            return model.bilateralSell;
           },
         ),
       ],

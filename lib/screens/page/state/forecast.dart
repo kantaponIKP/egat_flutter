@@ -28,4 +28,21 @@ class Forecast extends ChangeNotifier {
     this._info = ForecastModel();
     notifyListeners();
   }
+
+  setPageBilateralBuy() {
+    parent.status.setStateBilateralBuy();
+  }
+
+  setPageBilateralShortTermSell() {
+    parent.status.setStateBilateralShortTermSell();
+  }
+
+  setPagePoolMarketShortTermBuy() {
+    parent.status.setStatePoolMarketShortTermBuy();
+  }
+
+  setPagePoolMarketShortTermSell() {
+    parent.status.setStatePoolMarketShortTermSell();
+  }
+  
 }

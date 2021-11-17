@@ -27,4 +27,12 @@ class BilateralTrade extends ChangeNotifier {
     this._info = BilateralTradeModel();
     notifyListeners();
   }
+
+  setPageBilateralBuy() {
+    parent.status.setStateBilateralBuy();
+  }
+
+  setPageBilateralSell() {
+    parent.status.setStateBilateralSell();
+  }
 }

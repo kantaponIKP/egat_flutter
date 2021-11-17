@@ -1,8 +1,11 @@
+import 'package:egat_flutter/screens/page/state/bilateral/bilateral_trade.dart';
 import 'package:egat_flutter/screens/page/widgets/logo_appbar.dart';
+import 'package:egat_flutter/screens/page/widgets/page_appbar.dart';
 import 'package:egat_flutter/screens/page/widgets/page_bottom_navigation_bar.dart';
 import 'package:egat_flutter/screens/page/widgets/side_menu.dart';
 import 'package:egat_flutter/screens/page/trade/tabbar.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class BilateralTradeScreen extends StatefulWidget {
   const BilateralTradeScreen({Key? key}) : super(key: key);
@@ -11,8 +14,7 @@ class BilateralTradeScreen extends StatefulWidget {
   _BilateralTradeScreenState createState() => _BilateralTradeScreenState();
 }
 
-class _BilateralTradeScreenState extends State<BilateralTradeScreen>{
-
+class _BilateralTradeScreenState extends State<BilateralTradeScreen> {
   @override
   void initState() {
     super.initState();
@@ -21,7 +23,7 @@ class _BilateralTradeScreenState extends State<BilateralTradeScreen>{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: LogoAppbar(),
+      appBar: PageAppbar(firstTitle: "Bilateral",secondTitle: "Trade"),
       drawer: NavigationMenuWidget(),
       body: SafeArea(
         child: _buildAction(context),
@@ -35,8 +37,7 @@ class _BilateralTradeScreenState extends State<BilateralTradeScreen>{
       padding: const EdgeInsets.only(top: 12, bottom: 6),
       child: LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) {
-          return
-              SingleChildScrollView(
+          return SingleChildScrollView(
             child: Container(
               constraints: BoxConstraints(
                 minHeight: constraints.maxHeight,
@@ -45,6 +46,14 @@ class _BilateralTradeScreenState extends State<BilateralTradeScreen>{
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Tabbar(),
+                  TextButton(
+                    onPressed: _onListTileBuyPressed,
+                    child: Text('ListTileBuy'),
+                  ),
+                  TextButton(
+                    onPressed: _onListTileSellPressed,
+                    child: Text('ListTileSell'),
+                  )
                 ],
               ),
             ),
@@ -52,5 +61,17 @@ class _BilateralTradeScreenState extends State<BilateralTradeScreen>{
         },
       ),
     );
+  }
+
+  void _onListTileBuyPressed() {
+    //Navigate
+    BilateralTrade model = Provider.of<BilateralTrade>(context, listen: false);
+    model.setPageBilateralBuy();
+  }
+
+  void _onListTileSellPressed() {
+    //Navigate
+    BilateralTrade model = Provider.of<BilateralTrade>(context, listen: false);
+    model.setPageBilateralSell();
   }
 }

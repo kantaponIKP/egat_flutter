@@ -28,4 +28,12 @@ class PoolMarketTrade extends ChangeNotifier {
     this._info = PoolMarketTradeModel();
     notifyListeners();
   }
+
+  setPagePoolMarketShortTermBuy() {
+    parent.status.setStatePoolMarketShortTermBuy();
+  }
+
+  setPagePoolMarketShortTermSell() {
+    parent.status.setStatePoolMarketShortTermSell();
+  }
 }

@@ -11,6 +11,7 @@ const textButtonTheme = Colors.black;
 const textColor = Colors.white;
 const textButton = Color(0xff0DA6FC);
 const whiteColor = Colors.white;
+const blackColor = Colors.black;
 const greyColor = Colors.grey;
 final orangeColor = Colors.orange[500];
 

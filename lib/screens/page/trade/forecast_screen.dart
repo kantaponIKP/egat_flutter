@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:egat_flutter/constant.dart';
 import 'package:egat_flutter/i18n/app_localizations.dart';
+import 'package:egat_flutter/screens/page/state/forecast.dart';
 import 'package:egat_flutter/screens/page/state/personal_info.dart';
 import 'package:egat_flutter/screens/page/widgets/logo_appbar.dart';
 import 'package:egat_flutter/screens/page/widgets/page_appbar.dart';
@@ -176,53 +177,57 @@ class _ForecastScreenState extends State<ForecastScreen>
         shrinkWrap: true,
         // scrollDirection: Axis.horizontal,
         children: <Widget>[
-
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
             child: Row(
               children: [
                 Expanded(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.grey[800],
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                    height: 50,
-                    // color: Colors.grey[800],
-                    child: Row(
-                      children: [
-                        Flexible(
-                          fit: FlexFit.tight,
-                          flex: 2,
-                          child: Align(
-                            alignment: Alignment.centerLeft,
-                            child: Checkbox(
-                              value: false,
-                              onChanged: (null),
+                  child: GestureDetector(
+                    onTap: () {
+                      _buttomSheet();
+                    },
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.grey[800],
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                      height: 50,
+                      // color: Colors.grey[800],
+                      child: Row(
+                        children: [
+                          Flexible(
+                            fit: FlexFit.tight,
+                            flex: 2,
+                            child: Align(
+                              alignment: Alignment.centerLeft,
+                              child: Checkbox(
+                                value: false,
+                                onChanged: (null),
+                              ),
                             ),
                           ),
-                        ),
-                        Flexible(
-                          fit: FlexFit.tight,
-                          flex: 2,
-                          child: Text("14:00-15:00"),
-                        ),
-                        Flexible(
-                          fit: FlexFit.tight,
-                          flex: 2,
-                          child: Center(
-                            child: Text(
-                              "4.3 kWh",
-                              style: TextStyle(color: primaryColor),
+                          Flexible(
+                            fit: FlexFit.tight,
+                            flex: 2,
+                            child: Text("14:00-15:00"),
+                          ),
+                          Flexible(
+                            fit: FlexFit.tight,
+                            flex: 2,
+                            child: Center(
+                              child: Text(
+                                "4.3 kWh",
+                                style: TextStyle(color: primaryColor),
+                              ),
                             ),
                           ),
-                        ),
-                        Flexible(
-                          fit: FlexFit.tight,
-                          flex: 2,
-                          child: Center(child: Text("0")),
-                        ),
-                      ],
+                          Flexible(
+                            fit: FlexFit.tight,
+                            flex: 2,
+                            child: Center(child: Text("0")),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -400,5 +405,83 @@ class _ForecastScreenState extends State<ForecastScreen>
         ),
       ]),
     );
+  }
+
+  void _buttomSheet() {
+    showModalBottomSheet(
+        backgroundColor: whiteColor,
+        context: context,
+        builder: (context) {
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              //TODO
+              ListTile(
+                leading: new Icon(Icons.handyman, color: blackColor),
+                title: Text(
+                  'Bilateral Trade (Buy)',
+                  style: TextStyle(color: blackColor),
+                ),
+                onTap: () {
+                  _onBilateralTradeBuyPressed();
+                },
+              ),
+              ListTile(
+                leading: new Icon(Icons.refresh, color: blackColor),
+                title: Text(
+                  'Pool Market Trade (Buy)',
+                  style: TextStyle(color: blackColor),
+                ),
+                onTap: () {
+                  _onPoolMarketTradeBuyPressed();
+                },
+              ),
+              ListTile(
+                leading: new Icon(Icons.handyman, color: blackColor),
+                title: Text(
+                  'Bilateral Trade (Sell)',
+                  style: TextStyle(color: blackColor),
+                ),
+                onTap: () {
+                  _onBilateralTradeSellPressed();
+                },
+              ),
+              ListTile(
+                leading: new Icon(Icons.refresh, color: blackColor),
+                title: Text(
+                  'Pool Market Trade (Sell)',
+                  style: TextStyle(color: blackColor),
+                ),
+                onTap: () {
+                  _onPoolMarketTradeSellPressed();
+                },
+              ),
+            ],
+          );
+        });
+  }
+
+  void _onBilateralTradeBuyPressed() {
+    Navigator.pop(context);
+    Forecast model = Provider.of<Forecast>(context, listen: false);
+    model.setPageBilateralBuy();
+  }
+
+  void _onBilateralTradeSellPressed() {
+    Navigator.pop(context);
+    Forecast model = Provider.of<Forecast>(context, listen: false);
+    model.setPageBilateralShortTermSell();
+  }
+
+  void _onPoolMarketTradeBuyPressed() {
+    Navigator.pop(context);
+    Forecast model = Provider.of<Forecast>(context, listen: false);
+    model.setPagePoolMarketShortTermBuy();
+  }
+
+  void _onPoolMarketTradeSellPressed() {
+    Navigator.pop(context);
+    Forecast model = Provider.of<Forecast>(context, listen: false);
+    model.setPagePoolMarketShortTermSell();
   }
 }
