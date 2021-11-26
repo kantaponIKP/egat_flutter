@@ -18,8 +18,12 @@ class PoolMarketShortTermBuyScreen extends StatefulWidget {
 
 class _PoolMarketShortTermBuyScreenState
     extends State<PoolMarketShortTermBuyScreen> {
-  bool _isChecked = false;
   double _currentSliderValue = 9;
+  bool _visible = false;
+  Icon _Togglevisible = Icon(
+    Icons.arrow_drop_down_rounded,
+    size: 30,
+  );
 
   @override
   void initState() {
@@ -90,6 +94,102 @@ class _PoolMarketShortTermBuyScreenState
                   ),
                 ),
               ),
+              Visibility(
+                visible: _visible,
+                child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text("Energy to buy"),
+                              Text("Energy tariff"),
+                              Text("Energy price"),
+                              Text("Wheeling charge Tariff"),
+                              Text("Wheeling charge"),
+                              Text("Trading fee"),
+                              Text("Vat (7%)")
+                            ],
+                          ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Row(
+                                children: [
+                                  Text("7.50"),
+                                  SizedBox(
+                                    width: 5,
+                                  ),
+                                  Text("kWh")
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  Text("3.00"),
+                                  SizedBox(
+                                    width: 5,
+                                  ),
+                                  Text("THB/kWh")
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  Text("22.50"),
+                                  SizedBox(
+                                    width: 5,
+                                  ),
+                                  Text("THB")
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  Text("1.15"),
+                                  SizedBox(
+                                    width: 5,
+                                  ),
+                                  Text("THB/kWh")
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  Text("8.62"),
+                                  SizedBox(
+                                    width: 5,
+                                  ),
+                                  Text("THB")
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  Text("0.08"),
+                                  SizedBox(
+                                    width: 5,
+                                  ),
+                                  Text("THB")
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  Text("1.57"),
+                                  SizedBox(
+                                    width: 5,
+                                  ),
+                                  Text("THB")
+                                ],
+                              ),
+                            ],
+                          )
+                        ],
+                      )
+                    ],
+                  ),
+                ),
+              ),
               Container(
                 decoration: BoxDecoration(color: backgroundColor),
                 padding: EdgeInsets.symmetric(horizontal: 20),
@@ -107,34 +207,44 @@ class _PoolMarketShortTermBuyScreenState
                             "Estimated buy",
                             style: TextStyle(fontSize: 16),
                           ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            mainAxisSize: MainAxisSize.max,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                  padding: EdgeInsets.only(right: 10),
-                                  child: Text(
-                                    "32.77",
-                                    style: TextStyle(
-                                        fontSize: 20, color: redColor),
-                                  )),
-                              Container(
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  mainAxisSize: MainAxisSize.max,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Text("THB"),
-                                    Icon(
-                                      Icons.arrow_drop_down_rounded,
-                                      size: 30,
-                                    )
-                                  ],
-                                ),
-                              )
-                            ],
+                          GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                _visible = !_visible;
+                              });
+                            },
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              mainAxisSize: MainAxisSize.max,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                    padding: EdgeInsets.only(right: 10),
+                                    child: Text(
+                                      "32.77",
+                                      style: TextStyle(
+                                          fontSize: 20, color: redColor),
+                                    )),
+                                Container(
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    mainAxisSize: MainAxisSize.max,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Text("THB"),
+                                      Icon(
+                                        _visible
+                                            ? Icons.arrow_drop_down_rounded
+                                            : Icons.arrow_drop_up_rounded,
+                                        size: 30,
+                                      )
+                                    ],
+                                  ),
+                                )
+                              ],
+                            ),
                           ),
                         ],
                       ),
@@ -168,19 +278,24 @@ class _PoolMarketShortTermBuyScreenState
                         ],
                       ),
                     ),
-                    Container(
-                      decoration: BoxDecoration(
-                          color: primaryColor,
-                          borderRadius: BorderRadius.circular(15)),
-                      height: 40,
-                      width: MediaQuery.of(context).size.width,
-                      child: Center(
-                        child: Text(
-                          "Submit",
-                          style: TextStyle(
-                              color: backgroundColor,
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold),
+                    GestureDetector(
+                      onTap: () {
+                        _onSubmitPressed();
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                            color: primaryColor,
+                            borderRadius: BorderRadius.circular(15)),
+                        height: 40,
+                        width: MediaQuery.of(context).size.width,
+                        child: Center(
+                          child: Text(
+                            "Submit",
+                            style: TextStyle(
+                                color: backgroundColor,
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold),
+                          ),
                         ),
                       ),
                     )
