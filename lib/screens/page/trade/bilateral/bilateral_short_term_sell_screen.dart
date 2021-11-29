@@ -5,6 +5,7 @@ import 'package:egat_flutter/screens/page/widgets/page_appbar.dart';
 import 'package:egat_flutter/screens/page/widgets/page_bottom_navigation_bar.dart';
 import 'package:egat_flutter/screens/page/widgets/side_menu.dart';
 import 'package:egat_flutter/screens/page/trade/tabbar.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:egat_flutter/constant.dart';
@@ -21,6 +22,16 @@ class _BilateralShortTermSellScreenState
     extends State<BilateralShortTermSellScreen> {
   bool _isChecked = false;
   double _currentSliderValue = 9;
+  var textlist = [
+    'Period: 14:00-15:00 Price 3.05 THB/kWh',
+    'Period: 14:00-15:00 Price 3.05 THB/kWh',
+    'Period: 14:00-15:00 Price 3.05 THB/kWh',
+    'Period: 14:00-15:00 Price 3.05 THB/kWh',
+    'Period: 14:00-15:00 Price 3.05 THB/kWh',
+    'Period: 14:00-15:00 Price 3.05 THB/kWh',
+    'Period: 14:00-15:00 Price 3.05 THB/kWh',
+    'Period: 14:00-15:00 Price 3.05 THB/kWh'
+  ];
 
   @override
   void initState() {
@@ -208,19 +219,24 @@ class _BilateralShortTermSellScreenState
                           ],
                         ),
                       ),
-                      Container(
-                        decoration: BoxDecoration(
-                            color: primaryColor,
-                            borderRadius: BorderRadius.circular(15)),
-                        height: 40,
-                        width: MediaQuery.of(context).size.width,
-                        child: Center(
-                          child: Text(
-                            "Submit",
-                            style: TextStyle(
-                                color: backgroundColor,
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold),
+                      GestureDetector(
+                        onTap: () {
+                          showAlertDialog(context);
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                              color: primaryColor,
+                              borderRadius: BorderRadius.circular(15)),
+                          height: 40,
+                          width: MediaQuery.of(context).size.width,
+                          child: Center(
+                            child: Text(
+                              "Submit",
+                              style: TextStyle(
+                                  color: backgroundColor,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold),
+                            ),
                           ),
                         ),
                       )
@@ -426,5 +442,91 @@ class _BilateralShortTermSellScreenState
     BilateralShortTermSell model =
         Provider.of<BilateralShortTermSell>(context, listen: false);
     model.setPageBilateralTrade();
+  }
+
+  void showAlertDialog(BuildContext context) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Short term Bilateral",
+                  style: TextStyle(color: primaryColor, fontSize: 24),
+                ),
+                SizedBox(
+                  height: 5,
+                ),
+                Text(
+                  "Offer to sell",
+                  style: TextStyle(color: greenColor, fontSize: 18),
+                ),
+              ],
+            ),
+            content: Container(
+              padding: EdgeInsets.all(5),
+              width: MediaQuery.of(context).size.width / 1.5,
+              height: MediaQuery.of(context).size.width / 3.0,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: Colors.grey,
+              ),
+              child: SingleChildScrollView(
+                child: Column(
+                  children: textlist
+                      .map((item) => new Text(
+                            item,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(color: blackColor),
+                          ))
+                      .toList(),
+                ),
+              ),
+            ),
+            backgroundColor: Colors.grey[800],
+            actionsAlignment: MainAxisAlignment.spaceEvenly,
+            actions: [
+              FlatButton(
+                  onPressed: () {
+                    _onSubmitPressed();
+                    Navigator.pop(context);
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                        color: primaryColor,
+                        borderRadius: BorderRadius.circular(5)),
+                    child: Padding(
+                      padding: const EdgeInsets.all(6),
+                      child: Text(
+                        "Agree",
+                        style: TextStyle(color: blackColor),
+                      ),
+                    ),
+                  )),
+              FlatButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                        color: greyColor,
+                        borderRadius: BorderRadius.circular(5)),
+                    child: Padding(
+                      padding: const EdgeInsets.all(6),
+                      child: Text(
+                        "Cancel",
+                        style: TextStyle(color: blackColor),
+                      ),
+                    ),
+                  )),
+            ],
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          );
+        });
   }
 }
