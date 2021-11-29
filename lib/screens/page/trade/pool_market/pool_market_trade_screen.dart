@@ -62,134 +62,142 @@ class _PoolMarketTradeScreenState extends State<PoolMarketTradeScreen> {
       padding: const EdgeInsets.only(top: 12, bottom: 6),
       child: LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) {
-          return SingleChildScrollView(
-            child: Container(
-              constraints: BoxConstraints(
-                minHeight: constraints.maxHeight,
-              ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Tabbar(),
-                  SizedBox(
-                    height: 10,
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Tabbar(),
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Container(
+                    constraints: BoxConstraints(
+                      minHeight: constraints.maxHeight,
+                    ),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        SizedBox(
+                          height: 10,
+                        ),
+                        //  TextButton(
+                        //   onPressed: _onListTileBuyPressed,
+                        //   child: Text('ListTileBuy'),
+                        // ),
+                        // TextButton(
+                        //   onPressed: _onListTileSellPressed,
+                        //   child: Text('ListTileSell'),
+                        // ),
+                        Row(
+                          // Row of dropdown box
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          mainAxisSize: MainAxisSize.max,
+                          children: [
+                            Container(
+                                height: 35,
+                                padding: EdgeInsets.symmetric(horizontal: 3),
+                                decoration: BoxDecoration(
+                                  color: Colors.grey[900],
+                                  borderRadius: BorderRadius.circular(5),
+                                ),
+                                child: DropdownButton(
+                                  value: _timeinit,
+                                  icon: Icon(
+                                    Icons.arrow_drop_down_rounded,
+                                  ),
+                                  iconSize: 20,
+                                  alignment: Alignment.center,
+                                  borderRadius: BorderRadius.circular(20),
+                                  onChanged: (String? newValue) {
+                                    setState(() {
+                                      _timeinit = newValue!;
+                                    });
+                                  },
+                                  items: timeItem.map((String items) {
+                                    return DropdownMenuItem(
+                                      value: items,
+                                      child: Text(items),
+                                    );
+                                  }).toList(),
+                                  underline: DropdownButtonHideUnderline(
+                                    child: Container(),
+                                  ),
+                                )),
+                            Container(
+                                height: 35,
+                                padding: EdgeInsets.symmetric(horizontal: 3),
+                                decoration: BoxDecoration(
+                                  color: Colors.grey[900],
+                                  borderRadius: BorderRadius.circular(5),
+                                ),
+                                child: DropdownButton(
+                                  value: _dateinit,
+                                  icon: Icon(Icons.arrow_drop_down_rounded),
+                                  iconSize: 20,
+                                  alignment: Alignment.center,
+                                  borderRadius: BorderRadius.circular(20),
+                                  onChanged: (String? newValue) {
+                                    setState(() {
+                                      _dateinit = newValue!;
+                                    });
+                                  },
+                                  items: dateItem.map((String items) {
+                                    return DropdownMenuItem(
+                                      value: items,
+                                      child: Text(items),
+                                    );
+                                  }).toList(),
+                                  underline: DropdownButtonHideUnderline(
+                                    child: Container(),
+                                  ),
+                                )),
+                            Container(
+                                height: 35,
+                                padding: EdgeInsets.symmetric(horizontal: 3),
+                                decoration: BoxDecoration(
+                                  color: primaryColor,
+                                  borderRadius: BorderRadius.circular(5),
+                                ),
+                                child: DropdownButton(
+                                  value: _offerinit,
+                                  icon: Icon(Icons.arrow_drop_down_rounded),
+                                  iconSize: 20,
+                                  iconEnabledColor: backgroundColor,
+                                  dropdownColor: primaryColor,
+                                  style: TextStyle(
+                                      fontSize: 18, color: backgroundColor),
+                                  alignment: Alignment.center,
+                                  borderRadius: BorderRadius.circular(20),
+                                  onChanged: (String? newValue) {
+                                    setState(() {
+                                      _offerinit = newValue!;
+                                    });
+                                  },
+                                  items: offerItem.map((String items) {
+                                    return DropdownMenuItem(
+                                      value: items,
+                                      child: Text(items),
+                                    );
+                                  }).toList(),
+                                  underline: DropdownButtonHideUnderline(
+                                    child: Container(),
+                                  ),
+                                )),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        _buildCloseCard("13:00-14:00", 5, 3),
+                        _buildPeriodCard("14:00-15:00", 5),
+                        _buildPeriodCard("15:00-16:00", 6),
+                        _buildPeriodCard("16:00-17:00", 0),
+                        _buildPeriodCard("17:00-18:00", 2)
+                      ],
+                    ),
                   ),
-                  //  TextButton(
-                  //   onPressed: _onListTileBuyPressed,
-                  //   child: Text('ListTileBuy'),
-                  // ),
-                  // TextButton(
-                  //   onPressed: _onListTileSellPressed,
-                  //   child: Text('ListTileSell'),
-                  // ),
-                  Row(
-                    // Row of dropdown box
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      Container(
-                          height: 35,
-                          padding: EdgeInsets.symmetric(horizontal: 3),
-                          decoration: BoxDecoration(
-                            color: Colors.grey[900],
-                            borderRadius: BorderRadius.circular(5),
-                          ),
-                          child: DropdownButton(
-                            value: _timeinit,
-                            icon: Icon(
-                              Icons.arrow_drop_down_rounded,
-                            ),
-                            iconSize: 20,
-                            alignment: Alignment.center,
-                            borderRadius: BorderRadius.circular(20),
-                            onChanged: (String? newValue) {
-                              setState(() {
-                                _timeinit = newValue!;
-                              });
-                            },
-                            items: timeItem.map((String items) {
-                              return DropdownMenuItem(
-                                value: items,
-                                child: Text(items),
-                              );
-                            }).toList(),
-                            underline: DropdownButtonHideUnderline(
-                              child: Container(),
-                            ),
-                          )),
-                      Container(
-                          height: 35,
-                          padding: EdgeInsets.symmetric(horizontal: 3),
-                          decoration: BoxDecoration(
-                            color: Colors.grey[900],
-                            borderRadius: BorderRadius.circular(5),
-                          ),
-                          child: DropdownButton(
-                            value: _dateinit,
-                            icon: Icon(Icons.arrow_drop_down_rounded),
-                            iconSize: 20,
-                            alignment: Alignment.center,
-                            borderRadius: BorderRadius.circular(20),
-                            onChanged: (String? newValue) {
-                              setState(() {
-                                _dateinit = newValue!;
-                              });
-                            },
-                            items: dateItem.map((String items) {
-                              return DropdownMenuItem(
-                                value: items,
-                                child: Text(items),
-                              );
-                            }).toList(),
-                            underline: DropdownButtonHideUnderline(
-                              child: Container(),
-                            ),
-                          )),
-                      Container(
-                          height: 35,
-                          padding: EdgeInsets.symmetric(horizontal: 3),
-                          decoration: BoxDecoration(
-                            color: primaryColor,
-                            borderRadius: BorderRadius.circular(5),
-                          ),
-                          child: DropdownButton(
-                            value: _offerinit,
-                            icon: Icon(Icons.arrow_drop_down_rounded),
-                            iconSize: 20,
-                            iconEnabledColor: backgroundColor,
-                            dropdownColor: primaryColor,
-                            style:
-                                TextStyle(fontSize: 18, color: backgroundColor),
-                            alignment: Alignment.center,
-                            borderRadius: BorderRadius.circular(20),
-                            onChanged: (String? newValue) {
-                              setState(() {
-                                _offerinit = newValue!;
-                              });
-                            },
-                            items: offerItem.map((String items) {
-                              return DropdownMenuItem(
-                                value: items,
-                                child: Text(items),
-                              );
-                            }).toList(),
-                            underline: DropdownButtonHideUnderline(
-                              child: Container(),
-                            ),
-                          )),
-                    ],
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  _buildCloseCard("13:00-14:00", 5, 3),
-                  _buildPeriodCard("14:00-15:00", 5),
-                  _buildPeriodCard("15:00-16:00", 6),
-                  _buildPeriodCard("16:00-17:00", 0),
-                  _buildPeriodCard("17:00-18:00", 2)
-                ],
-              ),
-            ),
+                ),
+              )
+            ],
           );
         },
       ),

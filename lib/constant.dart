@@ -17,6 +17,7 @@ final orangeColor = Colors.orange[500];
 
 const onBgColor = Colors.white;
 final surfaceColor = HexColor("#262729");
+final surfaceGreyColor = HexColor("#3E3E3E");
 const onSurfaceColor = Colors.white;
 final contentBgColor = HexColor("#262729");
 const onPrimaryBgColor = Colors.black;
@@ -29,6 +30,7 @@ final menuBgColor = HexColor("#3E3E3E"); //
 
 final greenColor = HexColor("#99FF75");
 final redColor = HexColor("#F6645A");
+
 
 final appTitle = 'EGAT P2P';
 

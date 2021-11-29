@@ -4,6 +4,8 @@ import 'package:egat_flutter/screens/page/widgets/page_appbar.dart';
 import 'package:egat_flutter/screens/page/widgets/page_bottom_navigation_bar.dart';
 import 'package:egat_flutter/screens/page/widgets/side_menu.dart';
 import 'package:egat_flutter/screens/page/trade/tabbar.dart';
+import 'package:egat_flutter/screens/widgets/loading_dialog.dart';
+import 'package:egat_flutter/screens/widgets/show_exception.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:egat_flutter/constant.dart';
@@ -61,133 +63,141 @@ class _BilateralTradeScreenState extends State<BilateralTradeScreen> {
       padding: const EdgeInsets.only(top: 12, bottom: 6),
       child: LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) {
-          return SingleChildScrollView(
-            child: Container(
-              constraints: BoxConstraints(
-                minHeight: constraints.maxHeight,
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Tabbar(),
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Container(
+                    constraints: BoxConstraints(
+                      minHeight: constraints.maxHeight,
+                    ),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          mainAxisSize: MainAxisSize.max,
+                          children: [
+                            Container(
+                                height: 35,
+                                padding: EdgeInsets.symmetric(horizontal: 3),
+                                decoration: BoxDecoration(
+                                  color: Colors.grey[900],
+                                  borderRadius: BorderRadius.circular(5),
+                                ),
+                                child: DropdownButton(
+                                  value: _timeinit,
+                                  icon: Icon(
+                                    Icons.arrow_drop_down_rounded,
+                                  ),
+                                  iconSize: 20,
+                                  alignment: Alignment.center,
+                                  borderRadius: BorderRadius.circular(20),
+                                  onChanged: (String? newValue) {
+                                    setState(() {
+                                      _timeinit = newValue!;
+                                    });
+                                  },
+                                  items: timeItem.map((String items) {
+                                    return DropdownMenuItem(
+                                      value: items,
+                                      child: Text(items),
+                                    );
+                                  }).toList(),
+                                  underline: DropdownButtonHideUnderline(
+                                    child: Container(),
+                                  ),
+                                )),
+                            Container(
+                                height: 35,
+                                padding: EdgeInsets.symmetric(horizontal: 3),
+                                decoration: BoxDecoration(
+                                  color: Colors.grey[900],
+                                  borderRadius: BorderRadius.circular(5),
+                                ),
+                                child: DropdownButton(
+                                  value: _dateinit,
+                                  icon: Icon(Icons.arrow_drop_down_rounded),
+                                  iconSize: 20,
+                                  alignment: Alignment.center,
+                                  borderRadius: BorderRadius.circular(20),
+                                  onChanged: (String? newValue) {
+                                    setState(() {
+                                      _dateinit = newValue!;
+                                    });
+                                  },
+                                  items: dateItem.map((String items) {
+                                    return DropdownMenuItem(
+                                      value: items,
+                                      child: Text(items),
+                                    );
+                                  }).toList(),
+                                  underline: DropdownButtonHideUnderline(
+                                    child: Container(),
+                                  ),
+                                )),
+                            Container(
+                                height: 35,
+                                padding: EdgeInsets.symmetric(horizontal: 3),
+                                decoration: BoxDecoration(
+                                  color: primaryColor,
+                                  borderRadius: BorderRadius.circular(5),
+                                ),
+                                child: DropdownButton(
+                                  value: _offerinit,
+                                  icon: Icon(Icons.arrow_drop_down_rounded),
+                                  iconSize: 20,
+                                  iconEnabledColor: backgroundColor,
+                                  dropdownColor: primaryColor,
+                                  style: TextStyle(
+                                      fontSize: 16, color: backgroundColor),
+                                  alignment: Alignment.center,
+                                  borderRadius: BorderRadius.circular(20),
+                                  onChanged: (String? newValue) {
+                                    setState(() {
+                                      _offerinit = newValue!;
+                                    });
+                                  },
+                                  items: offerItem.map((String items) {
+                                    return DropdownMenuItem(
+                                      value: items,
+                                      child: Text(items),
+                                    );
+                                  }).toList(),
+                                  underline: DropdownButtonHideUnderline(
+                                    child: Container(),
+                                  ),
+                                )),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        _buildCloseCard("13:00-14:00", 5, 3),
+                        _buildPeriodCard("14:00-15:00", 5),
+                        _buildPeriodCard("15:00-16:00", 6),
+                        _buildPeriodCard("16:00-17:00", 0),
+                        _buildPeriodCard("17:00-18:00", 2)
+                        // TextButton(
+                        //   onPressed: _onListTileBuyPressed,
+                        //   child: Text('ListTileBuy'),
+                        // ),
+                        // TextButton(
+                        //   onPressed: _onListTileSellPressed,
+                        //   child: Text('ListTileSell'),
+                        // ),
+                      ],
+                    ),
+                  ),
+                ),
               ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Tabbar(),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      Container(
-                          height: 35,
-                          padding: EdgeInsets.symmetric(horizontal: 3),
-                          decoration: BoxDecoration(
-                            color: Colors.grey[900],
-                            borderRadius: BorderRadius.circular(5),
-                          ),
-                          child: DropdownButton(
-                            value: _timeinit,
-                            icon: Icon(
-                              Icons.arrow_drop_down_rounded,
-                            ),
-                            iconSize: 20,
-                            alignment: Alignment.center,
-                            borderRadius: BorderRadius.circular(20),
-                            onChanged: (String? newValue) {
-                              setState(() {
-                                _timeinit = newValue!;
-                              });
-                            },
-                            items: timeItem.map((String items) {
-                              return DropdownMenuItem(
-                                value: items,
-                                child: Text(items),
-                              );
-                            }).toList(),
-                            underline: DropdownButtonHideUnderline(
-                              child: Container(),
-                            ),
-                          )),
-                      Container(
-                          height: 35,
-                          padding: EdgeInsets.symmetric(horizontal: 3),
-                          decoration: BoxDecoration(
-                            color: Colors.grey[900],
-                            borderRadius: BorderRadius.circular(5),
-                          ),
-                          child: DropdownButton(
-                            value: _dateinit,
-                            icon: Icon(Icons.arrow_drop_down_rounded),
-                            iconSize: 20,
-                            alignment: Alignment.center,
-                            borderRadius: BorderRadius.circular(20),
-                            onChanged: (String? newValue) {
-                              setState(() {
-                                _dateinit = newValue!;
-                              });
-                            },
-                            items: dateItem.map((String items) {
-                              return DropdownMenuItem(
-                                value: items,
-                                child: Text(items),
-                              );
-                            }).toList(),
-                            underline: DropdownButtonHideUnderline(
-                              child: Container(),
-                            ),
-                          )),
-                      Container(
-                          height: 35,
-                          padding: EdgeInsets.symmetric(horizontal: 3),
-                          decoration: BoxDecoration(
-                            color: primaryColor,
-                            borderRadius: BorderRadius.circular(5),
-                          ),
-                          child: DropdownButton(
-                            value: _offerinit,
-                            icon: Icon(Icons.arrow_drop_down_rounded),
-                            iconSize: 20,
-                            iconEnabledColor: backgroundColor,
-                            dropdownColor: primaryColor,
-                            style:
-                                TextStyle(fontSize: 16, color: backgroundColor),
-                            alignment: Alignment.center,
-                            borderRadius: BorderRadius.circular(20),
-                            onChanged: (String? newValue) {
-                              setState(() {
-                                _offerinit = newValue!;
-                              });
-                            },
-                            items: offerItem.map((String items) {
-                              return DropdownMenuItem(
-                                value: items,
-                                child: Text(items),
-                              );
-                            }).toList(),
-                            underline: DropdownButtonHideUnderline(
-                              child: Container(),
-                            ),
-                          )),
-                    ],
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  _buildCloseCard("13:00-14:00", 5, 3),
-                  _buildPeriodCard("14:00-15:00", 5),
-                  _buildPeriodCard("15:00-16:00", 6),
-                  _buildPeriodCard("16:00-17:00", 0),
-                  _buildPeriodCard("17:00-18:00", 2)
-                  // TextButton(
-                  //   onPressed: _onListTileBuyPressed,
-                  //   child: Text('ListTileBuy'),
-                  // ),
-                  // TextButton(
-                  //   onPressed: _onListTileSellPressed,
-                  //   child: Text('ListTileSell'),
-                  // ),
-                ],
-              ),
-            ),
+            ],
           );
         },
       ),
@@ -432,4 +442,28 @@ class _BilateralTradeScreenState extends State<BilateralTradeScreen> {
     BilateralTrade model = Provider.of<BilateralTrade>(context, listen: false);
     model.setPageBilateralSell();
   }
+
+
+  // void _onResetPasswordPressed() async {
+  //   await showLoading();
+
+  //   try {
+  //     var model = Provider.of<BilateralTrade>(context, listen: false);
+  //     await model.getOrder();
+  //   } catch (e) {
+  //     showException(context, e.toString());
+  //   } finally {
+  //     await hideLoading();
+  //     var forgotPasswordModel =
+  //         Provider.of<ForgotPasswordModel>(context, listen: false);
+  //   String message = 'Your password has been changed successfully.';
+  //   ScaffoldMessenger.of(context).clearSnackBars();
+  //   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+  //     content: Text(message),
+  //   ));
+  //     forgotPasswordModel.finish();
+  //   }
+  // }
+
+
 }

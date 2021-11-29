@@ -4,14 +4,23 @@ import 'package:egat_flutter/screens/login/api/login_api_mock.dart';
 import 'package:egat_flutter/screens/login/api/model/LoginRequest.dart';
 import 'package:egat_flutter/screens/login/api/model/LoginStatusState.dart';
 import 'package:egat_flutter/screens/login/login.dart';
+import 'package:egat_flutter/screens/session.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:provider/provider.dart';
 
 class LoginModel extends ChangeNotifier {
+  LoginSession loginSession;
   bool isError = false;
+
+  LoginModel({required this.loginSession});
 
   setIsError(isError) {
     this.isError = isError;
     notifyListeners();
+  }
+
+  setSession(session){
+    loginSession = session;
   }
 
   // LoginApi api = LoginApi();
@@ -29,5 +38,13 @@ class LoginModel extends ChangeNotifier {
         rememberMe: rememberMe,
       ),
     );
+    loginSession.setAccessToken(LoginSessionInfo(accessToken:response.accessToken!));
+    // LoginSession session = new LoginSession();
+    // session.setAccessToken(LoginSessionInfo(accessToken: response.accessToken!));
   }
+
+ 
+
+
+  // LoginSession locale = Provider.of<LoginSession>(context);
 }

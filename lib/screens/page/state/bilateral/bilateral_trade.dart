@@ -35,4 +35,23 @@ class BilateralTrade extends ChangeNotifier {
   setPageBilateralSell() {
     parent.status.setStateBilateralSell();
   }
+
+//  Future<bool> resetPassword(String password) async {
+//     if (parent.session.info == null) {
+//       // This must not happened.
+//       return false;
+//     }
+
+//     var result = await parent.api.changeForgotPassword(
+//         ChangeForgotPasswordRequest(
+//           sessionId: parent.session.info!.sessionId,
+//           sessionToken: parent.session.info!.sessionToken,
+//           email: parent.email.info.email!,
+//           password: password,
+//         ));
+
+//     nextPage();
+
+//     return false;
+//   }
 }

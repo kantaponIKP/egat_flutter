@@ -4,6 +4,7 @@ import 'package:egat_flutter/screens/page/state/home.dart';
 import 'package:egat_flutter/screens/page/widgets/logo_appbar.dart';
 import 'package:egat_flutter/screens/page/widgets/page_bottom_navigation_bar.dart';
 import 'package:egat_flutter/screens/page/widgets/side_menu.dart';
+import 'package:egat_flutter/screens/session.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
@@ -40,6 +41,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    LoginSession model = Provider.of<LoginSession>(context);
+    print("accessToken");
+    print(model.info!.accessToken);
     return Scaffold(
       appBar: LogoAppbar(),
       drawer: NavigationMenuWidget(),

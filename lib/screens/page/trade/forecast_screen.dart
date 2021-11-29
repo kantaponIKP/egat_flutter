@@ -58,23 +58,31 @@ class _ForecastScreenState extends State<ForecastScreen>
       padding: const EdgeInsets.only(top: 12, bottom: 6),
       child: LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) {
-          return SingleChildScrollView(
-            child: Container(
-              constraints: BoxConstraints(
-                minHeight: constraints.maxHeight,
-              ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Tabbar(),
-                  _buildEnergyBalance(),
-                  _buildEnergyWidgetList(),
-                  Container(height: 300, child: Placeholder()),
-                  _buildHeaderWidget(),
-                  _buildListTile(),
-                ],
-              ),
-            ),
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Tabbar(),
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Container(
+                    constraints: BoxConstraints(
+                      minHeight: constraints.maxHeight,
+                    ),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        _buildEnergyBalance(),
+                        _buildEnergyWidgetList(),
+                        Container(height: 300, child: Placeholder()),
+                        _buildHeaderWidget(),
+                        _buildListTile(),
+                      ],
+                    ),
+                  ),
+                ),
+              )
+            ],
           );
         },
       ),
@@ -188,7 +196,7 @@ class _ForecastScreenState extends State<ForecastScreen>
                     },
                     child: Container(
                       decoration: BoxDecoration(
-                        color: Colors.grey[800],
+                        color: surfaceGreyColor,
                         borderRadius: BorderRadius.circular(5),
                       ),
                       height: 50,
