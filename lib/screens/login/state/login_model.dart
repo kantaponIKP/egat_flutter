@@ -19,12 +19,12 @@ class LoginModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  setSession(session){
+  setSession(session) {
     loginSession = session;
   }
 
-  // LoginApi api = LoginApi();
-  LoginApiMock api = LoginApiMock();
+  LoginApi api = LoginApi();
+  // LoginApiMock api = LoginApiMock();
 
   Future<void> processLogin({
     required String email,
@@ -38,13 +38,13 @@ class LoginModel extends ChangeNotifier {
         rememberMe: rememberMe,
       ),
     );
-    loginSession.setAccessToken(LoginSessionInfo(accessToken:response.accessToken!));
+    loginSession.setAccessToken(LoginSessionInfo(
+        accessToken: response.accessToken!,
+        userId: response.userId!,
+        refreshToken: response.refreshToken!));
     // LoginSession session = new LoginSession();
     // session.setAccessToken(LoginSessionInfo(accessToken: response.accessToken!));
   }
-
- 
-
 
   // LoginSession locale = Provider.of<LoginSession>(context);
 }

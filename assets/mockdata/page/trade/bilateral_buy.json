@@ -1,0 +1,32 @@
+[
+    {
+        "lat": 101,
+        "lng": 102,
+        "name": "PROSUMER P01",
+        "date": "2021-12-01T14:39:14.492943Z",
+        "energyToBuy": 5,
+        "estimatedBuy": 7,
+        "netEnergyPrice": 2,
+        "energyTariff": 1,
+        "energyPrice": 2,
+        "wheelingChargeTariff": 3,
+        "wheelingCharge": 4,
+        "tradingFee": 1,
+        "vat": 2
+    },
+    {
+        "lat": 101,
+        "lng": 102,
+        "name": "PROSUMER P02",
+        "date": "2021-12-01T14:39:14.492943Z",
+        "energyToBuy": 1,
+        "estimatedBuy": 6,
+        "netEnergyPrice": 3,
+        "energyTariff": 2,
+        "energyPrice": 1,
+        "wheelingChargeTariff": 3,
+        "wheelingCharge": 4,
+        "tradingFee": 5,
+        "vat": 2
+    }
+]

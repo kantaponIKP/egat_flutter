@@ -1,0 +1,20 @@
+[
+    {
+        "lat": 101,
+        "lng": 102,
+        "name": "PROSUMER P01",
+        "date": "2021-12-01T14:39:14.492943Z",
+        "energy": 5,
+        "price": 7,
+        "sellerId": "2"
+    },
+    {
+        "lat": 101,
+        "lng": 102,
+        "name": "PROSUMER P02",
+        "date": "2021-12-01T14:39:14.492943Z",
+        "energy": 1,
+        "price": 6,
+        "sellerId": "3"
+    }
+]

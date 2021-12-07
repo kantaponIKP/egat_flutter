@@ -1,15 +1,15 @@
 import 'dart:convert';
 
-class Bilateral {
-  String accessToken;
+class BilateralLongTermSellInfoRequest {
+  String date;
 
-  Bilateral({
-    required this.accessToken,
+  BilateralLongTermSellInfoRequest({
+    required this.date,
   });
 
   String toJSON() {
     Map<String, dynamic> jsonMap = Map<String, dynamic>();
-    jsonMap['accessToken'] = this.accessToken;
+    jsonMap['date'] = this.date;
 
     return jsonEncode(jsonMap);
   }

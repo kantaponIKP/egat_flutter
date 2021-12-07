@@ -37,6 +37,7 @@ final appTitle = 'EGAT P2P';
 final apiBaseUrlRegister = "https://egat-p2p-register.di.iknowplus.co.th";
 final apiBaseUrlLogin = "https://egat-p2p-login.di.iknowplus.co.th";
 final apiBaseUrlProfileManage = "https://egat-p2p-profile-mange.di.iknowplus.co.th/";
+final apiBaseUrlTrade = "http://egat-p2p-bilateral.di.iknowplus.co.th/";
 
 final loggerPrinter = PrettyPrinter();
 final loggerLevel = Level.debug;

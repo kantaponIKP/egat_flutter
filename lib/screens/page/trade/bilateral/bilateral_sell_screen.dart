@@ -1,15 +1,22 @@
 import 'dart:async';
 
 import 'package:egat_flutter/constant.dart';
+import 'package:egat_flutter/screens/page/state/bilateral/bilateral_buy.dart';
+import 'package:egat_flutter/screens/page/state/bilateral/bilateral_long_term_sell.dart';
 import 'package:egat_flutter/screens/page/state/bilateral/bilateral_sell.dart';
+import 'package:egat_flutter/screens/page/state/bilateral/bilateral_short_term_sell.dart';
 import 'package:egat_flutter/screens/page/trade/bottom_button.dart';
 import 'package:egat_flutter/screens/page/widgets/logo_appbar.dart';
 import 'package:egat_flutter/screens/page/widgets/page_appbar.dart';
 import 'package:egat_flutter/screens/page/widgets/page_bottom_navigation_bar.dart';
 import 'package:egat_flutter/screens/page/widgets/side_menu.dart';
 import 'package:egat_flutter/screens/page/trade/tabbar.dart';
+import 'package:egat_flutter/screens/session.dart';
+import 'package:egat_flutter/screens/widgets/loading_dialog.dart';
+import 'package:egat_flutter/screens/widgets/show_exception.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class BilateralSellScreen extends StatefulWidget {
@@ -20,8 +27,13 @@ class BilateralSellScreen extends StatefulWidget {
 }
 
 class _BilateralSellScreenState extends State<BilateralSellScreen> {
- String _offerinit = "";
+  String _offerinit = "";
   String _date = "";
+  List<BilateralSellTile> _bilateralTileList = [];
+  List<BilateralSellTile> _initBilateralTileList = [];
+  int _selectedIndex = 0;
+  List<bool> _isChecked = [];
+
   Completer<GoogleMapController> _controller = Completer();
   var offerItem = [
     "Lowest Price",
@@ -34,7 +46,8 @@ class _BilateralSellScreenState extends State<BilateralSellScreen> {
   void initState() {
     super.initState();
     _offerinit = offerItem.first;
-    _date = "14:00-15:00, 21 August 2021";
+    // _date = "14:00-15:00, 21 August 2021";
+    _getData();
   }
 
   @override
@@ -51,6 +64,15 @@ class _BilateralSellScreenState extends State<BilateralSellScreen> {
   }
 
   Padding _buildAction(BuildContext context) {
+    LoginSession loginModel = Provider.of<LoginSession>(context, listen: false);
+    bool isSubmitable = _bilateralTileList.where(
+          (element) {
+            var isSeller = element.sellerId == loginModel.info!.userId;
+            var isBuyer = (element.buyerId ?? '') == loginModel.info!.userId;
+            return isSeller || isBuyer;
+          },
+        ).length ==
+        0;
     return Padding(
       padding: const EdgeInsets.only(top: 12, bottom: 6),
       child: LayoutBuilder(
@@ -75,21 +97,36 @@ class _BilateralSellScreenState extends State<BilateralSellScreen> {
                           SizedBox(height: 170, child: _buildMap(context)),
                           SizedBox(height: 12),
                           _buildSelectionSection(),
-                          _buildPeriodCard(
-                              "A", "Prosumer P02", "14:23, 20 Aug", 8.00, 3.05),
-                          _buildPeriodCard(
-                              "B", "Prosumer P02", "14:23, 20 Aug", 8.00, 3.05),
-                          _buildPeriodCard(
-                              "D", "Prosumer P02", "14:23, 20 Aug", 8.00, 3.05),
-                          _buildPeriodCard(
-                              "D", "Prosumer P02", "14:23, 20 Aug", 8.00, 3.05),
+                          Container(
+                            height: constraints.maxHeight,
+                            child: ListView.builder(
+                              scrollDirection: Axis.vertical,
+                              itemCount: _bilateralTileList.length,
+                              itemBuilder: (context, index) {
+                                return Visibility(
+                                  visible:
+                                      (_bilateralTileList[index].isLongterm!)
+                                          ? false
+                                          : true,
+                                  child: _buildPeriodCard(
+                                      "A",
+                                      _bilateralTileList[index].name!,
+                                      _bilateralTileList[index].date!,
+                                      _bilateralTileList[index].energy!,
+                                      _bilateralTileList[index].price!,
+                                      index),
+                                );
+                              },
+                            ),
+                          )
                         ],
                       ),
                     ),
                   ),
                 ),
                 BottomButton(
-                    onAction: _onPlaceOrderPressed, actionLabel: Text("Place Order"))
+                    onAction: isSubmitable ? _onPlaceOrderPressed : null,
+                    actionLabel: Text("Place Order"))
               ]);
         },
       ),
@@ -97,123 +134,152 @@ class _BilateralSellScreenState extends State<BilateralSellScreen> {
   }
 
   Widget _buildMap(BuildContext context) {
-    return AspectRatio(
-      aspectRatio: 2 / 1,
-      child: GoogleMap(
-        mapType: MapType.normal,
-        initialCameraPosition:
-            CameraPosition(target: LatLng(101, 202), zoom: 1),
-        onMapCreated: (GoogleMapController controller) {
-          _controller.complete(controller);
-        },
-        markers: Set<Marker>.of(
-          <Marker>[
-            Marker(
-              draggable: true,
-              markerId: MarkerId("1"),
-              position: LatLng(101, 202),
-              icon: BitmapDescriptor.defaultMarker,
-              infoWindow: const InfoWindow(
-                title: 'Your location',
-              ),
-            )
-          ],
-        ),
+    return GoogleMap(
+      mapType: MapType.normal,
+      initialCameraPosition: CameraPosition(target: LatLng(101, 202), zoom: 1),
+      onMapCreated: (GoogleMapController controller) {
+        _controller.complete(controller);
+      },
+      markers: Set<Marker>.of(
+        <Marker>[
+          Marker(
+            draggable: true,
+            markerId: MarkerId("1"),
+            position: LatLng(101, 202),
+            icon: BitmapDescriptor.defaultMarker,
+            infoWindow: const InfoWindow(
+              title: 'Your location',
+            ),
+          )
+        ],
       ),
     );
   }
 
-  Widget _buildPeriodCard(
-      String position, String title, String date, double kwh, double price) {
+  Widget _buildPeriodCard(String position, String title, String date,
+      double energy, double price, int index) {
+    var dateFormat = DateFormat('HH:mm, dd MMM');
     return Container(
       padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+      //TODO:
       decoration: BoxDecoration(borderRadius: BorderRadius.circular(5)),
-      child: Card(
-        child: IntrinsicHeight(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(left: 4.0),
-                child: Container(
-                  width: 24,
-                  height: 24,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: primaryColor,
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Text(position, style: TextStyle(color: blackColor)),
-                    ],
+      child: GestureDetector(
+        onTap: () {
+          setState(() {
+            _bilateralTileList = _initBilateralTileList;
+            _isChecked[index] = !_isChecked[index];
+            _selectedIndex = index;
+          });
+        },
+        child: Card(
+          child: IntrinsicHeight(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(left: 4.0),
+                  child: Container(
+                    width: 24,
+                    height: 24,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: primaryColor,
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Text(position, style: TextStyle(color: blackColor)),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-              Expanded(
-                child: Container(
+                Expanded(
+                  child: Container(
+                    padding: EdgeInsets.all(12),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          title,
+                          style: TextStyle(
+                              fontSize: 16,
+                              color: _isChecked[index]
+                                  ? primaryColor
+                                  : whiteColor),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        Text(
+                          dateFormat.format(DateTime.parse(date).toLocal()),
+                          style: TextStyle(
+                              color: _isChecked[index]
+                                  ? primaryColor
+                                  : whiteColor),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+                VerticalDivider(
+                  indent: 10,
+                  endIndent: 10,
+                  width: 12,
+                  thickness: 2,
+                  color: greyColor,
+                ),
+                Container(
                   padding: EdgeInsets.all(12),
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        title,
-                        style: TextStyle(fontSize: 16),
-                        overflow: TextOverflow.ellipsis,
+                        energy.toString(),
+                        style: TextStyle(
+                            fontSize: 16,
+                            color:
+                                _isChecked[index] ? primaryColor : whiteColor),
                       ),
-                      Text(date)
+                      Text(
+                        "kWh",
+                        style: TextStyle(
+                            fontSize: 12,
+                            color:
+                                _isChecked[index] ? primaryColor : whiteColor),
+                      )
                     ],
                   ),
                 ),
-              ),
-              VerticalDivider(
-                indent: 10,
-                endIndent: 10,
-                width: 12,
-                thickness: 2,
-                color: greyColor,
-              ),
-              Container(
-                padding: EdgeInsets.all(12),
-                child: Column(
-                  children: [
-                    Text(
-                      price.toString(),
-                      style: TextStyle(fontSize: 16),
-                    ),
-                    Text(
-                      "kWh",
-                      style: TextStyle(fontSize: 12),
-                    )
-                  ],
+                VerticalDivider(
+                  indent: 10,
+                  endIndent: 10,
+                  width: 12,
+                  thickness: 2,
+                  color: greyColor,
                 ),
-              ),
-              VerticalDivider(
-                indent: 10,
-                endIndent: 10,
-                width: 12,
-                thickness: 2,
-                color: greyColor,
-              ),
-              Container(
-                padding:
-                    EdgeInsets.only(top: 12, bottom: 12, left: 12, right: 24),
-                child: Column(
-                  children: [
-                    Text(
-                      price.toString(),
-                      style: TextStyle(fontSize: 16),
-                    ),
-                    Text(
-                      "THB",
-                      style: TextStyle(fontSize: 12),
-                    )
-                  ],
+                Container(
+                  padding:
+                      EdgeInsets.only(top: 12, bottom: 12, left: 12, right: 24),
+                  child: Column(
+                    children: [
+                      Text(
+                        price.toStringAsFixed(2),
+                        style: TextStyle(
+                            fontSize: 16,
+                            color:
+                                _isChecked[index] ? primaryColor : whiteColor),
+                      ),
+                      Text(
+                        "THB",
+                        style: TextStyle(
+                            fontSize: 12,
+                            color:
+                                _isChecked[index] ? primaryColor : whiteColor),
+                      )
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -221,12 +287,22 @@ class _BilateralSellScreenState extends State<BilateralSellScreen> {
   }
 
   Widget _buildDateSection() {
+    var dateFormat = DateFormat('dd MMMM yyyy');
+    var startDate = DateTime.parse(_date).toLocal();
+    var endDate = DateTime.parse(_date).toLocal().add(new Duration(hours: 1));
+    var startHour = DateFormat('HH').format(startDate);
+    var endHour = DateFormat('HH').format(endDate);
+    String displayDate = startHour.toString() +
+        ":00-" +
+        endHour.toString() +
+        ":00, " +
+        dateFormat.format(DateTime.parse(_date));
     return Row(children: [
       RichText(
         overflow: TextOverflow.ellipsis,
         textAlign: TextAlign.center,
         text: TextSpan(
-          text: _date,
+          text: displayDate,
           style: TextStyle(
             color: textColor,
             fontSize: (20),
@@ -239,7 +315,7 @@ class _BilateralSellScreenState extends State<BilateralSellScreen> {
   Widget _buildSelectionSection() {
     return Row(
       // mainAxisSize: MainAxisSize.min,
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
 
       children: [
         Container(
@@ -372,13 +448,32 @@ class _BilateralSellScreenState extends State<BilateralSellScreen> {
 
   void _onPlaceOrderPressed() {
     //Navigate
+    // print(_selectedIndex);
+    BilateralShortTermSell bilateralShortTermSell =
+        Provider.of<BilateralShortTermSell>(context, listen: false);
     BilateralSell model = Provider.of<BilateralSell>(context, listen: false);
+    bilateralShortTermSell.info.dateList = [model.info.date!];
     model.setPageBilateralShortTermSell();
   }
 
   void _onLongTermBilateralPressed() {
     //Navigate
+    BilateralLongTermSell bilateralLongTermSell =
+        Provider.of<BilateralLongTermSell>(context, listen: false);
     BilateralSell model = Provider.of<BilateralSell>(context, listen: false);
+    bilateralLongTermSell.info.date = model.info.date;
     model.setPageBilateralLongTermSell();
+  }
+
+  void _getData() async {
+    BilateralSell model = Provider.of<BilateralSell>(context, listen: false);
+    setState(() {
+      _bilateralTileList = model.info.bilateralTileList!;
+      _initBilateralTileList = model.info.bilateralTileList!;
+      _isChecked = List<bool>.filled(_bilateralTileList.length, false);
+      print("Model date");
+      print(model.info.date!);
+      _date = model.info.date!;
+    });
   }
 }

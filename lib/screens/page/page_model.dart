@@ -1,3 +1,4 @@
+import 'package:egat_flutter/screens/page/api/page_api.dart';
 import 'package:egat_flutter/screens/page/api/page_api_mock.dart';
 import 'package:egat_flutter/screens/page/state/bilateral/bilateral_buy.dart';
 import 'package:egat_flutter/screens/page/state/bilateral/bilateral_long_term_buy.dart';
@@ -16,6 +17,7 @@ import 'package:egat_flutter/screens/page/state/page_status.dart';
 import 'package:egat_flutter/screens/page/state/personal_info.dart';
 import 'package:egat_flutter/screens/page/state/sidebar.dart';
 import 'package:egat_flutter/screens/page/state/trading_tabbar.dart';
+import 'package:egat_flutter/screens/session.dart';
 import 'package:flutter/widgets.dart';
 
 class PageModel extends ChangeNotifier {
@@ -36,8 +38,9 @@ class PageModel extends ChangeNotifier {
   late final PoolMarketTrade poolMarketTrade;
   late final PoolMarketShortTermBuy poolMarketOrderBuy;
   late final PoolMarketShortTermSell poolMarketOrderSell;
+  LoginSession session;
 
-  PageModel() {
+  PageModel({required this.session}) {
     status = PageStatus(this);
     sidebar = Sidebar(this);
     personalInfo = PersonalInfo(this);
@@ -58,9 +61,8 @@ class PageModel extends ChangeNotifier {
   }
 
   // TODO : API
-  // PageApi api = PageApi();
-  PageApiMock api = PageApiMock();
+  PageApi api = PageApi();
+  // PageApiMock api = PageApiMock();
 
   void whenPageStatusChanged() {}
-
 }

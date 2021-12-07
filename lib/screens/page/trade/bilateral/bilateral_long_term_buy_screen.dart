@@ -7,7 +7,11 @@ import 'package:egat_flutter/screens/page/widgets/page_appbar.dart';
 import 'package:egat_flutter/screens/page/widgets/page_bottom_navigation_bar.dart';
 import 'package:egat_flutter/screens/page/widgets/side_menu.dart';
 import 'package:egat_flutter/screens/page/trade/tabbar.dart';
+import 'package:egat_flutter/screens/widgets/loading_dialog.dart';
+import 'package:egat_flutter/screens/widgets/show_exception.dart';
+import 'package:egat_flutter/screens/widgets/show_success_snackbar.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class BilateralLongTermBuyScreen extends StatefulWidget {
@@ -20,24 +24,39 @@ class BilateralLongTermBuyScreen extends StatefulWidget {
 
 class _BilateralLongTermBuyScreenState
     extends State<BilateralLongTermBuyScreen> {
-  bool _checkBox7days = false;
-  bool _checkBox30days = false;
-  bool _checkBox90days = false;
-  bool _checkBox1years = false;
-  bool _isChecked = false;
+  int _groupValue = 0;
+  var _daysMap = {
+    0: 7,
+    1: 30,
+    2: 90,
+    3: 365,
+  };
+  List<bool> _isChecked = [];
+  int _days = 0;
+  List<BilateralLongtermBuyTile> _bilateralTileList = [];
+  List<BilateralLongtermBuyTile> _initBilateralTileList = [];
+
+  String _offerinit = "";
+  var offerItem = ["16:00-17:00", "17:00-18:00", "18:00-19:00", "19:00-20:00"];
+  var _time = [];
+  DateTime _date = DateTime.now();
 
   @override
   void initState() {
     super.initState();
     _offerinit = offerItem.first;
-    _checkBox7days = false;
-    _checkBox30days = false;
-    _checkBox90days = false;
-    _checkBox1years = false;
+    _setTime();
+    _getData();
   }
 
-  String _offerinit = "";
-  var offerItem = ["16:00-17:00", "17:00-18:00", "18:00-19:00", "19:00-20:00"];
+  void _setTime() {
+    BilateralLongTermBuy model =
+        Provider.of<BilateralLongTermBuy>(context, listen: false);
+    DateTime dateTemp = DateTime.parse(model.info.date!);
+    setState(() {
+      _date = dateTemp;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -75,8 +94,25 @@ class _BilateralLongTermBuyScreenState
                         children: [
                           _buildPeriodSection(),
                           _selectionSection(),
-                          _buildExpansionTile("Prosumer P02", "14:23, 20 Aug",
-                              18.48, 4.45, 4.00, 3.15, 12.60, 18.48, 4.62),
+                          Container(
+                            height: constraints.maxHeight,
+                            child: ListView.builder(
+                              scrollDirection: Axis.vertical,
+                              itemCount: _bilateralTileList.length,
+                              itemBuilder: (context, index) {
+                                return _buildExpansionTile(
+                                    _bilateralTileList[index].name!,
+                                    _bilateralTileList[index].time!,
+                                    _bilateralTileList[index].energyToBuy!,
+                                    _bilateralTileList[index].netEnergyPrice!,
+                                    _bilateralTileList[index].energyTariff!,
+                                    _bilateralTileList[index]
+                                        .wheelingChargeTariff!,
+                                    _bilateralTileList[index].tradingFee!,
+                                    index);
+                              },
+                            ),
+                          )
                         ],
                       ),
                     ),
@@ -91,115 +127,130 @@ class _BilateralLongTermBuyScreenState
   }
 
   Widget _headerTile(
-      String title, String date, double estimated, double price) {
-    return
-        // Container(
-        //     padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-        //     decoration: BoxDecoration(borderRadius: BorderRadius.circular(5)),
-        //     child:
-        ListTile(
-      title: CheckboxListTile(
-        value: _isChecked,
-        onChanged: (bool? value) {
-          setState(() {
-            _isChecked = value!;
-          });
-        },
-        controlAffinity: ListTileControlAffinity.leading,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
-        activeColor: primaryColor,
-        checkColor: backgroundColor,
-        contentPadding: EdgeInsets.all(0),
-        title: Container(
-          // color: greyColor,
-          child: IntrinsicHeight(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                Container(
-                  padding: EdgeInsets.only(top: 12, bottom: 12),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        title,
-                        style: TextStyle(fontSize: 10),
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      Text(
-                        date,
-                        style: TextStyle(fontSize: 10),
-                      )
-                    ],
+      String title, String date, double estimated, double price, int index) {
+    var startDate = DateTime.parse(date).toLocal();
+    var endDate = DateTime.parse(date).toLocal().add(new Duration(hours: 1));
+    var startHour = DateFormat('HH').format(startDate);
+    var endHour = DateFormat('HH').format(endDate);
+    String displayDate =
+        startHour.toString() + ":00-" + endHour.toString() + ":00 everydays";
+    return SizedBox(
+      height: 60,
+      child: Row(
+        children: [
+          // ListTile(
+          //   title: CheckboxListTile(
+          //     value: _isChecked[index],
+          //     onChanged: (bool? value) {
+          //       setState(() {
+          //         _isChecked[index] = value!;
+          //       });
+          //     },
+          //     controlAffinity: ListTileControlAffinity.leading,
+          //     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
+          //     activeColor: primaryColor,
+          //     checkColor: backgroundColor,
+          //     contentPadding: EdgeInsets.all(0),
+          //     title:
+          Radio<int>(
+              value: index,
+              groupValue: _groupValue,
+              onChanged: (val) {
+                setState(() {
+                  _groupValue = val!;
+                });
+              }),
+          Expanded(
+            child: Container(
+              // color: greyColor,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  Container(
+                    padding: EdgeInsets.only(top: 12, bottom: 12),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          title,
+                          style: TextStyle(fontSize: 10),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        Text(
+                          displayDate,
+                          style: TextStyle(fontSize: 10),
+                        )
+                      ],
+                    ),
                   ),
-                ),
-                VerticalDivider(
-                  indent: 10,
-                  endIndent: 10,
-                  width: 12,
-                  thickness: 2,
-                  color: greyColor,
-                ),
-                Container(
-                  padding:
-                      EdgeInsets.only(top: 12, bottom: 12, left: 0, right: 0),
-                  child: Column(
-                    children: [
-                      Text(
-                        price.toString(),
-                        style: TextStyle( color: primaryColor, fontSize: 10),
-                      ),
-                      Text(
-                        "kWh",
-                        style: TextStyle(fontSize: 8),
-                      )
-                    ],
+                  VerticalDivider(
+                    indent: 10,
+                    endIndent: 10,
+                    width: 12,
+                    thickness: 2,
+                    color: greyColor,
                   ),
-                ),
-                VerticalDivider(
-                  indent: 10,
-                  endIndent: 10,
-                  width: 12,
-                  thickness: 2,
-                  color: greyColor,
-                ),
-                Expanded(
-                  child: Container(
+                  Container(
                     padding:
                         EdgeInsets.only(top: 12, bottom: 12, left: 0, right: 0),
                     child: Column(
                       children: [
-                        RichText(
-                          overflow: TextOverflow.ellipsis,
-                          text: TextSpan(
-                            style: TextStyle(fontSize: 8),
-                            children: <TextSpan>[
-                              TextSpan(text: "Estimated buy "),
-                              TextSpan(text: estimated.toString()),
-                              TextSpan(text: " THB"),
-                            ],
-                          ),
+                        Text(
+                          price.toString(),
+                          style: TextStyle(color: primaryColor, fontSize: 10),
                         ),
-                        RichText(
-                          overflow: TextOverflow.ellipsis,
-                          text: TextSpan(
-                            style: TextStyle(fontSize: 8),
-                            children: <TextSpan>[
-                              TextSpan(text: "NET energy price "),
-                              TextSpan(text: price.toString()),
-                              TextSpan(text: " THB/kWh"),
-                            ],
-                          ),
-                        ),
+                        Text(
+                          "kWh",
+                          style: TextStyle(fontSize: 8),
+                        )
                       ],
                     ),
                   ),
-                ),
-              ],
+                  VerticalDivider(
+                    indent: 10,
+                    endIndent: 10,
+                    width: 12,
+                    thickness: 2,
+                    color: greyColor,
+                  ),
+                  Expanded(
+                    child: Container(
+                      padding: EdgeInsets.only(
+                          top: 12, bottom: 12, left: 0, right: 0),
+                      child: Column(
+                        children: [
+                          RichText(
+                            overflow: TextOverflow.ellipsis,
+                            text: TextSpan(
+                              style: TextStyle(fontSize: 8),
+                              children: <TextSpan>[
+                                TextSpan(text: "Estimated buy "),
+                                TextSpan(text: estimated.toString()),
+                                TextSpan(text: " THB"),
+                              ],
+                            ),
+                          ),
+                          RichText(
+                            overflow: TextOverflow.ellipsis,
+                            text: TextSpan(
+                              style: TextStyle(fontSize: 8),
+                              children: <TextSpan>[
+                                TextSpan(text: "NET energy price "),
+                                TextSpan(text: price.toString()),
+                                TextSpan(text: " THB/kWh"),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
-        ),
+        ],
       ),
     );
   }
@@ -207,13 +258,12 @@ class _BilateralLongTermBuyScreenState
   Widget _buildExpansionTile(
       String title,
       String date,
-      double estimated,
-      double price,
       double energyToBuy,
+      double netEstimatedPrice,
       double energyTariff,
       double wheelingChargeTariff,
       double tradingFee,
-      double netEstimated) {
+      int index) {
     return ClipRRect(
       borderRadius: BorderRadius.circular(15),
       child: Container(
@@ -224,7 +274,8 @@ class _BilateralLongTermBuyScreenState
             // title: _headerTile(position, title, date, estimated, price),
             tilePadding: EdgeInsets.only(left: 0, top: 0, bottom: 0, right: 15),
             controlAffinity: ListTileControlAffinity.platform,
-            title: _headerTile(title, date, estimated, price),
+            title:
+                _headerTile(title, date, energyToBuy, netEstimatedPrice, index),
             collapsedBackgroundColor: surfaceGreyColor,
             backgroundColor: surfaceGreyColor,
             textColor: textColor,
@@ -254,7 +305,8 @@ class _BilateralLongTermBuyScreenState
                             children: [
                               Text(
                                 energyToBuy.toString(),
-                                style: TextStyle(color: primaryColor, fontSize: 12),
+                                style: TextStyle(
+                                    color: primaryColor, fontSize: 12),
                               ),
                               Text(
                                 " kWh",
@@ -369,33 +421,35 @@ class _BilateralLongTermBuyScreenState
                         children: [
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [Container(
-                              alignment: Alignment.centerLeft,
-                              child: Text(
-                                "Net estimated energy price",
-                                style: TextStyle(
-                                  color: primaryColor,
-                                  fontSize: 10,
+                            children: [
+                              Container(
+                                alignment: Alignment.centerLeft,
+                                child: Text(
+                                  "Net estimated energy price",
+                                  style: TextStyle(
+                                    color: primaryColor,
+                                    fontSize: 10,
+                                  ),
+                                  textAlign: TextAlign.left,
                                 ),
-                                textAlign: TextAlign.left,
                               ),
-                            ),
-                            Container(
-                              alignment: Alignment.centerLeft,
-                              child: Text(
-                                "(Not include VAT 7%)",
-                                style: TextStyle(
-                                  color: textColor,
-                                  fontSize: 8,
+                              Container(
+                                alignment: Alignment.centerLeft,
+                                child: Text(
+                                  "(Not include VAT 7%)",
+                                  style: TextStyle(
+                                    color: textColor,
+                                    fontSize: 8,
+                                  ),
+                                  textAlign: TextAlign.left,
                                 ),
-                                textAlign: TextAlign.left,
                               ),
-                            ),
-                            ],),
+                            ],
+                          ),
                           Row(
                             children: [
                               Text(
-                                netEstimated.toString(),
+                                netEstimatedPrice.toString(),
                                 style: TextStyle(fontSize: 12),
                               ),
                               Text(
@@ -423,11 +477,12 @@ class _BilateralLongTermBuyScreenState
           Row(children: <Widget>[
             SizedBox(
               width: 30,
-              child: Checkbox(
-                value: _checkBox7days,
-                onChanged: (bool? value) {
+              child: Radio<int>(
+                value: 0,
+                groupValue: _days,
+                onChanged: (value) {
                   setState(() {
-                    _checkBox7days = value!;
+                    _days = value!;
                   });
                 },
               ),
@@ -441,11 +496,12 @@ class _BilateralLongTermBuyScreenState
           Row(children: <Widget>[
             SizedBox(
               width: 30,
-              child: Checkbox(
-                value: _checkBox30days,
-                onChanged: (bool? value) {
+              child: Radio<int>(
+                value: 1,
+                groupValue: _days,
+                onChanged: (value) {
                   setState(() {
-                    _checkBox30days = value!;
+                    _days = value!;
                   });
                 },
               ),
@@ -459,11 +515,12 @@ class _BilateralLongTermBuyScreenState
           Row(children: <Widget>[
             SizedBox(
               width: 30,
-              child: Checkbox(
-                value: _checkBox90days,
-                onChanged: (bool? value) {
+              child: Radio<int>(
+                value: 2,
+                groupValue: _days,
+                onChanged: (value) {
                   setState(() {
-                    _checkBox90days = value!;
+                    _days = value!;
                   });
                 },
               ),
@@ -477,11 +534,12 @@ class _BilateralLongTermBuyScreenState
           Row(children: <Widget>[
             SizedBox(
               width: 30,
-              child: Checkbox(
-                value: _checkBox1years,
-                onChanged: (bool? value) {
+              child: Radio<int>(
+                value: 3,
+                groupValue: _days,
+                onChanged: (value) {
                   setState(() {
-                    _checkBox1years = value!;
+                    _days = value!;
                   });
                 },
               ),
@@ -495,6 +553,13 @@ class _BilateralLongTermBuyScreenState
   }
 
   Widget _buildPeriodSection() {
+    BilateralLongTermBuy model = Provider.of<BilateralLongTermBuy>(context);
+    DateTime dateTemp = DateTime.parse(model.info.date!).toUtc();
+    var dateList = <DateTime>[];
+    for (int i = 0; i < 24; i++) {
+      dateList.add(dateTemp.add(new Duration(hours: i)));
+    }
+
     return Row(
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -517,7 +582,7 @@ class _BilateralLongTermBuyScreenState
             borderRadius: BorderRadius.circular(5),
           ),
           child: DropdownButton(
-            value: _offerinit,
+            value: _date.toUtc().toString(),
             icon: Icon(Icons.arrow_drop_down_rounded),
             iconSize: 20,
             iconEnabledColor: whiteColor,
@@ -526,14 +591,25 @@ class _BilateralLongTermBuyScreenState
             alignment: Alignment.center,
             borderRadius: BorderRadius.circular(20),
             onChanged: (String? newValue) {
-              setState(() {
-                _offerinit = newValue!;
-              });
+              if (newValue != null) {
+                setState(
+                  () {
+                    _date = DateTime.parse(newValue);
+                  },
+                );
+              }
             },
-            items: offerItem.map((String items) {
+            items: dateList.map((DateTime item) {
+              var hourFormat = DateFormat('HH:mm');
+              var startHour = hourFormat.format(item.toLocal());
+              var endHour = hourFormat.format(item.toLocal().add(
+                Duration(
+                  hours: 1,
+                ),
+              ));
               return DropdownMenuItem(
-                value: items,
-                child: Text(items),
+                value: item.toString(),
+                child: Text('$startHour-$endHour'),
               );
             }).toList(),
             underline: DropdownButtonHideUnderline(
@@ -584,10 +660,54 @@ class _BilateralLongTermBuyScreenState
     return false;
   }
 
-  void _onSubmitPressed() {
+  void _onSubmitPressed() async {
+    // print(_groupValue);
+
     //Navigate
+    // print(_days);
+    // print(_daysMap[_days]);
+    await showLoading();
+    BilateralLongtermBuyTile _bilateralTileListOutput =
+        _bilateralTileList[_groupValue];
+
     BilateralLongTermBuy model =
         Provider.of<BilateralLongTermBuy>(context, listen: false);
-    model.setPageBilateralTrade();
+        bool response = false;
+    try {
+      response = await model.bilateralLongTermBuy(_bilateralTileListOutput);
+    } catch (e) {
+      showException(context, e.toString());
+    } finally {
+      await hideLoading();
+    }
+    if(response == true){
+      model.setPageBilateralTrade();
+      showSuccessSnackBar(context, "ทำรายการสำเร็จ");
+    }else{
+      //TODO
+      showException(context, "ไม่สามารถทำรายการได้");
+    }
+    
+  }
+
+  void _getData() async {
+    BilateralLongTermBuy model =
+        Provider.of<BilateralLongTermBuy>(context, listen: false);
+        print(DateTime.parse(model.info.date!).toLocal());
+
+      await showLoading();
+      try {
+        await model.getBilateralLongTermBuyInfo(_date,_daysMap[_groupValue]??7);
+        setState(() {
+        _bilateralTileList = model.info.bilateralTileList!;
+        _initBilateralTileList = model.info.bilateralTileList!;
+        _isChecked = List<bool>.filled(_bilateralTileList.length, false);
+      });
+      } catch (e) {
+        showException(context, e.toString());
+      } finally {
+        await hideLoading();
+      }
+      
   }
 }

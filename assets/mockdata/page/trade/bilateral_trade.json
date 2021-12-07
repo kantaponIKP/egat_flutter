@@ -1,0 +1,27 @@
+[
+    {
+        "type": "buy",
+        "time": "2021-12-01T14:39:14.492943Z",
+        "status": "CLOSE",
+        "offerCount": 0,
+        "price": 0,
+        "amount": 7,
+        "isLongterm": true
+    },
+    {
+        "type": "sell",
+        "time": "2021-12-01T14:39:14.492943Z",
+        "status": "MATCHED",
+        "offerCount": 1,
+        "price": 8.00,
+        "amount": 3.05,
+        "isLongterm": false
+    },
+    {
+        "type": "buy",
+        "time": "2021-12-01T14:39:14.492943Z",
+        "status": "OPEN",
+        "offerCount": 0,
+        "isLongterm": false
+    }
+]

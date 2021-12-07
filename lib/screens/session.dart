@@ -2,18 +2,22 @@ import 'package:flutter/cupertino.dart';
 
 class LoginSessionInfo {
   final String accessToken;
+  final String userId;
+  final String refreshToken;
 
 
   const LoginSessionInfo({
     required this.accessToken,
+    required this.userId,
+    required this.refreshToken,
   });
 }
 
 class LoginSession extends ChangeNotifier {
   LoginSessionInfo? info;
 
-  setAccessToken(LoginSessionInfo accessToken) {
-    _setAccessToken(accessToken);
+  setAccessToken(LoginSessionInfo info) {
+    _setAccessToken(info);
   }
 
   setNoAccessToken() {

@@ -16,6 +16,7 @@ import 'package:egat_flutter/screens/page/state/pool_market/pool_market_short_te
 import 'package:egat_flutter/screens/page/state/pool_market/pool_market_trade.dart';
 import 'package:egat_flutter/screens/page/state/sidebar.dart';
 import 'package:egat_flutter/screens/page/state/trading_tabbar.dart';
+import 'package:egat_flutter/screens/session.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 
@@ -45,9 +46,29 @@ class _ManagePageState extends State<ManagePage> {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (context) {
-          return PageModel();
-        }),
+        // ChangeNotifierProvider(create: (context) {
+        //   return PageModel();
+        // }),
+        ChangeNotifierProxyProvider<LoginSession, PageModel>(
+          create: (context) {
+            var loginSession =
+                Provider.of<LoginSession>(context, listen: false);
+            PageModel pageModel = PageModel(session: loginSession);
+            return pageModel;
+          },
+          update: (
+            BuildContext context,
+            LoginSession session,
+            PageModel? previous,
+          ) {
+            if (previous == null) {
+              PageModel pageModel = PageModel(session: session);
+              return pageModel;
+            }
+            previous.session = session;
+            return previous;
+          },
+        ),
         ChangeNotifierProxyProvider<PageModel, PageStatus>(
           create: (context) {
             var model = Provider.of<PageModel>(context, listen: false);

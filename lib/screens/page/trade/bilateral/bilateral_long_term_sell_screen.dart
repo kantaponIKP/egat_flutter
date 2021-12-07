@@ -1,11 +1,15 @@
 import 'package:egat_flutter/constant.dart';
 import 'package:egat_flutter/screens/page/state/bilateral/bilateral_long_term_sell.dart';
-import 'package:egat_flutter/screens/page/widgets/logo_appbar.dart';
+import 'package:egat_flutter/screens/page/trade/bottom_button.dart';
 import 'package:egat_flutter/screens/page/widgets/page_appbar.dart';
 import 'package:egat_flutter/screens/page/widgets/page_bottom_navigation_bar.dart';
-import 'package:egat_flutter/screens/page/widgets/side_menu.dart';
-import 'package:egat_flutter/screens/page/trade/tabbar.dart';
+import 'package:egat_flutter/screens/widgets/loading_dialog.dart';
+import 'package:egat_flutter/screens/widgets/show_exception.dart';
+import 'package:egat_flutter/screens/widgets/show_success_snackbar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:http/http.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class BilateralLongTermSellScreen extends StatefulWidget {
@@ -17,14 +21,27 @@ class BilateralLongTermSellScreen extends StatefulWidget {
 
 class _BilateralLongTermSellScreenState
     extends State<BilateralLongTermSellScreen> {
-  bool _isChecked = false;
+  List<bool> _isChecked = [];
+  List<TextEditingController> _energyToSaleTextController = [];
+  List<TextEditingController> _offerToSellPriceTextController = [];
   double _currentSliderValue = 9;
+  List<BilateralLongtermSellTile> _bilateralTileList = [];
+  List<BilateralLongtermSellTile> _initBilateralTileList = [];
+
   String _date = "";
-  var _dateList = ["7 Days", "30 Days", "90 Days", "1 Year"];
+  var _daysList = [7, 30, 90, 365];
+  var _daysMap = {
+    7: '7 Days',
+    30: '30 Days',
+    90: '90 Days',
+    365: '1 Year',
+  };
+
   @override
   void initState() {
     super.initState();
-    _date = "7 Days";
+
+    _getData();
   }
 
   @override
@@ -37,7 +54,6 @@ class _BilateralLongTermSellScreenState
         body: SafeArea(
           child: _buildAction(context),
         ),
-        bottomNavigationBar: PageBottomNavigationBar(),
       ),
     );
   }
@@ -105,47 +121,80 @@ class _BilateralLongTermSellScreenState
                                   ]),
                             ],
                           ),
-                          _testlisttile(),
-                          _testlisttile(),
-                          _testlisttile(),
-                          _testlisttile()
+                          Container(
+                            height: constraints.maxHeight,
+                            child: ListView.builder(
+                              scrollDirection: Axis.vertical,
+                              itemCount: _bilateralTileList.length,
+                              itemBuilder: (context, index) {
+                                if (_bilateralTileList[index]
+                                        .dayOptions!
+                                        .length >
+                                    0) {
+                                  return __bilateralTile(
+                                      _bilateralTileList[index].time!,
+                                      _bilateralTileList[index].days!,
+                                      _bilateralTileList[index].energy!,
+                                      _bilateralTileList[index].price!,
+                                      index);
+                                }
+                                return __bilateralTile(
+                                    _bilateralTileList[index].time!,
+                                    30,
+                                    0,
+                                    0,
+                                    index);
+                              },
+                            ),
+                          )
                         ],
                       ),
                     ),
                   ),
                 ),
+                BottomButton(
+                    onAction: _onSubmitPressed, actionLabel: Text("Submit"))
               ]);
         },
       ),
     );
   }
 
-  Widget _testlisttile() {
-    return Column(
-      children: [_bodyExpand(), _bodyExpand()],
-    );
-  }
-
-  Widget _headerExpand() {
+  Widget _headerExpand(String time, index) {
+    var startDate = DateTime.parse(time).toLocal();
+    var endDate = DateTime.parse(time).toLocal().add(new Duration(hours: 1));
+    var startHour = DateFormat('HH').format(startDate);
+    var endHour = DateFormat('HH').format(endDate);
+    String displayDate =
+        startHour.toString() + ":00-" + endHour.toString() + ":00";
     return ListTile(
       title: CheckboxListTile(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
         contentPadding: EdgeInsets.all(0),
-        title: Text("12:00-13:00"),
+        title: Text(
+          displayDate,
+          style: (_bilateralTileList[index].isActive == true)
+              ? TextStyle(color: textColor.withAlpha(300))
+              : TextStyle(color: textColor),
+        ),
         activeColor: primaryColor,
         checkColor: backgroundColor,
         controlAffinity: ListTileControlAffinity.leading,
-        value: _isChecked,
+        value: _isChecked[index],
         onChanged: (bool? value) {
           setState(() {
-            _isChecked = value!;
+            if (_bilateralTileList[index].isActive == true) {
+            } else {
+              _isChecked[index] = value!;
+            }
           });
         },
       ),
     );
   }
 
-  Widget _bodyExpand() {
+  Widget __bilateralTile(String time, int days, double energyToSale,
+      double offerToSellPrice, int index) {
     return ClipRRect(
       borderRadius: BorderRadius.circular(30),
       child: Container(
@@ -153,7 +202,7 @@ class _BilateralLongTermSellScreenState
         child: ExpansionTile(
           tilePadding: EdgeInsets.only(left: 0, top: 0, bottom: 0, right: 15),
           controlAffinity: ListTileControlAffinity.platform,
-          title: _headerExpand(),
+          title: _headerExpand(time, index),
           collapsedBackgroundColor: surfaceGreyColor,
           backgroundColor: surfaceGreyColor,
           textColor: textColor,
@@ -165,7 +214,7 @@ class _BilateralLongTermSellScreenState
                   mainAxisSize: MainAxisSize.max,
                   children: [
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 24), 
+                      padding: const EdgeInsets.symmetric(horizontal: 24),
                       alignment: Alignment.centerLeft,
                       child: Text(
                         "Days",
@@ -185,24 +234,27 @@ class _BilateralLongTermSellScreenState
                           color: primaryColor,
                           borderRadius: BorderRadius.circular(5),
                         ),
-                        child: DropdownButton(
-                          value: _date,
+                        child: DropdownButton<int>(
+                          // value: _date,
+                          //TODO
+                          value: days,
                           icon: Icon(Icons.arrow_drop_down_rounded),
                           iconSize: 20,
                           iconEnabledColor: backgroundColor,
                           dropdownColor: primaryColor,
-                          style: TextStyle(fontSize: 16, color: backgroundColor),
+                          style:
+                              TextStyle(fontSize: 16, color: backgroundColor),
                           alignment: Alignment.center,
                           borderRadius: BorderRadius.circular(20),
-                          onChanged: (String? newValue) {
+                          onChanged: (newValue) {
                             setState(() {
-                              _date = newValue!;
+                              _bilateralTileList[index].days = newValue;
                             });
                           },
-                          items: _dateList.map((String items) {
+                          items: _daysList.map((int items) {
                             return DropdownMenuItem(
                               value: items,
-                              child: Text(items),
+                              child: Text(_daysMap[items]!),
                             );
                           }).toList(),
                           underline: DropdownButtonHideUnderline(
@@ -238,6 +290,21 @@ class _BilateralLongTermSellScreenState
                             width: 50,
                             height: 30,
                             child: TextField(
+                              keyboardType: TextInputType.number,
+                              inputFormatters: <TextInputFormatter>[
+                                FilteringTextInputFormatter.allow(
+                                  RegExp(r'^\d+\.?\d*'),
+                                ),
+                              ],
+                              controller: _energyToSaleTextController[index],
+                              // onChanged: (value) {
+                              // setState(
+                              //   () {
+                              //     _bilateralTileList[index].energy =
+                              //         double.parse(value);
+                              //   },
+                              // );
+                              // },
                               decoration: InputDecoration(
                                   border: UnderlineInputBorder(
                                       borderSide:
@@ -282,16 +349,16 @@ class _BilateralLongTermSellScreenState
                     valueIndicatorTextStyle: TextStyle(color: textColor),
                   ),
                   child: Slider(
-                    value: _currentSliderValue,
+                    value: energyToSale,
                     activeColor: primaryColor,
                     thumbColor: primaryColor,
                     min: 0.00,
                     max: 10.00,
                     divisions: 1000,
-                    label: _currentSliderValue.toStringAsFixed(2),
+                    label: energyToSale.toStringAsFixed(2),
                     onChanged: (double value) {
                       setState(() {
-                        _currentSliderValue = value;
+                        energyToSale = value;
                       });
                     },
                   ),
@@ -330,6 +397,22 @@ class _BilateralLongTermSellScreenState
                             width: 50,
                             height: 30,
                             child: TextField(
+                              keyboardType: TextInputType.number,
+                              inputFormatters: <TextInputFormatter>[
+                                FilteringTextInputFormatter.allow(
+                                  RegExp(r'^\d+\.?\d*'),
+                                ),
+                              ],
+                              controller:
+                                  _offerToSellPriceTextController[index],
+                              // onChanged: (value) {
+                              //   setState(
+                              //     () {
+                              //       _bilateralTileList[index].price =
+                              //           double.parse(value);
+                              //     },
+                              //   );
+                              // },
                               decoration: InputDecoration(
                                   border: UnderlineInputBorder(
                                       borderSide:
@@ -352,11 +435,68 @@ class _BilateralLongTermSellScreenState
     );
   }
 
-  void _onSubmitPressed() {
-    //Navigate
+  void _getData() async {
     BilateralLongTermSell model =
         Provider.of<BilateralLongTermSell>(context, listen: false);
-    model.setPageBilateralTrade();
+    try {
+      await model.getBilateralLongTermSellInfo();
+    } catch (e) {
+      showException(context, e.toString());
+    } finally {
+      await hideLoading();
+    }
+    setState(() {
+      _bilateralTileList = model.info.bilateralTileList!;
+      _initBilateralTileList = model.info.bilateralTileList!;
+      _isChecked = List<bool>.filled(_bilateralTileList.length, false);
+      _energyToSaleTextController = List.generate(
+          _bilateralTileList.length, (i) => TextEditingController());
+      _offerToSellPriceTextController = List.generate(
+          _bilateralTileList.length, (i) => TextEditingController());
+      for (int i = 0; i < _bilateralTileList.length; i++) {
+        _energyToSaleTextController[i].text =
+            _bilateralTileList[i].energy.toString();
+        _offerToSellPriceTextController[i].text =
+            _bilateralTileList[i].price.toString();
+      }
+    });
+  }
+
+  void _onSubmitPressed() async {
+    //Navigate
+    await showLoading();
+    List<BilateralLongtermSellTile> _bilateralTileListOutput = [];
+    int i = 0;
+    for (var _bilateral in _bilateralTileList) {
+      if (_isChecked[i] == true) {
+        _bilateral.energy = double.parse(_energyToSaleTextController[i].text);
+        _bilateral.price =
+            double.parse(_offerToSellPriceTextController[i].text);
+        _bilateralTileListOutput.add(_bilateral);
+      }
+      i++;
+    }
+
+    BilateralLongTermSell model =
+        Provider.of<BilateralLongTermSell>(context, listen: false);
+
+    bool response = false;
+    try {
+      //TODO
+      response = await model.bilateralLongTermSell(_bilateralTileListOutput);
+    } catch (e) {
+      showException(context, e.toString());
+    } finally {
+      await hideLoading();
+    }
+    if (response == true) {
+      model.setPageBilateralTrade();
+      showSuccessSnackBar(context, "ทำรายการสำเร็จ");
+    } else {
+      //TODO
+      showException(context, "ไม่สามารถทำรายการได้");
+    }
+    // model.setPageBilateralTrade();
   }
 
   Future<bool> _onWillPop() async {

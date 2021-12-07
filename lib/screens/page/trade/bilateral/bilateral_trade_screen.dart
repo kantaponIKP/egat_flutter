@@ -1,3 +1,6 @@
+import 'package:egat_flutter/screens/page/state/bilateral/bilateral_buy.dart';
+import 'package:egat_flutter/screens/page/state/bilateral/bilateral_long_term_buy.dart';
+import 'package:egat_flutter/screens/page/state/bilateral/bilateral_sell.dart';
 import 'package:egat_flutter/screens/page/state/bilateral/bilateral_trade.dart';
 import 'package:egat_flutter/screens/page/widgets/logo_appbar.dart';
 import 'package:egat_flutter/screens/page/widgets/page_appbar.dart';
@@ -9,6 +12,7 @@ import 'package:egat_flutter/screens/widgets/show_exception.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:egat_flutter/constant.dart';
+import 'package:intl/intl.dart';
 
 class BilateralTradeScreen extends StatefulWidget {
   const BilateralTradeScreen({Key? key}) : super(key: key);
@@ -17,25 +21,71 @@ class BilateralTradeScreen extends StatefulWidget {
   _BilateralTradeScreenState createState() => _BilateralTradeScreenState();
 }
 
+class DateDisplay {
+  DateTime? dateTime;
+  String? dateString;
+
+  DateDisplay({this.dateTime, this.dateString});
+}
+
 class _BilateralTradeScreenState extends State<BilateralTradeScreen> {
-  var dateItem = [
-    "20 August 2021",
-    "21 August 2021",
-    "22 August 2021",
-    "23 August 2021"
-  ];
-  var timeItem = ["6:00-18:00", "18:00-6:00"];
+  var dateItem = <String>[];
+
+  var timeItem = ["06:00-18:00", "18:00-6:00"];
   var offerItem = ["Choose to Buy", "Offer to Sell"];
-  String _timeinit = "";
-  String _dateinit = "";
-  String _offerinit = "";
+  String _timeInit = "";
+  String _dateInit = "";
+  String _offerInit = "";
+  var _bilateralList = [];
+  var _bilateralBuyList = [];
+  var _bilateralSellList = [];
+
+  void setBilateralList(bilateralList) {
+    var bilateralBuyList = [];
+    var bilateralSellList = [];
+
+    for (var bilateral in bilateralList) {
+      if (bilateral.type == "buy") {
+        bilateralBuyList.add(bilateral);
+      } else {
+        bilateralSellList.add(bilateral);
+      }
+    }
+    setState(() {
+      _bilateralSellList = bilateralSellList;
+      _bilateralBuyList = bilateralBuyList;
+    });
+  }
 
   @override
   void initState() {
     super.initState();
-    _timeinit = timeItem.first;
-    _dateinit = dateItem.first;
-    _offerinit = offerItem.first;
+    DateTime now = new DateTime.now();
+    now = now.add(Duration(hours: -6));
+    DateTime date = new DateTime(now.year, now.month, now.day);
+
+    dateItem = [
+      date.toString(),
+      date.add(new Duration(days: 1)).toString(),
+      date.add(new Duration(days: 2)).toString(),
+      date.add(new Duration(days: 3)).toString(),
+      date.add(new Duration(days: 4)).toString(),
+      date.add(new Duration(days: 5)).toString(),
+      date.add(new Duration(days: 6)).toString(),
+      date.add(new Duration(days: 7)).toString(),
+    ];
+    _timeInit = timeItem.first;
+    _dateInit = dateItem.first.toString();
+    int hour = DateTime.now().hour;
+    if (hour < 18 && hour >= 6) {
+      _timeInit = timeItem.first;
+    }
+    {
+      _timeInit = timeItem.last;
+    }
+    _offerInit = offerItem.first;
+
+    _getData(_dateInit, _timeInit);
   }
 
   @override
@@ -75,7 +125,7 @@ class _BilateralTradeScreenState extends State<BilateralTradeScreen> {
                       minHeight: constraints.maxHeight,
                     ),
                     child: Column(
-                      mainAxisSize: MainAxisSize.min,
+                      mainAxisSize: MainAxisSize.max,
                       children: [
                         SizedBox(
                           height: 10,
@@ -92,7 +142,7 @@ class _BilateralTradeScreenState extends State<BilateralTradeScreen> {
                                   borderRadius: BorderRadius.circular(5),
                                 ),
                                 child: DropdownButton(
-                                  value: _timeinit,
+                                  value: _timeInit,
                                   icon: Icon(
                                     Icons.arrow_drop_down_rounded,
                                   ),
@@ -101,7 +151,8 @@ class _BilateralTradeScreenState extends State<BilateralTradeScreen> {
                                   borderRadius: BorderRadius.circular(20),
                                   onChanged: (String? newValue) {
                                     setState(() {
-                                      _timeinit = newValue!;
+                                      _timeInit = newValue!;
+                                      _getData(_dateInit, newValue);
                                     });
                                   },
                                   items: timeItem.map((String items) {
@@ -122,20 +173,23 @@ class _BilateralTradeScreenState extends State<BilateralTradeScreen> {
                                   borderRadius: BorderRadius.circular(5),
                                 ),
                                 child: DropdownButton(
-                                  value: _dateinit,
+                                  value: _dateInit,
                                   icon: Icon(Icons.arrow_drop_down_rounded),
                                   iconSize: 20,
                                   alignment: Alignment.center,
                                   borderRadius: BorderRadius.circular(20),
                                   onChanged: (String? newValue) {
                                     setState(() {
-                                      _dateinit = newValue!;
+                                      _dateInit = newValue!;
+                                      _getData(newValue, _timeInit);
                                     });
                                   },
                                   items: dateItem.map((String items) {
                                     return DropdownMenuItem(
                                       value: items,
-                                      child: Text(items),
+                                      child: Text(DateFormat('dd MMMM yyyy')
+                                          .format(
+                                              DateTime.parse(items).toLocal())),
                                     );
                                   }).toList(),
                                   underline: DropdownButtonHideUnderline(
@@ -150,7 +204,7 @@ class _BilateralTradeScreenState extends State<BilateralTradeScreen> {
                                   borderRadius: BorderRadius.circular(5),
                                 ),
                                 child: DropdownButton(
-                                  value: _offerinit,
+                                  value: _offerInit,
                                   icon: Icon(Icons.arrow_drop_down_rounded),
                                   iconSize: 20,
                                   iconEnabledColor: backgroundColor,
@@ -161,13 +215,17 @@ class _BilateralTradeScreenState extends State<BilateralTradeScreen> {
                                   borderRadius: BorderRadius.circular(20),
                                   onChanged: (String? newValue) {
                                     setState(() {
-                                      _offerinit = newValue!;
+                                      _offerInit = newValue!;
+                                      _getData(_dateInit, _timeInit);
                                     });
                                   },
                                   items: offerItem.map((String items) {
                                     return DropdownMenuItem(
                                       value: items,
-                                      child: Text(items),
+                                      child: Text(
+                                        items,
+                                        style: TextStyle(fontSize: 14),
+                                      ),
                                     );
                                   }).toList(),
                                   underline: DropdownButtonHideUnderline(
@@ -179,11 +237,77 @@ class _BilateralTradeScreenState extends State<BilateralTradeScreen> {
                         SizedBox(
                           height: 10,
                         ),
-                        _buildCloseCard("13:00-14:00", 5, 3),
-                        _buildPeriodCard("14:00-15:00", 5),
-                        _buildPeriodCard("15:00-16:00", 6),
-                        _buildPeriodCard("16:00-17:00", 0),
-                        _buildPeriodCard("17:00-18:00", 2)
+                        (_offerInit == "Choose to Buy")
+                            ? Container(
+                                height: constraints.maxHeight - 80,
+                                child: ListView.builder(
+                                  scrollDirection: Axis.vertical,
+                                  itemCount: _bilateralBuyList.length,
+                                  itemBuilder: (context, index) {
+                                    if (_bilateralBuyList[index].amount !=
+                                        null) {
+                                      return _buildCard(
+                                        _bilateralBuyList[index].type!,
+                                        _bilateralBuyList[index].time!,
+                                        _bilateralBuyList[index].status!,
+                                        _bilateralBuyList[index].amount!,
+                                        _bilateralBuyList[index].price!,
+                                        _bilateralBuyList[index].offerCount!,
+                                        _bilateralBuyList[index].isoDate!,
+                                        _bilateralBuyList[index].isLongterm!,
+                                      );
+                                    } else {
+                                      return _buildCard(
+                                        _bilateralBuyList[index].type!,
+                                        _bilateralBuyList[index].time!,
+                                        _bilateralBuyList[index].status!,
+                                        0,
+                                        0,
+                                        _bilateralBuyList[index].offerCount!,
+                                        _bilateralBuyList[index].isoDate!,
+                                        false,
+                                      );
+                                    }
+                                  },
+                                ),
+                              )
+                            : Container(
+                                height: constraints.maxHeight - 80,
+                                child: ListView.builder(
+                                  scrollDirection: Axis.vertical,
+                                  itemCount: _bilateralSellList.length,
+                                  itemBuilder: (context, index) {
+                                    if (_bilateralSellList[index].amount !=
+                                        null) {
+                                      return _buildCard(
+                                          _bilateralSellList[index].type!,
+                                          _bilateralSellList[index].time!,
+                                          _bilateralSellList[index].status!,
+                                          _bilateralSellList[index].amount!,
+                                          _bilateralSellList[index].price!,
+                                          _bilateralSellList[index].offerCount!,
+                                          _bilateralSellList[index].isoDate!,
+                                          _bilateralSellList[index]
+                                              .isLongterm!);
+                                    } else {
+                                      return _buildCard(
+                                          _bilateralSellList[index].type!,
+                                          _bilateralSellList[index].time!,
+                                          _bilateralSellList[index].status!,
+                                          0,
+                                          0,
+                                          _bilateralSellList[index].offerCount!,
+                                          _bilateralSellList[index].isoDate!,
+                                          false);
+                                    }
+                                  },
+                                ),
+                              ),
+                        // _buildCloseCard("13:00-14:00", 5, 3),
+                        // _buildPeriodCard("14:00-15:00", 5),
+                        // _buildPeriodCard("15:00-16:00", 6),
+                        // _buildPeriodCard("16:00-17:00", 0),
+                        // _buildPeriodCard("17:00-18:00", 2)
                         // TextButton(
                         //   onPressed: _onListTileBuyPressed,
                         //   child: Text('ListTileBuy'),
@@ -204,266 +328,226 @@ class _BilateralTradeScreenState extends State<BilateralTradeScreen> {
     );
   }
 
-  Widget _buildPeriodCard(String time, int offer) {
+  Widget _buildCard(String type, String time, String status, double amount,
+      double price, int offerCount, String isoDate, bool isLongterm) {
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+      padding: EdgeInsets.symmetric(vertical: 4, horizontal: 8),
       decoration: BoxDecoration(borderRadius: BorderRadius.circular(5)),
-      child: Card(
-        child: IntrinsicHeight(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              Container(
-                padding: EdgeInsets.all(15),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+      child: GestureDetector(
+        onTap: () {
+          (_offerInit == "Choose to Buy")
+              ? _onListTileBuyPressed(isoDate)
+              : _onListTileSellPressed(isoDate);
+        },
+        child: Card(
+          child: IntrinsicHeight(
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisSize: MainAxisSize.max,
                   children: [
-                    Text(
-                      time,
-                      style: TextStyle(fontSize: 26),
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        _onListTileSellPressed();
-                      },
-                      child: Text(
-                        "OPEN(Test to Sell)",
-                        style: TextStyle(fontSize: 23, color: greenColor),
+                    Container(
+                      padding: EdgeInsets.all(10),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            time,
+                            style: TextStyle(fontSize: 26),
+                          ),
+                          Text(
+                            status,
+                            style: TextStyle(
+                                fontSize: 23,
+                                color: (status == "CLOSE")
+                                    ? redColor
+                                    : greenColor),
+                          ),
+                        ],
                       ),
-                    )
-                  ],
-                ),
-              ),
-              Row(
-                children: [
-                  VerticalDivider(
-                    indent: 10,
-                    endIndent: 10,
-                    width: 20,
-                    thickness: 2,
-                    color: greyColor,
-                  ),
-                  Container(
-                    padding: EdgeInsets.all(15),
-                    child: Column(
+                    ),
+                    (amount != 0)
+                        ? Row(
+                            children: [
+                              Container(
+                                height: 100,
+                                width: 0,
+                                child: VerticalDivider(
+                                  indent: 10,
+                                  endIndent: 10,
+                                  width: 20,
+                                  thickness: 2,
+                                  color: greyColor,
+                                ),
+                              ),
+                              Container(
+                                padding: EdgeInsets.all(2),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Container(
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: 5),
+                                            child: Text("Amount",
+                                                style: TextStyle(
+                                                    fontSize: 12,
+                                                    color: primaryColor))),
+                                        Text(
+                                          amount.toString(),
+                                          style: TextStyle(
+                                              fontSize: 12,
+                                              color: primaryColor),
+                                        ),
+                                        Text(
+                                          " kWh",
+                                          style: TextStyle(
+                                              fontSize: 12,
+                                              color: primaryColor),
+                                        ),
+                                      ],
+                                    ),
+                                    Row(
+                                      children: [
+                                        Container(
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: 5),
+                                            child: Text("Price",
+                                                style: TextStyle(
+                                                    fontSize: 12,
+                                                    color: primaryColor))),
+                                        Text(
+                                          price.toString(),
+                                          style: TextStyle(
+                                              fontSize: 12,
+                                              color: primaryColor),
+                                        ),
+                                        Text(
+                                          " THB/kWh",
+                                          style: TextStyle(
+                                              fontSize: 12,
+                                              color: primaryColor),
+                                        ),
+                                      ],
+                                    ),
+                                    (isLongterm)?
+                                    Row(
+                                      children: [
+                                        Container(
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 5),
+                                          child: Text(
+                                            "Long term Bilateral",
+                                            style: TextStyle(
+                                              fontSize: 12,
+                                              color: primaryColor
+                                            ),
+                                          ),
+                                        )
+                                      ],
+                                    ):Container()
+                                  ],
+                                ),
+                              )
+                            ],
+                          )
+                        : Container(),
+                    Row(
                       children: [
-                        Text(
-                          offer.toString(),
-                          style: TextStyle(fontSize: 26),
+                        Container(
+                          height: 100,
+                          width: 0,
+                          child: VerticalDivider(
+                            indent: 10,
+                            endIndent: 10,
+                            width: 20,
+                            thickness: 2,
+                            color: greyColor,
+                          ),
                         ),
-                        Text("Offers \nto buy")
+                        Container(
+                          padding: EdgeInsets.all(4),
+                          child: Column(
+                            children: [
+                              Text(
+                                offerCount.toString(),
+                                style: TextStyle(fontSize: 24),
+                              ),
+                              Container(
+                                  padding: EdgeInsets.symmetric(horizontal: 5),
+                                  child: Text("Offers \nto sell")),
+                            ],
+                          ),
+                        ),
                       ],
                     ),
-                  ),
-                ],
-              ),
-            ],
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),
     );
   }
 
-  Widget _buildCloseCard(String time, int offer, int match) {
-    return Container(
-      padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-      decoration: BoxDecoration(borderRadius: BorderRadius.circular(5)),
-      child: Card(
-        child: IntrinsicHeight(
-            child: Column(children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              Container(
-                padding: EdgeInsets.all(15),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      time,
-                      style: TextStyle(fontSize: 26),
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        _onListTileBuyPressed();
-                      },
-                      child: Text(
-                        "CLOSED(Test Buy)",
-                        style: TextStyle(fontSize: 23, color: redColor),
-                      ),
-                    )
-                  ],
-                ),
-              ),
-              Row(
-                children: [
-                  Container(
-                    height: 100,
-                    width: 0,
-                    child: VerticalDivider(
-                      indent: 10,
-                      endIndent: 10,
-                      width: 20,
-                      thickness: 2,
-                      color: greyColor,
-                    ),
-                  ),
-                  Container(
-                    padding: EdgeInsets.all(10),
-                    child: Column(
-                      children: [
-                        Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            mainAxisSize: MainAxisSize.max,
-                            children: [
-                              Text(
-                                offer.toString(),
-                                style: TextStyle(fontSize: 24),
-                              ),
-                              Container(
-                                  padding: EdgeInsets.symmetric(horizontal: 5),
-                                  child: Text("Offers \nto buy")),
-                            ]),
-                        Container(
-                          height: 20,
-                          width: 80,
-                          child: Divider(
-                            color: whiteColor,
-                            height: 10,
-                            thickness: 1,
-                          ),
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          mainAxisSize: MainAxisSize.max,
-                          children: [
-                            Text(
-                              match.toString(),
-                              style: TextStyle(fontSize: 24),
-                            ),
-                            Container(
-                                padding: EdgeInsets.symmetric(horizontal: 5),
-                                child: Text("Matched"))
-                          ],
-                        )
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-          Container(
-            padding: EdgeInsets.all(10),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Market clearing price",
-                      style: TextStyle(fontSize: 17),
-                    ),
-                    Text(
-                      "Market clearing volume",
-                      style: TextStyle(fontSize: 17),
-                    ),
-                  ],
-                ),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Row(
-                      children: [
-                        Text(
-                          "2.70",
-                          style: TextStyle(fontSize: 17),
-                        ),
-                        SizedBox(
-                          width: 5,
-                        ),
-                        Text("THB/kWh")
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Text(
-                          "100",
-                          style: TextStyle(fontSize: 17),
-                        ),
-                        SizedBox(
-                          width: 5,
-                        ),
-                        Text("kWh")
-                      ],
-                    )
-                  ],
-                )
-              ],
-            ),
-          ),
-
-          // Row(
-          //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          //   children: [
-          //     Text("Market clearing price"),
-          //     Row(
-          //       children: [Text("2.70"), Text("THB/kWh")],
-          //     )
-          //   ],
-          // ),
-          // Row(
-          //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          //   children: [
-          //     Text("Market clearing volume"),
-          //     Row(
-          //       children: [Text("100"), Text("kWh")],
-          //     )
-          //   ],
-          // )
-        ])),
-      ),
-    );
+  void _getData(String date, String time) async {
+    DateTime newDate = DateTime.parse(date)
+        .add(new Duration(hours: int.parse(time.substring(0, 2))));
+    await showLoading();
+    BilateralTrade model = Provider.of<BilateralTrade>(context, listen: false);
+    try {
+      await model.getBilateral(date: newDate.toUtc().toIso8601String());
+    } catch (e) {
+      showException(context, e.toString());
+    } finally {
+      await hideLoading();
+    }
+    setState(() {
+      setBilateralList(model.info.bilateralTileList!);
+      //   // _initBilateralTileList = model.info.bilateralTileList!;
+      //   // _isChecked = List<bool>.filled(_bilateralTileList.length, false);
+      //   // _isChecked[0] = true;
+    });
   }
 
-  void _onListTileBuyPressed() {
-    //Navigate
+  void _onListTileBuyPressed(String isoDate) async {
+    // DateTime newDate = DateTime.parse(_dateInit).add(new Duration(hours: int.parse(time.substring(0,2))));
+    DateTime newDate = DateTime.parse(isoDate);
+    await showLoading();
+    BilateralBuy bilateralBuy =
+        Provider.of<BilateralBuy>(context, listen: false);
+
+    try {
+      await bilateralBuy.getBilateralShortTermBuyInfo(
+          date: newDate.toUtc().toIso8601String());
+    } catch (e) {
+      showException(context, e.toString());
+    } finally {
+      await hideLoading();
+    }
     BilateralTrade model = Provider.of<BilateralTrade>(context, listen: false);
     model.setPageBilateralBuy();
   }
 
-  void _onListTileSellPressed() {
-    //Navigate
+//TODO
+  void _onListTileSellPressed(String isoDate) async {
+    // DateTime newDate = DateTime.parse(_dateInit).add(new Duration(hours: int.parse(time.substring(0,2))));
+    DateTime newDate = DateTime.parse(isoDate);
+    await showLoading();
+    BilateralSell bilateralBuy =
+        Provider.of<BilateralSell>(context, listen: false);
+    try {
+      await bilateralBuy.getBilateralShortTermSellInfo(
+          date: newDate.toUtc().toIso8601String());
+    } catch (e) {
+      showException(context, e.toString());
+    } finally {
+      await hideLoading();
+    }
     BilateralTrade model = Provider.of<BilateralTrade>(context, listen: false);
     model.setPageBilateralSell();
   }
-
-
-  // void _onResetPasswordPressed() async {
-  //   await showLoading();
-
-  //   try {
-  //     var model = Provider.of<BilateralTrade>(context, listen: false);
-  //     await model.getOrder();
-  //   } catch (e) {
-  //     showException(context, e.toString());
-  //   } finally {
-  //     await hideLoading();
-  //     var forgotPasswordModel =
-  //         Provider.of<ForgotPasswordModel>(context, listen: false);
-  //   String message = 'Your password has been changed successfully.';
-  //   ScaffoldMessenger.of(context).clearSnackBars();
-  //   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-  //     content: Text(message),
-  //   ));
-  //     forgotPasswordModel.finish();
-  //   }
-  // }
-
-
 }
