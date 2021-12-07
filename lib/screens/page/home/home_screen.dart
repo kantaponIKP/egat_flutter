@@ -41,9 +41,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    LoginSession model = Provider.of<LoginSession>(context);
-    print("accessToken");
-    print(model.info!.accessToken);
     return Scaffold(
       appBar: LogoAppbar(),
       drawer: NavigationMenuWidget(),
