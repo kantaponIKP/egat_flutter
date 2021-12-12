@@ -93,7 +93,7 @@ class _NewsCardSection extends StatelessWidget {
     // Content can't have more than 60 characters
     // If title is more than 60 characters, it will be cut off
     final content = this.content.length > 60
-        ? this.content.substring(0, 37) + '...'
+        ? this.content.substring(0, 57) + '...'
         : this.content;
 
     var dateFormatter = DateFormat('dd MMM yyyy');
