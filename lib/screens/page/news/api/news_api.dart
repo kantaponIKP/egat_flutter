@@ -17,7 +17,7 @@ class NewsApi {
     var bullet = NewsBullet(
       title:
           'รวมพลังกลุ่ม กฟผ. มอบเงิน 3 ล้านบาท จัดหายาฟ้าทะลายโจรช่วยผู้ป่วยโควิด-19',
-      description: 'description',
+      description: 'วันนี้ (13 สิงหาคม 2564) นายกิจจา ศรีพัฒากุระ กรรมการ',
       createdAt: DateTime.now(),
     );
 

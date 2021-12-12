@@ -7,6 +7,7 @@ import 'package:egat_flutter/screens/page/widgets/page_appbar.dart';
 import 'package:egat_flutter/screens/page/widgets/side_menu.dart';
 import 'package:egat_flutter/screens/widgets/single_child_scoped_scroll_view.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class NewsScreen extends StatefulWidget {
@@ -17,11 +18,6 @@ class NewsScreen extends StatefulWidget {
 }
 
 class _NewsScreenState extends State<NewsScreen> {
-  String news =
-      'รวมพลังกลุ่ม กฟผ. มอบเงิน 3 ล้านบาท จัดหายาฟ้าทะลายโจรช่วยผู้ป่วยโควิด-19';
-  String date = '13 Aug 2021';
-  String content = 'วันนี้ (13 สิงหาคม 2564) นายกิจจา ศรีพัฒากุระ กรรมการ';
-
   initState() {
     super.initState();
     final newsState = Provider.of<NewsState>(context, listen: false);
@@ -48,17 +44,32 @@ class _NewsScreenState extends State<NewsScreen> {
         mainAxisSize: MainAxisSize.min,
         children: [
           //TODO: loop
-          Column(
-            children: [
-              _NewsCardSection(date: date, title: news, content: content),
-              _NewsCardSection(date: date, title: news, content: content),
-              _NewsCardSection(date: date, title: news, content: content),
-              _NewsCardSection(date: date, title: news, content: content),
-            ],
-          ),
+          _NewsListSection(),
           _NewsPaginationSection(),
         ],
       )),
+    );
+  }
+}
+
+class _NewsListSection extends StatelessWidget {
+  const _NewsListSection({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final newsState = Provider.of<NewsState>(context);
+
+    return Column(
+      children: [
+        for (var news in newsState.newsOnCurrentPage)
+          _NewsCardSection(
+            date: news.createdAt,
+            title: news.title,
+            content: news.description,
+          ),
+      ],
     );
   }
 }
@@ -72,18 +83,21 @@ class _NewsCardSection extends StatelessWidget {
     this.onTap,
   }) : super(key: key);
 
-  final String date;
+  final DateTime date;
   final String title;
   final String content;
   final void Function()? onTap;
 
   @override
   Widget build(BuildContext context) {
-    // Title can't have more than 20 characters
-    // If title is more than 20 characters, it will be cut off
-    final title = this.title.length > 20
-        ? this.title.substring(0, 17) + '...'
-        : this.title;
+    // Content can't have more than 60 characters
+    // If title is more than 60 characters, it will be cut off
+    final content = this.content.length > 60
+        ? this.content.substring(0, 37) + '...'
+        : this.content;
+
+    var dateFormatter = DateFormat('dd MMM yyyy');
+    var date = dateFormatter.format(this.date);
 
     return Card(
       shape: RoundedRectangleBorder(
