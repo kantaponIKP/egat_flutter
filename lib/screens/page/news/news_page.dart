@@ -18,7 +18,7 @@ class NewsPage extends StatelessWidget {
         if (previous == null) {
           return NewsState(loginSession: value);
         } else {
-          previous.loginSession = value;
+          previous.setLoginSession(value);
           return previous;
         }
       },
