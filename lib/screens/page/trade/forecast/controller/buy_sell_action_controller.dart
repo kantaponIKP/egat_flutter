@@ -42,6 +42,7 @@ class BuySellActionController extends ChangeNotifier {
     required BuySellAction action,
     required double expectingAmount,
     required bool isSelected,
+    bool notify = true,
   }) {
     if (_currentAction != null && _currentAction != action) {
       return;
@@ -92,15 +93,19 @@ class BuySellActionController extends ChangeNotifier {
       }
     }
 
-    notifyListeners();
+    if (notify) {
+      notifyListeners();
+    }
   }
 
-  void selectAll() {
+  void selectAll({
+    BuySellAction? action,
+  }) {
     if (_buySellInfoMaps.length == 0) {
       return;
     }
 
-    _currentAction = _buySellInfoMaps.values.first.action;
+    _currentAction = action ?? _buySellInfoMaps.values.first.action;
 
     var keys = _buySellInfoMaps.keys.toList();
     for (var key in keys) {

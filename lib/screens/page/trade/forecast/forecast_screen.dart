@@ -504,6 +504,7 @@ class _BuySellActionTileState extends State<_BuySellActionTile> {
       action: widget.action,
       expectingAmount: widget.expectingAmount,
       isSelected: false,
+      notify: false,
     );
 
     var buySellInfo = widget.controller.getBuySellInfoAtDateTime(useDateTime);
