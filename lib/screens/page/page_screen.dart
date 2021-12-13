@@ -13,7 +13,8 @@ import 'package:egat_flutter/screens/page/trade/bilateral/bilateral_long_term_se
 import 'package:egat_flutter/screens/page/trade/bilateral/bilateral_short_term_sell_screen.dart';
 import 'package:egat_flutter/screens/page/trade/bilateral/bilateral_sell_screen.dart';
 import 'package:egat_flutter/screens/page/trade/bilateral/bilateral_trade_screen.dart';
-import 'package:egat_flutter/screens/page/trade/forecast_screen.dart';
+import 'package:egat_flutter/screens/page/trade/forecast/forecast_page.dart';
+import 'package:egat_flutter/screens/page/trade/forecast/forecast_screen.dart';
 import 'package:egat_flutter/screens/page/trade/pool_market/pool_market_short_term_buy_screen.dart';
 import 'package:egat_flutter/screens/page/trade/pool_market/pool_market_short_term_sell_screen.dart';
 import 'package:egat_flutter/screens/page/trade/pool_market/pool_market_trade_screen.dart';
@@ -76,7 +77,7 @@ class _PageScreenState extends State<PageScreen> {
     }
 
     if (page.state == PageState.Forecast) {
-      screen = ForecastScreen(key: Key('forecast_screen'));
+      screen = ForecastPage(key: Key('forecast_screen'));
       // duration = Duration(milliseconds: 200);
     }
 
