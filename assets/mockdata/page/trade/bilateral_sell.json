@@ -6,7 +6,10 @@
         "date": "2021-12-01T14:39:14.492943Z",
         "energy": 5,
         "price": 7,
-        "sellerId": "2"
+        "sellerId": "2",
+        "isLongterm": false,
+        "buyerId": "1"
+
     },
     {
         "lat": 101,
@@ -15,6 +18,8 @@
         "date": "2021-12-01T14:39:14.492943Z",
         "energy": 1,
         "price": 6,
-        "sellerId": "3"
+        "sellerId": "3",
+        "isLongterm": true,
+        "buyerId": "1"
     }
 ]

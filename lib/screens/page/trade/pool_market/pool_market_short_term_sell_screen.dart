@@ -4,7 +4,12 @@ import 'package:egat_flutter/screens/page/widgets/page_appbar.dart';
 import 'package:egat_flutter/screens/page/widgets/page_bottom_navigation_bar.dart';
 import 'package:egat_flutter/screens/page/widgets/side_menu.dart';
 import 'package:egat_flutter/screens/page/trade/tabbar.dart';
+import 'package:egat_flutter/screens/widgets/loading_dialog.dart';
+import 'package:egat_flutter/screens/widgets/show_exception.dart';
+import 'package:egat_flutter/screens/widgets/show_success_snackbar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:egat_flutter/constant.dart';
 
@@ -18,11 +23,16 @@ class PoolMarketShortTermSellScreen extends StatefulWidget {
 
 class _PoolMarketShortTermSellScreenState
     extends State<PoolMarketShortTermSellScreen> {
-  bool _ischecked = false;
+  List<bool> _isChecked = [];
   double _currentSliderValue = 9;
+  List<PoolMarketShortTermSellTile> _poolMarketTileList = [];
+  List<TradingFee> _tradingFeeList = [];
+  double _totalTradingFee = 0;
+  double _totalEstimatedSales = 0;
   @override
   void initState() {
     super.initState();
+    _getData();
   }
 
   @override
@@ -79,14 +89,21 @@ class _PoolMarketShortTermSellScreenState
                               ),
                             ),
                           ),
-                          _testlisttile(),
-                          _testlisttile(),
-                          _testlisttile(),
-                          _testlisttile()
-                          // TextButton(
-                          //   onPressed: _onSubmitPressed,
-                          //   child: Text('Submit'),
-                          // )
+                          Container(
+                            height: constraints.maxHeight,
+                            child: ListView.builder(
+                              scrollDirection: Axis.vertical,
+                              itemCount: _poolMarketTileList.length,
+                              itemBuilder: (context, index) {
+                                return _buildExpansionTile(
+                                    _poolMarketTileList[index].date!,
+                                    _poolMarketTileList[index].energyToSale!,
+                                    _poolMarketTileList[index]
+                                        .offerToSellPrice!,
+                                    index);
+                              },
+                            ),
+                          )
                         ],
                       ),
                     ),
@@ -116,7 +133,7 @@ class _PoolMarketShortTermSellScreenState
                                 Container(
                                     padding: EdgeInsets.only(right: 10),
                                     child: Text(
-                                      "(0.08)",
+                                      _totalTradingFee.toString(),
                                       style: TextStyle(
                                           fontSize: 20, color: primaryColor),
                                     )),
@@ -145,7 +162,7 @@ class _PoolMarketShortTermSellScreenState
                                 Container(
                                     padding: EdgeInsets.only(right: 10),
                                     child: Text(
-                                      "28.27",
+                                      _totalEstimatedSales.toString(),
                                       style: TextStyle(
                                           fontSize: 20, color: primaryColor),
                                     )),
@@ -157,7 +174,7 @@ class _PoolMarketShortTermSellScreenState
                       ),
                       GestureDetector(
                         onTap: () {
-                          _onSubmitPressed();
+                          showAlertDialog(context);
                         },
                         child: Container(
                           decoration: BoxDecoration(
@@ -185,32 +202,47 @@ class _PoolMarketShortTermSellScreenState
     );
   }
 
-  Widget _testlisttile() {
-    return Column(
-      children: [_bodyExpand(), _bodyExpand()],
+  // Widget _testlisttile() {
+  //   return Column(
+  //     children: [_bodyExpand(), _bodyExpand()],
+  //   );
+  // }
+
+  Widget _headerTile(String date, int index) {
+    var startDate = DateTime.parse(date).toLocal();
+    var endDate = DateTime.parse(date).toLocal().add(new Duration(hours: 1));
+    var startHour = DateFormat('HH').format(startDate);
+    var endHour = DateFormat('HH').format(endDate);
+    String displayTime =
+        startHour.toString() + ":00-" + endHour.toString() + ":00";
+    String displayDate =
+        DateFormat('dd MMMM yyyy').format(DateTime.parse(date).toLocal());
+    return StatefulBuilder(
+      builder: (BuildContext context, StateSetter setState) {
+        return CheckboxListTile(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
+          contentPadding: EdgeInsets.all(0),
+          title: Text("Date : $displayDate, Period: $displayTime"),
+          activeColor: primaryColor,
+          checkColor: backgroundColor,
+          controlAffinity: ListTileControlAffinity.leading,
+          value: _isChecked[index],
+          onChanged: (bool? value) {
+            setState(
+              () {
+                _isChecked[index] = value!;
+                calculateTradingFee();
+              },
+            );
+          },
+        );
+      },
     );
   }
 
-  Widget _headerExpand() {
-    return ListTile(
-      title: CheckboxListTile(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
-        contentPadding: EdgeInsets.all(0),
-        title: Text("Date : 21 Aug 2021, Period: 13:00-14:00"),
-        activeColor: primaryColor,
-        checkColor: backgroundColor,
-        controlAffinity: ListTileControlAffinity.leading,
-        value: _ischecked,
-        onChanged: (bool? value) {
-          setState(() {
-            _ischecked = value!;
-          });
-        },
-      ),
-    );
-  }
-
-  Widget _bodyExpand() {
+  Widget _buildExpansionTile(
+      String date, double energyToSell, double offterToSellPrice, int index) {
     return ClipRRect(
       borderRadius: BorderRadius.circular(30),
       child: Container(
@@ -218,7 +250,7 @@ class _PoolMarketShortTermSellScreenState
         child: ExpansionTile(
           tilePadding: EdgeInsets.only(left: 0, top: 0, bottom: 0, right: 15),
           controlAffinity: ListTileControlAffinity.platform,
-          title: _headerExpand(),
+          title: _headerTile(date, index),
           collapsedBackgroundColor: surfaceColor,
           backgroundColor: surfaceColor,
           textColor: textColor,
@@ -246,6 +278,23 @@ class _PoolMarketShortTermSellScreenState
                           width: 50,
                           height: 30,
                           child: TextField(
+                            keyboardType: TextInputType.number,
+                            inputFormatters: <TextInputFormatter>[
+                              FilteringTextInputFormatter.allow(
+                                RegExp(r'^\d+\.?\d*'),
+                              ),
+                            ],
+                            onChanged: (value) {
+                              setState(
+                                () {
+                                  if (value != "") {
+                                    _poolMarketTileList[index].energyToSale =
+                                        double.parse(value);
+                                    calculateTradingFee();
+                                  }
+                                },
+                              );
+                            },
                             decoration: InputDecoration(
                                 border: UnderlineInputBorder(
                                     borderSide: BorderSide(color: textColor))),
@@ -336,6 +385,24 @@ class _PoolMarketShortTermSellScreenState
                             width: 50,
                             height: 30,
                             child: TextField(
+                              keyboardType: TextInputType.number,
+                              inputFormatters: <TextInputFormatter>[
+                                FilteringTextInputFormatter.allow(
+                                  RegExp(r'^\d+\.?\d*'),
+                                ),
+                              ],
+                              onChanged: (value) {
+                                setState(
+                                  () {
+                                    if (value != "") {
+                                      _poolMarketTileList[index]
+                                              .offerToSellPrice =
+                                          double.parse(value);
+                                      calculateTradingFee();
+                                    }
+                                  },
+                                );
+                              },
                               decoration: InputDecoration(
                                   border: UnderlineInputBorder(
                                       borderSide:
@@ -359,6 +426,153 @@ class _PoolMarketShortTermSellScreenState
     );
   }
 
+  void showAlertDialog(BuildContext context) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Short term Bilateral",
+                  style: TextStyle(color: primaryColor, fontSize: 24),
+                ),
+                SizedBox(
+                  height: 5,
+                ),
+                Text(
+                  "Offer to sell",
+                  style: TextStyle(color: greenColor, fontSize: 18),
+                ),
+              ],
+            ),
+            content: Container(
+              padding: EdgeInsets.all(5),
+              width: MediaQuery.of(context).size.width / 1.5,
+              height: MediaQuery.of(context).size.width / 3.0,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: Colors.grey,
+              ),
+              child: SingleChildScrollView(
+                child: Column(
+                  children: _poolMarketTileList
+                      .map((item) => new Text(
+                            "Period: " +
+                                DateFormat('HH')
+                                    .format(DateTime.parse(item.date!).toLocal())
+                                    .toString() +
+                                ":00-" +
+                                DateFormat('HH')
+                                    .format(DateTime.parse(item.date!).toLocal())
+                                    .toString() +
+                                ":00" +
+                                " Price ${item.offerToSellPrice.toString()} THB/kWh",
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(color: blackColor),
+                          ))
+                      .toList(),
+                ),
+              ),
+            ),
+            backgroundColor: Colors.grey[800],
+            actionsAlignment: MainAxisAlignment.spaceEvenly,
+            actions: [
+              FlatButton(
+                  onPressed: () {
+                    _onSubmitPressed();
+                    Navigator.pop(context);
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                        color: primaryColor,
+                        borderRadius: BorderRadius.circular(5)),
+                    child: Padding(
+                      padding: const EdgeInsets.all(6),
+                      child: Text(
+                        "Agree",
+                        style: TextStyle(color: blackColor),
+                      ),
+                    ),
+                  )),
+              FlatButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                        color: greyColor,
+                        borderRadius: BorderRadius.circular(5)),
+                    child: Padding(
+                      padding: const EdgeInsets.all(6),
+                      child: Text(
+                        "Cancel",
+                        style: TextStyle(color: blackColor),
+                      ),
+                    ),
+                  )),
+            ],
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          );
+        });
+  }
+
+  void calculateTradingFee() {
+    double totalTradingFee = 0;
+    double totalEstimatedSales = 0;
+    int i = 0;
+    for (var _poolMarket in _poolMarketTileList) {
+      if (_isChecked[i] == true) {
+        totalTradingFee = totalTradingFee +
+            (_tradingFeeList[i].tradingFee! * _poolMarket.energyToSale!);
+        totalEstimatedSales =
+            _poolMarket.energyToSale! * _poolMarket.offerToSellPrice!;
+      }
+      i++;
+    }
+    totalEstimatedSales = totalEstimatedSales + totalTradingFee;
+    setState(() {
+      _totalTradingFee = totalTradingFee;
+      _totalEstimatedSales = totalEstimatedSales;
+    });
+  }
+
+  void _getData() async {
+    PoolMarketShortTermSell model =
+        Provider.of<PoolMarketShortTermSell>(context, listen: false);
+
+    List<PoolMarketShortTermSellTile> list = [];
+    for (var i = 0; i < model.info.dateList!.length; i++) {
+      list.add(PoolMarketShortTermSellTile(
+          date: model.info.dateList![i], energyToSale: 0, offerToSellPrice: 0));
+    }
+
+    // await model.getPoolMarketShortTermSellInfo();
+    setState(() {
+      _poolMarketTileList = list;
+      // _initBilateralTileList = model.info.bilateralTileList!;
+      _isChecked = List<bool>.filled(_poolMarketTileList.length, false);
+    });
+
+    await showLoading();
+    try {
+      await model.getPoolMarketTradingFee();
+    } catch (e) {
+      showException(context, e.toString());
+    } finally {
+      await hideLoading();
+    }
+
+    setState(() {
+      _tradingFeeList = model.info.tradingFee!;
+      print(_tradingFeeList[0].tradingFee);
+    });
+  }
+
   Future<bool> _onWillPop() async {
     PoolMarketShortTermSell model =
         Provider.of<PoolMarketShortTermSell>(context, listen: false);
@@ -366,10 +580,38 @@ class _PoolMarketShortTermSellScreenState
     return false;
   }
 
-  void _onSubmitPressed() {
+  void _onSubmitPressed() async {
     //Navigate
+    // PoolMarketShortTermSell model =
+    //     Provider.of<PoolMarketShortTermSell>(context, listen: false);
+    // model.setPagePoolMarketTrade();
+
+    List<PoolMarketShortTermSellTile> _poolMarketTileListOutput = [];
+    int i = 0;
+    for (var _poolMarket in _poolMarketTileList) {
+      if (_isChecked[i] == true) {
+        _poolMarketTileListOutput.add(_poolMarket);
+      }
+      i++;
+    }
+    bool response = false;
+    await showLoading();
     PoolMarketShortTermSell model =
         Provider.of<PoolMarketShortTermSell>(context, listen: false);
-    model.setPagePoolMarketTrade();
+    try {
+      response = await model.poolMarketShortTermSell(_poolMarketTileListOutput);
+    } catch (e) {
+      showException(context, e.toString());
+    } finally {
+      await hideLoading();
+    }
+
+    if (response == true) {
+      model.setPagePoolMarketTrade();
+      showSuccessSnackBar(context, "ทำรายการสำเร็จ");
+    } else {
+      //TODO
+      showException(context, "ไม่สามารถทำรายการได้");
+    }
   }
 }

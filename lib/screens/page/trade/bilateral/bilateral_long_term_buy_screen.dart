@@ -603,10 +603,10 @@ class _BilateralLongTermBuyScreenState
               var hourFormat = DateFormat('HH:mm');
               var startHour = hourFormat.format(item.toLocal());
               var endHour = hourFormat.format(item.toLocal().add(
-                Duration(
-                  hours: 1,
-                ),
-              ));
+                    Duration(
+                      hours: 1,
+                    ),
+                  ));
               return DropdownMenuItem(
                 value: item.toString(),
                 child: Text('$startHour-$endHour'),
@@ -672,7 +672,7 @@ class _BilateralLongTermBuyScreenState
 
     BilateralLongTermBuy model =
         Provider.of<BilateralLongTermBuy>(context, listen: false);
-        bool response = false;
+    bool response = false;
     try {
       response = await model.bilateralLongTermBuy(_bilateralTileListOutput);
     } catch (e) {
@@ -680,34 +680,33 @@ class _BilateralLongTermBuyScreenState
     } finally {
       await hideLoading();
     }
-    if(response == true){
+    if (response == true) {
       model.setPageBilateralTrade();
       showSuccessSnackBar(context, "ทำรายการสำเร็จ");
-    }else{
+    } else {
       //TODO
       showException(context, "ไม่สามารถทำรายการได้");
     }
-    
   }
 
   void _getData() async {
     BilateralLongTermBuy model =
         Provider.of<BilateralLongTermBuy>(context, listen: false);
-        print(DateTime.parse(model.info.date!).toLocal());
+    print(DateTime.parse(model.info.date!).toLocal());
 
-      await showLoading();
-      try {
-        await model.getBilateralLongTermBuyInfo(_date,_daysMap[_groupValue]??7);
-        setState(() {
+    await showLoading();
+    try {
+      await model.getBilateralLongTermBuyInfo(
+          _date, _daysMap[_groupValue] ?? 7);
+      setState(() {
         _bilateralTileList = model.info.bilateralTileList!;
         _initBilateralTileList = model.info.bilateralTileList!;
         _isChecked = List<bool>.filled(_bilateralTileList.length, false);
       });
-      } catch (e) {
-        showException(context, e.toString());
-      } finally {
-        await hideLoading();
-      }
-      
+    } catch (e) {
+      showException(context, e.toString());
+    } finally {
+      await hideLoading();
+    }
   }
 }

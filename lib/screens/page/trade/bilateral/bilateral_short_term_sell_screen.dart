@@ -280,8 +280,9 @@ class _BilateralShortTermSellScreenState
         startHour.toString() + ":00-" + endHour.toString() + ":00";
     String displayDate =
         DateFormat('dd MMMM yyyy').format(DateTime.parse(date).toLocal());
-    return ListTile(
-      title: CheckboxListTile(
+    return StatefulBuilder(
+        builder: (BuildContext context, StateSetter setState) {
+      return CheckboxListTile(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
         contentPadding: EdgeInsets.all(0),
         title: Text("Date : $displayDate, Period: $displayTime"),
@@ -295,8 +296,8 @@ class _BilateralShortTermSellScreenState
             calculateTradingFee();
           });
         },
-      ),
-    );
+      );
+    });
   }
 
   Widget _buildExpansionTile(
@@ -490,7 +491,8 @@ class _BilateralShortTermSellScreenState
     int i = 0;
     for (var _bilateral in _bilateralTileList) {
       if (_isChecked[i] == true) {
-        totalTradingFee = totalTradingFee + (_tradingFeeList[i].tradingFee! * _bilateral.energyToSale!);
+        totalTradingFee = totalTradingFee +
+            (_tradingFeeList[i].tradingFee! * _bilateral.energyToSale!);
         totalEstimatedSales =
             _bilateral.energyToSale! * _bilateral.offerToSellPrice!;
       }
@@ -523,15 +525,14 @@ class _BilateralShortTermSellScreenState
     await showLoading();
     try {
       await model.getBilateralTradingFee();
+      setState(() {
+        _tradingFeeList = model.info.tradingFee!;
+      });
     } catch (e) {
       showException(context, e.toString());
     } finally {
       await hideLoading();
     }
-
-    setState(() {
-      _tradingFeeList = model.info.tradingFee!;
-    });
   }
 
   Future<bool> _onWillPop() async {
@@ -568,13 +569,12 @@ class _BilateralShortTermSellScreenState
       showException(context, e.toString());
     } finally {
       await hideLoading();
-      
     }
 
-    if(response == true){
+    if (response == true) {
       model.setPageBilateralTrade();
       showSuccessSnackBar(context, "ทำรายการสำเร็จ");
-    }else{
+    } else {
       //TODO
       showException(context, "ไม่สามารถทำรายการได้");
     }
@@ -615,7 +615,16 @@ class _BilateralShortTermSellScreenState
                 child: Column(
                   children: _bilateralTileList
                       .map((item) => new Text(
-                            "Period: ${item.date.toString()} Price ${item.offerToSellPrice.toString()} THB/kWh",
+                            "Period: " +
+                                DateFormat('HH')
+                                    .format(DateTime.parse(item.date!))
+                                    .toString() +
+                                ":00-" +
+                                DateFormat('HH')
+                                    .format(DateTime.parse(item.date!))
+                                    .toString() +
+                                ":00"
+                                    " Price ${item.offerToSellPrice.toString()} THB/kWh",
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(color: blackColor),

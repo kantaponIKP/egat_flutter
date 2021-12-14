@@ -1,5 +1,7 @@
 [
     {
+        "id": "1",
+        "sellerId" : "1",
         "lat": 101,
         "lng": 102,
         "name": "PROSUMER P01",
@@ -12,9 +14,15 @@
         "wheelingChargeTariff": 3,
         "wheelingCharge": 4,
         "tradingFee": 1,
-        "vat": 2
+        "vat": 2,
+        "isLongterm": false,
+        "buyerId": "1",
+        "isBuyable": false
+
     },
     {
+        "id": "2",
+        "sellerId" : "2",
         "lat": 101,
         "lng": 102,
         "name": "PROSUMER P02",
@@ -27,6 +35,9 @@
         "wheelingChargeTariff": 3,
         "wheelingCharge": 4,
         "tradingFee": 5,
-        "vat": 2
+        "vat": 2,
+        "isLongterm": true,
+        "buyerId": "1",
+        "isBuyable": true
     }
 ]

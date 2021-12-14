@@ -31,13 +31,15 @@ final menuBgColor = HexColor("#3E3E3E"); //
 final greenColor = HexColor("#99FF75");
 final redColor = HexColor("#F6645A");
 
-
 final appTitle = 'EGAT P2P';
 
 final apiBaseUrlRegister = "https://egat-p2p-register.di.iknowplus.co.th";
 final apiBaseUrlLogin = "https://egat-p2p-login.di.iknowplus.co.th";
-final apiBaseUrlProfileManage = "https://egat-p2p-profile-mange.di.iknowplus.co.th/";
-final apiBaseUrlTrade = "http://egat-p2p-bilateral.di.iknowplus.co.th/";
+final apiBaseUrlProfileManage =
+    "https://egat-p2p-profile-mange.di.iknowplus.co.th/";
+final apiBaseUrlBilateralTrade =
+    "https://egat-p2p-bilateral.di.iknowplus.co.th/";
+final apiBaseUrlPoolMarketTrade = "https://egat-p2p-pool.di.iknowplus.co.th/";
 
 final loggerPrinter = PrettyPrinter();
 final loggerLevel = Level.debug;

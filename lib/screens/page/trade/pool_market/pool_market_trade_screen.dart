@@ -1,11 +1,16 @@
+import 'package:egat_flutter/screens/page/state/pool_market/pool_market_short_term_buy.dart';
+import 'package:egat_flutter/screens/page/state/pool_market/pool_market_short_term_sell.dart';
 import 'package:egat_flutter/screens/page/state/pool_market/pool_market_trade.dart';
 import 'package:egat_flutter/screens/page/widgets/logo_appbar.dart';
 import 'package:egat_flutter/screens/page/widgets/page_appbar.dart';
 import 'package:egat_flutter/screens/page/widgets/page_bottom_navigation_bar.dart';
 import 'package:egat_flutter/screens/page/widgets/side_menu.dart';
 import 'package:egat_flutter/screens/page/trade/tabbar.dart';
+import 'package:egat_flutter/screens/widgets/loading_dialog.dart';
+import 'package:egat_flutter/screens/widgets/show_exception.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:egat_flutter/constant.dart';
 
@@ -17,24 +22,65 @@ class PoolMarketTradeScreen extends StatefulWidget {
 }
 
 class _PoolMarketTradeScreenState extends State<PoolMarketTradeScreen> {
-  var dateItem = [
-    "20 August 2021",
-    "21 August 2021",
-    "22 August 2021",
-    "23 August 2021"
-  ];
+  var dateItem = <String>[];
+
   var timeItem = ["6:00-18:00", "18:00-6:00"];
   var offerItem = ["Bid to Buy", "Offer to Sell"];
-  String _timeinit = "";
-  String _dateinit = "";
-  String _offerinit = "";
+  String _time = "";
+  String _date = "";
+  String _offerInit = "";
+  var _poolMarketList = [];
+  var _poolMarketBuyList = [];
+  var _poolMarketSellList = [];
 
   @override
   void initState() {
     super.initState();
-    _timeinit = timeItem.first;
-    _dateinit = dateItem.first;
-    _offerinit = offerItem.first;
+
+    DateTime now = new DateTime.now();
+    now = now.add(Duration(hours: -6));
+    DateTime date = new DateTime(now.year, now.month, now.day);
+
+    dateItem = [
+      date.toString(),
+      date.add(new Duration(days: 1)).toString(),
+      date.add(new Duration(days: 2)).toString(),
+      date.add(new Duration(days: 3)).toString(),
+      date.add(new Duration(days: 4)).toString(),
+      date.add(new Duration(days: 5)).toString(),
+      date.add(new Duration(days: 6)).toString(),
+      date.add(new Duration(days: 7)).toString(),
+    ];
+
+    _time = timeItem.first;
+    _date = dateItem.first.toString();
+    int hour = DateTime.now().hour;
+    if (hour < 18 && hour >= 6) {
+      _time = timeItem.first;
+    }
+    {
+      _time = timeItem.last;
+    }
+    _offerInit = offerItem.first;
+
+    _getData(_date, _time);
+  }
+
+  void setPoolMarketList(poolMarketList) {
+    var poolMarketBuyList = [];
+    var poolMarketSellList = [];
+
+    for (var poolMarket in poolMarketList) {
+      if (poolMarket.type == "buy") {
+        poolMarketBuyList.add(poolMarket);
+      } else {
+        poolMarketSellList.add(poolMarket);
+      }
+    }
+    setState(() {
+      _poolMarketSellList = poolMarketSellList;
+      _poolMarketBuyList = poolMarketBuyList;
+    });
   }
 
   @override
@@ -100,7 +146,7 @@ class _PoolMarketTradeScreenState extends State<PoolMarketTradeScreen> {
                                   borderRadius: BorderRadius.circular(5),
                                 ),
                                 child: DropdownButton(
-                                  value: _timeinit,
+                                  value: _time,
                                   icon: Icon(
                                     Icons.arrow_drop_down_rounded,
                                   ),
@@ -109,7 +155,8 @@ class _PoolMarketTradeScreenState extends State<PoolMarketTradeScreen> {
                                   borderRadius: BorderRadius.circular(20),
                                   onChanged: (String? newValue) {
                                     setState(() {
-                                      _timeinit = newValue!;
+                                      _time = newValue!;
+                                      _getData(_date, newValue);
                                     });
                                   },
                                   items: timeItem.map((String items) {
@@ -130,20 +177,23 @@ class _PoolMarketTradeScreenState extends State<PoolMarketTradeScreen> {
                                   borderRadius: BorderRadius.circular(5),
                                 ),
                                 child: DropdownButton(
-                                  value: _dateinit,
+                                  value: _date,
                                   icon: Icon(Icons.arrow_drop_down_rounded),
                                   iconSize: 20,
                                   alignment: Alignment.center,
                                   borderRadius: BorderRadius.circular(20),
                                   onChanged: (String? newValue) {
                                     setState(() {
-                                      _dateinit = newValue!;
+                                      _date = newValue!;
+                                      _getData(newValue, _time);
                                     });
                                   },
                                   items: dateItem.map((String items) {
                                     return DropdownMenuItem(
                                       value: items,
-                                      child: Text(items),
+                                      child: Text(DateFormat('dd MMMM yyyy')
+                                          .format(
+                                              DateTime.parse(items).toLocal())),
                                     );
                                   }).toList(),
                                   underline: DropdownButtonHideUnderline(
@@ -158,7 +208,7 @@ class _PoolMarketTradeScreenState extends State<PoolMarketTradeScreen> {
                                   borderRadius: BorderRadius.circular(5),
                                 ),
                                 child: DropdownButton(
-                                  value: _offerinit,
+                                  value: _offerInit,
                                   icon: Icon(Icons.arrow_drop_down_rounded),
                                   iconSize: 20,
                                   iconEnabledColor: backgroundColor,
@@ -169,13 +219,17 @@ class _PoolMarketTradeScreenState extends State<PoolMarketTradeScreen> {
                                   borderRadius: BorderRadius.circular(20),
                                   onChanged: (String? newValue) {
                                     setState(() {
-                                      _offerinit = newValue!;
+                                      _offerInit = newValue!;
+                                      _getData(_date, _time);
                                     });
                                   },
                                   items: offerItem.map((String items) {
                                     return DropdownMenuItem(
                                       value: items,
-                                      child: Text(items),
+                                      child: Text(
+                                        items,
+                                        style: TextStyle(fontSize: 14),
+                                      ),
                                     );
                                   }).toList(),
                                   underline: DropdownButtonHideUnderline(
@@ -187,11 +241,112 @@ class _PoolMarketTradeScreenState extends State<PoolMarketTradeScreen> {
                         SizedBox(
                           height: 10,
                         ),
-                        _buildCloseCard("13:00-14:00", 5, 3),
-                        _buildPeriodCard("14:00-15:00", 5),
-                        _buildPeriodCard("15:00-16:00", 6),
-                        _buildPeriodCard("16:00-17:00", 0),
-                        _buildPeriodCard("17:00-18:00", 2)
+
+                        (_offerInit == "Bid to Buy")
+                            ? Container(
+                                height: constraints.maxHeight - 80,
+                                child: ListView.builder(
+                                  scrollDirection: Axis.vertical,
+                                  itemCount: _poolMarketBuyList.length,
+                                  itemBuilder: (context, index) {
+                                    if (_poolMarketBuyList[index].price !=
+                                        null) {
+                                      return _buildCard(
+                                          time: _poolMarketBuyList[index].time,
+                                          status:
+                                              _poolMarketBuyList[index].status,
+                                          offer: _poolMarketBuyList[index]
+                                              .offerCount,
+                                          matched:
+                                              _poolMarketBuyList[index].matched,
+                                          price:
+                                              _poolMarketBuyList[index].price,
+                                          volume:
+                                              _poolMarketBuyList[index].volume,
+                                          isoDate:
+                                              _poolMarketBuyList[index].isoDate,
+                                          offerAmount: _poolMarketBuyList[index]
+                                              .offerAmount,
+                                          offerPrice: _poolMarketBuyList[index]
+                                              .offerPrice,
+                                          isMatched: _poolMarketBuyList[index]
+                                              .isMatched);
+                                    } else {
+                                      return _buildCard(
+                                          time: _poolMarketBuyList[index].time,
+                                          status:
+                                              _poolMarketBuyList[index].status,
+                                          offer: _poolMarketBuyList[index]
+                                              .offerCount,
+                                          matched:
+                                              _poolMarketBuyList[index].matched,
+                                          price: null,
+                                          volume: null,
+                                          isoDate:
+                                              _poolMarketBuyList[index].isoDate,
+                                          offerAmount: _poolMarketBuyList[index]
+                                              .offerAmount,
+                                          offerPrice: _poolMarketBuyList[index]
+                                              .offerPrice,
+                                          isMatched: _poolMarketBuyList[index]
+                                              .isMatched);
+                                    }
+                                  },
+                                ),
+                              )
+                            : Container(
+                                height: constraints.maxHeight - 80,
+                                child: ListView.builder(
+                                  scrollDirection: Axis.vertical,
+                                  itemCount: _poolMarketSellList.length,
+                                  itemBuilder: (context, index) {
+                                    if (_poolMarketSellList[index].price !=
+                                        null) {
+                                      return _buildCard(
+                                          time: _poolMarketSellList[index].time,
+                                          status:
+                                              _poolMarketSellList[index].status,
+                                          offer: _poolMarketSellList[index]
+                                              .offerCount,
+                                          matched: _poolMarketSellList[index]
+                                              .matched,
+                                          price:
+                                              _poolMarketSellList[index].price,
+                                          volume:
+                                              _poolMarketSellList[index].volume,
+                                          isoDate: _poolMarketSellList[index]
+                                              .isoDate,
+                                          offerAmount:
+                                              _poolMarketSellList[index]
+                                                  .offerAmount,
+                                          offerPrice: _poolMarketSellList[index]
+                                              .offerPrice,
+                                          isMatched: _poolMarketSellList[index]
+                                              .isMatched);
+                                    } else {
+                                      return _buildCard(
+                                          time: _poolMarketSellList[index].time,
+                                          status:
+                                              _poolMarketSellList[index].status,
+                                          offer: _poolMarketSellList[index]
+                                              .offerCount,
+                                          matched: _poolMarketSellList[index]
+                                              .matched,
+                                          price: null,
+                                          volume: null,
+                                          isoDate: _poolMarketSellList[index]
+                                              .isoDate,
+                                          offerAmount:
+                                              _poolMarketSellList[index]
+                                                  .offerAmount,
+                                          offerPrice: _poolMarketSellList[index]
+                                              .offerPrice,
+                                          isMatched: _poolMarketSellList[index]
+                                              .isMatched);
+                                    }
+                                  },
+                                ),
+                              ),
                       ],
                     ),
                   ),
@@ -204,244 +359,368 @@ class _PoolMarketTradeScreenState extends State<PoolMarketTradeScreen> {
     );
   }
 
-  Widget _buildPeriodCard(String time, int offer) {
+  Widget _buildCard({
+    String? time,
+    String? status,
+    int? offer,
+    int? matched,
+    double? price,
+    double? volume,
+    String? isoDate,
+    double? offerAmount,
+    double? offerPrice,
+    bool? isMatched,
+  }) {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
       decoration: BoxDecoration(borderRadius: BorderRadius.circular(5)),
-      child: Card(
-        child: IntrinsicHeight(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              Container(
-                padding: EdgeInsets.all(15),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      time,
-                      style: TextStyle(fontSize: 26),
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        _onListTileSellPressed();
-                      },
-                      child: Text(
-                        "OPEN(Test to Sell)",
-                        style: TextStyle(fontSize: 23, color: greenColor),
+      child: GestureDetector(
+        onTap: () {
+          (_offerInit == "Bid to Buy")
+              ? _onListTileBuyPressed(isoDate!)
+              : _onListTileSellPressed(isoDate!);
+        },
+        child: Card(
+          child: IntrinsicHeight(
+              child: Column(children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                Container(
+                  padding: EdgeInsets.all(15),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        time!,
+                        style: TextStyle(fontSize: 26),
                       ),
-                    )
+                      Text(
+                        status!,
+                        style: TextStyle(
+                            fontSize: 23,
+                            color: (status == "CLOSE") ? redColor : greenColor),
+                      )
+                    ],
+                  ),
+                ),
+                (offerAmount != 0 && offerAmount != null && status == "OPEN")
+                    ? Row(
+                        children: [
+                          Container(
+                            height: 100,
+                            width: 0,
+                            child: VerticalDivider(
+                              indent: 10,
+                              endIndent: 10,
+                              width: 20,
+                              thickness: 2,
+                              color: greyColor,
+                            ),
+                          ),
+                          Container(
+                            padding: EdgeInsets.all(2),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  children: [
+                                    Container(
+                                        padding:
+                                            EdgeInsets.symmetric(horizontal: 5),
+                                        child: Text("Amount",
+                                            style: TextStyle(
+                                                fontSize: 12,
+                                                color: primaryColor))),
+                                    Text(
+                                      offerAmount.toString(),
+                                      style: TextStyle(
+                                          fontSize: 12, color: primaryColor),
+                                    ),
+                                    Text(
+                                      " kWh",
+                                      style: TextStyle(
+                                          fontSize: 12, color: primaryColor),
+                                    ),
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    Container(
+                                        padding:
+                                            EdgeInsets.symmetric(horizontal: 5),
+                                        child: Text("Price",
+                                            style: TextStyle(
+                                                fontSize: 12,
+                                                color: primaryColor))),
+                                    Text(
+                                      offerPrice.toString(),
+                                      style: TextStyle(
+                                          fontSize: 12, color: primaryColor),
+                                    ),
+                                    Text(
+                                      " THB/kWh",
+                                      style: TextStyle(
+                                          fontSize: 12, color: primaryColor),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          )
+                        ],
+                      )
+                    : Container(),
+                Row(
+                  children: [
+                    Container(
+                      height: 100,
+                      width: 0,
+                      child: VerticalDivider(
+                        indent: 10,
+                        endIndent: 10,
+                        width: 20,
+                        thickness: 2,
+                        color: greyColor,
+                      ),
+                    ),
+                    Container(
+                      padding: EdgeInsets.all(10),
+                      child: Column(
+                        children: [
+                          (status == "CLOSE")
+                              ? Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  mainAxisSize: MainAxisSize.max,
+                                  children: [
+                                      Text(offer.toString(),
+                                          style: TextStyle(
+                                              fontSize: 24,
+                                              color: (isMatched!)
+                                                  ? primaryColor
+                                                  : whiteColor)),
+                                      Container(
+                                        padding:
+                                            EdgeInsets.symmetric(horizontal: 5),
+                                        child: Text(
+                                          (_offerInit == "Bid to Buy")
+                                              ? "Offers \nto buy"
+                                              : "Offers \nto sell",
+                                          style: TextStyle(
+                                              color: (isMatched)
+                                                  ? primaryColor
+                                                  : whiteColor),
+                                        ),
+                                      ),
+                                    ])
+                              : Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  mainAxisSize: MainAxisSize.max,
+                                  children: [
+                                      Text(offer.toString(),
+                                          style: TextStyle(
+                                              fontSize: 24,
+                                              color: (isMatched! && status == "CLOSE")
+                                                  ? primaryColor
+                                                  : whiteColor)),
+                                      Container(
+                                        padding:
+                                            EdgeInsets.symmetric(horizontal: 5),
+                                        child: Text(
+                                          (_offerInit == "Bid to Buy")
+                                              ? "Offers \nto buy"
+                                              : "Offers \nto sell",
+                                          style: TextStyle(
+                                              color: (isMatched && status == "CLOSE")
+                                                  ? primaryColor
+                                                  : whiteColor),
+                                        ),
+                                      ),
+                                    ]),
+                          (status == "CLOSE")
+                              ? Container(
+                                  height: 20,
+                                  width: 80,
+                                  child: Divider(
+                                    color: whiteColor,
+                                    height: 10,
+                                    thickness: 1,
+                                  ),
+                                )
+                              : Container(),
+                          (status == "CLOSE")
+                              ? Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  mainAxisSize: MainAxisSize.max,
+                                  children: [
+                                    Text(
+                                      matched.toString(),
+                                      style: TextStyle(
+                                          fontSize: 24,
+                                          color: (isMatched)
+                                              ? primaryColor
+                                              : whiteColor),
+                                    ),
+                                    Container(
+                                      padding:
+                                          EdgeInsets.symmetric(horizontal: 5),
+                                      child: Text(
+                                        "Matched",
+                                        style: TextStyle(
+                                            color: (isMatched)
+                                                ? primaryColor
+                                                : whiteColor),
+                                      ),
+                                    )
+                                  ],
+                                )
+                              : Container()
+                        ],
+                      ),
+                    ),
                   ],
                 ),
-              ),
-              Row(
-                children: [
-                  VerticalDivider(
-                    indent: 10,
-                    endIndent: 10,
-                    width: 20,
-                    thickness: 2,
-                    color: greyColor,
-                  ),
-                  Container(
-                    padding: EdgeInsets.all(15),
-                    child: Column(
+              ],
+            ),
+            (price != null && volume != null)
+                ? Container(
+                    padding: EdgeInsets.all(10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        Text(
-                          offer.toString(),
-                          style: TextStyle(fontSize: 26),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Market clearing price",
+                              style: TextStyle(fontSize: 17),
+                            ),
+                            Text(
+                              "Market clearing volume",
+                              style: TextStyle(fontSize: 17),
+                            ),
+                          ],
                         ),
-                        Text("Offers \nto buy")
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Row(
+                              children: [
+                                Text(
+                                  price.toStringAsFixed(2),
+                                  style: TextStyle(fontSize: 17),
+                                ),
+                                SizedBox(
+                                  width: 5,
+                                ),
+                                Text("THB/kWh")
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                Text(
+                                  volume.toStringAsFixed(2),
+                                  style: TextStyle(fontSize: 17),
+                                ),
+                                SizedBox(
+                                  width: 5,
+                                ),
+                                Text("kWh")
+                              ],
+                            )
+                          ],
+                        )
                       ],
                     ),
-                  ),
-                ],
-              ),
-            ],
-          ),
+                  )
+                : Container(),
+
+            // Row(
+            //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            //   children: [
+            //     Text("Market clearing price"),
+            //     Row(
+            //       children: [Text("2.70"), Text("THB/kWh")],
+            //     )
+            //   ],
+            // ),
+            // Row(
+            //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            //   children: [
+            //     Text("Market clearing volume"),
+            //     Row(
+            //       children: [Text("100"), Text("kWh")],
+            //     )
+            //   ],
+            // )
+          ])),
         ),
       ),
     );
   }
 
-  Widget _buildCloseCard(String time, int offer, int match) {
-    return Container(
-      padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-      decoration: BoxDecoration(borderRadius: BorderRadius.circular(5)),
-      child: Card(
-        child: IntrinsicHeight(
-            child: Column(children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              Container(
-                padding: EdgeInsets.all(15),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      time,
-                      style: TextStyle(fontSize: 26),
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        _onListTileBuyPressed();
-                      },
-                      child: Text(
-                        "CLOSED(Test Buy)",
-                        style: TextStyle(fontSize: 23, color: redColor),
-                      ),
-                    )
-                  ],
-                ),
-              ),
-              Row(
-                children: [
-                  Container(
-                    height: 100,
-                    width: 0,
-                    child: VerticalDivider(
-                      indent: 10,
-                      endIndent: 10,
-                      width: 20,
-                      thickness: 2,
-                      color: greyColor,
-                    ),
-                  ),
-                  Container(
-                    padding: EdgeInsets.all(10),
-                    child: Column(
-                      children: [
-                        Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            mainAxisSize: MainAxisSize.max,
-                            children: [
-                              Text(
-                                offer.toString(),
-                                style: TextStyle(fontSize: 24),
-                              ),
-                              Container(
-                                  padding: EdgeInsets.symmetric(horizontal: 5),
-                                  child: Text("Offers \nto buy")),
-                            ]),
-                        Container(
-                          height: 20,
-                          width: 80,
-                          child: Divider(
-                            color: whiteColor,
-                            height: 10,
-                            thickness: 1,
-                          ),
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          mainAxisSize: MainAxisSize.max,
-                          children: [
-                            Text(
-                              match.toString(),
-                              style: TextStyle(fontSize: 24),
-                            ),
-                            Container(
-                                padding: EdgeInsets.symmetric(horizontal: 5),
-                                child: Text("Matched"))
-                          ],
-                        )
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-          Container(
-            padding: EdgeInsets.all(10),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Market clearing price",
-                      style: TextStyle(fontSize: 17),
-                    ),
-                    Text(
-                      "Market clearing volume",
-                      style: TextStyle(fontSize: 17),
-                    ),
-                  ],
-                ),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Row(
-                      children: [
-                        Text(
-                          "2.70",
-                          style: TextStyle(fontSize: 17),
-                        ),
-                        SizedBox(
-                          width: 5,
-                        ),
-                        Text("THB/kWh")
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Text(
-                          "100",
-                          style: TextStyle(fontSize: 17),
-                        ),
-                        SizedBox(
-                          width: 5,
-                        ),
-                        Text("kWh")
-                      ],
-                    )
-                  ],
-                )
-              ],
-            ),
-          ),
+  void _onListTileBuyPressed(String isoDate) async {
+    //Navigate
+    DateTime newDate = DateTime.parse(isoDate);
+        // .add(new Duration(hours: int.parse(_time.substring(0, 2))));
 
-          // Row(
-          //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          //   children: [
-          //     Text("Market clearing price"),
-          //     Row(
-          //       children: [Text("2.70"), Text("THB/kWh")],
-          //     )
-          //   ],
-          // ),
-          // Row(
-          //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          //   children: [
-          //     Text("Market clearing volume"),
-          //     Row(
-          //       children: [Text("100"), Text("kWh")],
-          //     )
-          //   ],
-          // )
-        ])),
-      ),
-    );
+    PoolMarketShortTermBuy poolMarketShortTermBuy =
+        Provider.of<PoolMarketShortTermBuy>(context, listen: false);
+    poolMarketShortTermBuy.info.date = newDate.toUtc().toIso8601String();
+
+    await showLoading();
+    try {
+      await poolMarketShortTermBuy.getPoolMarketReferences();
+    } catch (e) {
+      showException(context, e.toString());
+    } finally {
+      await hideLoading();
+    }
+
+    PoolMarketTrade poolMarketTrade =
+        Provider.of<PoolMarketTrade>(context, listen: false);
+    poolMarketTrade.setPagePoolMarketShortTermBuy();
   }
 
-  void _onListTileBuyPressed() {
+  void _onListTileSellPressed(String isoDate) {
     //Navigate
-    PoolMarketTrade model =
+    DateTime newDate = DateTime.parse(isoDate);
+        // .add(new Duration(hours: int.parse(_time.substring(0, 2))));
+
+    PoolMarketShortTermSell poolMarketShortTermSell =
+        Provider.of<PoolMarketShortTermSell>(context, listen: false);
+        print(newDate.toUtc().toIso8601String());
+    poolMarketShortTermSell.info.dateList = [newDate.toUtc().toIso8601String()];
+    PoolMarketTrade poolMarketTrade =
         Provider.of<PoolMarketTrade>(context, listen: false);
-    model.setPagePoolMarketShortTermBuy();
+
+    poolMarketTrade.setPagePoolMarketShortTermSell();
   }
 
-  void _onListTileSellPressed() {
-    //Navigate
+  void _getData(String date, String time) async {
+    DateTime newDate = DateTime.parse(date)
+        .add(new Duration(hours: int.parse(time.substring(0, 2))));
+    await showLoading();
     PoolMarketTrade model =
         Provider.of<PoolMarketTrade>(context, listen: false);
-    model.setPagePoolMarketShortTermSell();
+    try {
+      await model.getPoolMarket(date: newDate.toUtc().toIso8601String());
+    } catch (e) {
+      showException(context, e.toString());
+    } finally {
+      await hideLoading();
+    }
+    setState(() {
+      setPoolMarketList(model.info.poolMarketTileList!);
+      //   // _initBilateralTileList = model.info.bilateralTileList!;
+      //   // _isChecked = List<bool>.filled(_bilateralTileList.length, false);
+      //   // _isChecked[0] = true;
+    });
   }
 }

@@ -27,6 +27,7 @@ class BilateralModel {
     this.offerCount = 0,
     this.isoDate = "",
     this.isLongterm = false,
+    
   });
 
   BilateralModel.fromJSONMap(Map<String, dynamic> jsonMap) {

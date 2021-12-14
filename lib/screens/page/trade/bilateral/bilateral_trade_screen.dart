@@ -21,13 +21,6 @@ class BilateralTradeScreen extends StatefulWidget {
   _BilateralTradeScreenState createState() => _BilateralTradeScreenState();
 }
 
-class DateDisplay {
-  DateTime? dateTime;
-  String? dateString;
-
-  DateDisplay({this.dateTime, this.dateString});
-}
-
 class _BilateralTradeScreenState extends State<BilateralTradeScreen> {
   var dateItem = <String>[];
 

@@ -1,27 +1,30 @@
 [
     {
         "type": "buy",
-        "time": "2021-12-01T14:39:14.492943Z",
+        "time": "2021-12-01T14:00:00.000000Z",
         "status": "CLOSE",
         "offerCount": 0,
         "price": 0,
         "amount": 7,
-        "isLongterm": true
+        "isLongterm": true,
+        "isoDate": "2021-12-01T14:00:00.000000Z"
     },
     {
         "type": "sell",
-        "time": "2021-12-01T14:39:14.492943Z",
+        "time": "2021-12-01T15:00:00.000000Z",
         "status": "MATCHED",
         "offerCount": 1,
         "price": 8.00,
         "amount": 3.05,
-        "isLongterm": false
+        "isLongterm": false,
+        "isoDate": "2021-12-01T15:00:00.000000Z"
     },
     {
         "type": "buy",
-        "time": "2021-12-01T14:39:14.492943Z",
+        "time": "2021-12-01T16:00:00.000000Z",
         "status": "OPEN",
         "offerCount": 0,
-        "isLongterm": false
+        "isLongterm": false,
+        "isoDate": "2021-12-01T16:00:00.000000Z"
     }
 ]

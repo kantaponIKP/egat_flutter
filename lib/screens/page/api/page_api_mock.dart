@@ -20,6 +20,14 @@ import 'package:egat_flutter/screens/page/api/model/ChangePasswordRequest.dart';
 import 'package:egat_flutter/screens/page/api/model/ChangePersonalInfoRequest.dart';
 import 'package:egat_flutter/screens/page/api/model/ChangePhotoRequest.dart';
 import 'package:egat_flutter/screens/page/api/model/PersonalInfoResponse.dart';
+import 'package:egat_flutter/screens/page/api/model/PoolMarketShortTermBuyInfoRequest.dart';
+import 'package:egat_flutter/screens/page/api/model/PoolMarketShortTermBuyInfoResponse.dart';
+import 'package:egat_flutter/screens/page/api/model/PoolMarketShortTermBuyRequest.dart';
+import 'package:egat_flutter/screens/page/api/model/PoolMarketShortTermSellRequest.dart';
+import 'package:egat_flutter/screens/page/api/model/PoolMarketTradeRequest.dart';
+import 'package:egat_flutter/screens/page/api/model/PoolMarketTradeResponse.dart';
+import 'package:egat_flutter/screens/page/api/model/PoolMarketTradingFeeRequest.dart';
+import 'package:egat_flutter/screens/page/api/model/PoolMarketTradingFeeResponse.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart';
 
@@ -149,14 +157,56 @@ class PageApiMock {
     return response;
   }
 
-  
-
-    Future<BilateralTradingFeeResponse> getBilateralTradingFee(
+  Future<BilateralTradingFeeResponse> getBilateralTradingFee(
     BilateralTradingFeeRequest request,
     AccessRequest access,
   ) async {
-  
-     return BilateralTradingFeeResponse.fromJSON(await rootBundle
+    return BilateralTradingFeeResponse.fromJSON(await rootBundle
         .loadString('assets/mockdata/page/trade/bilateral_trading_fee.json'));
+  }
+
+  Future<PoolMarketTradeResponse> getPoolMarketTrade(
+      PoolMarketTradeRequest request, AccessRequest access) async {
+    return PoolMarketTradeResponse.fromJSON(await rootBundle
+        .loadString('assets/mockdata/page/trade/pool_market_trade.json'));
+  }
+
+  Future<Response> getPoolMarketShortTermBuyInfo(
+      PoolMarketShortTermBuyInfoRequest request, AccessRequest access) async {
+    String responseBody = await rootBundle.loadString(
+        'assets/mockdata/page/trade/pool_market_shortterm_buy.json');
+    Response response = Response(responseBody, 200);
+    return response;
+  }
+
+  Future<Response> poolMarketShortTermBuy(
+    PoolMarketShortTermBuyRequest request,
+    AccessRequest access,
+  ) async {
+    Response response = Response("", 200);
+    return response;
+  }
+
+  Future<PoolMarketTradingFeeResponse> getPoolMarketTradingFee(
+    PoolMarketTradingFeeRequest request,
+    AccessRequest access,
+  ) async {
+    return PoolMarketTradingFeeResponse.fromJSON(await rootBundle
+        .loadString('assets/mockdata/page/trade/pool_market_trading_fee.json'));
+  }
+
+  Future<PoolMarketShortTermBuyInfoResponse> getPoolMarketShortTermSellInfo(
+      PoolMarketShortTermBuyInfoRequest request, AccessRequest access) async {
+    return PoolMarketShortTermBuyInfoResponse.fromJSON(
+        await rootBundle.loadString(
+            'assets/mockdata/page/trade/pool_market_shortterm_sell.json'));
+  }
+
+  Future<Response> poolMarketShortTermSell(
+    PoolMarketShortTermSellRequest request,
+    AccessRequest access,
+  ) async {
+    Response response = Response("", 200);
+    return response;
   }
 }

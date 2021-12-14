@@ -251,7 +251,7 @@ class _BilateralLongTermSellScreenState
                               _bilateralTileList[index].days = newValue;
                             });
                           },
-                          items: _daysList.map((int items) {
+                          items: _bilateralTileList[index].dayOptions!.map((int items) {
                             return DropdownMenuItem(
                               value: items,
                               child: Text(_daysMap[items]!),
@@ -454,10 +454,18 @@ class _BilateralLongTermSellScreenState
       _offerToSellPriceTextController = List.generate(
           _bilateralTileList.length, (i) => TextEditingController());
       for (int i = 0; i < _bilateralTileList.length; i++) {
+        if(_bilateralTileList[i].dayOptions!.length == 0){
+          _bilateralTileList[i].dayOptions!.add(7);
+        }
+        _bilateralTileList[i].days = _bilateralTileList[i].dayOptions!.first; //assign days value for display
+
+
         _energyToSaleTextController[i].text =
             _bilateralTileList[i].energy.toString();
         _offerToSellPriceTextController[i].text =
             _bilateralTileList[i].price.toString();
+            
+        
       }
     });
   }
