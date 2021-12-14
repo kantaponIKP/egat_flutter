@@ -1,5 +1,4 @@
 import 'dart:collection';
-import 'dart:math';
 
 import 'package:egat_flutter/screens/page/trade/forecast/api/forecast_api.dart';
 import 'package:egat_flutter/screens/page/trade/forecast/state/forecast_date_state.dart';
@@ -69,8 +68,6 @@ class ForecastState extends ChangeNotifier {
         availableDateTimes: [],
       );
     }
-
-    notifyListeners();
   }
 
   fetchForecastsFromDate(DateTime date) async {

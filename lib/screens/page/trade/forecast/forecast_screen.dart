@@ -463,7 +463,7 @@ class _BuySellActionItemTile extends StatelessWidget {
               startDateTime: action.dateTime,
               action: action.action,
               expectingAmount: action.expectingAmount,
-              key: Key(action.dateTime.toString()),
+              key: Key(action.dateTime.toIso8601String()),
             ),
         ],
       ),
