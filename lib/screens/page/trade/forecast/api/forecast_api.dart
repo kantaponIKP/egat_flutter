@@ -1,3 +1,4 @@
+import 'dart:collection';
 import 'dart:math';
 
 class ForecastApi {
@@ -34,17 +35,38 @@ class ForecastApi {
       randomForecastDatas.add(randomForecastData);
     }
 
+    var availableTradeDateTimes = <DateTime>[];
+    for (var day = -1; day < 1; day++) {
+      for (var hour = 0; hour < 24; hour++) {
+        var randomAvailableLogic = random.nextBool();
+
+        if (randomAvailableLogic) {
+          availableTradeDateTimes.add(
+            startDate.add(
+              Duration(
+                days: day,
+                hours: hour,
+              ),
+            ),
+          );
+        }
+      }
+    }
+
     return ForecastDataResponse(
       forecasts: randomForecastDatas,
+      availableTradeDateTimes: availableTradeDateTimes,
     );
   }
 }
 
 class ForecastDataResponse {
   final List<ForecastData> forecasts;
+  final List<DateTime> availableTradeDateTimes;
 
   const ForecastDataResponse({
     required this.forecasts,
+    required this.availableTradeDateTimes,
   });
 }
 
@@ -58,6 +80,12 @@ class ForecastData {
     required this.forecastInGrids,
     required this.powerInGrids,
   });
+
+  asUnmodifiable() => ForecastData(
+        date: date,
+        forecastInGrids: UnmodifiableListView(forecastInGrids),
+        powerInGrids: UnmodifiableListView(powerInGrids),
+      );
 }
 
 const forecastApi = const ForecastApi();

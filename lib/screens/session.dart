@@ -5,7 +5,6 @@ class LoginSessionInfo {
   final String userId;
   final String refreshToken;
 
-
   const LoginSessionInfo({
     required this.accessToken,
     required this.userId,
@@ -28,5 +27,20 @@ class LoginSession extends ChangeNotifier {
     info = session;
 
     notifyListeners();
+  }
+
+  ReadonlyLoginSession asReadonly() {
+    return ReadonlyLoginSession(loginSession: this);
+  }
+}
+
+class ReadonlyLoginSession {
+  late final LoginSession _loginSession;
+  LoginSessionInfo? get info => _loginSession.info;
+
+  ReadonlyLoginSession({
+    required LoginSession loginSession,
+  }) {
+    _loginSession = loginSession;
   }
 }

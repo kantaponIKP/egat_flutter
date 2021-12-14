@@ -24,19 +24,11 @@ class ForecastScreen extends StatefulWidget {
 
 class _ForecastScreenState extends State<ForecastScreen>
     with TickerProviderStateMixin {
-  TextEditingController? _fullNameController;
-  TextEditingController? _phoneNumberController;
-  TextEditingController? _emailController;
-
   @override
   void initState() {
     super.initState();
 
     initForecastState();
-
-    _fullNameController = TextEditingController();
-    _phoneNumberController = TextEditingController();
-    _emailController = TextEditingController();
   }
 
   initForecastState() async {
@@ -59,13 +51,13 @@ class _ForecastScreenState extends State<ForecastScreen>
       appBar: LogoAppbar(),
       drawer: NavigationMenuWidget(),
       body: SafeArea(
-        child: _buildAction(context),
+        child: _buildBody(context),
       ),
       bottomNavigationBar: PageBottomNavigationBar(),
     );
   }
 
-  Padding _buildAction(BuildContext context) {
+  Padding _buildBody(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(top: 12, bottom: 6),
       child: LayoutBuilder(
@@ -85,9 +77,9 @@ class _ForecastScreenState extends State<ForecastScreen>
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         _buildEnergyBalance(),
-                        _ForecastEnergyWidgetList(),
+                        _ForecastEnergyWidgetListTile(),
                         Container(height: 300, child: Placeholder()),
-                        _BuySellSection(),
+                        _BuySellListTile(),
                       ],
                     ),
                   ),
@@ -331,14 +323,14 @@ class __BuySellSectionHeaderState extends State<_BuySellSectionHeader> {
   }
 }
 
-class _BuySellSection extends StatefulWidget {
-  _BuySellSection({Key? key}) : super(key: key);
+class _BuySellListTile extends StatefulWidget {
+  _BuySellListTile({Key? key}) : super(key: key);
 
   @override
-  __BuySellSectionState createState() => __BuySellSectionState();
+  _BuySellListTileState createState() => _BuySellListTileState();
 }
 
-class __BuySellSectionState extends State<_BuySellSection> {
+class _BuySellListTileState extends State<_BuySellListTile> {
   BuySellActionController _controller = BuySellActionController();
 
   @override
@@ -346,6 +338,13 @@ class __BuySellSectionState extends State<_BuySellSection> {
     super.initState();
 
     _controller.clearInfos();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+
+    _controller.dispose();
   }
 
   @override
@@ -402,12 +401,20 @@ class __BuySellSectionState extends State<_BuySellSection> {
       }
     }
 
+    final availableDateInUtcIsoString = selectedDateState.availableDateTimes
+        .map((time) => time.toUtc().toIso8601String());
+
+    buySellItemList = buySellItemList
+        .where(
+          (item) => availableDateInUtcIsoString
+              .contains(item.dateTime.toUtc().toIso8601String()),
+        )
+        .toList();
+
     return Column(
       children: [
-        _BuySellSectionHeader(
-          controller: _controller,
-        ),
-        _BuySellActionListTile(
+        _BuySellSectionHeader(controller: _controller),
+        _BuySellActionItemTile(
           controller: _controller,
           buySellItems: buySellItemList,
         ),
@@ -416,10 +423,10 @@ class __BuySellSectionState extends State<_BuySellSection> {
   }
 }
 
-class _BuySellActionListTile extends StatelessWidget {
+class _BuySellActionItemTile extends StatelessWidget {
   final List<BuySellItem> buySellItems;
 
-  const _BuySellActionListTile({
+  const _BuySellActionItemTile({
     required this.buySellItems,
     required this.controller,
     Key? key,
@@ -485,6 +492,7 @@ class _BuySellActionTile extends StatefulWidget {
 class _BuySellActionTileState extends State<_BuySellActionTile> {
   var _isSelected = false;
   var _isSelectable = true;
+  BuySellInfo? _buySellInfo;
 
   @override
   void initState() {
@@ -499,12 +507,10 @@ class _BuySellActionTileState extends State<_BuySellActionTile> {
       0,
     );
 
-    widget.controller.addOrUpdateOptions(
+    _buySellInfo = widget.controller.addOptions(
       dateTime: useDateTime,
       action: widget.action,
       expectingAmount: widget.expectingAmount,
-      isSelected: false,
-      notify: false,
     );
 
     var buySellInfo = widget.controller.getBuySellInfoAtDateTime(useDateTime);
@@ -518,22 +524,47 @@ class _BuySellActionTileState extends State<_BuySellActionTile> {
     _isSelected = buySellInfo.isSelected;
     _isSelectable = buySellInfo.isSelectable;
 
-    widget.controller.addListener(() {
-      var buySellInfo = widget.controller.getBuySellInfoAtDateTime(useDateTime);
+    widget.controller.addListener(_controllerListener);
+  }
 
-      if (buySellInfo == null) {
-        return;
-      }
+  void _controllerListener() {
+    var useDateTime = DateTime(
+      widget.startDateTime.year,
+      widget.startDateTime.month,
+      widget.startDateTime.day,
+      widget.startDateTime.hour,
+      0,
+      0,
+    );
 
-      try {
-        setState(() {
-          _isSelected = buySellInfo.isSelected;
-          _isSelectable = buySellInfo.isSelectable;
-        });
-      } catch (e) {
-        print(e);
-      }
-    });
+    var buySellInfo = widget.controller.getBuySellInfoAtDateTime(useDateTime);
+
+    if (buySellInfo == null) {
+      return;
+    }
+
+    try {
+      setState(() {
+        _isSelected = buySellInfo.isSelected;
+        _isSelectable = buySellInfo.isSelectable;
+      });
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+
+    widget.controller.removeListener(_controllerListener);
+
+    if (_buySellInfo != null) {
+      widget.controller.removeOptions(
+        buySellInfo: _buySellInfo!,
+      );
+      _buySellInfo = null;
+    }
   }
 
   @override
@@ -586,20 +617,22 @@ class _BuySellActionTileState extends State<_BuySellActionTile> {
                               onChanged: _isSelectable
                                   ? (value) {
                                       if (value != null && value) {
-                                        widget.controller.addOrUpdateOptions(
+                                        widget.controller.updateOptions(
                                           action: widget.action,
                                           dateTime: useDateTime,
                                           expectingAmount:
                                               widget.expectingAmount,
                                           isSelected: true,
+                                          uniqueKey: _buySellInfo!.key,
                                         );
                                       } else {
-                                        widget.controller.addOrUpdateOptions(
+                                        widget.controller.updateOptions(
                                           action: widget.action,
                                           dateTime: useDateTime,
                                           expectingAmount:
                                               widget.expectingAmount,
                                           isSelected: false,
+                                          uniqueKey: _buySellInfo!.key,
                                         );
                                       }
                                     }
@@ -702,8 +735,8 @@ class _ForecastEnergyBalanceTotal extends StatelessWidget {
   }
 }
 
-class _ForecastEnergyWidgetList extends StatelessWidget {
-  const _ForecastEnergyWidgetList({
+class _ForecastEnergyWidgetListTile extends StatelessWidget {
+  const _ForecastEnergyWidgetListTile({
     Key? key,
   }) : super(key: key);
 

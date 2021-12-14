@@ -37,11 +37,19 @@ class BuySellActionController extends ChangeNotifier {
     return _buySellInfoMaps[dateKey];
   }
 
-  void addOrUpdateOptions({
+  void removeOptions({
+    required BuySellInfo buySellInfo,
+  }) {
+    _buySellInfoMaps.removeWhere((key, value) => value.key == buySellInfo.key);
+    notifyListeners();
+  }
+
+  void updateOptions({
     required DateTime dateTime,
     required BuySellAction action,
     required double expectingAmount,
     required bool isSelected,
+    required UniqueKey uniqueKey,
     bool notify = true,
   }) {
     if (_currentAction != null && _currentAction != action) {
@@ -52,6 +60,15 @@ class BuySellActionController extends ChangeNotifier {
         dateTime.year, dateTime.month, dateTime.day, dateTime.hour, 0, 0);
 
     final dateKey = dateStartHour.toIso8601String();
+
+    var buySellInfo = _buySellInfoMaps[dateKey];
+    if (buySellInfo == null) {
+      return;
+    }
+
+    if (buySellInfo.key != uniqueKey) {
+      return;
+    }
 
     var isSelectable = true;
     if (_buySellInfoMaps[dateKey] != null) {
@@ -65,7 +82,7 @@ class BuySellActionController extends ChangeNotifier {
     }
     isSelectedCheck = isSelectedCheck && isSelectable;
 
-    _buySellInfoMaps[dateKey] = BuySellInfo(
+    _buySellInfoMaps[dateKey] = buySellInfo.copyWith(
       action: action,
       dateTime: dateTime,
       expectingAmount: expectingAmount,
@@ -96,6 +113,32 @@ class BuySellActionController extends ChangeNotifier {
     if (notify) {
       notifyListeners();
     }
+  }
+
+  BuySellInfo addOptions({
+    required DateTime dateTime,
+    required BuySellAction action,
+    required double expectingAmount,
+  }) {
+    final dateStartHour = DateTime(
+        dateTime.year, dateTime.month, dateTime.day, dateTime.hour, 0, 0);
+
+    final dateKey = dateStartHour.toIso8601String();
+
+    var isSelectable = true;
+    if (_buySellInfoMaps[dateKey] != null) {
+      isSelectable = _buySellInfoMaps[dateKey]!.isSelectable;
+    }
+
+    _buySellInfoMaps[dateKey] = BuySellInfo(
+      action: action,
+      dateTime: dateTime,
+      expectingAmount: expectingAmount,
+      isSelected: false,
+      isSelectable: isSelectable,
+    );
+
+    return _buySellInfoMaps[dateKey]!;
   }
 
   void selectAll({
@@ -152,13 +195,19 @@ class BuySellInfo {
   final bool isSelected;
   final bool isSelectable;
 
-  const BuySellInfo({
+  late UniqueKey _key;
+  UniqueKey get key => _key;
+
+  BuySellInfo({
     required this.action,
     required this.expectingAmount,
     required this.dateTime,
     required this.isSelected,
     required this.isSelectable,
-  });
+    UniqueKey? key,
+  }) {
+    this._key = key ?? UniqueKey();
+  }
 
   copyWith({
     BuySellAction? action,
@@ -173,6 +222,7 @@ class BuySellInfo {
       dateTime: dateTime ?? this.dateTime,
       isSelected: isSelected ?? this.isSelected,
       isSelectable: isSelectable ?? this.isSelectable,
+      key: this.key,
     );
   }
 }
