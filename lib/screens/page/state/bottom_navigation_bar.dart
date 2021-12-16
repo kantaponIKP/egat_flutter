@@ -4,12 +4,9 @@ import 'package:flutter/cupertino.dart';
 class BottomNavigationBarModel {
   final int? index;
 
-
   BottomNavigationBarModel({
     this.index,
   });
-
-
 }
 
 class BottomNavigationBarPage extends ChangeNotifier {
@@ -26,7 +23,7 @@ class BottomNavigationBarPage extends ChangeNotifier {
     notifyListeners();
   }
 
-  setIndex(index){
+  setIndex(index) {
     setInfo(BottomNavigationBarModel(index: index));
   }
 
