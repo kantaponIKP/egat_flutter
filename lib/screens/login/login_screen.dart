@@ -12,6 +12,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:egat_flutter/screens/widgets/loading_dialog.dart';
 import 'package:provider/provider.dart';
 import 'package:egat_flutter/screens/widgets/language_button.dart';
+import 'package:get_it/get_it.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -34,6 +35,8 @@ class _LoginScreenState extends State<LoginScreen> {
     super.initState();
     _emailController = TextEditingController();
     _passwordController = TextEditingController();
+    _emailController!.text = "prosumer04@email.com";
+    _passwordController!.text = "Str123";
   }
 
   @override
@@ -313,14 +316,14 @@ class _LoginScreenState extends State<LoginScreen> {
       showException(context, e.toString());
     } finally {
       await hideLoading();
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (BuildContext context) {
+            return ManagePage();
+          },
+        ),
+      );
     }
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (BuildContext context) {
-          return ManagePage();
-        },
-      ),
-    );
   }
 
   void _onRegister(BuildContext context) {

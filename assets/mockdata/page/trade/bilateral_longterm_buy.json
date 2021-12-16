@@ -1,0 +1,29 @@
+[
+    {
+        "name": "Prosumer 01",
+        "time": "2021-12-01T09:00:00.000000Z",
+        "energyToBuy": 5.00,
+        "netEnergyPrice": 4.45,
+        "energyTariff": 3.00,
+        "wheelingChargeTariff": 2.15,
+        "tradingFee": 0.18
+    },
+    {
+        "name": "Prosumer 02",
+        "time": "2021-12-01T10:00:00.000000Z",
+        "energyToBuy": 2.00,
+        "netEnergyPrice": 4.45,
+        "energyTariff": 1.00,
+        "wheelingChargeTariff": 1.15,
+        "tradingFee": 0.04
+    },
+    {
+        "name": "Prosumer 03",
+        "time": "2021-12-01T11:00:00.000000Z",
+        "energyToBuy": 7.00,
+        "netEnergyPrice": 4.45,
+        "energyTariff": 3.50,
+        "wheelingChargeTariff": 1.15,
+        "tradingFee": 0.08
+    }
+]

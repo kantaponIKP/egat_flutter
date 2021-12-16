@@ -17,6 +17,7 @@ final orangeColor = Colors.orange[500];
 
 const onBgColor = Colors.white;
 final surfaceColor = HexColor("#262729");
+final surfaceGreyColor = HexColor("#3E3E3E");
 const onSurfaceColor = Colors.white;
 final contentBgColor = HexColor("#262729");
 const onPrimaryBgColor = Colors.black;
@@ -34,7 +35,11 @@ final appTitle = 'EGAT P2P';
 
 final apiBaseUrlRegister = "https://egat-p2p-register.di.iknowplus.co.th";
 final apiBaseUrlLogin = "https://egat-p2p-login.di.iknowplus.co.th";
-final apiBaseUrlProfileManage = "https://egat-p2p-profile-mange.di.iknowplus.co.th/";
+final apiBaseUrlProfileManage =
+    "https://egat-p2p-profile-mange.di.iknowplus.co.th/";
+final apiBaseUrlBilateralTrade =
+    "https://egat-p2p-bilateral.di.iknowplus.co.th/";
+final apiBaseUrlPoolMarketTrade = "https://egat-p2p-pool.di.iknowplus.co.th/";
 
 final loggerPrinter = PrettyPrinter();
 final loggerLevel = Level.debug;

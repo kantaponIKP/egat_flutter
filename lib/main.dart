@@ -2,10 +2,14 @@ import 'package:egat_flutter/constant.dart';
 import 'package:egat_flutter/i18n/app_language.dart';
 import 'package:egat_flutter/i18n/app_localizations.dart';
 import 'package:egat_flutter/screens/login/login.dart';
+import 'package:egat_flutter/screens/session.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
+import 'package:get_it/get_it.dart';
+
+GetIt getIt = GetIt.instance;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -25,11 +29,17 @@ class EgatApp extends StatelessWidget {
     required this.preferredAppLanguage,
     Key? key,
   }) : super(key: key);
+  
 
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
+        ChangeNotifierProvider<LoginSession>(
+          create: (context) {
+            return LoginSession();
+          },
+        ),
         ChangeNotifierProvider<AppLocale>(
           create: (context) {
             var appLocale =
@@ -112,6 +122,7 @@ class EgatApp extends StatelessWidget {
               ),
               textTheme: TextTheme(
                 bodyText2: TextStyle(
+                  fontWeight: FontWeight.w300,
                   color: textColor,
                 ),
                 subtitle1:

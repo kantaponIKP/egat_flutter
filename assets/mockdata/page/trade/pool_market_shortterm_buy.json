@@ -1,0 +1,12 @@
+
+{
+  "id": "1",
+  "time": "2021-12-02T05:00:00.000Z",
+  "energyToBuy": 5,
+  "energyTariff": 1,
+  "energyPrice": 2,
+  "wheelingChargeTariff": 3,
+  "wheelingCharge": 4,
+  "tradingFee": 0.08,
+  "vat": 1.57
+}

@@ -2,6 +2,7 @@ import 'package:egat_flutter/screens/page/change_password/change_password_screen
 import 'package:egat_flutter/screens/page/contact_us/contact_us_screen.dart';
 import 'package:egat_flutter/screens/page/graph/graph_screen.dart';
 import 'package:egat_flutter/screens/page/home/home_screen.dart';
+import 'package:egat_flutter/screens/page/news/news_page.dart';
 import 'package:egat_flutter/screens/page/news/news_screen.dart';
 import 'package:egat_flutter/screens/page/personal_info/personal_info_screen.dart';
 import 'package:egat_flutter/screens/page/setting/setting_screen.dart';
@@ -12,7 +13,8 @@ import 'package:egat_flutter/screens/page/trade/bilateral/bilateral_long_term_se
 import 'package:egat_flutter/screens/page/trade/bilateral/bilateral_short_term_sell_screen.dart';
 import 'package:egat_flutter/screens/page/trade/bilateral/bilateral_sell_screen.dart';
 import 'package:egat_flutter/screens/page/trade/bilateral/bilateral_trade_screen.dart';
-import 'package:egat_flutter/screens/page/trade/forecast_screen.dart';
+import 'package:egat_flutter/screens/page/trade/forecast/forecast_page.dart';
+import 'package:egat_flutter/screens/page/trade/forecast/forecast_screen.dart';
 import 'package:egat_flutter/screens/page/trade/pool_market/pool_market_short_term_buy_screen.dart';
 import 'package:egat_flutter/screens/page/trade/pool_market/pool_market_short_term_sell_screen.dart';
 import 'package:egat_flutter/screens/page/trade/pool_market/pool_market_trade_screen.dart';
@@ -60,7 +62,7 @@ class _PageScreenState extends State<PageScreen> {
     }
 
     if (page.state == PageState.News) {
-      screen = NewsScreen(key: Key('news_screen'));
+      screen = NewsPage(key: Key('news_screen'));
       duration = Duration(milliseconds: 200);
     }
 
@@ -75,7 +77,7 @@ class _PageScreenState extends State<PageScreen> {
     }
 
     if (page.state == PageState.Forecast) {
-      screen = ForecastScreen(key: Key('forecast_screen'));
+      screen = ForecastPage(key: Key('forecast_screen'));
       // duration = Duration(milliseconds: 200);
     }
 
@@ -88,15 +90,18 @@ class _PageScreenState extends State<PageScreen> {
     }
 
     if (page.state == PageState.BilateralLongTermBuy) {
-      screen = BilateralLongTermBuyScreen(key: Key('bilateral_long_term_buy_screen'));
+      screen = BilateralLongTermBuyScreen(
+          key: Key('bilateral_long_term_buy_screen'));
     }
 
     if (page.state == PageState.BilateralLongTermSell) {
-      screen = BilateralLongTermSellScreen(key: Key('bilateral_long_term_sell_screen'));
+      screen = BilateralLongTermSellScreen(
+          key: Key('bilateral_long_term_sell_screen'));
     }
 
     if (page.state == PageState.BilateralShortTermSell) {
-      screen = BilateralShortTermSellScreen(key: Key('bilateral_short_term_sell_screen'));
+      screen = BilateralShortTermSellScreen(
+          key: Key('bilateral_short_term_sell_screen'));
     }
 
     if (page.state == PageState.BilateralSell) {
@@ -108,11 +113,13 @@ class _PageScreenState extends State<PageScreen> {
     }
 
     if (page.state == PageState.PoolMarketShortTermBuy) {
-      screen = PoolMarketShortTermBuyScreen(key: Key('pool_market_short_term_buy_screen'));
+      screen = PoolMarketShortTermBuyScreen(
+          key: Key('pool_market_short_term_buy_screen'));
     }
 
     if (page.state == PageState.PoolMarketShortTermSell) {
-      screen = PoolMarketShortTermSellScreen(key: Key('pool_market_short_term_sell_screen'));
+      screen = PoolMarketShortTermSellScreen(
+          key: Key('pool_market_short_term_sell_screen'));
     }
 
     // if (page.state == PageState.Detail) {

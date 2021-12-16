@@ -1,10 +1,16 @@
 import 'package:egat_flutter/screens/page/state/pool_market/pool_market_short_term_buy.dart';
+import 'package:egat_flutter/screens/page/state/pool_market/pool_market_short_term_sell.dart';
 import 'package:egat_flutter/screens/page/widgets/logo_appbar.dart';
 import 'package:egat_flutter/screens/page/widgets/page_appbar.dart';
 import 'package:egat_flutter/screens/page/widgets/page_bottom_navigation_bar.dart';
 import 'package:egat_flutter/screens/page/widgets/side_menu.dart';
 import 'package:egat_flutter/screens/page/trade/tabbar.dart';
+import 'package:egat_flutter/screens/widgets/loading_dialog.dart';
+import 'package:egat_flutter/screens/widgets/show_exception.dart';
+import 'package:egat_flutter/screens/widgets/show_success_snackbar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:egat_flutter/constant.dart';
 
@@ -20,14 +26,62 @@ class _PoolMarketShortTermBuyScreenState
     extends State<PoolMarketShortTermBuyScreen> {
   double _currentSliderValue = 9;
   bool _visible = false;
+
+  DateTime? _date;
+  double? _energyToBuy;
+  double? _energyTariff;
+  double? _energyPrice;
+  double? _wheelingChargeTariff;
+  double? _wheelingCharge;
+  double? _totalTradingFee;
+  double? _vat;
+  double? _estimatedBuy;
+  double? _estimateNetPrice;
+  double? _tradingFee;
+
+  List<bool> _isChecked = [];
+  // List<TextEditingController> _energyToSaleTextController = [];
+  // List<TextEditingController> _offerToSellPriceTextController = [];
+  PoolMarketShortTermSellTile? _poolMarketTile;
+  // List<PoolMarketShortTermSellTile> _poolMarketTileList = [];
+  final _energyToBuyTextController = TextEditingController();
+  final _offerToSellPriceTextController= TextEditingController();
+
   Icon _Togglevisible = Icon(
     Icons.arrow_drop_down_rounded,
     size: 30,
   );
+  PoolMarketReference _poolMarketShortTermBuyDetail = PoolMarketReference();
 
   @override
   void initState() {
     super.initState();
+
+    _energyToBuyTextController.text = "0";
+    _offerToSellPriceTextController.text = "0";
+    _date = DateTime.now();
+    _energyToBuy = 0;
+    _energyTariff = 0;
+    _energyPrice = 0;
+    _wheelingChargeTariff = 0;
+    _wheelingCharge = 0;
+    _tradingFee = 0;
+    _totalTradingFee = 0;
+    _vat = 0;
+    _estimatedBuy = 0;
+    _estimateNetPrice = 0;
+
+    _setTime();
+    _getData();
+  }
+
+  void _setTime() {
+    PoolMarketShortTermBuy model =
+        Provider.of<PoolMarketShortTermBuy>(context, listen: false);
+    DateTime date = DateTime.parse(model.info.date!);
+    setState(() {
+      _date = date;
+    });
   }
 
   @override
@@ -94,102 +148,7 @@ class _PoolMarketShortTermBuyScreenState
                   ),
                 ),
               ),
-              Visibility(
-                visible: _visible,
-                child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                  child: Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        mainAxisSize: MainAxisSize.max,
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text("Energy to buy"),
-                              Text("Energy tariff"),
-                              Text("Energy price"),
-                              Text("Wheeling charge Tariff"),
-                              Text("Wheeling charge"),
-                              Text("Trading fee"),
-                              Text("Vat (7%)")
-                            ],
-                          ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              Row(
-                                children: [
-                                  Text("7.50"),
-                                  SizedBox(
-                                    width: 5,
-                                  ),
-                                  Text("kWh")
-                                ],
-                              ),
-                              Row(
-                                children: [
-                                  Text("3.00"),
-                                  SizedBox(
-                                    width: 5,
-                                  ),
-                                  Text("THB/kWh")
-                                ],
-                              ),
-                              Row(
-                                children: [
-                                  Text("22.50"),
-                                  SizedBox(
-                                    width: 5,
-                                  ),
-                                  Text("THB")
-                                ],
-                              ),
-                              Row(
-                                children: [
-                                  Text("1.15"),
-                                  SizedBox(
-                                    width: 5,
-                                  ),
-                                  Text("THB/kWh")
-                                ],
-                              ),
-                              Row(
-                                children: [
-                                  Text("8.62"),
-                                  SizedBox(
-                                    width: 5,
-                                  ),
-                                  Text("THB")
-                                ],
-                              ),
-                              Row(
-                                children: [
-                                  Text("0.08"),
-                                  SizedBox(
-                                    width: 5,
-                                  ),
-                                  Text("THB")
-                                ],
-                              ),
-                              Row(
-                                children: [
-                                  Text("1.57"),
-                                  SizedBox(
-                                    width: 5,
-                                  ),
-                                  Text("THB")
-                                ],
-                              ),
-                            ],
-                          )
-                        ],
-                      )
-                    ],
-                  ),
-                ),
-              ),
+              _buildDetail(),
               Container(
                 decoration: BoxDecoration(color: backgroundColor),
                 padding: EdgeInsets.symmetric(horizontal: 20),
@@ -221,7 +180,7 @@ class _PoolMarketShortTermBuyScreenState
                                 Container(
                                     padding: EdgeInsets.only(right: 10),
                                     child: Text(
-                                      "32.77",
+                                      _estimatedBuy!.toStringAsFixed(2),
                                       style: TextStyle(
                                           fontSize: 20, color: redColor),
                                     )),
@@ -256,7 +215,7 @@ class _PoolMarketShortTermBuyScreenState
                         mainAxisSize: MainAxisSize.max,
                         children: [
                           Text(
-                            "Estimated Net Price",
+                            "Estimate Net Price",
                             style: TextStyle(
                               fontSize: 20,
                             ),
@@ -268,7 +227,7 @@ class _PoolMarketShortTermBuyScreenState
                               Container(
                                   padding: EdgeInsets.only(right: 10),
                                   child: Text(
-                                    "4.15",
+                                    _estimateNetPrice!.toStringAsFixed(2),
                                     style: TextStyle(
                                         fontSize: 20, color: redColor),
                                   )),
@@ -309,7 +268,119 @@ class _PoolMarketShortTermBuyScreenState
     );
   }
 
+  Widget _buildDetail() {
+    PoolMarketShortTermBuy model =
+        Provider.of<PoolMarketShortTermBuy>(context, listen: false);
+    return Visibility(
+      visible: _visible,
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text("Energy to buy"),
+                    Text("Energy tariff"),
+                    Text("Energy price"),
+                    Text("Wheeling charge Tariff"),
+                    Text("Wheeling charge"),
+                    Text("Trading fee"),
+                    Text("Vat (7%)")
+                  ],
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Row(
+                      children: [
+                        Text(_energyToBuy!.toStringAsFixed(2)),
+                        SizedBox(
+                          width: 5,
+                        ),
+                        Text("kWh")
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Text(_energyTariff!.toStringAsFixed(2)),
+                        SizedBox(
+                          width: 5,
+                        ),
+                        Text("THB/kWh")
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Text(_energyPrice!.toStringAsFixed(2)),
+                        SizedBox(
+                          width: 5,
+                        ),
+                        Text("THB")
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Text(_wheelingChargeTariff!.toStringAsFixed(2)),
+                        SizedBox(
+                          width: 5,
+                        ),
+                        Text("THB/kWh")
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Text(_wheelingCharge!.toStringAsFixed(2)),
+                        SizedBox(
+                          width: 5,
+                        ),
+                        Text("THB")
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Text(_tradingFee!.toStringAsFixed(2)),
+                        SizedBox(
+                          width: 5,
+                        ),
+                        Text("THB")
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Text(_vat!.toStringAsFixed(2)),
+                        SizedBox(
+                          width: 5,
+                        ),
+                        Text("THB")
+                      ],
+                    ),
+                  ],
+                )
+              ],
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget _bodyExpand() {
+    var startDate = _date!.toLocal();
+    var endDate = _date!.toLocal().add(new Duration(hours: 1));
+    var startHour = DateFormat('HH').format(startDate);
+    var endHour = DateFormat('HH').format(endDate);
+    String displayDate = "Date: " +
+        DateFormat('dd MMMM yyyy').format(startDate) +
+        ", Period: " +
+        startHour.toString() +
+        ":00-" +
+        endHour.toString() +
+        ":00";
     return ClipRRect(
       borderRadius: BorderRadius.circular(15),
       child: Container(
@@ -319,7 +390,7 @@ class _PoolMarketShortTermBuyScreenState
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "Date : 21 Aug 2021, Period: 13:00-14:00",
+                displayDate,
                 style: TextStyle(
                   color: textColor,
                   fontSize: 16,
@@ -334,7 +405,7 @@ class _PoolMarketShortTermBuyScreenState
                     Container(
                       alignment: Alignment.centerLeft,
                       child: Text(
-                        "Energy to Sale",
+                        "Energy to Buy",
                         style: TextStyle(
                           color: textColor,
                           fontSize: 18,
@@ -348,6 +419,18 @@ class _PoolMarketShortTermBuyScreenState
                           width: 50,
                           height: 30,
                           child: TextField(
+                            controller: _energyToBuyTextController,
+                            keyboardType: TextInputType.number,
+                            inputFormatters: <TextInputFormatter>[
+                              FilteringTextInputFormatter.allow(
+                                RegExp(r'^\d+\.?\d*'),
+                              ),
+                            ],
+                            onChanged: (value) {
+                              if (value != "") {
+                                calculateEstimated();
+                              }
+                            },
                             decoration: InputDecoration(
                                 border: UnderlineInputBorder(
                                     borderSide: BorderSide(color: textColor))),
@@ -443,6 +526,18 @@ class _PoolMarketShortTermBuyScreenState
                           width: 50,
                           height: 30,
                           child: TextField(
+                            controller: _offerToSellPriceTextController,
+                            keyboardType: TextInputType.number,
+                            inputFormatters: <TextInputFormatter>[
+                              FilteringTextInputFormatter.allow(
+                                RegExp(r'^\d+\.?\d*'),
+                              ),
+                            ],
+                            onChanged: (value) {
+                              if (value != "") {
+                                calculateEstimated();
+                              }
+                            },
                             decoration: InputDecoration(
                                 border: UnderlineInputBorder(
                                     borderSide: BorderSide(color: textColor))),
@@ -458,8 +553,90 @@ class _PoolMarketShortTermBuyScreenState
                 ),
               ),
             ],
-          )),
+          ),
+          ),
     );
+  }
+
+  void calculateEstimated() {
+    setState(() {
+      _energyToBuy = double.parse(_energyToBuyTextController.text);
+      _energyTariff = double.parse(_offerToSellPriceTextController.text);
+      _energyPrice = _energyToBuy! * _energyTariff!;
+      _wheelingCharge = _wheelingChargeTariff! * _energyToBuy!;
+      _totalTradingFee = _energyToBuy! * _tradingFee!;
+      _vat = (_energyPrice! + _wheelingCharge! + _totalTradingFee!) * 0.07;
+      _estimatedBuy =
+          _energyPrice! + _wheelingCharge! + _totalTradingFee! + _vat!;
+      _estimateNetPrice = _estimatedBuy! / _energyToBuy!;
+    });
+  }
+
+  void _getData() async {
+    PoolMarketShortTermBuy model =
+        Provider.of<PoolMarketShortTermBuy>(context, listen: false);
+
+    await showLoading();
+    try {
+      _wheelingChargeTariff =
+          model.info.poolMarketReference!.wheelingChargeTariff;
+      _tradingFee = model.info.poolMarketReference!.tradingFee;
+      // await model.getPoolMarketReferences();
+      // setState(() {
+      //   _poolMarketShortTermBuyDetail =
+      //       model.info.poolMarketShortTermBuyDetail!;
+      //   _isChecked = List<bool>.filled(_poolMarketTileList.length, false);
+      //   _energyToSaleTextController = List.generate(
+      //       _poolMarketTileList.length, (i) => TextEditingController());
+      //   _offerToSellPriceTextController = List.generate(
+      //       _poolMarketTileList.length, (i) => TextEditingController());
+      // });
+    } catch (e) {
+      showException(context, e.toString());
+    } finally {
+      await hideLoading();
+    }
+  }
+
+  void _onSubmitPressed() async {
+    //Navigate
+    await showLoading();
+    // List<PoolMarketShortTermSellTile> _poolMarketTileListOutput = [];
+    // int i = 0;
+    // for (var _poolMarket in _poolMarketTileList) {
+    //   if (_isChecked[i] == true) {
+    //     _poolMarket.energyToSale =
+    //         double.parse(_energyToSaleTextController[i].text);
+    //     _poolMarket.offerToSellPrice =
+    //         double.parse(_offerToSellPriceTextController[i].text);
+    //     _poolMarketTileListOutput.add(_poolMarket);
+    //   }
+    //   i++;
+    // }
+
+    PoolMarketShortTermBuy model =
+        Provider.of<PoolMarketShortTermBuy>(context, listen: false);
+
+    bool response = false;
+    try {
+      //TODO
+      response = await model.poolMarketShortTermBuy(
+          date: _date!.toUtc().toIso8601String(),
+          energy: _energyToBuy!,
+          price: _energyPrice!);
+    } catch (e) {
+      showException(context, e.toString());
+    } finally {
+      await hideLoading();
+    }
+    if (response == true) {
+      model.setPagePoolMarketTrade();
+      showSuccessSnackBar(context, "ทำรายการสำเร็จ");
+    } else {
+      //TODO
+      showException(context, "ไม่สามารถทำรายการได้");
+    }
+    // model.setPageBilateralTrade();
   }
 
   Future<bool> _onWillPop() async {
@@ -467,12 +644,5 @@ class _PoolMarketShortTermBuyScreenState
         Provider.of<PoolMarketShortTermBuy>(context, listen: false);
     model.setPageBack();
     return false;
-  }
-
-  void _onSubmitPressed() {
-    //Navigate
-    PoolMarketShortTermBuy model =
-        Provider.of<PoolMarketShortTermBuy>(context, listen: false);
-    model.setPagePoolMarketTrade();
   }
 }
