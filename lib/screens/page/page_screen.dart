@@ -1,3 +1,4 @@
+import 'package:egat_flutter/screens/pages/main/main_page.dart';
 import 'package:egat_flutter/screens/page/change_password/change_password_screen.dart';
 import 'package:egat_flutter/screens/page/contact_us/contact_us_screen.dart';
 import 'package:egat_flutter/screens/page/graph/graph_screen.dart';
@@ -14,7 +15,6 @@ import 'package:egat_flutter/screens/page/trade/bilateral/bilateral_short_term_s
 import 'package:egat_flutter/screens/page/trade/bilateral/bilateral_sell_screen.dart';
 import 'package:egat_flutter/screens/page/trade/bilateral/bilateral_trade_screen.dart';
 import 'package:egat_flutter/screens/page/trade/forecast/forecast_page.dart';
-import 'package:egat_flutter/screens/page/trade/forecast/forecast_screen.dart';
 import 'package:egat_flutter/screens/page/trade/pool_market/pool_market_short_term_buy_screen.dart';
 import 'package:egat_flutter/screens/page/trade/pool_market/pool_market_short_term_sell_screen.dart';
 import 'package:egat_flutter/screens/page/trade/pool_market/pool_market_trade_screen.dart';
@@ -42,7 +42,8 @@ class _PageScreenState extends State<PageScreen> {
     Duration duration = Duration.zero;
 
     if (page.state == PageState.Home) {
-      screen = HomeScreen(key: Key('home_screen'));
+      // screen = HomeScreen(key: Key('home_screen'));
+      screen = MainPage();
       // duration = Duration(milliseconds: 200);
     }
 

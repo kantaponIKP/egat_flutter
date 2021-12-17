@@ -6,7 +6,7 @@ class PageAppbar extends StatelessWidget with PreferredSizeWidget {
   final String firstTitle;
   final String secondTitle;
 
-  PageAppbar({
+  const PageAppbar({
     Key? key,
     required this.firstTitle,
     required this.secondTitle,

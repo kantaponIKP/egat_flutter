@@ -38,7 +38,7 @@ final apiBaseUrlLogin = "https://egat-p2p-login.di.iknowplus.co.th";
 final apiBaseUrlProfileManage =
     "https://egat-p2p-profile-mange.di.iknowplus.co.th/";
 final apiBaseUrlBilateralTrade =
-    "https://egat-p2p-bilateral.di.iknowplus.co.th/";
+    "https://egat-p2p-bilateral.di.iknowplus.co.th";
 final apiBaseUrlPoolMarketTrade = "https://egat-p2p-pool.di.iknowplus.co.th/";
 
 final loggerPrinter = PrettyPrinter();

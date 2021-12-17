@@ -38,7 +38,7 @@ class _BilateralTradeScreenState extends State<BilateralTradeScreen> {
     var bilateralSellList = [];
 
     for (var bilateral in bilateralList) {
-      if (bilateral.type == "buy") {
+      if (bilateral.resultType == "buy") {
         bilateralBuyList.add(bilateral);
       } else {
         bilateralSellList.add(bilateral);
@@ -240,9 +240,9 @@ class _BilateralTradeScreenState extends State<BilateralTradeScreen> {
                                     if (_bilateralBuyList[index].amount !=
                                         null) {
                                       return _buildCard(
-                                        _bilateralBuyList[index].type!,
+                                        _bilateralBuyList[index].resultType!,
                                         _bilateralBuyList[index].time!,
-                                        _bilateralBuyList[index].status!,
+                                        _bilateralBuyList[index].resultType!,
                                         _bilateralBuyList[index].amount!,
                                         _bilateralBuyList[index].price!,
                                         _bilateralBuyList[index].offerCount!,
@@ -251,9 +251,9 @@ class _BilateralTradeScreenState extends State<BilateralTradeScreen> {
                                       );
                                     } else {
                                       return _buildCard(
-                                        _bilateralBuyList[index].type!,
+                                        _bilateralBuyList[index].resultType!,
                                         _bilateralBuyList[index].time!,
-                                        _bilateralBuyList[index].status!,
+                                        _bilateralBuyList[index].resultType!,
                                         0,
                                         0,
                                         _bilateralBuyList[index].offerCount!,
@@ -273,9 +273,9 @@ class _BilateralTradeScreenState extends State<BilateralTradeScreen> {
                                     if (_bilateralSellList[index].amount !=
                                         null) {
                                       return _buildCard(
-                                          _bilateralSellList[index].type!,
+                                          _bilateralSellList[index].resultType!,
                                           _bilateralSellList[index].time!,
-                                          _bilateralSellList[index].status!,
+                                          _bilateralSellList[index].resultType!,
                                           _bilateralSellList[index].amount!,
                                           _bilateralSellList[index].price!,
                                           _bilateralSellList[index].offerCount!,
@@ -284,9 +284,9 @@ class _BilateralTradeScreenState extends State<BilateralTradeScreen> {
                                               .isLongterm!);
                                     } else {
                                       return _buildCard(
-                                          _bilateralSellList[index].type!,
+                                          _bilateralSellList[index].resultType!,
                                           _bilateralSellList[index].time!,
-                                          _bilateralSellList[index].status!,
+                                          _bilateralSellList[index].resultType!,
                                           0,
                                           0,
                                           _bilateralSellList[index].offerCount!,
@@ -425,22 +425,22 @@ class _BilateralTradeScreenState extends State<BilateralTradeScreen> {
                                         ),
                                       ],
                                     ),
-                                    (isLongterm)?
-                                    Row(
-                                      children: [
-                                        Container(
-                                          padding: EdgeInsets.symmetric(
-                                              horizontal: 5),
-                                          child: Text(
-                                            "Long term Bilateral",
-                                            style: TextStyle(
-                                              fontSize: 12,
-                                              color: primaryColor
-                                            ),
-                                          ),
-                                        )
-                                      ],
-                                    ):Container()
+                                    (isLongterm)
+                                        ? Row(
+                                            children: [
+                                              Container(
+                                                padding: EdgeInsets.symmetric(
+                                                    horizontal: 5),
+                                                child: Text(
+                                                  "Long term Bilateral",
+                                                  style: TextStyle(
+                                                      fontSize: 12,
+                                                      color: primaryColor),
+                                                ),
+                                              )
+                                            ],
+                                          )
+                                        : Container()
                                   ],
                                 ),
                               )

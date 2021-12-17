@@ -71,7 +71,7 @@ class _PoolMarketTradeScreenState extends State<PoolMarketTradeScreen> {
     var poolMarketSellList = [];
 
     for (var poolMarket in poolMarketList) {
-      if (poolMarket.type == "buy") {
+      if (poolMarket.resultType == "buy") {
         poolMarketBuyList.add(poolMarket);
       } else {
         poolMarketSellList.add(poolMarket);
@@ -253,8 +253,8 @@ class _PoolMarketTradeScreenState extends State<PoolMarketTradeScreen> {
                                         null) {
                                       return _buildCard(
                                           time: _poolMarketBuyList[index].time,
-                                          status:
-                                              _poolMarketBuyList[index].status,
+                                          status: _poolMarketBuyList[index]
+                                              .resultType,
                                           offer: _poolMarketBuyList[index]
                                               .offerCount,
                                           matched:
@@ -274,8 +274,8 @@ class _PoolMarketTradeScreenState extends State<PoolMarketTradeScreen> {
                                     } else {
                                       return _buildCard(
                                           time: _poolMarketBuyList[index].time,
-                                          status:
-                                              _poolMarketBuyList[index].status,
+                                          status: _poolMarketBuyList[index]
+                                              .resultType,
                                           offer: _poolMarketBuyList[index]
                                               .offerCount,
                                           matched:
@@ -304,8 +304,8 @@ class _PoolMarketTradeScreenState extends State<PoolMarketTradeScreen> {
                                         null) {
                                       return _buildCard(
                                           time: _poolMarketSellList[index].time,
-                                          status:
-                                              _poolMarketSellList[index].status,
+                                          status: _poolMarketSellList[index]
+                                              .resultType,
                                           offer: _poolMarketSellList[index]
                                               .offerCount,
                                           matched: _poolMarketSellList[index]
@@ -326,8 +326,8 @@ class _PoolMarketTradeScreenState extends State<PoolMarketTradeScreen> {
                                     } else {
                                       return _buildCard(
                                           time: _poolMarketSellList[index].time,
-                                          status:
-                                              _poolMarketSellList[index].status,
+                                          status: _poolMarketSellList[index]
+                                              .resultType,
                                           offer: _poolMarketSellList[index]
                                               .offerCount,
                                           matched: _poolMarketSellList[index]
@@ -523,7 +523,8 @@ class _PoolMarketTradeScreenState extends State<PoolMarketTradeScreen> {
                                       Text(offer.toString(),
                                           style: TextStyle(
                                               fontSize: 24,
-                                              color: (isMatched! && status == "CLOSE")
+                                              color: (isMatched! &&
+                                                      status == "CLOSE")
                                                   ? primaryColor
                                                   : whiteColor)),
                                       Container(
@@ -534,7 +535,8 @@ class _PoolMarketTradeScreenState extends State<PoolMarketTradeScreen> {
                                               ? "Offers \nto buy"
                                               : "Offers \nto sell",
                                           style: TextStyle(
-                                              color: (isMatched && status == "CLOSE")
+                                              color: (isMatched &&
+                                                      status == "CLOSE")
                                                   ? primaryColor
                                                   : whiteColor),
                                         ),
@@ -668,7 +670,7 @@ class _PoolMarketTradeScreenState extends State<PoolMarketTradeScreen> {
   void _onListTileBuyPressed(String isoDate) async {
     //Navigate
     DateTime newDate = DateTime.parse(isoDate);
-        // .add(new Duration(hours: int.parse(_time.substring(0, 2))));
+    // .add(new Duration(hours: int.parse(_time.substring(0, 2))));
 
     PoolMarketShortTermBuy poolMarketShortTermBuy =
         Provider.of<PoolMarketShortTermBuy>(context, listen: false);
@@ -691,11 +693,11 @@ class _PoolMarketTradeScreenState extends State<PoolMarketTradeScreen> {
   void _onListTileSellPressed(String isoDate) {
     //Navigate
     DateTime newDate = DateTime.parse(isoDate);
-        // .add(new Duration(hours: int.parse(_time.substring(0, 2))));
+    // .add(new Duration(hours: int.parse(_time.substring(0, 2))));
 
     PoolMarketShortTermSell poolMarketShortTermSell =
         Provider.of<PoolMarketShortTermSell>(context, listen: false);
-        print(newDate.toUtc().toIso8601String());
+    print(newDate.toUtc().toIso8601String());
     poolMarketShortTermSell.info.dateList = [newDate.toUtc().toIso8601String()];
     PoolMarketTrade poolMarketTrade =
         Provider.of<PoolMarketTrade>(context, listen: false);
