@@ -8,6 +8,7 @@ class LogoAppbar extends StatelessWidget with PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
+      backgroundColor: Colors.transparent,
       title: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [

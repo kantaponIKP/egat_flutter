@@ -79,7 +79,7 @@ class _ForecastScreenState extends State<ForecastScreen>
                         _buildEnergyBalance(),
                         _ForecastEnergyWidgetListTile(),
                         Container(height: 300, child: Placeholder()),
-                        _BuySellListTile(),
+                        _BuySellSection(),
                       ],
                     ),
                   ),
@@ -323,14 +323,14 @@ class __BuySellSectionHeaderState extends State<_BuySellSectionHeader> {
   }
 }
 
-class _BuySellListTile extends StatefulWidget {
-  _BuySellListTile({Key? key}) : super(key: key);
+class _BuySellSection extends StatefulWidget {
+  _BuySellSection({Key? key}) : super(key: key);
 
   @override
-  _BuySellListTileState createState() => _BuySellListTileState();
+  _BuySellSectionState createState() => _BuySellSectionState();
 }
 
-class _BuySellListTileState extends State<_BuySellListTile> {
+class _BuySellSectionState extends State<_BuySellSection> {
   BuySellActionController _controller = BuySellActionController();
 
   @override
@@ -404,7 +404,10 @@ class _BuySellListTileState extends State<_BuySellListTile> {
     final availableDateInUtcIsoString = selectedDateState.availableDateTimes
         .map((time) => time.toUtc().toIso8601String());
 
+    final limitTime = DateTime.now().add(Duration(days: 1)).toUtc();
+
     buySellItemList = buySellItemList
+        .where((element) => element.dateTime.isBefore(limitTime))
         .where(
           (item) => availableDateInUtcIsoString
               .contains(item.dateTime.toUtc().toIso8601String()),
@@ -414,7 +417,7 @@ class _BuySellListTileState extends State<_BuySellListTile> {
     return Column(
       children: [
         _BuySellSectionHeader(controller: _controller),
-        _BuySellActionItemTile(
+        _BuySellActionListTile(
           controller: _controller,
           buySellItems: buySellItemList,
         ),
@@ -423,10 +426,10 @@ class _BuySellListTileState extends State<_BuySellListTile> {
   }
 }
 
-class _BuySellActionItemTile extends StatelessWidget {
+class _BuySellActionListTile extends StatelessWidget {
   final List<BuySellItem> buySellItems;
 
-  const _BuySellActionItemTile({
+  const _BuySellActionListTile({
     required this.buySellItems,
     required this.controller,
     Key? key,
@@ -614,29 +617,25 @@ class _BuySellActionTileState extends State<_BuySellActionTile> {
                             alignment: Alignment.centerLeft,
                             child: Checkbox(
                               value: _isSelected,
-                              onChanged: _isSelectable
-                                  ? (value) {
-                                      if (value != null && value) {
-                                        widget.controller.updateOptions(
-                                          action: widget.action,
-                                          dateTime: useDateTime,
-                                          expectingAmount:
-                                              widget.expectingAmount,
-                                          isSelected: true,
-                                          uniqueKey: _buySellInfo!.key,
-                                        );
-                                      } else {
-                                        widget.controller.updateOptions(
-                                          action: widget.action,
-                                          dateTime: useDateTime,
-                                          expectingAmount:
-                                              widget.expectingAmount,
-                                          isSelected: false,
-                                          uniqueKey: _buySellInfo!.key,
-                                        );
-                                      }
-                                    }
-                                  : null,
+                              onChanged: (value) {
+                                if (value != null && value) {
+                                  widget.controller.updateOptions(
+                                    action: widget.action,
+                                    dateTime: useDateTime,
+                                    expectingAmount: widget.expectingAmount,
+                                    isSelected: true,
+                                    uniqueKey: _buySellInfo!.key,
+                                  );
+                                } else {
+                                  widget.controller.updateOptions(
+                                    action: widget.action,
+                                    dateTime: useDateTime,
+                                    expectingAmount: widget.expectingAmount,
+                                    isSelected: false,
+                                    uniqueKey: _buySellInfo!.key,
+                                  );
+                                }
+                              },
                             ),
                           ),
                         ),
@@ -742,15 +741,10 @@ class _ForecastEnergyWidgetListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final forecastDateState = Provider.of<ForecastDateState>(context);
-
     var dates = <DateTime>[];
     for (var day = 0; day < 7; day++) {
       dates.add(DateTime.now().add(Duration(days: -day)));
     }
-
-    final today = forecastDateState.date;
-    final todayMidnight = DateTime(today.year, today.month, today.day);
 
     var dateWidgets = <Widget>[];
     for (var date in dates) {
@@ -759,7 +753,7 @@ class _ForecastEnergyWidgetListTile extends StatelessWidget {
       dateWidgets.add(
         _ForecastEnergyWidget(
           date: date,
-          key: Key('forecast-date-${date.toString()}'),
+          key: Key('forecast-date-${dateMidnight.toString()}'),
         ),
       );
     }
