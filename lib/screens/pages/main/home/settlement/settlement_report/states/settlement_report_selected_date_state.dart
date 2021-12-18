@@ -29,9 +29,10 @@ class SettlementReportSelectedDateState extends ChangeNotifier {
     );
   }
 
-  void setIsDaily(bool isDaily) {
+  Future<void> setIsDaily(bool isDaily) async {
     _isDaily = isDaily;
     notifyListeners();
+    await _notifyParent();
   }
 
   void _checkSelectedDate() {

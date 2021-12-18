@@ -1,5 +1,16 @@
 import 'package:egat_flutter/constant.dart';
 import 'package:egat_flutter/screens/pages/main/home/settlement/models/contract_direction.dart';
+import 'package:egat_flutter/screens/pages/main/home/settlement/models/settlement_report_info.dart';
+import 'package:egat_flutter/screens/pages/main/home/settlement/settlement_report/states/settlement_report_state.dart';
+import 'package:egat_flutter/screens/pages/main/home/settlement/widgets/horizontal_positioned_list_view_with_controller.dart';
+import 'package:egat_flutter/screens/pages/main/home/settlement/widgets/settlement_report_box/bilateal_seller_energy_excess_settlement_report_info.dart';
+import 'package:egat_flutter/screens/pages/main/home/settlement/widgets/settlement_report_box/bilateal_seller_energy_shortfall_settlement_report_info.dart';
+import 'package:egat_flutter/screens/pages/main/home/settlement/widgets/settlement_report_box/bilateral_buyer_energy_excess_settlement_report_info.dart';
+import 'package:egat_flutter/screens/pages/main/home/settlement/widgets/settlement_report_box/bilateral_buyer_energy_shortfall_settlement_report_info.dart';
+import 'package:egat_flutter/screens/pages/main/home/settlement/widgets/settlement_report_box/pool_buyer_energy_excess_settlement_report_info.dart';
+import 'package:egat_flutter/screens/pages/main/home/settlement/widgets/settlement_report_box/pool_buyer_energy_shortfall_settlement_report_info%20copy.dart';
+import 'package:egat_flutter/screens/pages/main/home/settlement/widgets/settlement_report_box/pool_seller_energy_excess_settlement_report_info.dart';
+import 'package:egat_flutter/screens/pages/main/home/settlement/widgets/settlement_report_box/pool_seller_energy_shortfall_settlement_report_info.dart';
 import 'package:egat_flutter/screens/pages/main/home/widgets/collapsable_report_row.dart';
 import 'package:egat_flutter/screens/pages/main/states/main_screen_title_state.dart';
 import 'package:egat_flutter/screens/widgets/loading_dialog.dart';
@@ -30,6 +41,7 @@ class _DataDisplaySection extends StatelessWidget {
 
     if (isDaily) {
       return SingleChildScrollView(
+        key: const Key('data_display_section'),
         child: _DailyDataDisplaySection(
           isBuyerSelected: isBuyerSelected,
           isSellerSelected: isSellerSelected,
@@ -37,6 +49,7 @@ class _DataDisplaySection extends StatelessWidget {
       );
     } else {
       return SingleChildScrollView(
+        key: const Key('data_display_section'),
         child: _MonthlyDataDisplaySection(
           isBuyerSelected: isBuyerSelected,
           isSellerSelected: isSellerSelected,
@@ -58,6 +71,17 @@ class _DailyDataDisplaySection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final SettlementReportState settlementReportState =
+        context.watch<SettlementReportState>();
+
+    if (settlementReportState.dailyReport == null) {
+      return const Center(
+        child: CircularProgressIndicator(),
+      );
+    }
+
+    final report = settlementReportState.dailyReport!;
+
     final defaulTextStyle = TextStyle(fontSize: 15);
     final defaultCollapseTextStyle = TextStyle(fontSize: 12);
     final defaultImbalanceTextStyle =
@@ -87,44 +111,54 @@ class _DailyDataDisplaySection extends StatelessWidget {
               ),
               CollapsableReportRow(
                 title: Text('Completed Contracts'),
-                value: Text('5'),
+                value: Text(report.completedContracts.toStringAsFixed(0)),
                 textStyle: defaulTextStyle,
                 collapseTextStyle: defaultCollapseTextStyle,
                 collapseItems: [
                   CollapsableReportRow(
                       title: Text('Short term Bilateral trade'),
-                      value: Text('2')),
+                      value: Text(report.completedContractsShortTermBilateral
+                          .toStringAsFixed(0))),
                   CollapsableReportRow(
                       title: Text('Long term Bilateral trade'),
-                      value: Text('2')),
+                      value: Text(report.completedContractsLongTermBilateral
+                          .toStringAsFixed(0))),
                   CollapsableReportRow(
-                      title: Text('Pool Market trade'), value: Text('2')),
+                      title: Text('Pool Market trade'),
+                      value: Text(
+                          report.completedContractsPool.toStringAsFixed(0))),
                 ],
               ),
               CollapsableReportRow(
                 title: Text('Scheduled Contracts'),
-                value: Text('5'),
+                value: Text(report.scheduledContracts.toStringAsFixed(0)),
                 textStyle: defaulTextStyle,
                 collapseTextStyle: defaultCollapseTextStyle,
                 collapseItems: [
                   CollapsableReportRow(
                       title: Text('Short term Bilateral trade'),
-                      value: Text('2')),
+                      value: Text(report.scheduledContractsShortTermBilateral
+                          .toStringAsFixed(0))),
                   CollapsableReportRow(
                       title: Text('Long term Bilateral trade'),
-                      value: Text('2')),
+                      value: Text(report.scheduledContractsLongTermBilateral
+                          .toStringAsFixed(0))),
                   CollapsableReportRow(
-                      title: Text('Pool Market trade'), value: Text('2')),
+                      title: Text('Pool Market trade'),
+                      value: Text(
+                          report.scheduledContractsPool.toStringAsFixed(0))),
                 ],
               ),
               CollapsableReportRow(
                 title: Text('Seller Energy Commited/Delivered'),
-                value: Text('8.00/6.45 kWh'),
+                value: Text(
+                    '${report.sellerEnergyCommited.toStringAsFixed(2)}/${report.sellerEnergyDelivered.toStringAsFixed(2)} kWh'),
                 textStyle: defaulTextStyle,
               ),
               CollapsableReportRow(
                 title: Text('Buyer Energy Commited/Used'),
-                value: Text('8.00/6.45 kWh'),
+                value: Text(
+                    '${report.buyerEnergyCommited.toStringAsFixed(2)}/${report.buyerEnergyUsed.toStringAsFixed(2)} kWh'),
                 textStyle: defaulTextStyle,
               ),
               CollapsableReportRow(
@@ -139,17 +173,17 @@ class _DailyDataDisplaySection extends StatelessWidget {
                     ],
                   ),
                 ),
-                value: Text('12 THB'),
+                value: Text('${report.netSales.toStringAsFixed(2)} THB'),
                 textStyle: defaulTextStyle,
               ),
               CollapsableReportRow(
                 title: Text('Imbalance amount'),
-                value: Text('10 kWh'),
+                value: Text('${report.imbalanceAmount.toStringAsFixed(2)} kWh'),
                 textStyle: defaultImbalanceTextStyle,
               ),
               CollapsableReportRow(
                 title: Text('Seller Imbalance'),
-                value: Text('-0.25 THB'),
+                value: Text('${report.sellerImbalance.toStringAsFixed(2)} THB'),
                 textStyle: defaultImbalanceTextStyle,
               ),
               CollapsableReportRow(
@@ -164,7 +198,7 @@ class _DailyDataDisplaySection extends StatelessWidget {
                     ],
                   ),
                 ),
-                value: Text('12 THB'),
+                value: Text('${report.netEnergyPrice.toStringAsFixed(2)} THB'),
                 textStyle: defaulTextStyle,
               ),
             ],
@@ -178,7 +212,76 @@ class _DailyDataDisplaySection extends StatelessWidget {
             color: Colors.white,
           ),
         ),
+        _DailyReportItemSection(),
       ],
+    );
+  }
+}
+
+class _DailyReportItemSection extends StatelessWidget {
+  const _DailyReportItemSection({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final settlementReportState = Provider.of<SettlementReportState>(context);
+
+    if (settlementReportState.dailyReport == null) {
+      return Container();
+    }
+
+    var reportItems = settlementReportState.dailyReport!.settlementReportInfos;
+
+    if (reportItems.isEmpty) {
+      return Container();
+    }
+
+    final members = <Widget>[];
+    for (var item in reportItems) {
+      Widget? widget;
+      if (item is BilateralBuyerEnergyShortfallSettlementReportInfo) {
+        widget = BilateralBuyerEnergyShortfallSettlementReportInfoBox(
+          tradeInfo: item,
+        );
+      } else if (item is PoolBuyerEnergyShortfallSettlementReportInfo) {
+        widget = PoolBuyerEnergyShortfallSettlementReportInfoBox(
+          tradeInfo: item,
+        );
+      } else if (item is BilateralBuyerEnergyExcessSettlementReportInfo) {
+        widget = BilateralBuyerEnergyExcessSettlementReportInfoBox(
+          tradeInfo: item,
+        );
+      } else if (item is PoolBuyerEnergyExcessSettlementReportInfo) {
+        widget = PoolBuyerEnergyExcessSettlementReportInfoBox(
+          tradeInfo: item,
+        );
+      } else if (item is BilateralSellerEnergyShortfallSettlementReportInfo) {
+        widget = BilateralSellerEnergyShortfallSettlementReportInfoBox(
+          tradeInfo: item,
+        );
+      } else if (item is BilateralSellerEnergyExcessSettlementReportInfo) {
+        widget = BilateralSellerEnergyExcessSettlementReportInfoBox(
+          tradeInfo: item,
+        );
+      } else if (item is PoolSellerEnergyShortfallSettlementReportInfo) {
+        widget = PoolSellerEnergyShortfallSettlementReportInfoBox(
+          tradeInfo: item,
+        );
+      } else if (item is PoolSellerEnergyExcessSettlementReportInfo) {
+        widget = PoolSellerEnergyExcessSettlementReportInfoBox(
+          tradeInfo: item,
+        );
+      }
+
+      if (widget != null) {
+        members.add(widget);
+      }
+    }
+
+    return HorizontalPositionedListViewWithController(
+      controllerWidth: 40,
+      children: members,
     );
   }
 }
@@ -195,6 +298,17 @@ class _MonthlyDataDisplaySection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final SettlementReportState settlementReportState =
+        context.watch<SettlementReportState>();
+
+    if (settlementReportState.monthlyReport == null) {
+      return const Center(
+        child: CircularProgressIndicator(),
+      );
+    }
+
+    final report = settlementReportState.monthlyReport!;
+
     final defaulTextStyle = TextStyle(fontSize: 15);
     final defaultCollapseTextStyle = TextStyle(fontSize: 12);
     final defaultImbalanceTextStyle =
@@ -215,48 +329,56 @@ class _MonthlyDataDisplaySection extends StatelessWidget {
               ),
               CollapsableReportRow(
                 title: Text('Completed Contracts'),
-                value: Text('10'),
+                value: Text(report.completedContracts.toStringAsFixed(0)),
                 textStyle: defaulTextStyle,
                 collapseTextStyle: defaultCollapseTextStyle,
                 collapseItems: [
                   CollapsableReportRow(
                       title: Text('Short term Bilateral trade'),
-                      value: Text('3')),
+                      value: Text(report.completedContractsShortTermBilateral
+                          .toStringAsFixed(0))),
                   CollapsableReportRow(
                       title: Text('Long term Bilateral trade'),
-                      value: Text('1')),
+                      value: Text(report.completedContractsLongTermBilateral
+                          .toStringAsFixed(0))),
                   CollapsableReportRow(
                     title: Text('Pool Market trade'),
-                    value: Text('1'),
+                    value:
+                        Text(report.completedContractsPool.toStringAsFixed(0)),
                   ),
                 ],
               ),
               CollapsableReportRow(
                 title: Text('Scheduled Contracts'),
-                value: Text('4'),
+                value: Text(report.scheduledContracts.toStringAsFixed(0)),
                 textStyle: defaulTextStyle,
                 collapseTextStyle: defaultCollapseTextStyle,
                 collapseItems: [
                   CollapsableReportRow(
                       title: Text('Short term Bilateral trade'),
-                      value: Text('3')),
+                      value: Text(report.scheduledContractsShortTermBilateral
+                          .toStringAsFixed(0))),
                   CollapsableReportRow(
                       title: Text('Long term Bilateral trade'),
-                      value: Text('1')),
+                      value: Text(report.scheduledContractsLongTermBilateral
+                          .toStringAsFixed(0))),
                   CollapsableReportRow(
                     title: Text('Pool Market trade'),
-                    value: Text('1'),
+                    value:
+                        Text(report.scheduledContractsPool.toStringAsFixed(0)),
                   ),
                 ],
               ),
               CollapsableReportRow(
                 title: Text('Seller Energy Commited/Delivered'),
-                value: Text('8.00/6.45 kWh'),
+                value: Text(
+                    '${report.sellerEnergyCommited.toStringAsFixed(2)}/${report.sellerEnergyDelivered.toStringAsFixed(2)} kWh'),
                 textStyle: defaulTextStyle,
               ),
               CollapsableReportRow(
                 title: Text('Buyer Energy Commited/Used'),
-                value: Text('8.00/6.45 kWh'),
+                value: Text(
+                    '${report.buyerEnergyCommited.toStringAsFixed(2)}/${report.buyerEnergyUsed.toStringAsFixed(2)} kWh'),
                 textStyle: defaulTextStyle,
               ),
               CollapsableReportRow(
@@ -271,7 +393,7 @@ class _MonthlyDataDisplaySection extends StatelessWidget {
                     ],
                   ),
                 ),
-                value: Text('12 THB'),
+                value: Text('${report.netSell.toStringAsFixed(2)} THB'),
                 textStyle: defaulTextStyle,
               ),
               CollapsableReportRow(
@@ -286,27 +408,29 @@ class _MonthlyDataDisplaySection extends StatelessWidget {
                     ],
                   ),
                 ),
-                value: Text('12 THB'),
+                value: Text('${report.netBuy.toStringAsFixed(2)} THB'),
                 textStyle: defaulTextStyle,
               ),
               CollapsableReportRow(
                 title: Text('Seller Imbalance amount'),
-                value: Text('10 kWh'),
+                value: Text(
+                    '${report.sellerImbalanceAmount.toStringAsFixed(2)} kWh'),
                 textStyle: defaultImbalanceTextStyle,
               ),
               CollapsableReportRow(
                 title: Text('Buyer Imbalance amount'),
-                value: Text('10 kWh'),
+                value: Text(
+                    '${report.buyerImbalanceAmount.toStringAsFixed(2)} kWh'),
                 textStyle: defaultImbalanceTextStyle,
               ),
               CollapsableReportRow(
                 title: Text('NET imbalance'),
-                value: Text('-0.25 THB'),
+                value: Text('${report.netImbalance.toStringAsFixed(2)} THB'),
                 textStyle: defaulTextStyle,
               ),
               CollapsableReportRow(
                 title: Text('Wheeling charge'),
-                value: Text('0.25 THB'),
+                value: Text('${report.wheelingCharge.toStringAsFixed(2)} THB'),
                 textStyle: defaulTextStyle,
               ),
               CollapsableReportRow(
@@ -321,7 +445,8 @@ class _MonthlyDataDisplaySection extends StatelessWidget {
                     ],
                   ),
                 ),
-                value: Text('3.83 THB/kWh'),
+                value: Text(
+                    '${report.netEnergySalesPrice.toStringAsFixed(2)} THB/kWh'),
                 textStyle: defaulTextStyle,
               ),
               CollapsableReportRow(
@@ -336,7 +461,8 @@ class _MonthlyDataDisplaySection extends StatelessWidget {
                     ],
                   ),
                 ),
-                value: Text('3.83 THB/kWh'),
+                value: Text(
+                    '${report.netEnergyBuyPrice.toStringAsFixed(2)} THB/kWh'),
                 textStyle: defaulTextStyle,
               ),
             ],
@@ -408,7 +534,7 @@ class _DateSelectionBar extends StatelessWidget {
     );
   }
 
-  void _updateIsDaily(BuildContext context, bool value) {
+  void _updateIsDaily(BuildContext context, bool value) async {
     showLoading();
 
     try {
@@ -416,7 +542,7 @@ class _DateSelectionBar extends StatelessWidget {
           Provider.of<SettlementReportSelectedDateState>(context,
               listen: false);
 
-      settlementReportSelectedDateState.setIsDaily(value);
+      await settlementReportSelectedDateState.setIsDaily(value);
     } catch (e) {
       showException(context, e.toString());
     } finally {
