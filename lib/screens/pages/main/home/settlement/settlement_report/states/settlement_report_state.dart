@@ -17,7 +17,7 @@ class SettlementReportState extends ChangeNotifier {
 
   LoginSession? get loginSession => _loginSession;
 
-  Future<void> fetchOrderAtTime(DateTime selectedTime, bool isDaily) async {
+  Future<void> fetchReportAtTime(DateTime selectedTime, bool isDaily) async {
     if (loginSession == null) {
       throw new Exception("No login session provided.");
     }
@@ -25,15 +25,20 @@ class SettlementReportState extends ChangeNotifier {
     final accessToken = loginSession!.info!.accessToken;
 
     if (isDaily) {
+      final date =
+          DateTime(selectedTime.year, selectedTime.month, selectedTime.day);
+
       final data = await settlementReportApi.fetchDailySettlementReport(
-        date: selectedTime,
+        date: date,
         accessToken: accessToken,
       );
 
       _dailyReport = data;
     } else {
+      final date = DateTime(selectedTime.year, selectedTime.month, 1);
+
       final data = await settlementReportApi.fetchMonthlySettlementReport(
-        date: selectedTime,
+        date: date,
         accessToken: accessToken,
       );
 
