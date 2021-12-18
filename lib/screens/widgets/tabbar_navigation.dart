@@ -32,7 +32,7 @@ class TabBarNavigationItem<T> {
 
     if (icon != null) {
       return Icon(
-        Icons.home,
+        icon,
         size: 18,
         color: isSelected ? onPrimaryBgColor : whiteColor,
       );
@@ -70,7 +70,7 @@ class TabBarNavigation<T> extends StatelessWidget {
   }) {
     var titles = <TextSpan>[
       TextSpan(
-        text: " ${item.title}",
+        text: "${item.title}",
         style: TextStyle(
           color: isSelected ? onPrimaryBgColor : whiteColor,
         ),
@@ -100,16 +100,23 @@ class TabBarNavigation<T> extends StatelessWidget {
             child: Container(
               height: 32,
               child: Center(
-                child: RichText(
-                  textAlign: TextAlign.center,
-                  text: TextSpan(
-                    children: [
-                      WidgetSpan(
-                        child: item.buildIcon(context, isSelected: isSelected),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    item.buildIcon(context, isSelected: isSelected),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 8),
+                      child: RichText(
+                        textAlign: TextAlign.left,
+                        text: TextSpan(
+                          children: [
+                            ...titles,
+                          ],
+                        ),
                       ),
-                      ...titles,
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
             ),

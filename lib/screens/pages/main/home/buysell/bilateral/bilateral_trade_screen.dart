@@ -80,27 +80,26 @@ class _BilateralTradeScreenState extends State<BilateralTradeScreen> {
                       // mainAxisSize: MainAxisSize.max,
                       children: [
                         SizedBox(height: 10),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          mainAxisSize: MainAxisSize.max,
-                          children: [
-                            Flexible(
-                              flex: 2,
-                              fit: FlexFit.tight,
-                              child: _TimeSelectionDropdown(),
-                            ),
-                            Flexible(
-                              flex: 3,
-                              fit: FlexFit.tight,
-                              child: _DateSelectionDropdown(),
-                            ),
-                            _ViewModeSelectionDropdown(
-                              viewModeSelected: _viewModeSelected,
-                              onChange: (newItem) => setState(() {
-                                _viewModeSelected = newItem;
-                              }),
-                            ),
-                          ],
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 12),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            mainAxisSize: MainAxisSize.max,
+                            children: [
+                              Row(
+                                children: [
+                                  _TimeSelectionDropdown(),
+                                  _DateSelectionDropdown(),
+                                ],
+                              ),
+                              _ViewModeSelectionDropdown(
+                                viewModeSelected: _viewModeSelected,
+                                onChange: (newItem) => setState(() {
+                                  _viewModeSelected = newItem;
+                                }),
+                              ),
+                            ],
+                          ),
                         ),
                         SizedBox(
                           height: 10,
