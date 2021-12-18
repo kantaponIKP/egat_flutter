@@ -87,33 +87,18 @@ class _BilateralTradeScreenState extends State<BilateralTradeScreen> {
                             Flexible(
                               flex: 2,
                               fit: FlexFit.tight,
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 8,
-                                ),
-                                child: _TimeSelectionDropdown(),
-                              ),
+                              child: _TimeSelectionDropdown(),
                             ),
                             Flexible(
                               flex: 3,
                               fit: FlexFit.tight,
-                              child: Padding(
-                                padding: const EdgeInsets.only(
-                                  right: 8,
-                                ),
-                                child: _DateSelectionDropdown(),
-                              ),
+                              child: _DateSelectionDropdown(),
                             ),
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                right: 8,
-                              ),
-                              child: _ViewModeSelectionDropdown(
-                                viewModeSelected: _viewModeSelected,
-                                onChange: (newItem) => setState(() {
-                                  _viewModeSelected = newItem;
-                                }),
-                              ),
+                            _ViewModeSelectionDropdown(
+                              viewModeSelected: _viewModeSelected,
+                              onChange: (newItem) => setState(() {
+                                _viewModeSelected = newItem;
+                              }),
                             ),
                           ],
                         ),
