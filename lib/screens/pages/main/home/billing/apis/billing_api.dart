@@ -8,6 +8,9 @@ class BillingApi {
     required DateTime date,
     required String accessToken,
   }) async {
+    // TODO: use real data
+    await Future.delayed(Duration(seconds: 1));
+
     return GetBillingSummaryResponse(
         netEnergyTradingPayment: 1,
         gridPrice: 1,
@@ -18,6 +21,7 @@ class BillingApi {
   Future<GetPreliminaryInvoiceResponse> fetchPreliminaryInvoice({
     required String accessToken,
   }) async {
+    // TODO: use real data
     await Future.delayed(Duration(seconds: 1));
 
     return GetPreliminaryInvoiceResponse(

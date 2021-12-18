@@ -75,9 +75,7 @@ class _DailyDataDisplaySection extends StatelessWidget {
         context.watch<SettlementReportState>();
 
     if (settlementReportState.dailyReport == null) {
-      return const Center(
-        child: CircularProgressIndicator(),
-      );
+      return Container();
     }
 
     final report = settlementReportState.dailyReport!;
