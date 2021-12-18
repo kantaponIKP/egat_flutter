@@ -9,6 +9,8 @@ class ForecastApi {
     required DateTime startDate,
   }) async {
     // TODO: real data
+    await Future.delayed(Duration(seconds: 1));
+
     var random = Random();
     final randomForecastDatas = <ForecastData>[];
     for (var i = -1; i < 7; i++) {

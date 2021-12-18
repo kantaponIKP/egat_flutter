@@ -9,6 +9,9 @@ class SettlementReportApi {
     required DateTime date,
     required String accessToken,
   }) async {
+    // TODO: use real data
+    await Future.delayed(Duration(seconds: 1));
+
     return GetMonthlySettlementReportResponse(
       completedContracts: 1,
       completedContractsShortTermBilateral: 1,
