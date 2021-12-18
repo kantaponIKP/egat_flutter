@@ -40,6 +40,9 @@ class SettlementReportApi {
     required DateTime date,
     required String accessToken,
   }) async {
+    // TODO: use real data
+    await Future.delayed(Duration(seconds: 1));
+
     final now = DateTime.now();
     final date = DateTime(now.year, now.month, now.day);
 
