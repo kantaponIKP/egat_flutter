@@ -1,5 +1,5 @@
-import 'package:egat_flutter/screens/pages/main/home/billing/dialogs/view_previous_invoice_dialog.dart';
-import 'package:egat_flutter/screens/pages/main/home/billing/states/billing_selected_date_state.dart';
+import 'package:egat_flutter/screens/pages/main/home/billing/invoice/invoice_page.dart';
+import 'package:egat_flutter/screens/pages/main/home/billing/preliminary/preliminary_page.dart';
 import 'package:egat_flutter/screens/pages/main/states/main_screen_title_state.dart';
 import 'package:egat_flutter/screens/widgets/loading_dialog.dart';
 import 'package:egat_flutter/screens/widgets/show_exception.dart';
@@ -8,6 +8,8 @@ import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
+import 'dialogs/view_previous_invoice_dialog.dart';
+import 'states/billing_selected_date_state.dart';
 import 'states/billing_state.dart';
 
 class BillingScreen extends StatefulWidget {
@@ -18,16 +20,6 @@ class BillingScreen extends StatefulWidget {
 }
 
 class _BillingScreenState extends State<BillingScreen> {
-  @override
-  void initState() {
-    super.initState();
-
-    final MainScreenTitleState titleState =
-        context.read<MainScreenTitleState>();
-
-    titleState.setTitleLogo();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -41,6 +33,16 @@ class _BillingScreenState extends State<BillingScreen> {
       ),
       child: _buildBody(context),
     );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    final MainScreenTitleState titleState =
+        context.read<MainScreenTitleState>();
+
+    titleState.setTitleLogo();
   }
 
   Widget _buildBody(BuildContext context) {
@@ -58,72 +60,6 @@ class _BillingScreenState extends State<BillingScreen> {
         ),
       );
     });
-  }
-}
-
-class _InformationSection extends StatelessWidget {
-  const _InformationSection({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    final billingState = Provider.of<BillingState>(context);
-
-    if (billingState.billingSummary == null) {
-      return Center(child: CircularProgressIndicator());
-    }
-
-    final billingSummary = billingState.billingSummary!;
-
-    return Padding(
-      padding: const EdgeInsets.only(left: 20, right: 20, top: 12),
-      child: Column(
-        children: [
-          _HilightedValueDisplay(
-            title: 'Net Energy Trading Payment',
-            value:
-                '${billingSummary.netEnergyTradingPayment.toStringAsFixed(2)} Baht',
-          ),
-          _HilightedValueDisplay(
-            title: 'Grid Price',
-            value: '${billingSummary.gridPrice.toStringAsFixed(2)} Baht',
-          ),
-          _HilightedValueDisplay(
-            title: 'Wheeling Charge',
-            value: '${billingSummary.wheelingCharge.toStringAsFixed(2)} Baht',
-          ),
-          _SummaryValueDisplay(
-            title: 'Estimated Net Payment',
-            secondaryTitle: '(as of 20 August 2021)',
-            value: '${billingSummary.estimatedNetPayment.toStringAsFixed(2)}',
-            unit: 'Baht',
-          ),
-          _Button(
-            title: 'View Preliminary Invoice',
-            secondaryTitle: 'as of 20 August 2021',
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: 4, bottom: 16),
-            child: Divider(
-              color: Colors.white,
-              thickness: 1,
-            ),
-          ),
-          _Button(
-            title: 'View Previous Invoice',
-            onTap: () => _showViewPreviousInvoiceDialog(context),
-          ),
-        ],
-      ),
-    );
-  }
-
-  void _showViewPreviousInvoiceDialog(BuildContext context) async {
-    DateTime? selectedDate = await showDialog<DateTime>(
-      context: context,
-      builder: (context) {
-        return ViewPreviousInvoiceDialog();
-      },
-    );
   }
 }
 
@@ -146,6 +82,7 @@ class _Button extends StatelessWidget {
         title,
         style: const TextStyle(
           fontSize: 15,
+          fontWeight: FontWeight.normal,
           color: Colors.black,
         ),
       ),
@@ -156,109 +93,155 @@ class _Button extends StatelessWidget {
         secondaryTitle!,
         style: const TextStyle(
           fontSize: 11,
+          fontWeight: FontWeight.normal,
           color: Colors.black,
         ),
       ));
     }
 
-    return InkWell(
-      onTap: onTap,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 35),
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            return GestureDetector(
-              onTap: onTap,
-              child: Container(
-                width: constraints.maxWidth,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(5),
-                  color: Color(0xFFFeC908),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  child: Column(
-                    children: members,
-                  ),
-                ),
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 35),
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          return TextButton(
+            onPressed: onTap,
+            style: TextButton.styleFrom(
+              backgroundColor: Color(0xFFFeC908),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(5)),
+              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 35),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 16),
+              child: Column(
+                children: members,
               ),
-            );
-          },
-        ),
+            ),
+          );
+        },
       ),
     );
   }
 }
 
-class _SummaryValueDisplay extends StatelessWidget {
-  final String title;
-  final String secondaryTitle;
-  final String value;
-  final String unit;
-
-  const _SummaryValueDisplay({
+class _DateSelectionBar extends StatelessWidget {
+  const _DateSelectionBar({
     Key? key,
-    required this.title,
-    required this.secondaryTitle,
-    required this.value,
-    required this.unit,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return DefaultTextStyle(
-      style: TextStyle(
-        fontSize: 15,
-      ),
-      textAlign: TextAlign.left,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
-          child: Row(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Column(
-                children: [
-                  RichText(
-                    text: TextSpan(
-                      children: [
-                        TextSpan(
-                          text: title,
-                          style: const TextStyle(fontSize: 15),
-                        ),
-                        const TextSpan(text: '\n'),
-                        TextSpan(
-                          text: secondaryTitle,
-                          style: const TextStyle(fontSize: 10),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-              Row(
-                children: [
-                  Text(value, style: const TextStyle(fontSize: 35)),
-                  SizedBox(width: 8),
-                  SizedBox(
-                    height: 30,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      mainAxisSize: MainAxisSize.max,
-                      children: [
-                        Text(unit, style: const TextStyle(fontSize: 15)),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ],
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      mainAxisSize: MainAxisSize.max,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(
+            left: 20,
+            right: 4,
           ),
+          child: _MonthSelectionDropdown(),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: 8,
+          ),
+          child: _DateSelectionDropdown(),
+        ),
+        Flexible(
+          flex: 3,
+          // fit: FlexFit.tight,
+          child: Container(),
+        ),
+      ],
+    );
+  }
+}
+
+class _DateSelectionDropdown extends StatelessWidget {
+  const _DateSelectionDropdown({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final selectedDateState = Provider.of<BillingSelectedDateState>(context);
+
+    final selectedDate = selectedDateState.selectedDate;
+
+    final now = DateTime.now();
+
+    final selectableDates = <DateTime>[];
+    if (now.month == selectedDate.month && now.year == selectedDate.year) {
+      for (var i = 0; i < now.day; i++) {
+        selectableDates.add(
+          DateTime(selectedDate.year, selectedDate.month, i + 1),
+        );
+      }
+    } else {
+      final daysInMonth =
+          DateTime(selectedDate.year, selectedDate.month + 1, 0).day;
+
+      for (var i = 0; i < daysInMonth; i++) {
+        selectableDates.add(
+          DateTime(selectedDate.year, selectedDate.month, i + 1),
+        );
+      }
+    }
+
+    return Container(
+      height: 35,
+      padding: EdgeInsets.symmetric(horizontal: 3),
+      decoration: BoxDecoration(
+        color: Colors.grey[900],
+        borderRadius: BorderRadius.circular(5),
+      ),
+      child: DropdownButton<DateTime>(
+        value: selectedDate,
+        icon: Icon(Icons.arrow_drop_down_rounded),
+        iconSize: 20,
+        alignment: Alignment.center,
+        borderRadius: BorderRadius.circular(20),
+        onChanged: (DateTime? newValue) {
+          if (newValue != null) {
+            final newDate = DateTime(
+              newValue.year,
+              newValue.month,
+              newValue.day,
+            );
+            _setSelectedDate(context, selectedDateState, newDate);
+          }
+        },
+        items: selectableDates.map((
+          DateTime item,
+        ) {
+          return DropdownMenuItem(
+            value: item,
+            child: Text(
+              DateFormat('d').format(item.toLocal()),
+            ),
+          );
+        }).toList(),
+        underline: DropdownButtonHideUnderline(
+          child: Container(),
         ),
       ),
     );
+  }
+
+  _setSelectedDate(
+    BuildContext context,
+    BillingSelectedDateState selectedTimeState,
+    DateTime newDate,
+  ) async {
+    showLoading();
+    try {
+      await selectedTimeState.setSelectedDate(newDate);
+    } catch (e) {
+      showException(context, e.toString());
+    } finally {
+      hideLoading();
+    }
   }
 }
 
@@ -302,36 +285,90 @@ class _HilightedValueDisplay extends StatelessWidget {
   }
 }
 
-class _DateSelectionBar extends StatelessWidget {
-  const _DateSelectionBar({
-    Key? key,
-  }) : super(key: key);
+class _InformationSection extends StatelessWidget {
+  const _InformationSection({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      mainAxisSize: MainAxisSize.max,
-      children: [
-        Padding(
-          padding: const EdgeInsets.only(
-            left: 20,
-            right: 4,
+    final billingState = Provider.of<BillingState>(context);
+
+    if (billingState.billingSummary == null) {
+      return Center(child: CircularProgressIndicator());
+    }
+
+    final billingSummary = billingState.billingSummary!;
+
+    final toDateFormat = DateFormat('dd MMMM yyyy');
+    final toDate = toDateFormat.format(DateTime.now());
+
+    return Padding(
+      padding: const EdgeInsets.only(left: 20, right: 20, top: 12),
+      child: Column(
+        children: [
+          _HilightedValueDisplay(
+            title: 'Net Energy Trading Payment',
+            value:
+                '${billingSummary.netEnergyTradingPayment.toStringAsFixed(2)} Baht',
           ),
-          child: _MonthSelectionDropdown(),
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 8,
+          _HilightedValueDisplay(
+            title: 'Grid Price',
+            value: '${billingSummary.gridPrice.toStringAsFixed(2)} Baht',
           ),
-          child: _DateSelectionDropdown(),
+          _HilightedValueDisplay(
+            title: 'Wheeling Charge',
+            value: '${billingSummary.wheelingCharge.toStringAsFixed(2)} Baht',
+          ),
+          _SummaryValueDisplay(
+            title: 'Estimated Net Payment',
+            secondaryTitle: '(as of $toDate)',
+            value: '${billingSummary.estimatedNetPayment.toStringAsFixed(2)}',
+            unit: 'Baht',
+          ),
+          _Button(
+            title: 'View Preliminary Invoice',
+            secondaryTitle: 'as of $toDate',
+            onTap: () => _showPreliminaryInvoice(context),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 4, bottom: 16),
+            child: Divider(
+              color: Colors.white,
+              thickness: 1,
+            ),
+          ),
+          _Button(
+            title: 'View Previous Invoice',
+            onTap: () => _showViewPreviousInvoiceDialog(context),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showViewPreviousInvoiceDialog(BuildContext context) async {
+    DateTime? selectedMonth = await showDialog<DateTime>(
+      context: context,
+      builder: (context) {
+        return ViewPreviousInvoiceDialog();
+      },
+    );
+
+    if (selectedMonth != null) {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => InvoicePage(
+            month: selectedMonth,
+          ),
         ),
-        Flexible(
-          flex: 3,
-          // fit: FlexFit.tight,
-          child: Container(),
-        ),
-      ],
+      );
+    }
+  }
+
+  void _showPreliminaryInvoice(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => PreliminaryPage(),
+      ),
     );
   }
 }
@@ -421,89 +458,74 @@ class _MonthSelectionDropdown extends StatelessWidget {
   }
 }
 
-class _DateSelectionDropdown extends StatelessWidget {
-  const _DateSelectionDropdown({
+class _SummaryValueDisplay extends StatelessWidget {
+  final String title;
+  final String secondaryTitle;
+  final String value;
+  final String unit;
+
+  const _SummaryValueDisplay({
     Key? key,
+    required this.title,
+    required this.secondaryTitle,
+    required this.value,
+    required this.unit,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final selectedDateState = Provider.of<BillingSelectedDateState>(context);
-
-    final selectedDate = selectedDateState.selectedDate;
-
-    final now = DateTime.now();
-
-    final selectableDates = <DateTime>[];
-    if (now.month == selectedDate.month && now.year == selectedDate.year) {
-      for (var i = 0; i < now.day; i++) {
-        selectableDates.add(
-          DateTime(selectedDate.year, selectedDate.month, i + 1),
-        );
-      }
-    } else {
-      final daysInMonth =
-          DateTime(selectedDate.year, selectedDate.month + 1, 0).day;
-
-      for (var i = 0; i < daysInMonth; i++) {
-        selectableDates.add(
-          DateTime(selectedDate.year, selectedDate.month, i + 1),
-        );
-      }
-    }
-
-    return Container(
-      height: 35,
-      padding: EdgeInsets.symmetric(horizontal: 3),
-      decoration: BoxDecoration(
-        color: Colors.grey[900],
-        borderRadius: BorderRadius.circular(5),
+    return DefaultTextStyle(
+      style: TextStyle(
+        fontSize: 15,
       ),
-      child: DropdownButton<DateTime>(
-        value: selectedDate,
-        icon: Icon(Icons.arrow_drop_down_rounded),
-        iconSize: 20,
-        alignment: Alignment.center,
-        borderRadius: BorderRadius.circular(20),
-        onChanged: (DateTime? newValue) {
-          if (newValue != null) {
-            final newDate = DateTime(
-              newValue.year,
-              newValue.month,
-              newValue.day,
-            );
-            _setSelectedDate(context, selectedDateState, newDate);
-          }
-        },
-        items: selectableDates.map((
-          DateTime item,
-        ) {
-          return DropdownMenuItem(
-            value: item,
-            child: Text(
-              DateFormat('d').format(item.toLocal()),
-            ),
-          );
-        }).toList(),
-        underline: DropdownButtonHideUnderline(
-          child: Container(),
+      textAlign: TextAlign.left,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+          child: Row(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                children: [
+                  RichText(
+                    text: TextSpan(
+                      children: [
+                        TextSpan(
+                          text: title,
+                          style: const TextStyle(fontSize: 15),
+                        ),
+                        const TextSpan(text: '\n'),
+                        TextSpan(
+                          text: secondaryTitle,
+                          style: const TextStyle(fontSize: 10),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  Text(value, style: const TextStyle(fontSize: 35)),
+                  SizedBox(width: 8),
+                  SizedBox(
+                    height: 30,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        Text(unit, style: const TextStyle(fontSize: 15)),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
-  }
-
-  _setSelectedDate(
-    BuildContext context,
-    BillingSelectedDateState selectedTimeState,
-    DateTime newDate,
-  ) async {
-    showLoading();
-    try {
-      await selectedTimeState.setSelectedDate(newDate);
-    } catch (e) {
-      showException(context, e.toString());
-    } finally {
-      hideLoading();
-    }
   }
 }

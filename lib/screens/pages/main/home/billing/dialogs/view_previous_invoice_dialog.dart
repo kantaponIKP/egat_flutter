@@ -1,5 +1,6 @@
 import 'package:egat_flutter/constant.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 
@@ -113,62 +114,67 @@ class _MonthSelectionSection extends StatelessWidget {
       }
     }
 
-    return Column(
-      children: [
-        _MonthSelectionDropDown(
-          selectedMonth: selectedMonth,
-          onMonthChanged: onMonthChanged,
-        ),
-        _YearSelectionDropDown(
-          selectedMonth: selectedMonth,
-          onMonthChanged: onMonthChanged,
-        ),
-        Padding(
-          padding: const EdgeInsets.only(top: 12),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.of(context).pop(selectedMonth);
-                },
-                child: Text(
-                  'Confirm',
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.normal,
-                    fontSize: 12,
+    return LayoutBuilder(builder: (context, constraints) {
+      return SizedBox(
+        width: constraints.maxWidth - 32,
+        child: Column(
+          children: [
+            _MonthSelectionDropDown(
+              selectedMonth: selectedMonth,
+              onMonthChanged: onMonthChanged,
+            ),
+            _YearSelectionDropDown(
+              selectedMonth: selectedMonth,
+              onMonthChanged: onMonthChanged,
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 12),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).pop(selectedMonth);
+                    },
+                    child: Text(
+                      'Confirm',
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.normal,
+                        fontSize: 12,
+                      ),
+                    ),
+                    style: TextButton.styleFrom(
+                      backgroundColor: primaryColor,
+                      minimumSize: Size(0, 30),
+                      maximumSize: Size(200, 35),
+                    ),
                   ),
-                ),
-                style: TextButton.styleFrom(
-                  backgroundColor: primaryColor,
-                  minimumSize: Size(0, 30),
-                  maximumSize: Size(200, 35),
-                ),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: Text(
-                  'Cancel',
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.normal,
-                    fontSize: 12,
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Text(
+                      'Cancel',
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.normal,
+                        fontSize: 12,
+                      ),
+                    ),
+                    style: TextButton.styleFrom(
+                      backgroundColor: greyColor,
+                      minimumSize: Size(0, 30),
+                      maximumSize: Size(200, 35),
+                    ),
                   ),
-                ),
-                style: TextButton.styleFrom(
-                  backgroundColor: greyColor,
-                  minimumSize: Size(0, 30),
-                  maximumSize: Size(200, 35),
-                ),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
-      ],
-    );
+      );
+    });
   }
 }
 
