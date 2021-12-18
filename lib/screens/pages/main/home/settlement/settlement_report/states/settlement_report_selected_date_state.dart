@@ -6,8 +6,8 @@ import 'package:flutter/cupertino.dart';
 import 'settlement_report_state.dart';
 
 class SettlementReportSelectedDateState extends ChangeNotifier {
-  SettlementReportState? _orderState;
-  SettlementReportState? get orderState => _orderState;
+  SettlementReportState? _settlementReportState;
+  SettlementReportState? get orderState => _settlementReportState;
 
   bool _isTimeSettedToCurrentPeriod = true;
   bool get isTimeSettedToCurrentPeriod => _isTimeSettedToCurrentPeriod;
@@ -58,21 +58,21 @@ class SettlementReportSelectedDateState extends ChangeNotifier {
   }
 
   void setSettlementReportState(SettlementReportState orderState) {
-    if (_orderState == orderState) {
+    if (_settlementReportState == orderState) {
       return;
     }
 
-    _orderState = orderState;
+    _settlementReportState = orderState;
 
     _notifyParent();
   }
 
   _notifyParent() async {
-    if (_orderState != null) {
+    if (_settlementReportState != null) {
       showLoading();
 
       try {
-        await _orderState!.fetchOrderAtTime(selectedDate);
+        await _settlementReportState!.fetchReportAtTime(selectedDate, isDaily);
       } finally {
         hideLoading();
       }
