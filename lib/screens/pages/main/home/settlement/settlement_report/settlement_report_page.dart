@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 
 import 'settlement_report_screen.dart';
 import 'states/settlement_report_selected_date_state.dart';
-import 'states/settlement_report_transfer_state.dart';
+import 'states/settlement_report_state.dart';
 
 class SettlementReportPage extends StatelessWidget {
   const SettlementReportPage({Key? key}) : super(key: key);
