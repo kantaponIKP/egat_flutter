@@ -18,7 +18,7 @@ class PageAppbar extends StatelessWidget with PreferredSizeWidget {
       centerTitle: true,
       title: RichText(
         text: TextSpan(
-          style: TextStyle(fontSize: 24),
+          style: TextStyle(fontSize: 24, fontWeight: FontWeight.w300),
           children: <TextSpan>[
             TextSpan(
                 text: firstTitle,

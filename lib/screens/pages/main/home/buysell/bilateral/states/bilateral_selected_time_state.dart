@@ -23,6 +23,7 @@ class BilateralSelectedTimeState extends ChangeNotifier {
       Duration(seconds: 60),
       (timer) {
         _checkSelectedTime();
+        _notifyParent();
       },
     );
   }
@@ -88,7 +89,7 @@ class BilateralSelectedTimeState extends ChangeNotifier {
     final startDiff = now.difference(start);
     final limitDiff = now.difference(limit);
 
-    if (startDiff.inHours < 12 && limitDiff.inHours < 12) {
+    if (startDiff.inHours.abs() < 12 && limitDiff.inHours.abs() < 12) {
       _isTimeSettedToCurrentPeriod = true;
     } else {
       _isTimeSettedToCurrentPeriod = false;

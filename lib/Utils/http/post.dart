@@ -4,6 +4,7 @@ import 'package:http/http.dart';
 final httpPostJson = ({
   required Uri uri,
   required String accessToken,
+  String? body,
   int retryMax = 5,
 }) async {
   return await httpActionRetry(
@@ -13,6 +14,7 @@ final httpPostJson = ({
         'Authorization': 'Bearer $accessToken',
         'Content-Type': 'application/json',
       },
+      body: body,
     ),
     retryMax: retryMax,
   );
