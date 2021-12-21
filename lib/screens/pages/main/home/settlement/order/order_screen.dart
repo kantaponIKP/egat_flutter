@@ -1,3 +1,4 @@
+import 'package:egat_flutter/i18n/app_localizations.dart';
 import 'package:egat_flutter/screens/pages/main/home/settlement/models/contract_direction.dart';
 import 'package:egat_flutter/screens/pages/main/home/settlement/models/contract_status.dart';
 import 'package:egat_flutter/screens/pages/main/home/settlement/models/trade_info.dart';
@@ -106,7 +107,7 @@ class _OrderScreenState extends State<OrderScreen> {
           mainAxisSize: MainAxisSize.min,
           children: [
             _FilterCheckbox(
-              title: 'Bilateral Trade',
+              title: AppLocalizations.of(context).translate('settlement-order-bilateralTrade'),
               isSelected: isBilateralSelected,
               onTap: () {
                 setState(() {
@@ -115,7 +116,7 @@ class _OrderScreenState extends State<OrderScreen> {
               },
             ),
             _FilterCheckbox(
-              title: 'Pool Market Trade',
+              title: AppLocalizations.of(context).translate('settlement-order-poolMarketTrade'),
               isSelected: isPoolMarketSelected,
               onTap: () {
                 setState(() {

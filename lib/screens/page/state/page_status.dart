@@ -19,6 +19,7 @@ enum PageState {
   PoolMarketTrade,
   PoolMarketShortTermBuy,
   PoolMarketShortTermSell,
+  Signout
 }
 
 class PageStatus extends ChangeNotifier {
@@ -55,6 +56,10 @@ class PageStatus extends ChangeNotifier {
 
   setStateGraph() {
     _setState(PageState.Graph);
+  }
+
+  setStateSigout() {
+    _setState(PageState.Signout);
   }
 
   setStateForecast() {

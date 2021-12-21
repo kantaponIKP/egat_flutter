@@ -12,17 +12,18 @@ class LanguageButton extends StatefulWidget {
 }
 
 class _LanguageButtonState extends State<LanguageButton> {
-  List<bool> isSelected = [true, false];
+  List<bool> isSelected = [false, true];
 
   @override
   Widget build(BuildContext context) {
-    Locale _nowLocale = Localizations.localeOf(context);
-    // logger.d('hello ${_nowLocale.toString()}' );
-    AppLocale locale = Provider.of<AppLocale>(context);
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: <Widget>[
-        Icon(Icons.language),
+        GestureDetector(
+            onTap: () {
+              _changeLanguage(context);
+            },
+            child: Icon(Icons.language)),
         ToggleButtons(
           renderBorder: false,
           children: <Widget>[
@@ -31,27 +32,25 @@ class _LanguageButtonState extends State<LanguageButton> {
             // Text('TH', style: TextStyle(color: Theme.of(context).primaryColor)),
           ],
           onPressed: (int index) {
-            // appLanguage.changeLanguage(Locale("en"));
-            if(_nowLocale.toString() == 'th'){
-            locale.changeLanguage(Locale("en"));
-            }else {
-              locale.changeLanguage(Locale("th"));
-            }
-            setState(() {
-              for (int buttonIndex = 0;
-                  buttonIndex < isSelected.length;
-                  buttonIndex++) {
-                if (buttonIndex == index) {
-                  isSelected[buttonIndex] = true;
-                } else {
-                  isSelected[buttonIndex] = false;
-                }
-              }
-            });
+            _changeLanguage(context);
           },
           isSelected: isSelected,
         ),
       ],
     );
+  }
+
+  void _changeLanguage(context) {
+    Locale _nowLocale = Localizations.localeOf(context);
+    AppLocale locale = Provider.of<AppLocale>(context, listen: false);
+    setState(() {
+      isSelected[0] = !isSelected[0];
+      isSelected[1] = !isSelected[1];
+      if (_nowLocale.toString() == 'th') {
+        locale.changeLanguage(Locale("en"));
+      } else {
+        locale.changeLanguage(Locale("th"));
+      }
+    });
   }
 }

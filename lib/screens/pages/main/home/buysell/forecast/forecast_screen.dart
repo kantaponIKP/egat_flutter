@@ -1,4 +1,5 @@
 import 'package:egat_flutter/constant.dart';
+import 'package:egat_flutter/i18n/app_localizations.dart';
 import 'package:egat_flutter/screens/page/state/forecast.dart';
 import 'package:egat_flutter/screens/pages/main/states/main_screen_title_state.dart';
 import 'package:egat_flutter/screens/widgets/loading_dialog.dart';
@@ -83,7 +84,7 @@ class _ForecastScreenState extends State<ForecastScreen>
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Saleable Energy (24 hr. Ahead)'),
+                  Text(AppLocalizations.of(context).translate('trade-forecast-saleableEnergy')),
                 ],
               ),
             ),
@@ -99,7 +100,7 @@ class _ForecastScreenState extends State<ForecastScreen>
             new RichText(
               text: new TextSpan(
                 children: <TextSpan>[
-                  new TextSpan(text: "Past 7-day Forecast"),
+                  new TextSpan(text: AppLocalizations.of(context).translate('trade-forecast-past7dayForecast')),
                 ],
               ),
             )
@@ -246,7 +247,7 @@ class __BuySellSectionHeaderState extends State<_BuySellSectionHeader> {
                           }
                         },
                       ),
-                      Text("All"),
+                      Text(AppLocalizations.of(context).translate('trade-forecast-all')),
                     ]),
                   ),
                   Flexible(
@@ -254,7 +255,7 @@ class __BuySellSectionHeaderState extends State<_BuySellSectionHeader> {
                     flex: 2,
                     child: RichText(
                       overflow: TextOverflow.ellipsis,
-                      text: TextSpan(text: "Period"),
+                      text: TextSpan(text: AppLocalizations.of(context).translate('trade-forecast-period')),
                     ),
                   ),
                   Flexible(
@@ -268,7 +269,7 @@ class __BuySellSectionHeaderState extends State<_BuySellSectionHeader> {
                             padding: const EdgeInsets.only(left: 8.0),
                             child: RichText(
                               overflow: TextOverflow.ellipsis,
-                              text: TextSpan(text: "Can Sell"),
+                              text: TextSpan(text: AppLocalizations.of(context).translate('trade-forecast-canSell')),
                             ),
                           ),
                         ],
@@ -286,7 +287,7 @@ class __BuySellSectionHeaderState extends State<_BuySellSectionHeader> {
                           padding: const EdgeInsets.only(left: 8.0),
                           child: RichText(
                             overflow: TextOverflow.ellipsis,
-                            text: TextSpan(text: "Must buy"),
+                            text: TextSpan(text: AppLocalizations.of(context).translate('trade-forecast-mustBuy')),
                           ),
                         ),
                       ],

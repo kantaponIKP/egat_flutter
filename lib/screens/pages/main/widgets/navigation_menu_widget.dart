@@ -89,7 +89,9 @@ class _NavigationMenuWidgetState extends State<NavigationMenuWidget> {
                   ),
                 ),
                 hoverColor: hoverColor,
-                onTap: () {}),
+                onTap: () {
+                  _onSignOutPressed();
+                }),
             Divider(
               indent: 10,
               endIndent: 10,
@@ -305,6 +307,11 @@ class _NavigationMenuWidgetState extends State<NavigationMenuWidget> {
   void _onSettingMenuPressed() {
     Sidebar sidebar = Provider.of<Sidebar>(context, listen: false);
     sidebar.setPageSetting();
+  }
+
+  void _onSignOutPressed() {
+    Sidebar sidebar = Provider.of<Sidebar>(context, listen: false);
+    sidebar.setPageSignout();
   }
 }
 

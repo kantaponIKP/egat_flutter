@@ -133,6 +133,7 @@ class _PageScreenState extends State<PageScreen> {
       child: screen,
       transitionBuilder: buildSlideTransition,
     );
+    
   }
 
   Widget buildSlideTransition(Widget child, Animation<double> animation) {
@@ -148,11 +149,27 @@ class _PageScreenState extends State<PageScreen> {
     );
   }
 
+  
+
   @override
   void initState() {
     super.initState();
+    _initStateListener();
+  }
 
-    // _initStateListener();
+    void _initStateListener() {
+    PageStatus page =
+        Provider.of<PageStatus>(context, listen: false);
+
+    page.addListener(_whenStateChanged);
+  }
+
+    void _whenStateChanged() {
+    PageStatus page = Provider.of<PageStatus>(context, listen: false);
+     if (page.state == PageState.Signout) {
+      Navigator.of(context).popUntil((route) => route.isFirst);
+      //TODO:
+    }
   }
 
   // void _initStateListener() {
@@ -162,11 +179,5 @@ class _PageScreenState extends State<PageScreen> {
   //   page.addListener(_whenStateChanged);
   // }
 
-  // void _whenStateChanged() {
-  //   PageStatus page =
-  //       Provider.of<PageStatus>(context, listen: false);
-  //   if (page.state == PageState.ChangePassword) {
-  //     Navigator.of(context).pop();
-  //   }
-  // }
+  
 }

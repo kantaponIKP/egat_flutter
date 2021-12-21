@@ -1,3 +1,4 @@
+import 'package:egat_flutter/i18n/app_localizations.dart';
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 
@@ -30,7 +31,7 @@ class ScheduledOfferToSellEnergyTransferInfoBox extends StatelessWidget {
     final timeEndString =
         dateFormat.format(timeStartHour.add(Duration(hours: 1)));
 
-    final dateText = "Delivery Time $timeStartString-$timeEndString";
+    final dateText = "${AppLocalizations.of(context).translate('settlement-deliveryTime')} $timeStartString-$timeEndString";
 
     return DatedEnergyDetail(
       direction: TransferDirection.OFFER_TO_SELL,
@@ -41,7 +42,7 @@ class ScheduledOfferToSellEnergyTransferInfoBox extends StatelessWidget {
       defaultExpanded: defaultExpanded,
       items: [
         DatedEnergyDetailBoxItem(
-          name: 'Commited amount',
+          name: AppLocalizations.of(context).translate('settlement-commitedAmount'),
           value: '${tradeInfo.commitedAmount.toStringAsFixed(2)} kWh',
           fontSize: 13,
         ),
@@ -56,7 +57,7 @@ class ScheduledOfferToSellEnergyTransferInfoBox extends StatelessWidget {
           fontSize: 13,
         ),
         DatedEnergyDetailBoxItem(
-          name: 'Trading Fee',
+          name: AppLocalizations.of(context).translate('settlement-tradingFee'),
           value: '${tradeInfo.tradingFee.toStringAsFixed(2)} THB/kWh',
           fontSize: 10,
         ),

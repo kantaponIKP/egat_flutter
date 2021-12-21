@@ -38,6 +38,10 @@ class AppLocalizations {
   String translate(String key) {
     return _localizedStrings[key] ?? '$key not found';
   }
+
+  getLocale(){
+    return this.locale;
+  }
 }
 
 // LocalizationsDelegate is a factory for a set of localized resources

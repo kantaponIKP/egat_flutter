@@ -1,3 +1,4 @@
+import 'package:egat_flutter/i18n/app_localizations.dart';
 import 'package:egat_flutter/screens/pages/main/home/settlement/models/trade_info.dart';
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
@@ -32,7 +33,7 @@ class OpenOfferToSellTradeInfoBox extends StatelessWidget {
     final timeEndString =
         dateFormat.format(timeStartHour.add(Duration(hours: 1)));
 
-    final dateText = "Delivery Time $timeStartString-$timeEndString";
+    final dateText = "${AppLocalizations.of(context).translate('settlement-deliveryTime')} $timeStartString-$timeEndString";
 
     return DatedTradeDetail(
       direction: TransferDirection.OFFER_TO_SELL,
@@ -43,22 +44,22 @@ class OpenOfferToSellTradeInfoBox extends StatelessWidget {
       defaultExpanded: defaultExpanded,
       items: [
         DatedTradeDetailBoxItem(
-          name: 'Amount',
+          name: AppLocalizations.of(context).translate('settlement-order-amount'),
           value: '${tradeInfo.amount.toStringAsFixed(2)} kWh',
           fontSize: 13,
         ),
         DatedTradeDetailBoxItem(
-          name: 'Offer to sell',
+          name: AppLocalizations.of(context).translate('settlement-offerToSell'),
           value: '${tradeInfo.offerToSell.toStringAsFixed(2)} THB',
           fontSize: 13,
         ),
         DatedTradeDetailBoxItem(
-          name: 'Trading Fee',
+          name: AppLocalizations.of(context).translate('settlement-tradingFee'),
           value: '${tradeInfo.tradingFee.toStringAsFixed(2)} THB',
           fontSize: 10,
         ),
         DatedTradeDetailBoxItem(
-          name: 'Estimated Sales',
+          name: AppLocalizations.of(context).translate('settlement-order-estimatedSales'),
           value: '${tradeInfo.estimatedSales.toStringAsFixed(2)} THB',
           fontSize: 10,
         ),

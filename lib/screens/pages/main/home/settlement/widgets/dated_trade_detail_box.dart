@@ -1,3 +1,4 @@
+import 'package:egat_flutter/i18n/app_localizations.dart';
 import 'package:egat_flutter/screens/pages/main/home/settlement/models/contract_direction.dart';
 import 'package:egat_flutter/screens/pages/main/home/settlement/models/contract_status.dart';
 import 'package:flutter/material.dart';
@@ -315,19 +316,19 @@ class _TitleFirstRow extends StatelessWidget {
 
     switch (direction) {
       case TransferDirection.CHOOSE_TO_BUY:
-        members.add(Text('Choose to Buy',
+        members.add(Text(AppLocalizations.of(context).translate('settlement-order-chooseToBuy'),
             style: TextStyle(fontSize: 15, color: Color(0xFFF6645A))));
         break;
       case TransferDirection.BID_TO_BUY:
-        members.add(Text('Bid to Buy',
+        members.add(Text(AppLocalizations.of(context).translate('settlement-order-bidToBuy'),
             style: TextStyle(fontSize: 15, color: Color(0xFFF6645A))));
         break;
       case TransferDirection.OFFER_TO_SELL:
-        members.add(Text('Offer to Sell',
+        members.add(Text(AppLocalizations.of(context).translate('settlement-order-offerToSell'),
             style: TextStyle(fontSize: 15, color: Color(0xFF99FF75))));
         break;
       case TransferDirection.OFFER_TO_SELL_BID:
-        members.add(Text('Offer to Sell',
+        members.add(Text(AppLocalizations.of(context).translate('settlement-order-offerToSell'),
             style: TextStyle(fontSize: 15, color: Color(0xFF99FF75))));
         break;
     }

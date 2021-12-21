@@ -33,4 +33,8 @@ class Sidebar extends ChangeNotifier {
   setPageLogin() { //TODO:
     parent.status.setStateSetting();
   }
+
+  setPageSignout() { //TODO:
+    parent.status.setStateSigout();
+  }
 }

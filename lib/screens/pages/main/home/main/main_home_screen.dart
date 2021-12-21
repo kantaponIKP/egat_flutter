@@ -156,7 +156,8 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
             iconSize: 24.0,
             items: availableMonths.map(
               (month) {
-                final monthNameFormat = DateFormat.MMMM();
+                
+                final monthNameFormat = DateFormat.MMMM(AppLocalizations.of(context).getLocale().toString());
                 final monthName =
                     monthNameFormat.format(DateTime(yearSelected, month));
 
