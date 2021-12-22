@@ -234,15 +234,18 @@ class _TitleSecondRow extends StatelessWidget {
     switch (status) {
       case ContractStatus.OPEN:
         displayColor = Color(0xFFFEC908);
-        displayStatus = 'OPEN';
+        displayStatus = AppLocalizations.of(context)
+              .translate('settlement-open');
         break;
       case ContractStatus.MATCHED:
         displayColor = Color(0xFF99FF75);
-        displayStatus = 'MATCHED';
+        displayStatus = AppLocalizations.of(context)
+              .translate('settlement-matched');
         break;
       default:
         displayColor = Color(0xFFFEC908);
-        displayStatus = 'OPEN';
+        displayStatus = AppLocalizations.of(context)
+              .translate('settlement-open');
         break;
     }
 
@@ -250,7 +253,8 @@ class _TitleSecondRow extends StatelessWidget {
     if (targetName != null) {
       toTargetName = RichText(
         text: TextSpan(
-          text: 'To ',
+          text: '${AppLocalizations.of(context)
+              .translate('settlement-order-to')} ',
           style: TextStyle(
             color: Colors.white,
             fontSize: 12,

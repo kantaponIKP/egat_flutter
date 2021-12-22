@@ -1,4 +1,5 @@
 import 'package:egat_flutter/constant.dart';
+import 'package:egat_flutter/i18n/app_localizations.dart';
 import 'package:egat_flutter/screens/pages/main/home/settlement/models/contract_direction.dart';
 import 'package:egat_flutter/screens/pages/main/home/widgets/collapsable_report_row.dart';
 import 'package:egat_flutter/screens/pages/main/states/main_screen_title_state.dart';
@@ -76,7 +77,7 @@ class _DailyDataDisplaySection extends StatelessWidget {
               Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  "Total",
+                  AppLocalizations.of(context).translate('settlement-settlementReport-total'),
                   style: TextStyle(
                     fontSize: 12,
                   ),
@@ -86,44 +87,80 @@ class _DailyDataDisplaySection extends StatelessWidget {
                 height: 8,
               ),
               CollapsableReportRow(
-                title: Text('Completed Contracts'),
+                title: Text(
+                  AppLocalizations.of(context)
+                      .translate('settlement-completedContracts'),
+                ),
                 value: Text('5'),
                 textStyle: defaulTextStyle,
                 collapseTextStyle: defaultCollapseTextStyle,
                 collapseItems: [
                   CollapsableReportRow(
-                      title: Text('Short term Bilateral trade'),
+                      title: Text(
+                        AppLocalizations.of(context).translate(
+                            'settlement-settlementReport-shortTermBilateralTrade'),
+                      ),
                       value: Text('2')),
                   CollapsableReportRow(
-                      title: Text('Long term Bilateral trade'),
+                      title: Text(
+                        AppLocalizations.of(context).translate(
+                            'settlement-settlementReport-longTermBilateralTrade'),
+                      ),
                       value: Text('2')),
                   CollapsableReportRow(
-                      title: Text('Pool Market trade'), value: Text('2')),
+                      title: Text(
+                        AppLocalizations.of(context).translate(
+                            'settlement-settlementReport-poolMarketTrade'),
+                      ),
+                      value: Text('2')),
                 ],
               ),
               CollapsableReportRow(
-                title: Text('Scheduled Contracts'),
+                title: Text(
+                  AppLocalizations.of(context)
+                      .translate('settlement-scheduledContracts'),
+                ),
                 value: Text('5'),
                 textStyle: defaulTextStyle,
                 collapseTextStyle: defaultCollapseTextStyle,
                 collapseItems: [
                   CollapsableReportRow(
-                      title: Text('Short term Bilateral trade'),
+                      title: Text(
+                        AppLocalizations.of(context).translate(
+                            'settlement-settlementReport-shortTermBilateralTrade'),
+                      ),
                       value: Text('2')),
                   CollapsableReportRow(
-                      title: Text('Long term Bilateral trade'),
+                      title: Text(
+                        AppLocalizations.of(context).translate(
+                            'settlement-settlementReport-longTermBilateralTrade'),
+                      ),
                       value: Text('2')),
                   CollapsableReportRow(
-                      title: Text('Pool Market trade'), value: Text('2')),
+                      title: Text(
+                        AppLocalizations.of(context).translate(
+                            'settlement-settlementReport-poolMarketTrade'),
+                      ),
+                      value: Text('2')),
                 ],
               ),
               CollapsableReportRow(
-                title: Text('Seller Energy Commited/Delivered'),
+                title: Text(
+                  AppLocalizations.of(context).translate(
+                          'settlement-settlementReport-sellerEnergyCommited') +
+                      AppLocalizations.of(context).translate(
+                          'settlement-settlementReport-sellerEnergyCommited-delivered'),
+                ),
                 value: Text('8.00/6.45 kWh'),
                 textStyle: defaulTextStyle,
               ),
               CollapsableReportRow(
-                title: Text('Buyer Energy Commited/Used'),
+                title: Text(
+                  AppLocalizations.of(context).translate(
+                          'settlement-settlementReport-buyerEnergyCommited') +
+                      AppLocalizations.of(context).translate(
+                          'settlement-settlementReport-buyerEnergyCommited-used'),
+                ),
                 value: Text('8.00/6.45 kWh'),
                 textStyle: defaulTextStyle,
               ),
@@ -131,9 +168,13 @@ class _DailyDataDisplaySection extends StatelessWidget {
                 title: RichText(
                   text: TextSpan(
                     children: [
-                      TextSpan(text: "NET Sales"),
                       TextSpan(
-                        text: "\n(Include imbalance, fees)",
+                        text: AppLocalizations.of(context)
+                            .translate('settlement-netSales'),
+                      ),
+                      TextSpan(
+                        text:
+                            "\n(${AppLocalizations.of(context).translate('settlement-settlementReport-includeImbalanceFees')})",
                         style: defaulTextStyle.copyWith(fontSize: 12),
                       ),
                     ],
@@ -143,12 +184,18 @@ class _DailyDataDisplaySection extends StatelessWidget {
                 textStyle: defaulTextStyle,
               ),
               CollapsableReportRow(
-                title: Text('Imbalance amount'),
+                title: Text(
+                  AppLocalizations.of(context)
+                      .translate('settlement-settlementReport-imbalanceAmount'),
+                ),
                 value: Text('10 kWh'),
                 textStyle: defaultImbalanceTextStyle,
               ),
               CollapsableReportRow(
-                title: Text('Seller Imbalance'),
+                title: Text(
+                  AppLocalizations.of(context)
+                      .translate('settlement-settlementReport-sellerImbalance'),
+                ),
                 value: Text('-0.25 THB'),
                 textStyle: defaultImbalanceTextStyle,
               ),
@@ -156,9 +203,13 @@ class _DailyDataDisplaySection extends StatelessWidget {
                 title: RichText(
                   text: TextSpan(
                     children: [
-                      TextSpan(text: "NET Energy price"),
                       TextSpan(
-                        text: "\n(NET Sales/Energy Delivered)",
+                          text: AppLocalizations.of(context)
+                              .translate('settlement-netEnergyPrice')),
+                      TextSpan(
+                        text: "\n(${AppLocalizations.of(context)
+                              .translate('settlement-settlementReport-netSell')}/${AppLocalizations.of(context)
+                              .translate('settlement-settlementReport-energyDelivered')})",
                         style: defaulTextStyle.copyWith(fontSize: 12),
                       ),
                     ],
@@ -214,48 +265,82 @@ class _MonthlyDataDisplaySection extends StatelessWidget {
                 height: 8,
               ),
               CollapsableReportRow(
-                title: Text('Completed Contracts'),
+                title: Text(
+                  AppLocalizations.of(context)
+                      .translate('settlement-completedContracts'),
+                ),
                 value: Text('10'),
                 textStyle: defaulTextStyle,
                 collapseTextStyle: defaultCollapseTextStyle,
                 collapseItems: [
                   CollapsableReportRow(
-                      title: Text('Short term Bilateral trade'),
+                      title: Text(
+                        AppLocalizations.of(context).translate(
+                            'settlement-settlementReport-shortTermBilateralTrade'),
+                      ),
                       value: Text('3')),
                   CollapsableReportRow(
-                      title: Text('Long term Bilateral trade'),
+                      title: Text(
+                        AppLocalizations.of(context).translate(
+                            'settlement-settlementReport-longTermBilateralTrade'),
+                      ),
                       value: Text('1')),
                   CollapsableReportRow(
-                    title: Text('Pool Market trade'),
+                    title: Text(
+                      AppLocalizations.of(context).translate(
+                          'settlement-settlementReport-poolMarketTrade'),
+                    ),
                     value: Text('1'),
                   ),
                 ],
               ),
               CollapsableReportRow(
-                title: Text('Scheduled Contracts'),
+                title: Text(
+                  AppLocalizations.of(context)
+                      .translate('settlement-scheduledContracts'),
+                ),
                 value: Text('4'),
                 textStyle: defaulTextStyle,
                 collapseTextStyle: defaultCollapseTextStyle,
                 collapseItems: [
                   CollapsableReportRow(
-                      title: Text('Short term Bilateral trade'),
+                      title: Text(
+                        AppLocalizations.of(context).translate(
+                            'settlement-settlementReport-shortTermBilateralTrade'),
+                      ),
                       value: Text('3')),
                   CollapsableReportRow(
-                      title: Text('Long term Bilateral trade'),
+                      title: Text(
+                        AppLocalizations.of(context).translate(
+                            'settlement-settlementReport-longTermBilateralTrade'),
+                      ),
                       value: Text('1')),
                   CollapsableReportRow(
-                    title: Text('Pool Market trade'),
+                    title: Text(
+                      AppLocalizations.of(context).translate(
+                          'settlement-settlementReport-poolMarketTrade'),
+                    ),
                     value: Text('1'),
                   ),
                 ],
               ),
               CollapsableReportRow(
-                title: Text('Seller Energy Commited/Delivered'),
+                title: Text(
+                  AppLocalizations.of(context).translate(
+                          'settlement-settlementReport-sellerEnergyCommited') +
+                      AppLocalizations.of(context).translate(
+                          'settlement-settlementReport-sellerEnergyCommited-delivered'),
+                ),
                 value: Text('8.00/6.45 kWh'),
                 textStyle: defaulTextStyle,
               ),
               CollapsableReportRow(
-                title: Text('Buyer Energy Commited/Used'),
+                title: Text(
+                  AppLocalizations.of(context).translate(
+                          'settlement-settlementReport-buyerEnergyCommited') +
+                      AppLocalizations.of(context).translate(
+                          'settlement-settlementReport-buyerEnergyCommited-used'),
+                ),
                 value: Text('8.00/6.45 kWh'),
                 textStyle: defaulTextStyle,
               ),
@@ -263,9 +348,13 @@ class _MonthlyDataDisplaySection extends StatelessWidget {
                 title: RichText(
                   text: TextSpan(
                     children: [
-                      TextSpan(text: "NET Sell"),
                       TextSpan(
-                        text: "\n(Include imbalance, fees)",
+                        text: AppLocalizations.of(context)
+                            .translate('settlement-settlementReport-netSell'),
+                      ),
+                      TextSpan(
+                        text:
+                            "\n(${AppLocalizations.of(context).translate('settlement-settlementReport-includeImbalanceFees')})",
                         style: defaulTextStyle.copyWith(fontSize: 12),
                       ),
                     ],
@@ -278,9 +367,13 @@ class _MonthlyDataDisplaySection extends StatelessWidget {
                 title: RichText(
                   text: TextSpan(
                     children: [
-                      TextSpan(text: "NET Buy"),
                       TextSpan(
-                        text: "\n(Include imbalance, fees)",
+                        text: AppLocalizations.of(context)
+                            .translate('settlement-settlementReport-netBuy'),
+                      ),
+                      TextSpan(
+                        text:
+                            "\n(${AppLocalizations.of(context).translate('settlement-settlementReport-includeImbalanceFees')})",
                         style: defaulTextStyle.copyWith(fontSize: 12),
                       ),
                     ],
@@ -290,22 +383,28 @@ class _MonthlyDataDisplaySection extends StatelessWidget {
                 textStyle: defaulTextStyle,
               ),
               CollapsableReportRow(
-                title: Text('Seller Imbalance amount'),
+                title: Text(AppLocalizations.of(context).translate(
+                    'settlement-settlementReport-sellerImbalanceAmount')),
                 value: Text('10 kWh'),
                 textStyle: defaultImbalanceTextStyle,
               ),
               CollapsableReportRow(
-                title: Text('Buyer Imbalance amount'),
+                title: Text(AppLocalizations.of(context).translate(
+                    'settlement-settlementReport-buyerImbalanceAmount')),
                 value: Text('10 kWh'),
                 textStyle: defaultImbalanceTextStyle,
               ),
               CollapsableReportRow(
-                title: Text('NET imbalance'),
+                title: Text(AppLocalizations.of(context)
+                    .translate('settlement-settlementReport-netImbalance')),
                 value: Text('-0.25 THB'),
                 textStyle: defaulTextStyle,
               ),
               CollapsableReportRow(
-                title: Text('Wheeling charge'),
+                title: Text(
+                  AppLocalizations.of(context)
+                      .translate('settlement-wheelingCharge'),
+                ),
                 value: Text('0.25 THB'),
                 textStyle: defaulTextStyle,
               ),
@@ -313,9 +412,12 @@ class _MonthlyDataDisplaySection extends StatelessWidget {
                 title: RichText(
                   text: TextSpan(
                     children: [
-                      TextSpan(text: "NET Energy Sales price"),
                       TextSpan(
-                        text: "\n(NET Sales/Energy Delivered)",
+                        text: AppLocalizations.of(context).translate(
+                            'settlement-settlementReport-netEnergySalesPrice'),
+                      ),
+                      TextSpan(
+                        text: "\n(${AppLocalizations.of(context).translate('settlement-settlementReport-netSell')}/${AppLocalizations.of(context).translate('settlement-settlementReport-energyDelivered')})",
                         style: defaulTextStyle.copyWith(fontSize: 12),
                       ),
                     ],
@@ -328,9 +430,13 @@ class _MonthlyDataDisplaySection extends StatelessWidget {
                 title: RichText(
                   text: TextSpan(
                     children: [
-                      TextSpan(text: "NET Energy Buy price"),
                       TextSpan(
-                        text: "\n(NET Buy/Used)",
+                        text: AppLocalizations.of(context).translate(
+                            'settlement-settlementReport-netEnergyBuyPrice'),
+                      ),
+                      TextSpan(
+                        text:
+                            "\n(${AppLocalizations.of(context).translate('settlement-settlementReport-netBuy')}/${AppLocalizations.of(context).translate('settlement-settlementReport-used')})",
                         style: defaulTextStyle.copyWith(fontSize: 12),
                       ),
                     ],
@@ -395,7 +501,8 @@ class _DateSelectionBar extends StatelessWidget {
           padding: const EdgeInsets.only(right: 12),
           child: Row(
             children: [
-              Text('Daily'),
+              Text(AppLocalizations.of(context)
+              .translate('settlement-settlementReport-daily')),
               Switch(
                 value: isDaily,
                 onChanged: (value) => _updateIsDaily(context, value),
@@ -592,7 +699,8 @@ class _SettlementReportScreenState extends State<SettlementReportScreen> {
           mainAxisSize: MainAxisSize.min,
           children: [
             _FilterCheckbox(
-              title: 'All',
+              title: AppLocalizations.of(context)
+                  .translate('settlement-settlementReport-all'),
               isSelected: _isAllSelected,
               onTap: () {
                 setState(() {
@@ -603,7 +711,8 @@ class _SettlementReportScreenState extends State<SettlementReportScreen> {
               },
             ),
             _FilterCheckbox(
-              title: 'Buyer',
+              title: AppLocalizations.of(context)
+                  .translate('settlement-settlementReport-buyer'),
               isSelected: _isBuyerSelected,
               onTap: () {
                 setState(() {
@@ -612,7 +721,8 @@ class _SettlementReportScreenState extends State<SettlementReportScreen> {
               },
             ),
             _FilterCheckbox(
-              title: 'Seller',
+              title: AppLocalizations.of(context)
+                  .translate('settlement-settlementReport-seller'),
               isSelected: _isSellerSelected,
               onTap: () {
                 setState(() {

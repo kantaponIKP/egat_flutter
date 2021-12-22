@@ -1,3 +1,4 @@
+import 'package:egat_flutter/i18n/app_localizations.dart';
 import 'package:egat_flutter/screens/pages/main/home/settlement/models/contract_direction.dart';
 import 'package:egat_flutter/screens/pages/main/states/main_screen_title_state.dart';
 import 'package:egat_flutter/screens/widgets/loading_dialog.dart';
@@ -327,7 +328,8 @@ class _EnergyTransferScreenState extends State<EnergyTransferScreen> {
           mainAxisSize: MainAxisSize.min,
           children: [
             _FilterCheckbox(
-              title: 'Bilateral Trade',
+              title: AppLocalizations.of(context)
+              .translate('settlement-bilateralTrade'),
               isSelected: isBilateralSelected,
               onTap: () {
                 setState(() {
@@ -336,7 +338,8 @@ class _EnergyTransferScreenState extends State<EnergyTransferScreen> {
               },
             ),
             _FilterCheckbox(
-              title: 'Pool Market Trade',
+              title: AppLocalizations.of(context)
+              .translate('settlement-poolMarketTrade'),
               isSelected: isPoolMarketSelected,
               onTap: () {
                 setState(() {

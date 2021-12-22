@@ -44,12 +44,12 @@ class MatchedOfferToSellBidTradeInfoBox extends StatelessWidget {
       defaultExpanded: defaultExpanded,
       items: [
         DatedTradeDetailBoxItem(
-          name: 'Offered amount',
+          name: AppLocalizations.of(context).translate('settlement-offeredAmount'),
           value: '${tradeInfo.offeredAmount.toStringAsFixed(2)} kWh',
           fontSize: 13,
         ),
         DatedTradeDetailBoxItem(
-          name: 'Matched amount',
+          name: AppLocalizations.of(context).translate('settlement-matchedAmount'),
           value: '${tradeInfo.matchedAmount.toStringAsFixed(2)} kWh',
           fontColor: Color(0xFF0329F2),
           fontSize: 13,
@@ -60,7 +60,7 @@ class MatchedOfferToSellBidTradeInfoBox extends StatelessWidget {
           fontSize: 13,
         ),
         DatedTradeDetailBoxItem(
-          name: 'Market clearing price',
+          name: AppLocalizations.of(context).translate('settlement-marketClearingPrice'),
           value: '${tradeInfo.marketClearingPrice.toStringAsFixed(2)} THB',
           fontColor: Color(0xFF0329F2),
           fontSize: 13,

@@ -1,10 +1,10 @@
-import 'dart:convert';
-
+import 'dart:async';
+import 'package:egat_flutter/Utils/http/post.dart';
 import 'package:egat_flutter/constant.dart';
+import 'package:egat_flutter/errors/IntlException.dart';
+import 'package:http/http.dart';
 import 'model/LoginResponse.dart';
 import 'model/LoginRequest.dart';
-
-import 'package:http/http.dart' as http;
 
 class LoginApi {
   Future<LoginResponse> requestLogin(LoginRequest request) async {
@@ -14,25 +14,30 @@ class LoginApi {
 
     var requestJson = request.toJSON();
 
-    var response = await http.post(
-      url,
-      headers: {'Content-Type': 'application/json'},
-      body: requestJson,
-    );
+    final httpRequest = httpPostJson(uri: url, body: requestJson);
 
-    if (response.statusCode == 404) {
-      throw "ปฎิเสธเนื่องจากการเข้าสู่ระบบไม่ถูกต้องหรือโดนยกเลิก";
+    Response response;
+    try {
+      response = await httpRequest.timeout(Duration(seconds: 60));
+    } on TimeoutException catch (_) {
+      throw IntlException(
+        message: "Time out",
+        intlMessage: "error-timeoutError",
+      );
     }
 
-    if (response.statusCode == 401) {
-      throw "ปฎิเสธเนื่องจากการเข้าสู่ระบบไม่ถูกต้อง กรุณาเข้าสู่ระบบอีกครั้ง";
+    if (response.statusCode >= 500) {
+      throw IntlException(
+        message: "ปฎิเสธ server ตอบกลับด้วยสถานะ ${response.statusCode}",
+        intlMessage: "error-connectionError",
+      );
     }
-
     if (response.statusCode >= 300) {
-      throw "ปฎิเสธ server ตอบกลับด้วยสถานะ ${response.statusCode}";
+      throw IntlException(
+        message: "ปฎิเสธ server ตอบกลับด้วยสถานะ ${response.statusCode}",
+        intlMessage: "error-incorrectInformationError",
+      );
     }
-
-    logger.d(response.body);
 
     return LoginResponse.fromJSON(response.body);
   }

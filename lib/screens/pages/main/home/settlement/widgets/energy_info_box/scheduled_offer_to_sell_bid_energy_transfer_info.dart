@@ -31,7 +31,8 @@ class ScheduledOfferToSellBidEnergyTransferInfoBox extends StatelessWidget {
     final timeEndString =
         dateFormat.format(timeStartHour.add(Duration(hours: 1)));
 
-    final dateText = "${AppLocalizations.of(context).translate('settlement-deliveryTime')} $timeStartString-$timeEndString";
+    final dateText =
+        "${AppLocalizations.of(context).translate('settlement-deliveryTime')} $timeStartString-$timeEndString";
 
     return DatedEnergyDetail(
       direction: TransferDirection.OFFER_TO_SELL,
@@ -42,24 +43,27 @@ class ScheduledOfferToSellBidEnergyTransferInfoBox extends StatelessWidget {
       defaultExpanded: defaultExpanded,
       items: [
         DatedEnergyDetailBoxItem(
-          name: 'Offered amount(Matched)',
+          name: AppLocalizations.of(context)
+              .translate('settlement-offeredAmount-matched'),
           value: '${tradeInfo.offeredAmount.toStringAsFixed(2)} kWh',
           fontSize: 13,
           fontColor: Color(0xFF0329F2),
         ),
         DatedEnergyDetailBoxItem(
-          name: 'Market clearing price',
+          name: AppLocalizations.of(context)
+              .translate('settlement-marketClearingPrice'),
           value: '${tradeInfo.marketClearingPrice.toStringAsFixed(2)} THB/kWh',
           fontSize: 13,
           fontColor: Color(0xFF0329F2),
         ),
         DatedEnergyDetailBoxItem(
-          name: 'NET Sales',
+          name: AppLocalizations.of(context).translate('settlement-netSales'),
           value: '${tradeInfo.netSales.toStringAsFixed(2)} THB',
           fontSize: 13,
         ),
         DatedEnergyDetailBoxItem(
-          name: 'NET energy price(NET Sales/Energy Delivered)',
+          name:
+              '${AppLocalizations.of(context).translate('settlement-netEnergyPrice')}(${AppLocalizations.of(context).translate('settlement-netSales')}/${AppLocalizations.of(context).translate('settlement-energyDelivered')})',
           value: '${tradeInfo.netEnergyPrice.toStringAsFixed(2)} THB/kWh',
           fontSize: 10,
         ),

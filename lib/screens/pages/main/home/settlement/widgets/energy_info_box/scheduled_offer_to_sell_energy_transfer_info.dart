@@ -31,7 +31,8 @@ class ScheduledOfferToSellEnergyTransferInfoBox extends StatelessWidget {
     final timeEndString =
         dateFormat.format(timeStartHour.add(Duration(hours: 1)));
 
-    final dateText = "${AppLocalizations.of(context).translate('settlement-deliveryTime')} $timeStartString-$timeEndString";
+    final dateText =
+        "${AppLocalizations.of(context).translate('settlement-deliveryTime')} $timeStartString-$timeEndString";
 
     return DatedEnergyDetail(
       direction: TransferDirection.OFFER_TO_SELL,
@@ -42,17 +43,19 @@ class ScheduledOfferToSellEnergyTransferInfoBox extends StatelessWidget {
       defaultExpanded: defaultExpanded,
       items: [
         DatedEnergyDetailBoxItem(
-          name: AppLocalizations.of(context).translate('settlement-commitedAmount'),
+          name: AppLocalizations.of(context)
+              .translate('settlement-commitedAmount'),
           value: '${tradeInfo.commitedAmount.toStringAsFixed(2)} kWh',
           fontSize: 13,
         ),
         DatedEnergyDetailBoxItem(
-          name: 'Selling Price',
+          name:
+              AppLocalizations.of(context).translate('settlement-sellingPrice'),
           value: '${tradeInfo.sellingPrice.toStringAsFixed(2)} THB',
           fontSize: 13,
         ),
         DatedEnergyDetailBoxItem(
-          name: 'NET Sales',
+          name: AppLocalizations.of(context).translate('settlement-netSales'),
           value: '${tradeInfo.netSales.toStringAsFixed(2)} THB',
           fontSize: 13,
         ),
@@ -62,7 +65,7 @@ class ScheduledOfferToSellEnergyTransferInfoBox extends StatelessWidget {
           fontSize: 10,
         ),
         DatedEnergyDetailBoxItem(
-          name: 'NET energy price(NET Sales/Commited amount)',
+          name: '${AppLocalizations.of(context).translate('settlement-netEnergyPrice')}(${AppLocalizations.of(context).translate('settlement-netSales')}/${AppLocalizations.of(context).translate('settlement-commitedAmount')})',
           value: '${tradeInfo.netEnergyPrice.toStringAsFixed(2)} THB/kWh',
           fontSize: 10,
         ),

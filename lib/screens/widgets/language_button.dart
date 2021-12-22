@@ -12,10 +12,25 @@ class LanguageButton extends StatefulWidget {
 }
 
 class _LanguageButtonState extends State<LanguageButton> {
-  List<bool> isSelected = [false, true];
+  // List<bool> isSelected = [false, true];
+
+  List<bool> _isSelected = [false, true];
+
+  void setInit() {
+    setState(() {
+      Locale _nowLocale = Localizations.localeOf(context);
+
+      if (_nowLocale.toString() == 'th') {
+        _isSelected = [true, false];
+      } else {
+        _isSelected = [false, true];
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
+    setInit();
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: <Widget>[
@@ -34,7 +49,7 @@ class _LanguageButtonState extends State<LanguageButton> {
           onPressed: (int index) {
             _changeLanguage(context);
           },
-          isSelected: isSelected,
+          isSelected: _isSelected,
         ),
       ],
     );
@@ -44,8 +59,9 @@ class _LanguageButtonState extends State<LanguageButton> {
     Locale _nowLocale = Localizations.localeOf(context);
     AppLocale locale = Provider.of<AppLocale>(context, listen: false);
     setState(() {
-      isSelected[0] = !isSelected[0];
-      isSelected[1] = !isSelected[1];
+      _isSelected[0] = !_isSelected[0];
+      _isSelected[1] = !_isSelected[1];
+
       if (_nowLocale.toString() == 'th') {
         locale.changeLanguage(Locale("en"));
       } else {

@@ -1,12 +1,8 @@
-import 'package:egat_flutter/constant.dart';
 import 'package:egat_flutter/screens/login/api/login_api.dart';
 import 'package:egat_flutter/screens/login/api/login_api_mock.dart';
 import 'package:egat_flutter/screens/login/api/model/LoginRequest.dart';
-import 'package:egat_flutter/screens/login/api/model/LoginStatusState.dart';
-import 'package:egat_flutter/screens/login/login.dart';
 import 'package:egat_flutter/screens/session.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:provider/provider.dart';
 
 class LoginModel extends ChangeNotifier {
   LoginSession loginSession;
@@ -42,6 +38,7 @@ class LoginModel extends ChangeNotifier {
         accessToken: response.accessToken!,
         userId: response.userId!,
         refreshToken: response.refreshToken!));
+        
     // LoginSession session = new LoginSession();
     // session.setAccessToken(LoginSessionInfo(accessToken: response.accessToken!));
   }

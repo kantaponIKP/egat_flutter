@@ -1,3 +1,4 @@
+import 'package:egat_flutter/errors/IntlException.dart';
 import 'package:egat_flutter/i18n/app_language.dart';
 import 'package:egat_flutter/i18n/app_localizations.dart';
 import 'package:egat_flutter/screens/forgot_password/forgot_password.dart';
@@ -312,9 +313,6 @@ class _LoginScreenState extends State<LoginScreen> {
           email: _emailController!.text,
           password: _passwordController!.text,
           rememberMe: rememberMe);
-    } catch (e) {
-      showException(context, e.toString());
-    } finally {
       await hideLoading();
       Navigator.of(context).push(
         MaterialPageRoute(
@@ -323,6 +321,10 @@ class _LoginScreenState extends State<LoginScreen> {
           },
         ),
       );
+    } catch (e) {
+      showIntlException(context, e);
+    } finally {
+      await hideLoading();
     }
   }
 

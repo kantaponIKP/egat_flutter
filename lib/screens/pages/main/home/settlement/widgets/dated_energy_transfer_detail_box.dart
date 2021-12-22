@@ -1,3 +1,4 @@
+import 'package:egat_flutter/i18n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
@@ -248,15 +249,18 @@ class _TitleSecondRow extends StatelessWidget {
     switch (status) {
       case EnergyTransferStatus.COMPLETED:
         displayColor = Color(0xFF99FF75);
-        displayStatus = 'COMPLETED';
+        displayStatus = AppLocalizations.of(context)
+              .translate('settlement-matched');
         break;
       case EnergyTransferStatus.SCHEDULED:
         displayColor = Color(0xFFF8E294);
-        displayStatus = 'MATCHED';
+        displayStatus = AppLocalizations.of(context)
+              .translate('settlement-matched');
         break;
       default:
         displayColor = Color(0xFF99FF75);
-        displayStatus = 'COMPLETED';
+        displayStatus = AppLocalizations.of(context)
+              .translate('settlement-completed');
         break;
     }
 
@@ -264,7 +268,8 @@ class _TitleSecondRow extends StatelessWidget {
     if (targetName != null) {
       toTargetName = RichText(
         text: TextSpan(
-          text: 'To ',
+          text: '${AppLocalizations.of(context)
+              .translate('settlement-order-to')} ',
           style: TextStyle(
             color: Colors.white,
             fontSize: 12,

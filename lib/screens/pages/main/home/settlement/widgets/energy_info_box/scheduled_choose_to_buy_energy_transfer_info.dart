@@ -31,7 +31,8 @@ class ScheduledChooseToBuyEnergyTransferInfoBox extends StatelessWidget {
     final timeEndString =
         dateFormat.format(timeStartHour.add(Duration(hours: 1)));
 
-    final dateText = "${AppLocalizations.of(context).translate('settlement-deliveryTime')} $timeStartString-$timeEndString";
+    final dateText =
+        "${AppLocalizations.of(context).translate('settlement-deliveryTime')} $timeStartString-$timeEndString";
 
     return DatedEnergyDetail(
       direction: TransferDirection.CHOOSE_TO_BUY,
@@ -42,52 +43,59 @@ class ScheduledChooseToBuyEnergyTransferInfoBox extends StatelessWidget {
       defaultExpanded: defaultExpanded,
       items: [
         DatedEnergyDetailBoxItem(
-          name: AppLocalizations.of(context).translate('settlement-commitedAmount'),
+          name: AppLocalizations.of(context)
+              .translate('settlement-commitedAmount'),
           value: '${tradeInfo.commitedAmount.toStringAsFixed(2)} kWh',
           fontSize: 13,
         ),
         DatedEnergyDetailBoxItem(
-          name: 'NET Buy',
+          name: AppLocalizations.of(context).translate('settlement-netBuy'),
           value: '${tradeInfo.netBuy.toStringAsFixed(2)} THB',
           fontSize: 13,
         ),
         DatedEnergyDetailBoxItem(
-          name: 'NET energy price(NET buy/Energy used)',
+          name:
+              '${AppLocalizations.of(context).translate('settlement-netEnergyPrice')}(${AppLocalizations.of(context).translate('settlement-netBuy')}/${AppLocalizations.of(context).translate('settlement-energyUsed')})',
           value: '${tradeInfo.netEnergyPrice.toStringAsFixed(2)} THB/kWh',
           fontSize: 10,
         ),
         DatedEnergyDetailBoxItem(
-          name: 'Energy to buy',
+          name:
+              AppLocalizations.of(context).translate('settlement-energyToBuy'),
           value: '${tradeInfo.energyToBuy.toStringAsFixed(2)} kWh',
           fontSize: 10,
         ),
         DatedEnergyDetailBoxItem(
-          name: 'Energy tariff ',
+          name:
+              AppLocalizations.of(context).translate('settlement-energyTariff'),
           value: '${tradeInfo.energyTariff.toStringAsFixed(2)} THB/kWh',
           fontSize: 10,
         ),
         DatedEnergyDetailBoxItem(
-          name: 'Energy price',
+          name:
+              AppLocalizations.of(context).translate('settlement-energyPrice'),
           value: '${tradeInfo.energyPrice.toStringAsFixed(2)} THB',
           fontSize: 10,
         ),
         DatedEnergyDetailBoxItem(
-          name: 'Wheeling charge Tariff',
+          name: AppLocalizations.of(context)
+              .translate('settlement-wheelingChargeTariff'),
           value: '${tradeInfo.wheelingChargeTariff.toStringAsFixed(2)} THB/kWh',
           fontSize: 10,
         ),
         DatedEnergyDetailBoxItem(
-          name: 'Wheeling charge',
+          name: AppLocalizations.of(context)
+              .translate('settlement-wheelingCharge'),
           value: '${tradeInfo.wheelingCharge.toStringAsFixed(2)} THB',
           fontSize: 10,
         ),
         DatedEnergyDetailBoxItem(
-          name: 'Trading fee',
+          name: AppLocalizations.of(context).translate('settlement-tradingFee'),
           value: '${tradeInfo.tradingFee.toStringAsFixed(2)} THB',
           fontSize: 10,
         ),
         DatedEnergyDetailBoxItem(
-          name: 'VAT(7%)',
+          name: AppLocalizations.of(context).translate('settlement-vat'),
           value: '${tradeInfo.vat.toStringAsFixed(2)} THB',
           fontSize: 10,
         ),
