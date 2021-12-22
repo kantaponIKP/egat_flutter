@@ -6,9 +6,7 @@ import 'package:egat_flutter/constant.dart';
 import 'package:egat_flutter/screens/pages/main/home/buysell/bilateral/apis/models/TransactionSubmitItem.dart';
 import 'package:http/http.dart';
 import 'package:logger/logger.dart';
-import 'models/BilateralShortTermBuyInfoRequest.dart';
 import 'models/BilateralShortTermBuyInfoResponse.dart';
-import 'models/BilateralShortTermSellInfoRequest.dart';
 import 'models/BilateralShortTermSellRequest.dart';
 import 'models/BilateralTradingFeeRequest.dart';
 import 'models/BilateralTradingFeeResponse.dart';
@@ -150,11 +148,6 @@ class BilateralApi {
     );
 
     final jsonMap = json.decode(response.body);
-
-    // assert(
-    //   jsonMap.runtimeType.toString() == "List<dynamic>",
-    //   'Invalid response from server (not a list of object)',
-    // );
 
     var result = GetBilateralTradeResponse.fromJSON(jsonMap as List<dynamic>);
 

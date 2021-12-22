@@ -1,9 +1,9 @@
 import 'dart:convert';
 
-import 'package:egat_flutter/screens/page/state/bilateral/bilateral_buy.dart';
+import 'BilateralBuyItem.dart';
 
 class BilateralShortTermBuyInfoResponse {
-  final List<BilateralBuyTile> bilateralList;
+  final List<BilateralBuyItem> bilateralList;
 
   BilateralShortTermBuyInfoResponse({
     required this.bilateralList,
@@ -12,8 +12,8 @@ class BilateralShortTermBuyInfoResponse {
   factory BilateralShortTermBuyInfoResponse.fromJSON(String jsonString) {
     List<dynamic> jsonMap = jsonDecode(jsonString);
 
-    final bilateralList = <BilateralBuyTile>[
-      for (var item in jsonMap) BilateralBuyTile.fromJSONMap(item)
+    final bilateralList = <BilateralBuyItem>[
+      for (var item in jsonMap) BilateralBuyItem.fromJSON(item)
     ];
 
     return BilateralShortTermBuyInfoResponse(
