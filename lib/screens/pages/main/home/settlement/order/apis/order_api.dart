@@ -5,6 +5,9 @@ class OrderApi {
     required DateTime date,
     required String accessToken,
   }) async {
+    // TODO: use real data
+    await Future.delayed(Duration(seconds: 1));
+
     return <TradeInfo>[
       OpenOfferToSellTradeInfo(
         date: DateTime.now(),

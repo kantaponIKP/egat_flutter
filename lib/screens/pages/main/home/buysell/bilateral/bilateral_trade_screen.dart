@@ -1,5 +1,6 @@
 import 'package:egat_flutter/constant.dart';
 import 'package:egat_flutter/screens/pages/main/home/buysell/bilateral/models/bilateral_model.dart';
+import 'package:egat_flutter/screens/pages/main/home/buysell/bilateral/sell/bilateral_sell_page.dart';
 import 'package:egat_flutter/screens/pages/main/home/buysell/bilateral/states/bilateral_selected_time_state.dart';
 import 'package:egat_flutter/screens/pages/main/states/main_screen_title_state.dart';
 import 'package:egat_flutter/screens/widgets/loading_dialog.dart';
@@ -108,7 +109,9 @@ class _BilateralTradeScreenState extends State<BilateralTradeScreen> {
                           child:
                               (_viewModeSelected == _ViewModeType.CHOOSE_TO_BUY)
                                   ? _BuyItemList()
-                                  : _SellItemList(),
+                                  : _SellItemList(
+                                      onItemTap: _onListTileSellPressed,
+                                    ),
                         )
                       ],
                     ),
@@ -141,28 +144,36 @@ class _BilateralTradeScreenState extends State<BilateralTradeScreen> {
   //   model.setPageBilateralBuy();
   // }
 
-  // void _onListTileSellPressed(String isoDate) async {
-  //   // DateTime newDate = DateTime.parse(_dateInit).add(new Duration(hours: int.parse(time.substring(0,2))));
-  //   DateTime newDate = DateTime.parse(isoDate);
-  //   await showLoading();
-  //   BilateralSell bilateralBuy =
-  //       Provider.of<BilateralSell>(context, listen: false);
-  //   try {
-  //     await bilateralBuy.getBilateralShortTermSellInfo(
-  //         date: newDate.toUtc().toIso8601String());
-  //   } catch (e) {
-  //     showException(context, e.toString());
-  //   } finally {
-  //     await hideLoading();
-  //   }
-  //   BilateralTrade model = Provider.of<BilateralTrade>(context, listen: false);
-  //   model.setPageBilateralSell();
-  // }
+  void _onListTileSellPressed(BilateralTradeItemModel item) async {
+    final isoDate = item.time;
+
+    await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => BilateralSellPage(date: isoDate),
+      ),
+    );
+
+    final bilateralState = Provider.of<BilateralState>(context, listen: false);
+    final selectedTime =
+        Provider.of<BilateralSelectedTimeState>(context, listen: false);
+
+    showLoading();
+    try {
+      await bilateralState.fetchTradeAtTime(selectedTime.selectedTime);
+    } catch (e) {
+      showException(context, 'Loading Bilaterals failed');
+    } finally {
+      await hideLoading();
+    }
+  }
 }
 
 class _SellItemList extends StatelessWidget {
+  final Function(BilateralTradeItemModel)? onItemTap;
+
   const _SellItemList({
     Key? key,
+    this.onItemTap,
   }) : super(key: key);
 
   @override
@@ -173,15 +184,20 @@ class _SellItemList extends StatelessWidget {
         .where((element) => element.type == BilateralTradeItemType.SELL)
         .toList();
 
-    return _TradeItemList(items: sellItems);
+    return _TradeItemList(
+      items: sellItems,
+      onItemTap: onItemTap,
+    );
   }
 }
 
 class _TradeItemCard extends StatelessWidget {
   final BilateralTradeItemModel item;
+  final Function()? onTap;
 
   const _TradeItemCard({
     required this.item,
+    this.onTap,
     Key? key,
   }) : super(key: key);
 
@@ -191,6 +207,7 @@ class _TradeItemCard extends StatelessWidget {
       padding: EdgeInsets.symmetric(vertical: 4, horizontal: 8),
       decoration: BoxDecoration(borderRadius: BorderRadius.circular(5)),
       child: GestureDetector(
+        onTap: item.status == BilateralTradeItemStatus.OPEN ? onTap : null,
         child: Card(
           child: IntrinsicHeight(
             child: Column(
@@ -390,8 +407,11 @@ class _TradeItemCard extends StatelessWidget {
 }
 
 class _BuyItemList extends StatelessWidget {
+  final Function(BilateralTradeItemModel)? onItemTap;
+
   const _BuyItemList({
     Key? key,
+    this.onItemTap,
   }) : super(key: key);
 
   @override
@@ -402,14 +422,20 @@ class _BuyItemList extends StatelessWidget {
         .where((element) => element.type == BilateralTradeItemType.BUY)
         .toList();
 
-    return _TradeItemList(items: buyItems);
+    return _TradeItemList(
+      items: buyItems,
+      onItemTap: onItemTap,
+    );
   }
 }
 
 class _TradeItemList extends StatelessWidget {
+  final Function(BilateralTradeItemModel)? onItemTap;
+
   const _TradeItemList({
     Key? key,
     required this.items,
+    this.onItemTap,
   }) : super(key: key);
 
   final List<BilateralTradeItemModel> items;
@@ -420,7 +446,14 @@ class _TradeItemList extends StatelessWidget {
       child: ListView.builder(
         scrollDirection: Axis.vertical,
         itemCount: items.length,
-        itemBuilder: (context, index) => _TradeItemCard(item: items[index]),
+        itemBuilder: (context, index) => _TradeItemCard(
+          item: items[index],
+          onTap: onItemTap != null
+              ? () {
+                  onItemTap?.call(items[index]);
+                }
+              : null,
+        ),
       ),
     );
   }

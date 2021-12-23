@@ -27,7 +27,7 @@ class BilateralState extends ChangeNotifier {
     notifyListeners();
   }
 
-  fetchTradeAtTime(DateTime dateTime) async {
+  Future<void> fetchTradeAtTime(DateTime dateTime) async {
     if (_loginSession == null) {
       throw new Exception("Login session is not provided");
     }
