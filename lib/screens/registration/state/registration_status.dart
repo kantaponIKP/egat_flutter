@@ -16,7 +16,7 @@ enum RegistrationState {
 class RegistrationStatus extends ChangeNotifier {
   RegistrationState previousState = RegistrationState.UserInfo;
   RegistrationState state = RegistrationState.UserInfo;
-  final RegistrationModel _parent;
+  final PageModel _parent;
 
   RegistrationStatus(this._parent);
 

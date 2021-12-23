@@ -19,7 +19,7 @@ class UserInfoModel {
 class UserInfo extends ChangeNotifier {
   UserInfoModel _info = UserInfoModel();
 
-  RegistrationModel parent;
+  PageModel parent;
 
   UserInfo(this.parent);
 

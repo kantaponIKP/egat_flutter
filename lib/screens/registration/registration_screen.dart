@@ -19,9 +19,12 @@ class RegistrationScreen extends StatefulWidget {
 class _RegistrationScreenState extends State<RegistrationScreen> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        backgroundColor: Theme.of(context).backgroundColor,
-        body: _buildBody(context));
+    return 
+    // Scaffold(
+    //     backgroundColor: Theme.of(context).backgroundColor,
+    //     body: 
+        _buildBody(context);
+        // );
   }
 
   Widget _buildBody(BuildContext context) {

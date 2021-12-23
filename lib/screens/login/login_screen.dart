@@ -1,16 +1,18 @@
 import 'package:egat_flutter/i18n/app_language.dart';
 import 'package:egat_flutter/i18n/app_localizations.dart';
 import 'package:egat_flutter/screens/forgot_password/forgot_password.dart';
-import 'package:egat_flutter/screens/forgot_password/email/email_screen.dart';
 import 'package:egat_flutter/screens/login/state/login_model.dart';
+import 'package:egat_flutter/screens/page/page.dart';
 import 'package:egat_flutter/screens/registration/registration.dart';
 import 'package:egat_flutter/screens/widgets/show_exception.dart';
+import 'package:egat_flutter/screens/widgets/side_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:egat_flutter/screens/widgets/loading_dialog.dart';
 import 'package:provider/provider.dart';
 import 'package:egat_flutter/screens/widgets/language_button.dart';
+import 'package:get_it/get_it.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -33,34 +35,21 @@ class _LoginScreenState extends State<LoginScreen> {
     super.initState();
     _emailController = TextEditingController();
     _passwordController = TextEditingController();
+    _emailController!.text = "prosumer04@email.com";
+    _passwordController!.text = "Str123";
   }
 
   @override
   Widget build(BuildContext context) {
     return Container(
         decoration: BoxDecoration(
-            gradient: RadialGradient(
-                // radius: 0.5,
-                colors: [
-              Color(0xFF303030),
-              Colors.black,
-            ])),
+            gradient: RadialGradient(colors: [
+          Color(0xFF303030),
+          Colors.black,
+        ])),
         child: Scaffold(
-          //       appBar: AppBar(
-          //     leading: Builder(
-          //       builder: (context) =>
-          //       Row(
-          //   mainAxisAlignment: MainAxisAlignment.end,
-          //   children: <Widget>[
-          //     Icon(Icons.arrow_back_ios_new, color: Colors.white),
-          //     Text('EN', style: TextStyle(color: Colors.white)),
-          //   ],
-          // )
-          //     ),
-          //   ),
-          // backgroundColor: Theme.of(context).backgroundColor,
-          // backgroundColor: backgroundColor,
-          // backgroundColor: LinearGradient(colors: [Colors.red, Colors.blue]),
+          // appBar: AppBar(),
+          // drawer: NavigationMenuWidget(),
           backgroundColor: Colors.transparent,
           resizeToAvoidBottomInset: false,
           body: SafeArea(
@@ -99,22 +88,6 @@ class _LoginScreenState extends State<LoginScreen> {
         },
       ),
     );
-    // return Padding(
-    //   padding: const EdgeInsets.only(left: 32, right: 32, bottom: 16),
-    //   child: Column(
-    //     children: [
-    //       _buildLanguageButton(context),
-    //       Spacer(),
-    //       _buildLogoImage(),
-    //       _buildForm(context),
-    //       _buildAdditionalSection(context),
-    //       _buildAlertSection(context),
-    //       _buildLoginButton(context),
-    //       Spacer(),
-    //       _buildRegisterButton(context),
-    //     ],
-    //   ),
-    // );
   }
 
   Widget _buildLanguageButton(BuildContext context) {
@@ -184,7 +157,7 @@ class _LoginScreenState extends State<LoginScreen> {
               obscureText: _isPasswordObscure,
               controller: _passwordController,
               decoration: InputDecoration(
-                                suffixIcon: IconButton(
+                suffixIcon: IconButton(
                   icon: Icon(
                     _isPasswordObscure
                         ? Icons.visibility
@@ -235,7 +208,8 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
             Container(
               padding: const EdgeInsets.all(8.0),
-              child: Text('${AppLocalizations.of(context).translate('remember-me')}'),
+              child: Text(
+                  '${AppLocalizations.of(context).translate('remember-me')}'),
             ),
           ],
         ),
@@ -258,12 +232,12 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Widget _buildAlertSection(BuildContext context) {
     return Container(
-      // TODO
-      // alignment: Alignment.centerLeft,
-      // padding: const EdgeInsets.only(bottom: 8.0),
-      // child: Text('${AppLocalizations.of(context).translate('email-or-password-incorrect')}',
-      //     style: TextStyle(color: Theme.of(context).errorColor)),
-    );
+        // TODO
+        // alignment: Alignment.centerLeft,
+        // padding: const EdgeInsets.only(bottom: 8.0),
+        // child: Text('${AppLocalizations.of(context).translate('email-or-password-incorrect')}',
+        //     style: TextStyle(color: Theme.of(context).errorColor)),
+        );
   }
 
   Widget _buildLoginButton(BuildContext context) {
@@ -296,12 +270,14 @@ class _LoginScreenState extends State<LoginScreen> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text('${AppLocalizations.of(context).translate('dont-have-an-account')}'),
+            Text(
+                '${AppLocalizations.of(context).translate('dont-have-an-account')}'),
             TextButton(
               onPressed: () {
                 _onRegister(context);
               },
-              child: Text('${AppLocalizations.of(context).translate('sign-up')}',
+              child: Text(
+                  '${AppLocalizations.of(context).translate('sign-up')}',
                   style: TextStyle(color: Theme.of(context).primaryColor)),
             )
           ],
@@ -332,11 +308,21 @@ class _LoginScreenState extends State<LoginScreen> {
     await showLoading();
     try {
       var login = Provider.of<LoginModel>(context, listen: false);
-      await login.processLogin(email: _emailController!.text, password: _passwordController!.text, rememberMe: rememberMe);
+      await login.processLogin(
+          email: _emailController!.text,
+          password: _passwordController!.text,
+          rememberMe: rememberMe);
     } catch (e) {
       showException(context, e.toString());
     } finally {
       await hideLoading();
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (BuildContext context) {
+            return ManagePage();
+          },
+        ),
+      );
     }
   }
 

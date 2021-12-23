@@ -93,7 +93,7 @@ class _PrivacyDetailsState extends State<PrivacyDetails> {
           },
           icon: Icon(
             Icons.close,
-            color: white,
+            color: whiteColor,
           ))
     ]);
   }

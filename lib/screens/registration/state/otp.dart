@@ -9,7 +9,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 
 class Otp extends ChangeNotifier {
-  RegistrationModel parent;
+  PageModel parent;
 
   String? _reference;
   String? get reference => _reference;

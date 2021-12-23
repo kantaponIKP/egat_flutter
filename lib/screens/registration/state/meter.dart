@@ -38,7 +38,7 @@ class MeterModel {
 class Meter extends ChangeNotifier {
   MeterModel _info = MeterModel(status: MeterStatus.Uncheck, errorText: null, location: '');
 
-  final RegistrationModel parent;
+  final PageModel parent;
   String? meterName;
   String? meterID;
   String? location;
