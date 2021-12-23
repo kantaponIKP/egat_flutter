@@ -1,24 +1,21 @@
 import 'dart:async';
 
 import 'package:egat_flutter/screens/forgot_password/widgets/forgot_password_cancellation_dialog.dart';
+import 'billing_state.dart';
 import 'package:flutter/cupertino.dart';
 
-import 'settlement_report_state.dart';
-
-class SettlementReportSelectedDateState extends ChangeNotifier {
-  SettlementReportState? _settlementReportState;
-  SettlementReportState? get orderState => _settlementReportState;
+class BillingSelectedDateState extends ChangeNotifier {
+  BillingState? _billingState;
+  BillingState? get billingState => _billingState;
 
   bool _isTimeSettedToCurrentPeriod = true;
   bool get isTimeSettedToCurrentPeriod => _isTimeSettedToCurrentPeriod;
 
   late DateTime _selectedDate;
+
   DateTime get selectedDate => _selectedDate;
 
-  bool _isDaily = true;
-  bool get isDaily => _isDaily;
-
-  SettlementReportSelectedDateState() {
+  BillingSelectedDateState() {
     _setDefaultSelectedTime(notify: false);
 
     Timer.periodic(
@@ -27,12 +24,6 @@ class SettlementReportSelectedDateState extends ChangeNotifier {
         _checkSelectedDate();
       },
     );
-  }
-
-  Future<void> setIsDaily(bool isDaily) async {
-    _isDaily = isDaily;
-    notifyListeners();
-    await _notifyParent();
   }
 
   void _checkSelectedDate() {
@@ -58,22 +49,22 @@ class SettlementReportSelectedDateState extends ChangeNotifier {
     }
   }
 
-  void setSettlementReportState(SettlementReportState orderState) {
-    if (_settlementReportState == orderState) {
+  void setBillingState(BillingState billingState) {
+    if (_billingState == billingState) {
       return;
     }
 
-    _settlementReportState = orderState;
+    _billingState = billingState;
 
     _notifyParent();
   }
 
   _notifyParent() async {
-    if (_settlementReportState != null) {
+    if (_billingState != null) {
       showLoading();
 
       try {
-        await _settlementReportState!.fetchReportAtTime(selectedDate, isDaily);
+        await _billingState!.fetchBillingSummaryAtTime(selectedDate);
       } finally {
         hideLoading();
       }
