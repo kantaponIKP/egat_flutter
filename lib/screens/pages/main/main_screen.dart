@@ -52,6 +52,9 @@ class _AppBody extends StatelessWidget {
       case MainScreenNavigationPage.HOME:
         widget = HomePage(key: Key('home'));
         break;
+      case MainScreenNavigationPage.SETTING:
+      widget = HomePage(key: Key('setting'));
+        break;
       default:
         widget = Container(key: Key('blank'));
     }

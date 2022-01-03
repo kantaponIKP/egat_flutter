@@ -18,4 +18,5 @@ class MainScreenNavigationState extends ChangeNotifier {
 
 enum MainScreenNavigationPage {
   HOME,
+  SETTING,
 }
