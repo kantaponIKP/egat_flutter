@@ -1,9 +1,13 @@
 // import 'dart:io' show Platform;
+import 'dart:convert';
+
 import 'package:egat_flutter/constant.dart';
 import 'package:egat_flutter/i18n/app_localizations.dart';
-import 'package:egat_flutter/screens/page/state/sidebar.dart';
+import 'package:egat_flutter/screens/page/state/personal_info.dart';
 import 'package:egat_flutter/screens/pages/main/states/main_screen_navigation_state.dart';
 import 'package:egat_flutter/screens/pages/main/states/main_screen_title_state.dart';
+import 'package:egat_flutter/screens/widgets/loading_dialog.dart';
+import 'package:egat_flutter/screens/widgets/show_exception.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
@@ -16,17 +20,26 @@ class NavigationMenuWidget extends StatefulWidget {
   _NavigationMenuWidgetState createState() => _NavigationMenuWidgetState();
 }
 
-class UserInfoMockUp {
-  final String firstName;
-  final String lastName;
+class UserInfo {
+  final String fullName;
   final String email;
 
-  const UserInfoMockUp(this.firstName, this.lastName, this.email);
+  const UserInfo(this.fullName, this.email);
 }
 
 class _NavigationMenuWidgetState extends State<NavigationMenuWidget> {
-  final UserInfoMockUp _userInfo =
-      new UserInfoMockUp('Logan1', 'venial', 'logan@gmail.com');
+  String? _fullName;
+  String? _email;
+  String? _imageBase64;
+
+  UserInfo _userInfo = new UserInfo('', '');
+
+  @override
+  void initState() {
+    super.initState();
+
+    _getPersonalInformation();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -247,7 +260,23 @@ class _NavigationMenuWidgetState extends State<NavigationMenuWidget> {
     );
   }
 
-  Widget _buildUserHeader(BuildContext context, UserInfoMockUp userInfo) {
+  Widget _buildAvatar() {
+    try {
+      if (_imageBase64 == null || _imageBase64 == "") {
+        return CircleAvatar(
+          radius: 30,
+        );
+      } else {
+        return CircleAvatar(
+            radius: 30,
+            child: ClipOval(child: Image.memory(base64Decode(_imageBase64!))));
+      }
+    } catch (e) {
+      return CircleAvatar();
+    }
+  }
+
+  Widget _buildUserHeader(BuildContext context, UserInfo userInfo) {
     return InkWell(
       child: Container(
         color: HexColor('#262729'),
@@ -255,10 +284,7 @@ class _NavigationMenuWidgetState extends State<NavigationMenuWidget> {
         padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
         child: Row(
           children: [
-            CircleAvatar(
-              radius: 30,
-              // backgroundImage: ,
-            ),
+            _buildAvatar(),
             Padding(
               padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
               child: SizedBox(
@@ -267,7 +293,7 @@ class _NavigationMenuWidgetState extends State<NavigationMenuWidget> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text(userInfo.firstName + " " + userInfo.lastName),
+                      Text(userInfo.fullName),
                       Text(userInfo.email),
                     ],
                   ),
@@ -279,6 +305,43 @@ class _NavigationMenuWidgetState extends State<NavigationMenuWidget> {
       ),
       onTap: () {},
     );
+  }
+
+  void _getPersonalInformation() async {
+    var model = Provider.of<PersonalInfo>(context, listen: false);
+    print(model.info.fullName);
+    if (model.info.fullName == null) {
+      try {
+        await showLoading();
+        await model.getPersonalInformation();
+      } catch (e) {
+        showIntlException(context, e);
+      } finally {
+        await hideLoading();
+      }
+    }
+
+    if (model.info.fullName != null) {
+      setState(() {
+        _fullName = model.info.fullName!;
+      });
+    }
+    if (model.info.email != null) {
+      setState(() {
+        _email = model.info.email!;
+      });
+    }
+    if (model.info.photo != null) {
+      setState(() {
+        _imageBase64 = model.info.photo!;
+      });
+    }
+
+    if (_fullName != null && _email != null) {
+      setState(() {
+        _userInfo = new UserInfo(_fullName!, _email!);
+      });
+    }
   }
 
   void _onChangePasswordMenuPressed() {

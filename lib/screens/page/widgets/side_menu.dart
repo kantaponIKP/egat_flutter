@@ -14,17 +14,17 @@ class NavigationMenuWidget extends StatefulWidget {
   _NavigationMenuWidgetState createState() => _NavigationMenuWidgetState();
 }
 
-class UserInfoMockUp {
+class UserInfo {
   final String firstName;
   final String lastName;
   final String email;
 
-  const UserInfoMockUp(this.firstName, this.lastName, this.email);
+  const UserInfo(this.firstName, this.lastName, this.email);
 }
 
 class _NavigationMenuWidgetState extends State<NavigationMenuWidget> {
-  final UserInfoMockUp _userInfo =
-      new UserInfoMockUp('Logan', 'venial', 'logan@gmail.com');
+  final UserInfo _userInfo =
+      new UserInfo('Logan1', 'venial', 'logan@gmail.com');
 
   @override
   Widget build(BuildContext context) {
@@ -85,7 +85,7 @@ class _NavigationMenuWidgetState extends State<NavigationMenuWidget> {
     );
   }
 
-  Widget _buildUserHeader(BuildContext context, UserInfoMockUp userInfo) {
+  Widget _buildUserHeader(BuildContext context, UserInfo userInfo) {
     return InkWell(
       child: Container(
         color: HexColor('#262729'),

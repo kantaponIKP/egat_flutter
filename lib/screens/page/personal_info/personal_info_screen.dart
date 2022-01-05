@@ -52,9 +52,11 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
     var model = Provider.of<PersonalInfo>(context, listen: false);
     await showLoading();
     try {
-      await model.getPersonalInformation();
+      if(model.info.fullName == null){
+        await model.getPersonalInformation();
+      }
     } catch (e) {
-      showException(context, e.toString());
+      showIntlException(context, e);
     } finally {
       if (model.info.fullName != null) {
         _fullNameController!.text = model.info.fullName!;
@@ -167,19 +169,12 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
   }
 
   Widget _buildAvatar() {
-    print("_imageBase64");
-    print(_imageBase64);
     try{
       if (_imageBase64 == null || _imageBase64 == "") {
-        print("if");
           return CircleAvatar();
         } else {
-          print("else");
-          // return CircleAvatar(child: ClipOval(child: _image)
           return CircleAvatar(
               child: ClipOval(child: Image.memory(base64Decode(_imageBase64!)))
-              // child: ClipOval(child: Image.memory(base64Decode("")))
-              // backgroundImage: AssetImage("assets/images/Profile Image.png"),
               );
         }
     }catch (e){
@@ -193,7 +188,7 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
       text: TextSpan(
         style: TextStyle(fontSize: 22),
         children: <TextSpan>[
-          TextSpan(text: "Logan venial"),
+          TextSpan(text: _fullNameController!.text),
         ],
       ),
     );
@@ -407,15 +402,12 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
     final file = File(xfile.path);
     final bytes = file.readAsBytesSync();
     String base64Image = base64Encode(bytes);
-       log(base64Image.toString());
      try {
       var model = Provider.of<PersonalInfo>(context, listen: false);
-      log("base print");
-      log(base64Image);
       await model.changePhoto(base64Image);
       _getPersonalInformation();
     } catch (e) {
-      showException(context, e.toString());
+      showIntlException(context, e);
     } finally {
       await hideLoading();
     }
@@ -432,7 +424,7 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
       await model.removePhoto();
       _getPersonalInformation();
     } catch (e) {
-      showException(context, e.toString());
+      showIntlException(context, e);
     } finally {
       await hideLoading();
     }
@@ -450,7 +442,7 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
           email: _emailController!.text);
       _getPersonalInformation();
     } catch (e) {
-      showException(context, e.toString());
+      showIntlException(context, e);
     } finally {
       await hideLoading();
     }

@@ -1,6 +1,11 @@
+import 'dart:async';
 import 'dart:convert';
 
+import 'package:egat_flutter/Utils/http/delete.dart';
+import 'package:egat_flutter/Utils/http/get.dart';
+import 'package:egat_flutter/Utils/http/put.dart';
 import 'package:egat_flutter/constant.dart';
+import 'package:egat_flutter/errors/IntlException.dart';
 import 'package:egat_flutter/screens/page/api/model/AccessRequest.dart';
 import 'package:egat_flutter/screens/page/api/model/BilateralLongTermBuyInfoRequest.dart';
 import 'package:egat_flutter/screens/page/api/model/BilateralLongTermBuyInfoResponse.dart';
@@ -43,29 +48,30 @@ class PageApi {
       "$apiBaseUrlProfileManage/users/me",
     );
 
-    // var requestJson = request.toJSON();
+    final httpRequest = httpGetJson(url: url, accessToken: request.accessToken);
+
     Response response;
-    response = await http.get(
-      url,
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ${request.accessToken}'
-      },
-    );
-
-    if (response.statusCode == 404) {
-      throw "ปฎิเสธเนื่องจากการเข้าสู่ระบบไม่ถูกต้องหรือโดนยกเลิก";
+    try {
+      response = await httpRequest.timeout(Duration(seconds: 60));
+    } on TimeoutException catch (_) {
+      throw IntlException(
+        message: "Time out",
+        intlMessage: "error-timeoutError",
+      );
     }
 
-    if (response.statusCode == 401) {
-      throw "ปฎิเสธเนื่องจากการเข้าสู่ระบบไม่ถูกต้อง กรุณาเข้าสู่ระบบอีกครั้ง";
+    if (response.statusCode >= 500) {
+      throw IntlException(
+        message: "ปฎิเสธ server ตอบกลับด้วยสถานะ ${response.statusCode}",
+        intlMessage: "error-connectionError",
+      );
     }
-
     if (response.statusCode >= 300) {
-      throw "ปฎิเสธ server ตอบกลับด้วยสถานะ ${response.statusCode}";
+      throw IntlException(
+        message: "ปฎิเสธ server ตอบกลับด้วยสถานะ ${response.statusCode}",
+        intlMessage: "error-incorrectInformationError",
+      );
     }
-
-    logger.d(response.body);
 
     return PersonalInfoResponse.fromJSON(response.body);
   }
@@ -75,33 +81,33 @@ class PageApi {
     var url = Uri.parse(
       "$apiBaseUrlProfileManage/users/${access.userId}",
     );
-    print("request*****");
-    print(request.fullName);
-    print(request.phoneNumber);
-    print(request.email);
-    print("request******");
 
     var requestJson = request.toJSON();
 
-    var response = await http.put(
-      url,
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ${access.accessToken}'
-      },
-      body: requestJson,
-    );
+    final httpRequest = httpPutJson(
+        uri: url, body: requestJson, accessToken: access.accessToken);
 
-    if (response.statusCode == 404) {
-      throw "ปฎิเสธเนื่องจากการเข้าสู่ระบบไม่ถูกต้องหรือโดนยกเลิก";
+    Response response;
+    try {
+      response = await httpRequest.timeout(Duration(seconds: 60));
+    } on TimeoutException catch (_) {
+      throw IntlException(
+        message: "Time out",
+        intlMessage: "error-timeoutError",
+      );
     }
 
-    if (response.statusCode == 401) {
-      throw "ปฎิเสธเนื่องจากการเข้าสู่ระบบไม่ถูกต้อง กรุณาเข้าสู่ระบบอีกครั้ง";
+    if (response.statusCode >= 500) {
+      throw IntlException(
+        message: "ปฎิเสธ server ตอบกลับด้วยสถานะ ${response.statusCode}",
+        intlMessage: "error-connectionError",
+      );
     }
-
     if (response.statusCode >= 300) {
-      throw "ปฎิเสธ server ตอบกลับด้วยสถานะ ${response.statusCode}";
+      throw IntlException(
+        message: "ปฎิเสธ server ตอบกลับด้วยสถานะ ${response.statusCode}",
+        intlMessage: "error-incorrectInformationError",
+      );
     }
 
     return response;
@@ -117,30 +123,31 @@ class PageApi {
 
     var requestJson = request.toJSON();
 
-    var response = await http.put(
-      url,
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ${access.accessToken}'
-      },
-      body: requestJson,
-    );
+    final httpRequest = httpPutJson(
+        uri: url, body: requestJson, accessToken: access.accessToken);
 
-    print(response.statusCode);
-
-    if (response.statusCode == 404) {
-      throw "ปฎิเสธเนื่องจากการเข้าสู่ระบบไม่ถูกต้องหรือโดนยกเลิก";
+    Response response;
+    try {
+      response = await httpRequest.timeout(Duration(seconds: 60));
+    } on TimeoutException catch (_) {
+      throw IntlException(
+        message: "Time out",
+        intlMessage: "error-timeoutError",
+      );
     }
 
-    if (response.statusCode == 401) {
-      throw "ปฎิเสธเนื่องจากการเข้าสู่ระบบไม่ถูกต้อง กรุณาเข้าสู่ระบบอีกครั้ง";
+    if (response.statusCode >= 500) {
+      throw IntlException(
+        message: "ปฎิเสธ server ตอบกลับด้วยสถานะ ${response.statusCode}",
+        intlMessage: "error-connectionError",
+      );
     }
-
     if (response.statusCode >= 300) {
-      throw "ปฎิเสธ server ตอบกลับด้วยสถานะ ${response.statusCode}";
+      throw IntlException(
+        message: "ปฎิเสธ server ตอบกลับด้วยสถานะ ${response.statusCode}",
+        intlMessage: "error-incorrectInformationError",
+      );
     }
-
-    logger.d(response.body);
 
     return response;
   }
@@ -150,27 +157,31 @@ class PageApi {
       "$apiBaseUrlProfileManage/users/${access.userId}/photo", //TODO
     );
 
-    var response = await http.delete(
-      url,
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ${access.accessToken}'
-      },
-    );
+    final httpRequest =
+        httpDeleteJson(url: url, accessToken: access.accessToken);
 
-    if (response.statusCode == 404) {
-      throw "ปฎิเสธเนื่องจากการเข้าสู่ระบบไม่ถูกต้องหรือโดนยกเลิก";
+    Response response;
+    try {
+      response = await httpRequest.timeout(Duration(seconds: 60));
+    } on TimeoutException catch (_) {
+      throw IntlException(
+        message: "Time out",
+        intlMessage: "error-timeoutError",
+      );
     }
 
-    if (response.statusCode == 401) {
-      throw "ปฎิเสธเนื่องจากการเข้าสู่ระบบไม่ถูกต้อง กรุณาเข้าสู่ระบบอีกครั้ง";
+    if (response.statusCode >= 500) {
+      throw IntlException(
+        message: "ปฎิเสธ server ตอบกลับด้วยสถานะ ${response.statusCode}",
+        intlMessage: "error-connectionError",
+      );
     }
-
     if (response.statusCode >= 300) {
-      throw "ปฎิเสธ server ตอบกลับด้วยสถานะ ${response.statusCode}";
+      throw IntlException(
+        message: "ปฎิเสธ server ตอบกลับด้วยสถานะ ${response.statusCode}",
+        intlMessage: "error-incorrectInformationError",
+      );
     }
-
-    logger.d(response.body);
 
     return response;
   }
@@ -183,28 +194,31 @@ class PageApi {
 
     var requestJson = request.toJSON();
 
-    var response = await http.put(
-      url,
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ${access.accessToken}'
-      },
-      body: requestJson,
-    );
+    final httpRequest = httpPutJson(
+        uri: url, body: requestJson, accessToken: access.accessToken);
 
-    print(response.statusCode);
+    Response response;
+    try {
+      response = await httpRequest.timeout(Duration(seconds: 60));
+    } on TimeoutException catch (_) {
+      throw IntlException(
+        message: "Time out",
+        intlMessage: "error-timeoutError",
+      );
+    }
 
-    // if (response.statusCode == 404) {
-    //   throw "ปฎิเสธเนื่องจากการเข้าสู่ระบบไม่ถูกต้องหรือโดนยกเลิก";
-    // }
-
-    // if (response.statusCode == 401) {
-    //   throw "ปฎิเสธเนื่องจากการเข้าสู่ระบบไม่ถูกต้อง กรุณาเข้าสู่ระบบอีกครั้ง";
-    // }
-
-    // if (response.statusCode >= 300) {
-    //   throw "ปฎิเสธ server ตอบกลับด้วยสถานะ ${response.statusCode}";
-    // }
+    if (response.statusCode >= 500) {
+      throw IntlException(
+        message: "ปฎิเสธ server ตอบกลับด้วยสถานะ ${response.statusCode}",
+        intlMessage: "error-connectionError",
+      );
+    }
+    if (response.statusCode >= 300) {
+      throw IntlException(
+        message: "ปฎิเสธ server ตอบกลับด้วยสถานะ ${response.statusCode}",
+        intlMessage: "error-incorrectInformationError",
+      );
+    }
 
     return response;
   }
@@ -534,7 +548,7 @@ class PageApi {
     return response;
   }
 
-    Future<PoolMarketReferencesResponse> getPoolMarketReferences(
+  Future<PoolMarketReferencesResponse> getPoolMarketReferences(
     PoolMarketReferencesRequest request,
     AccessRequest access,
   ) async {

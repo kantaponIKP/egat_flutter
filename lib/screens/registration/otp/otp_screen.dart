@@ -41,7 +41,7 @@ class _OtpScreenState extends State<OtpScreen> {
     super.initState();
     _pinController = TextEditingController();
     _sendOTP();
-    _startTimer();
+    // _startTimer();
   }
 
   void _startTimer() {
@@ -454,7 +454,7 @@ class _OtpScreenState extends State<OtpScreen> {
       // await otp.submitFirstTimeOtp();
       await otp.sendOtp();
     } catch (e) {
-      showException(context, e.toString());
+      showIntlException(context, e);
     } finally {
       await hideLoading();
     }
@@ -475,7 +475,7 @@ class _OtpScreenState extends State<OtpScreen> {
       await otp.submitOtp(_pinController!.text);
       _timer!.cancel();
     } catch (e) {
-      showException(context, e.toString());
+      showIntlException(context, e);
     } finally {
       await hideLoading();
     }

@@ -1,4 +1,5 @@
 import 'package:egat_flutter/Utils/http/httpActionRetry.dart';
+import 'package:egat_flutter/constant.dart';
 import 'package:http/http.dart';
 
 final httpPostJson = ({
@@ -24,6 +25,7 @@ final httpPostJson = ({
       callFunction: () => post(
         uri,
         headers: {
+          'Authorization' : 'Basic $authorizationBase64',
           'Content-Type': 'application/json',
         },
         body: body,
