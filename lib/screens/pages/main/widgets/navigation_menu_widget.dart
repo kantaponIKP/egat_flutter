@@ -2,6 +2,8 @@
 import 'package:egat_flutter/constant.dart';
 import 'package:egat_flutter/i18n/app_localizations.dart';
 import 'package:egat_flutter/screens/page/state/sidebar.dart';
+import 'package:egat_flutter/screens/pages/main/states/main_screen_navigation_state.dart';
+import 'package:egat_flutter/screens/pages/main/states/main_screen_title_state.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
@@ -24,7 +26,7 @@ class UserInfoMockUp {
 
 class _NavigationMenuWidgetState extends State<NavigationMenuWidget> {
   final UserInfoMockUp _userInfo =
-      new UserInfoMockUp('Logan', 'venial', 'logan@gmail.com');
+      new UserInfoMockUp('Logan1', 'venial', 'logan@gmail.com');
 
   @override
   Widget build(BuildContext context) {
@@ -280,38 +282,77 @@ class _NavigationMenuWidgetState extends State<NavigationMenuWidget> {
   }
 
   void _onChangePasswordMenuPressed() {
-    Sidebar sidebar = Provider.of<Sidebar>(context, listen: false);
-    sidebar.setPageChangePassword();
+    MainScreenNavigationState mainScreenNavigation =
+        Provider.of<MainScreenNavigationState>(context, listen: false);
+    mainScreenNavigation.setPageToChangePassword();
+    MainScreenTitleState mainScreenTitle =
+        Provider.of<MainScreenTitleState>(context, listen: false);
+    mainScreenTitle.setTitleTwoTitles(
+        title: AppLocalizations.of(context)
+            .translate('title-changePassword-first'),
+        secondaryTitle: AppLocalizations.of(context)
+            .translate('title-changePassword-second'));
   }
 
   void _onContactUsMenuPressed() {
-    Sidebar sidebar = Provider.of<Sidebar>(context, listen: false);
-    sidebar.setPageContactUs();
+    MainScreenNavigationState mainScreenNavigation =
+        Provider.of<MainScreenNavigationState>(context, listen: false);
+    mainScreenNavigation.setPageToContactUs();
+    MainScreenTitleState mainScreenTitle =
+        Provider.of<MainScreenTitleState>(context, listen: false);
+    mainScreenTitle.setTitleTwoTitles(
+        title: AppLocalizations.of(context)
+            .translate('title-Contact-first'),
+        secondaryTitle: AppLocalizations.of(context)
+            .translate('title-Us-second'));
   }
 
   void _onHomeMenuPressed() {
-    Sidebar sidebar = Provider.of<Sidebar>(context, listen: false);
-    sidebar.setPageHome();
+    MainScreenNavigationState mainScreenNavigation =
+        Provider.of<MainScreenNavigationState>(context, listen: false);
+    mainScreenNavigation.setPageToHome();
+        MainScreenTitleState mainScreenTitle =
+        Provider.of<MainScreenTitleState>(context, listen: false);
+    mainScreenTitle.setTitleLogo();
   }
 
   void _onNewsMenuPressed() {
-    Sidebar sidebar = Provider.of<Sidebar>(context, listen: false);
-    sidebar.setPageNews();
+    MainScreenNavigationState mainScreenNavigation =
+        Provider.of<MainScreenNavigationState>(context, listen: false);
+    mainScreenNavigation.setPageToNews();
+        MainScreenTitleState mainScreenTitle =
+        Provider.of<MainScreenTitleState>(context, listen: false);
+    mainScreenTitle.setTitleOneTitle(title: AppLocalizations.of(context)
+            .translate('title-news'));
   }
 
   void _onPersonalInfoMenuPressed() {
-    Sidebar sidebar = Provider.of<Sidebar>(context, listen: false);
-    sidebar.setPagePersonalInfo();
+    MainScreenNavigationState mainScreenNavigation =
+        Provider.of<MainScreenNavigationState>(context, listen: false);
+    mainScreenNavigation.setPageToPersonalInfo();
+    MainScreenTitleState mainScreenTitle =
+        Provider.of<MainScreenTitleState>(context, listen: false);
+    mainScreenTitle.setTitleTwoTitles(
+        title: AppLocalizations.of(context)
+            .translate('title-personalInformation-first'),
+        secondaryTitle: AppLocalizations.of(context)
+            .translate('title-personalInformation-second'));
   }
 
   void _onSettingMenuPressed() {
-    Sidebar sidebar = Provider.of<Sidebar>(context, listen: false);
-    sidebar.setPageSetting();
+    MainScreenNavigationState mainScreenNavigation =
+        Provider.of<MainScreenNavigationState>(context, listen: false);
+    mainScreenNavigation.setPageToSetting();
+        MainScreenTitleState mainScreenTitle =
+        Provider.of<MainScreenTitleState>(context, listen: false);
+    mainScreenTitle.setTitleOneTitle(title: AppLocalizations.of(context)
+            .translate('title-setting'));
   }
 
   void _onSignOutPressed() {
-    Sidebar sidebar = Provider.of<Sidebar>(context, listen: false);
-    sidebar.setPageSignout();
+    MainScreenNavigationState mainScreenNavigation =
+        Provider.of<MainScreenNavigationState>(context, listen: false);
+    mainScreenNavigation.setPageToSignOut();
   }
 }
 

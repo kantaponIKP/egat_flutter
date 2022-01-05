@@ -72,6 +72,15 @@
   "setting": "การตั้งค่า",
   "sign-out": "ออกจากระบบ",
 
+  "title-personalInformation-first": "ข้อมูล",
+  "title-personalInformation-second": "ส่วนตัว",
+  "title-changePassword-first": "เปลี่ยน",
+  "title-changePassword-second": "รหัสผ่าน",
+  "title-contactUs-first": "ติดต่อ",
+  "title-contactUs-second": "เรา",
+  "title-news": "ข่าวสาร",
+  "title-setting": "การตั้งค่า",
+
   "error-connectionError": "ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์ได้",
   "error-incorrectInformationError": "ข้อมูลผิดพลาด",
   "error-notFoundError": "ไม่พบข้อมูล",

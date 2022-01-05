@@ -1,3 +1,4 @@
+import 'package:egat_flutter/Utils/http/httpRefreshToken.dart';
 import 'package:egat_flutter/Utils/http/httpShouldRetry.dart';
 import 'package:http/http.dart';
 
@@ -12,6 +13,11 @@ Future<Response> httpActionRetry({
       final response = await callFunction();
 
       if (httpShouldRetry(response)) {
+        await Future.delayed(Duration(milliseconds: 500 * (retryCount + 1)));
+        continue;
+      }
+
+      if (await httpRefreshToken(response)) {
         await Future.delayed(Duration(milliseconds: 500 * (retryCount + 1)));
         continue;
       }

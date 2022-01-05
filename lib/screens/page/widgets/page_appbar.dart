@@ -1,3 +1,4 @@
+import 'package:egat_flutter/i18n/app_language.dart';
 import 'package:egat_flutter/i18n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -14,6 +15,7 @@ class PageAppbar extends StatelessWidget with PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
+    print(AppLocalizations.of(context).getLocale().toString());
     return AppBar(
       centerTitle: true,
       title: RichText(
@@ -23,8 +25,9 @@ class PageAppbar extends StatelessWidget with PreferredSizeWidget {
             TextSpan(
                 text: firstTitle,
                 style: TextStyle(color: Theme.of(context).primaryColor)),
+            (AppLocalizations.of(context).getLocale().toString() == "th")?TextSpan(text:''):TextSpan(text:' '),
             TextSpan(
-              text: ' $secondTitle',
+              text: '$secondTitle',
             ),
           ],
         ),

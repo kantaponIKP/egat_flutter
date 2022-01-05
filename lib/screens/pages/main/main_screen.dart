@@ -1,5 +1,10 @@
 import 'package:egat_flutter/screens/page/widgets/page_appbar.dart';
+import 'package:egat_flutter/screens/pages/main/change_password/change_password_page.dart';
+import 'package:egat_flutter/screens/pages/main/contact_us/contact_us_screen.dart';
 import 'package:egat_flutter/screens/pages/main/home/home_page.dart';
+import 'package:egat_flutter/screens/pages/main/news/news_screen.dart';
+import 'package:egat_flutter/screens/pages/main/personal_info/personal_info_screen.dart';
+import 'package:egat_flutter/screens/pages/main/setting/setting_screen.dart';
 import 'package:egat_flutter/screens/pages/main/states/main_screen_title_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -52,8 +57,20 @@ class _AppBody extends StatelessWidget {
       case MainScreenNavigationPage.HOME:
         widget = HomePage(key: Key('home'));
         break;
+      case MainScreenNavigationPage.PERSONAL_INFORMATION:
+        widget = PersonalInfoScreen(key: Key('personal_information'));
+        break;
+      case MainScreenNavigationPage.CHANGE_PASSWORD:
+        widget = ChangePasswordPage(key: Key('change_password'));
+        break;
+      case MainScreenNavigationPage.CONTACT_US:
+        widget = ContactUsScreen(key: Key('contact_us'));
+        break;
+      case MainScreenNavigationPage.NEWS:
+        widget = NewsScreen(key: Key('news'));
+        break;
       case MainScreenNavigationPage.SETTING:
-      widget = HomePage(key: Key('setting'));
+        widget = SettingScreen(key: Key('setting'));
         break;
       default:
         widget = Container(key: Key('blank'));
@@ -80,9 +97,14 @@ class _AppBody extends StatelessWidget {
   }
 }
 
-class MainScreen extends StatelessWidget {
+class MainScreen extends StatefulWidget {
   MainScreen({Key? key}) : super(key: key);
 
+  @override
+  State<MainScreen> createState() => _MainScreenState();
+}
+
+class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     return _buildContent(context);
@@ -94,5 +116,27 @@ class MainScreen extends StatelessWidget {
       drawer: NavigationMenuWidget(),
       body: SafeArea(child: _AppBody()),
     );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _initStateListener();
+  }
+
+  void _initStateListener() {
+    MainScreenNavigationState page =
+        Provider.of<MainScreenNavigationState>(context, listen: false);
+
+    page.addListener(_whenStateChanged);
+  }
+
+  void _whenStateChanged() {
+    MainScreenNavigationState page =
+        Provider.of<MainScreenNavigationState>(context, listen: false);
+    if (page.currentPage == MainScreenNavigationPage.SIGN_OUT) {
+      Navigator.of(context).popUntil((route) => route.isFirst);
+      //TODO:
+    }
   }
 }
