@@ -163,7 +163,7 @@ class _MeterScreenState extends State<MeterScreen> {
               controller: _meterNameController,
               decoration: InputDecoration(
                 counterText: '',
-                labelText: '${AppLocalizations.of(context).translate('meter')}',
+                labelText: '${AppLocalizations.of(context).translate('meter-name')}',
               ),
               keyboardType: TextInputType.text,
               maxLength: 24,
@@ -353,7 +353,7 @@ class _MeterScreenState extends State<MeterScreen> {
       }
       _setValidated();
     } catch (e) {
-      showException(context, e.toString());
+      showIntlException(context, e);
       logger.d(e.toString());
     } finally {
       await hideLoading();

@@ -45,6 +45,8 @@ class Otp extends ChangeNotifier {
 
     var result = await parent.api.submitOtp(
         RegistrationRequest(
+          sessionId: parent.session.info!.sessionId,
+          sessionToken: parent.session.info!.sessionToken,
           fullName: parent.userInfo.info.fullName!,
           phoneNumber: parent.userInfo.info.phoneNumber!,
           email: parent.userInfo.info.email!,
@@ -52,7 +54,6 @@ class Otp extends ChangeNotifier {
           meterId: parent.meter.info.meterId!,
           meterName: parent.meter.info.meterName!,
           role: parent.meter.info.role!.text,
-          sessionId: parent.session.info!.sessionId,
           otp: otp,
           reference: reference ?? "",
         ));

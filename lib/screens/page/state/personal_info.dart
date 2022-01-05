@@ -20,10 +20,8 @@ class PersonalInfoModel {
 }
 
 class PersonalInfo extends ChangeNotifier {
-  LoginSession? _loginSession;
   PersonalInfoModel _info = PersonalInfoModel();
 
-  LoginSession? get loginSession => _loginSession;
   final userId = "";
   //TODO:
 
@@ -80,7 +78,7 @@ class PersonalInfo extends ChangeNotifier {
       String? phoneNumber,
       String? email,
       String? photo}) async {
-        final accessToken = loginSession!.info!.accessToken;
+    final accessToken = parent.session.info!.accessToken;
     ChangePersonalInfoRequest changePersonalInfo =
         new ChangePersonalInfoRequest();
 
@@ -105,7 +103,7 @@ class PersonalInfo extends ChangeNotifier {
   }
 
   Future<void> changePhoto(String photo) async {
-    final accessToken = loginSession!.info!.accessToken;
+    final accessToken = parent.session.info!.accessToken;
     var response = await parent.api.changePhoto(
       ChangePhotoRequest(photo: photo),
       AccessRequest(
@@ -116,7 +114,7 @@ class PersonalInfo extends ChangeNotifier {
   }
 
   Future<void> removePhoto() async {
-    final accessToken = loginSession!.info!.accessToken;
+    final accessToken = parent.session.info!.accessToken;
     var response = await parent.api.removePhoto(
       AccessRequest(
         accessToken: accessToken,
@@ -126,19 +124,19 @@ class PersonalInfo extends ChangeNotifier {
   }
 
   Future<void> getPersonalInformation() async {
-    final accessToken = loginSession!.info!.accessToken;
+    final accessToken = parent.session.info!.accessToken;
     var response = await parent.api.getPersonalInfo(
       AccessRequest(
         accessToken: accessToken,
         userId: userId,
       ),
     );
-
     updateInfo(
-        fullName: response.fullName,
-        phoneNumber: response.phoneNumber,
-        email: response.email,
-        photo: response.photo);
+      fullName: response.fullName,
+      phoneNumber: response.phoneNumber,
+      email: response.email,
+      photo: response.photo,
+    );
 
     // TODO
     // Success

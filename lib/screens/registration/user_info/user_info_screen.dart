@@ -414,7 +414,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
         password: _passwordController!.text,
       );
     } catch (e) {
-      showException(context, e.toString());
+      showIntlException(context, e);
     } finally {
       await hideLoading();
     }

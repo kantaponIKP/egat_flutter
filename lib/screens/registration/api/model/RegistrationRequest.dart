@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 class RegistrationRequest {
+  String sessionId;
+  String sessionToken;
   String fullName;
   String phoneNumber;
   String email;
@@ -10,11 +12,12 @@ class RegistrationRequest {
   String meterId;
   String meterName;
   String role;
-  String sessionId;
   String otp;
   String reference;
 
   RegistrationRequest({
+    required this.sessionId,
+    required this.sessionToken,
     required this.fullName,
     required this.phoneNumber,
     required this.email,
@@ -22,7 +25,6 @@ class RegistrationRequest {
     required this.meterId,
     required this.meterName,
     required this.role,
-    required this.sessionId,
     required this.otp,
     required this.reference,
   });
@@ -30,6 +32,8 @@ class RegistrationRequest {
   String toJSON() {
     Map<String, dynamic> jsonMap = Map<String, dynamic>();
 
+    jsonMap['sessionId'] = this.sessionId;
+    jsonMap['sessionToken'] = this.sessionToken;
     jsonMap['fullName'] = this.fullName;
     jsonMap['phoneNumber'] = this.phoneNumber;
     jsonMap['email'] = this.email;
@@ -37,7 +41,6 @@ class RegistrationRequest {
     jsonMap['meterId'] = this.meterId;
     jsonMap['meterName'] = this.meterName;
     jsonMap['role'] = this.role;
-    jsonMap['sessionId'] = this.sessionId;
     jsonMap['otp'] = this.otp;
     jsonMap['reference'] = this.reference;
 

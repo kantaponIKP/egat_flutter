@@ -171,14 +171,14 @@ class Meter extends ChangeNotifier {
       LocationRequest(
         meterId: meterId,
         sessionId: parent.session.info!.sessionId,
+        sessionToken: parent.session.info!.sessionToken
       ),
     );
 
-    // TODO
-    // Success
- 
     if(true){
-      updateInfo(location: response.location, zoomLevel: response.zoomLevel!.toDouble(), status: MeterStatus.Checked, latitude: response.position!.lat!.toDouble(), longtitude: response.position!.lng!.toDouble());
+      //TODO:
+      updateInfo(location: response.location, zoomLevel: 14.0, status: MeterStatus.Checked, latitude: response.position!.lat!.toDouble(), longtitude: response.position!.lng!.toDouble());
+      // updateInfo(location: response.location, zoomLevel: response.zoomLevel!.toDouble(), status: MeterStatus.Checked, latitude: response.position!.lat!.toDouble(), longtitude: response.position!.lng!.toDouble());
       logger.d(info.zoomLevel);
     }
     

@@ -76,6 +76,9 @@
   "error-incorrectInformationError": "ข้อมูลผิดพลาด",
   "error-notFoundError": "ไม่พบข้อมูล",
   "error-timeoutError": "เกินเวลาที่กำหนด",
+  "error-unauthorized": "ไม่ได้รับอนุญาตในการเข้าถึง",
+  "error-sessionExpired": "หมดระยะเวลาทำการ กรุณาลองใหม่อีกครั้ง",
+  "error-conflict": "ข้อมูลซ้ำ",
 
   "bottomNavigation-home": "หน้าหลัก",
   "bottomNavigation-buySell": "ซื้อ/ขาย",

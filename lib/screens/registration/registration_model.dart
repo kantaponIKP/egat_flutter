@@ -28,8 +28,8 @@ class PageModel extends ChangeNotifier {
   }
 
   // TODO : API
-  // RegistrationApi api = RegistrationApi();
-  RegistrationApiMock api = RegistrationApiMock();
+  RegistrationApi api = RegistrationApi();
+  // RegistrationApiMock api = RegistrationApiMock();
 
 
   Future<void> cancelRegistration() async {

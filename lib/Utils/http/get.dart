@@ -1,4 +1,5 @@
 import 'package:egat_flutter/Utils/http/httpActionRetry.dart';
+import 'package:egat_flutter/constant.dart';
 import 'package:http/http.dart';
 
 final httpGetJson = ({
@@ -22,6 +23,7 @@ final httpGetJson = ({
       callFunction: () => get(
         url,
         headers: {
+          'Authorization' : 'Basic $authorizationBase64',
           'Content-Type': 'application/json',
         },
       ),

@@ -30,7 +30,7 @@
   "privacy-4": "What do we do to keep your information secure?",
   "privacy-5": "Cookies and tracking technologies policy",
   "effective-date": "Effective from August 2021",
-  "meter-name": "Meter Name",
+  "meter-name": "Meter name",
   "meter-ID": "Meter ID",
   "check": "Check",
   "location": "Location",
@@ -76,6 +76,9 @@
   "error-incorrectInformationError": "Incorrect information.",
   "error-notFoundError": "Not found",
   "error-timeoutError": "Request time out",
+  "error-unauthorized": "Unauthorized",
+  "error-sessionExpired": "Session expired",
+  "error-conflict": "Conflict",
 
   "bottomNavigation-home": "Home",
   "bottomNavigation-buySell": "Buy/Sell",

@@ -20,6 +20,8 @@ import 'package:egat_flutter/screens/page/api/model/ChangePasswordRequest.dart';
 import 'package:egat_flutter/screens/page/api/model/ChangePersonalInfoRequest.dart';
 import 'package:egat_flutter/screens/page/api/model/ChangePhotoRequest.dart';
 import 'package:egat_flutter/screens/page/api/model/PersonalInfoResponse.dart';
+import 'package:egat_flutter/screens/page/api/model/PoolMarketReferencesRequest.dart';
+import 'package:egat_flutter/screens/page/api/model/PoolMarketReferencesResponse.dart';
 import 'package:egat_flutter/screens/page/api/model/PoolMarketShortTermBuyInfoRequest.dart';
 import 'package:egat_flutter/screens/page/api/model/PoolMarketShortTermBuyInfoResponse.dart';
 import 'package:egat_flutter/screens/page/api/model/PoolMarketShortTermBuyRequest.dart';
@@ -208,5 +210,13 @@ class PageApiMock {
   ) async {
     Response response = Response("", 200);
     return response;
+  }
+
+  Future<PoolMarketReferencesResponse> getPoolMarketReferences(
+    PoolMarketReferencesRequest request,
+    AccessRequest access,
+  ) async {
+    return PoolMarketReferencesResponse.fromJSON(await rootBundle
+        .loadString('assets/mockdata/page/trade/pool_market_references.json'));
   }
 }
