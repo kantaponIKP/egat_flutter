@@ -534,7 +534,7 @@ class PageApi {
     return response;
   }
 
-    Future<PoolMarketReferencesResponse> getPoolMarketReferences(
+  Future<PoolMarketReferencesResponse> getPoolMarketReferences(
     PoolMarketReferencesRequest request,
     AccessRequest access,
   ) async {

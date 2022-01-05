@@ -39,7 +39,8 @@ final apiBaseUrlProfileManage =
     "https://egat-p2p-profile-mange.di.iknowplus.co.th/";
 final apiBaseUrlBilateralTrade =
     "https://egat-p2p-bilateral.di.iknowplus.co.th";
-final apiBaseUrlPoolMarketTrade = "https://egat-p2p-pool.di.iknowplus.co.th/";
+final apiBaseUrlPoolMarketTrade = "https://egat-p2p-pool.di.iknowplus.co.th";
+final apiBaseUrlReport = "https://egat-p2p-report.di.iknowplus.co.th";
 
 final loggerPrinter = PrettyPrinter();
 final loggerLevel = Level.debug;

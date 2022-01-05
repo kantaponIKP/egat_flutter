@@ -16,16 +16,24 @@ class BilateralSelectedTimeState extends ChangeNotifier {
 
   DateTime get selectedTime => _selectedTime;
 
+  Timer? _timer;
+
   BilateralSelectedTimeState() {
     _setDefaultSelectedTime(notify: false);
 
-    Timer.periodic(
+    _timer = Timer.periodic(
       Duration(seconds: 60),
       (timer) {
         _checkSelectedTime();
         _notifyParent();
       },
     );
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
   }
 
   void _checkSelectedTime() {

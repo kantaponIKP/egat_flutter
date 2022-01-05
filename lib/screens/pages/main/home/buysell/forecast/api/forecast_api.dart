@@ -1,10 +1,42 @@
 import 'dart:collection';
+import 'dart:convert';
 import 'dart:math';
+
+import 'package:egat_flutter/Utils/http/get.dart';
+import 'package:egat_flutter/constant.dart';
+import 'package:http/http.dart';
+import 'package:logger/logger.dart';
 
 class ForecastApi {
   const ForecastApi();
 
   Future<ForecastDataResponse> fetchForecastDataAnd7DaysPrevious({
+    required String accessToken,
+    required DateTime startDate,
+  }) async {
+    Response response;
+
+    var url = Uri.parse(
+      "$apiBaseUrlReport/report/forecast/${startDate.toUtc().toIso8601String()}",
+    );
+
+    response = await httpGetJson(
+      url: url,
+      accessToken: accessToken,
+    );
+
+    if (response.statusCode >= 300) {
+      logger.log(
+        Level.debug,
+        'ForecastApi.fetchForecastDataAnd7DaysPrevious: Error response from server: ${response.statusCode}',
+      );
+      throw Exception('Failed to fetch forecast data ${response.statusCode}');
+    }
+
+    return ForecastDataResponse.fromJson(jsonDecode(response.body));
+  }
+
+  Future<ForecastDataResponse> fetchForecastDataAnd7DaysPreviousMock({
     required String accessToken,
     required DateTime startDate,
   }) async {
@@ -70,6 +102,21 @@ class ForecastDataResponse {
     required this.forecasts,
     required this.availableTradeDateTimes,
   });
+
+  factory ForecastDataResponse.fromJson(Map<String, dynamic> json) {
+    final forecasts = (json['forecasts'] as List)
+        .map((e) => ForecastData.fromJson(e))
+        .toList();
+
+    final availableTradeDateTimes = (json['availableTradeDateTimes'] as List)
+        .map((e) => DateTime.parse(e))
+        .toList();
+
+    return ForecastDataResponse(
+      forecasts: forecasts,
+      availableTradeDateTimes: availableTradeDateTimes,
+    );
+  }
 }
 
 class ForecastData {
@@ -88,6 +135,30 @@ class ForecastData {
         forecastInGrids: UnmodifiableListView(forecastInGrids),
         powerInGrids: UnmodifiableListView(powerInGrids),
       );
+
+  factory ForecastData.fromJson(Map<String, dynamic> jsonMap) {
+    final date = DateTime.parse(jsonMap['date']);
+    final forecastInGrids = jsonMap['forecastInGrids'] as List<dynamic>;
+    final powerInGrids = jsonMap['powerInGrids'] as List<dynamic>;
+
+    return ForecastData(
+      date: date,
+      forecastInGrids: forecastInGrids.map((e) {
+        if (e != null) {
+          return (e as num).toDouble();
+        } else {
+          return null;
+        }
+      }).toList(),
+      powerInGrids: powerInGrids.map((e) {
+        if (e != null) {
+          return (e as num).toDouble();
+        } else {
+          return null;
+        }
+      }).toList(),
+    );
+  }
 }
 
 const forecastApi = const ForecastApi();

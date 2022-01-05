@@ -1,3 +1,4 @@
+import 'package:egat_flutter/screens/pages/main/home/buysell/pool/pool_market_trade_page.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 
@@ -26,6 +27,9 @@ class _BuySellScreenState extends State<BuySellScreen> {
         break;
       case BuySellNavigationPage.BILATERAL:
         widget = BilateralPage(key: Key('BilateralPage'));
+        break;
+      case BuySellNavigationPage.POOL:
+        widget = PoolMarketTradePage(key: Key('PoolMarketTradePage'));
         break;
     }
 

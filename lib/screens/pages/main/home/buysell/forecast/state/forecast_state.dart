@@ -108,7 +108,7 @@ class ForecastState extends ChangeNotifier {
         date: dateMidnight,
         forecastData: forecastDataSelectedDate,
         nextDayForecastData: forecastDataNextDate,
-        availableDateTimes: [],
+        availableDateTimes: availableDateTime,
       );
     }
   }

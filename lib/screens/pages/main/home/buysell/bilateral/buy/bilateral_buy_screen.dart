@@ -4,6 +4,8 @@ import 'package:egat_flutter/constant.dart';
 import 'package:egat_flutter/screens/forgot_password/widgets/forgot_password_cancellation_dialog.dart';
 import 'package:egat_flutter/screens/page/trade/bottom_button.dart';
 import 'package:egat_flutter/screens/page/widgets/page_appbar.dart';
+import 'package:egat_flutter/screens/pages/main/home/buysell/bilateral/buy/controller/buy_item_controller.dart';
+import 'package:egat_flutter/screens/pages/main/home/buysell/bilateral/buy/dialogs/buy_confirmation_dialog.dart';
 import '../apis/models/BilateralBuyItem.dart';
 import 'package:egat_flutter/screens/pages/main/home/buysell/bilateral/apis/models/TransactionSubmitItem.dart';
 import '../apis/bilateral_api.dart';
@@ -13,6 +15,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
+import 'long_term/long_term_buy_page.dart';
 import 'short_term/bilateral_short_term_sell_page.dart';
 
 class BilateralBuyScreen extends StatefulWidget {
@@ -63,10 +66,32 @@ class _BilateralBuyScreenState extends State<BilateralBuyScreen> {
 
   Completer<GoogleMapController> _controller = Completer();
 
+  BuyItemController _buyItemController = BuyItemController();
+
+  bool _isAtLeastOneItemSelected = false;
+
   @override
   void initState() {
     super.initState();
     _getData();
+
+    _buyItemController = BuyItemController();
+    _isAtLeastOneItemSelected = false;
+
+    _buyItemController.addListener(_onSelectedItemChanged);
+  }
+
+  void _onSelectedItemChanged() {
+    setState(() {
+      _isAtLeastOneItemSelected = _buyItemController.items.isNotEmpty;
+    });
+  }
+
+  @override
+  void dispose() {
+    _buyItemController.removeListener(_onSelectedItemChanged);
+
+    super.dispose();
   }
 
   @override
@@ -190,15 +215,11 @@ class _BilateralBuyScreenState extends State<BilateralBuyScreen> {
                                 visible: (_bilateralItemList[index].isLongterm)
                                     ? false
                                     : true,
-                                child: _BuyItemCard(
-                                  index: index,
+                                child: _BuyItem(
                                   item: _bilateralItemList[index],
-                                  isChecked: _selectedItems.contains(
-                                    _bilateralItemList[index],
-                                  ),
-                                  onTap: () => _onItemTap(
-                                    _bilateralItemList[index],
-                                  ),
+                                  controller: _buyItemController,
+                                  key: Key('item-$index'),
+                                  index: index,
                                 ),
                               );
                             },
@@ -210,11 +231,13 @@ class _BilateralBuyScreenState extends State<BilateralBuyScreen> {
                 ),
               ),
               BottomButton(
-                onAction: isSubmitable ? _onPlaceOrderPressed : null,
+                onAction: isSubmitable && _isAtLeastOneItemSelected
+                    ? _onPlaceOrderPressed
+                    : null,
                 actionLabel: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 8),
                   child: Text(
-                    "Place Order",
+                    "Submit",
                     style: TextStyle(
                       fontWeight: FontWeight.w300,
                       fontSize: 20,
@@ -253,17 +276,21 @@ class _BilateralBuyScreenState extends State<BilateralBuyScreen> {
   }
 
   void _onPlaceOrderPressed() async {
-    await Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => BilateralShortTermSellPage(
-          requestItems: [
-            TransactionSubmitItem(date: widget.date, amount: 1, price: 3)
-          ],
-        ),
-      ),
+    final items = _buyItemController.items.values.toList();
+
+    final dialogAnswer = await showDialog<bool>(
+      context: context,
+      builder: (context) {
+        return BuyConfirmationDialog(
+          items: items,
+          forDate: widget.date,
+        );
+      },
     );
 
-    Navigator.pop(context);
+    if (dialogAnswer == true) {
+      _placeOrder(items[0]);
+    }
   }
 
   Future<List<BilateralBuyItem>> _getData() async {
@@ -292,6 +319,29 @@ class _BilateralBuyScreenState extends State<BilateralBuyScreen> {
         _selectedItems.add(buyItem);
       }
     });
+  }
+
+  void _placeOrder(BilateralBuyItem item) async {
+    showLoading();
+    try {
+      final loginSession = Provider.of<LoginSession>(context, listen: false);
+
+      if (loginSession.info == null) {
+        showException(context, "No login session provided");
+        throw Exception("No login session provided");
+      }
+
+      final accessToken = loginSession.info!.accessToken;
+
+      await bilateralApi.bilateralShortTermBuy(
+        id: item.id,
+        accessToken: accessToken,
+      );
+    } catch (e) {
+      showException(context, e.toString());
+    } finally {
+      hideLoading();
+    }
   }
 }
 
@@ -426,7 +476,17 @@ class _SelectionSection extends StatelessWidget {
 class _HeaderSection extends StatelessWidget {
   const _HeaderSection({Key? key}) : super(key: key);
 
-  onLongTermPressed() {}
+  onLongTermPressed(BuildContext context) async {
+    final result = await Navigator.of(context).push<bool>(
+      MaterialPageRoute(
+        builder: (context) => LongTermBuyPage(),
+      ),
+    );
+
+    if (result != null && result) {
+      Navigator.pop(context, true);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -439,11 +499,13 @@ class _HeaderSection extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Offer to sell',
-                style: TextStyle(fontSize: 24, color: greenColor),
+                'Choose to buy',
+                style: TextStyle(fontSize: 24, color: redColor),
               ),
-              Text("Short term Bilateral",
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w200)),
+              Text(
+                "Short term Bilateral",
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w200),
+              ),
             ],
           ),
         ),
@@ -452,7 +514,7 @@ class _HeaderSection extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             ElevatedButton(
-              onPressed: onLongTermPressed,
+              onPressed: () => onLongTermPressed(context),
               child: Row(
                 children: [
                   Icon(Icons.refresh),
@@ -531,520 +593,386 @@ class _DateSection extends StatelessWidget {
   }
 }
 
-class _BuyItemCard extends StatelessWidget {
-  final BilateralBuyItem item;
-  final int index;
-  final Function()? onTap;
-  final bool isChecked;
+String _convertIndexToAlphabatical(int index) {
+  String alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
-  const _BuyItemCard({
+  if (index ~/ 24 > 0) {
+    return _convertIndexToAlphabatical(index ~/ 24) + alphabet[index % 24];
+  } else {
+    return alphabet[index % 24];
+  }
+}
+
+class _BuyItem extends StatefulWidget {
+  final BilateralBuyItem item;
+  final BuyItemController controller;
+  final int index;
+
+  const _BuyItem({
     Key? key,
     required this.item,
+    required this.controller,
     required this.index,
-    required this.isChecked,
-    this.onTap,
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    var dateFormat = DateFormat('HH:mm, dd MMM');
+  __BuyItemState createState() => __BuyItemState();
+}
 
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(15),
+class __BuyItemState extends State<_BuyItem> {
+  bool _selected = false;
+  bool _expanded = true;
+
+  Object get _key => this.widget.key ?? this;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _selected = false;
+    _expanded = true;
+
+    widget.controller.addListener(_selectedListener);
+  }
+
+  void _selectedListener() {
+    setState(() {
+      _selected = widget.controller.isOwnerSelected(_key);
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+
+    widget.controller.removeListener(_selectedListener);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 16),
       child: Container(
-        padding: EdgeInsets.symmetric(vertical: 5),
-        child: ExpansionTile(
-            // tilePadding: EdgeInsets.only(left: 0, top: 0, bottom: 0, right: 0),
-            // controlAffinity: ListTileControlAffinity.platform,
-            // title: _headerTile(position, title, date, estimated, price),
-            tilePadding: EdgeInsets.only(left: 0, top: 0, bottom: 0, right: 15),
-            controlAffinity: ListTileControlAffinity.platform,
-            title: _headerTile(
-              "A",
-              item.name,
-              dateFormat.format(item.date),
-              item.energyToBuy,
-              item.estimatedBuy,
-              item.netEnergyPrice,
-              index,
+        decoration: BoxDecoration(
+          color: Color(0xFF3E3E3E),
+          borderRadius: BorderRadius.circular(5),
+        ),
+        child: Column(
+          children: [
+            _BuyItemHeader(
+              item: widget.item,
+              selected: _selected,
+              expanded: _expanded,
+              index: widget.index,
+              onChanged: _onChange,
+              onExpand: _onExpand,
             ),
-            collapsedBackgroundColor: surfaceGreyColor,
-            backgroundColor: surfaceGreyColor,
-            textColor: textColor,
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 60.0),
-                child: Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 4),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        mainAxisSize: MainAxisSize.max,
-                        children: [
-                          Container(
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              "Energy to buy",
-                              style: TextStyle(
-                                color: textColor,
-                                fontSize: 14,
-                              ),
-                              textAlign: TextAlign.left,
-                            ),
-                          ),
-                          Row(
-                            children: [
-                              Text(
-                                item.energyToBuy.toStringAsFixed(2),
-                                style: TextStyle(fontSize: 12),
-                              ),
-                              Text(
-                                " kWh",
-                                style: TextStyle(fontSize: 12),
-                              )
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 4),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        mainAxisSize: MainAxisSize.max,
-                        children: [
-                          Container(
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              "Energy tariff",
-                              style: TextStyle(
-                                color: textColor,
-                                fontSize: 12,
-                              ),
-                              textAlign: TextAlign.left,
-                            ),
-                          ),
-                          Row(
-                            children: [
-                              Text(
-                                item.energyTariff.toStringAsFixed(2),
-                                style: TextStyle(fontSize: 12),
-                              ),
-                              Text(
-                                " THB/kWh",
-                                style: TextStyle(fontSize: 10),
-                              )
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 4),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        mainAxisSize: MainAxisSize.max,
-                        children: [
-                          Container(
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              "Energy price",
-                              style: TextStyle(
-                                color: textColor,
-                                fontSize: 14,
-                              ),
-                              textAlign: TextAlign.left,
-                            ),
-                          ),
-                          Row(
-                            children: [
-                              Text(
-                                item.energyPrice.toStringAsFixed(2),
-                                style: TextStyle(fontSize: 12),
-                              ),
-                              Text(
-                                " THB",
-                                style: TextStyle(fontSize: 12),
-                              )
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 4),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        mainAxisSize: MainAxisSize.max,
-                        children: [
-                          Container(
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              "Wheeling charge Tariff",
-                              style: TextStyle(
-                                color: textColor,
-                                fontSize: 10,
-                              ),
-                              textAlign: TextAlign.left,
-                            ),
-                          ),
-                          Row(
-                            children: [
-                              Text(
-                                item.wheelingChargeTariff.toStringAsFixed(2),
-                                style: TextStyle(fontSize: 12),
-                              ),
-                              Text(
-                                " THB/kWh",
-                                style: TextStyle(fontSize: 10),
-                              )
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 4),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        mainAxisSize: MainAxisSize.max,
-                        children: [
-                          Container(
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              "Wheeling charge",
-                              style: TextStyle(
-                                color: textColor,
-                                fontSize: 12,
-                              ),
-                              textAlign: TextAlign.left,
-                            ),
-                          ),
-                          Row(
-                            children: [
-                              Text(
-                                item.wheelingCharge.toStringAsFixed(2),
-                                style: TextStyle(fontSize: 12),
-                              ),
-                              Text(
-                                " THB",
-                                style: TextStyle(fontSize: 10),
-                              )
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 4),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        mainAxisSize: MainAxisSize.max,
-                        children: [
-                          Container(
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              "Trading fee",
-                              style: TextStyle(
-                                color: textColor,
-                                fontSize: 10,
-                              ),
-                              textAlign: TextAlign.left,
-                            ),
-                          ),
-                          Row(
-                            children: [
-                              Text(
-                                item.tradingFee.toStringAsFixed(2),
-                                style: TextStyle(fontSize: 12),
-                              ),
-                              Text(
-                                " THB",
-                                style: TextStyle(fontSize: 10),
-                              )
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 4),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        mainAxisSize: MainAxisSize.max,
-                        children: [
-                          Container(
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              "Vat (7%)",
-                              style: TextStyle(
-                                color: textColor,
-                                fontSize: 10,
-                              ),
-                              textAlign: TextAlign.left,
-                            ),
-                          ),
-                          Row(
-                            children: [
-                              Text(
-                                item.vat.toStringAsFixed(2),
-                                style: TextStyle(fontSize: 12),
-                              ),
-                              Text(
-                                " THB",
-                                style: TextStyle(fontSize: 10),
-                              )
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 4),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        mainAxisSize: MainAxisSize.max,
-                        children: [
-                          Container(
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              "Estimated buy",
-                              style: TextStyle(
-                                color: textColor,
-                                fontSize: 12,
-                              ),
-                              textAlign: TextAlign.left,
-                            ),
-                          ),
-                          Row(
-                            children: [
-                              Text(
-                                item.estimatedBuy.toStringAsFixed(2),
-                                style: TextStyle(fontSize: 12),
-                              ),
-                              Text(
-                                " THB",
-                                style: TextStyle(fontSize: 10),
-                              )
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 4),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        mainAxisSize: MainAxisSize.max,
-                        children: [
-                          Container(
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              "Net estimated energy price",
-                              style: TextStyle(
-                                color: textColor,
-                                fontSize: 10,
-                              ),
-                              textAlign: TextAlign.left,
-                            ),
-                          ),
-                          Row(
-                            children: [
-                              Text(
-                                item.netEnergyPrice.toStringAsFixed(2),
-                                style: TextStyle(fontSize: 12),
-                              ),
-                              Text(
-                                " THB/kWh",
-                                style: TextStyle(fontSize: 10),
-                              )
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              )
-            ]),
+            _BuyItemBody(
+              item: widget.item,
+              selected: _selected,
+              expanded: _expanded,
+            ),
+          ],
+        ),
       ),
     );
   }
 
-  Widget _headerTile(String position, String title, String date,
-      double energyToBuy, double estimatedBuy, double netEstimated, int index) {
-    var dateFormat = DateFormat('HH:mm, dd MMM');
-    return SizedBox(
-      height: 62,
+  void _onChange(bool newState) {
+    if (newState) {
+      widget.controller.addItem(_key, widget.item);
+    } else {
+      widget.controller.removeItem(_key);
+    }
+  }
+
+  void _onExpand(bool p1) {
+    setState(() {
+      _expanded = !_expanded;
+    });
+  }
+}
+
+class _BuyItemHeader extends StatelessWidget {
+  final BilateralBuyItem item;
+  final bool selected;
+  final bool expanded;
+  final int index;
+
+  final void Function(bool)? onChanged;
+  final void Function(bool)? onExpand;
+
+  const _BuyItemHeader({
+    Key? key,
+    required this.item,
+    required this.selected,
+    required this.expanded,
+    required this.index,
+    this.onChanged,
+    this.onExpand,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final dateFormat = DateFormat('HH:mm, dd MMM');
+    final createDateString = dateFormat.format(item.date);
+
+    return GestureDetector(
+      onTap: onExpand != null
+          ? () {
+              if (onChanged != null) {
+                onExpand?.call(!selected);
+              }
+            }
+          : null,
+      behavior: HitTestBehavior.translucent,
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisSize: MainAxisSize.max,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Radio<int>(
-          //   value: index,
-          //   groupValue: _groupValue,
-          //   onChanged: (val) {
-          //     setState(() {
-          //       _groupValue = val!;
-          //     });
-          //   },
-          // ),
+          Checkbox(
+            value: selected,
+            onChanged: onChanged != null
+                ? (newValue) {
+                    if (newValue != null) {
+                      onChanged?.call(newValue);
+                    }
+                  }
+                : null,
+          ),
           Expanded(
-            child: Container(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(right: 2),
-                    child: Container(
-                      width: 12,
-                      height: 12,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: primaryColor,
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Text(position,
-                              style: TextStyle(color: blackColor, fontSize: 8)),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Container(
-                    padding: EdgeInsets.only(top: 12, bottom: 12),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+            child: IntrinsicHeight(
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 8, top: 12),
+                child: Row(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        Text(
-                          title,
-                          style: TextStyle(fontSize: 14),
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        Text(
-                          dateFormat.format(DateTime.parse(date)),
-                          style: TextStyle(fontSize: 12),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 4, right: 4),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Color(0xFFFEC908),
+                              borderRadius: BorderRadius.circular(1000),
+                            ),
+                            width: 17,
+                            height: 17,
+                            child: Center(
+                              child: Text(
+                                _convertIndexToAlphabatical(index),
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 12,
+                                ),
+                              ),
+                            ),
+                          ),
                         )
                       ],
                     ),
-                  ),
-                  VerticalDivider(
-                    indent: 10,
-                    endIndent: 10,
-                    width: 12,
-                    thickness: 2,
-                    color: greyColor,
-                  ),
-                  Container(
-                    padding:
-                        EdgeInsets.only(top: 12, bottom: 12, left: 0, right: 0),
-                    child: Column(
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        FittedBox(
+                          child: Text(
+                            item.name,
+                            style: TextStyle(fontSize: 15),
+                          ),
+                        ),
+                        Text(createDateString, style: TextStyle(fontSize: 12)),
+                      ],
+                    ),
+                    VerticalDivider(
+                      color: Colors.white,
+                      thickness: 1,
+                    ),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         Text(
-                          energyToBuy.toStringAsFixed(2),
-                          style: TextStyle(fontSize: 14),
+                          "${item.energyTariff.toStringAsFixed(2)}",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 15,
+                          ),
                         ),
                         Text(
                           "kWh",
-                          style: TextStyle(fontSize: 12),
-                        )
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 10,
+                            fontWeight: FontWeight.w300,
+                          ),
+                        ),
                       ],
                     ),
-                  ),
-                  VerticalDivider(
-                    indent: 10,
-                    endIndent: 10,
-                    width: 12,
-                    thickness: 2,
-                    color: greyColor,
-                  ),
-                  Expanded(
-                    child: Container(
-                      padding: EdgeInsets.only(
-                          top: 12, bottom: 12, left: 0, right: 0),
-                      child: Row(
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              RichText(
-                                overflow: TextOverflow.ellipsis,
-                                text: TextSpan(
-                                  style: TextStyle(fontSize: 10),
-                                  children: <TextSpan>[
-                                    TextSpan(text: "Estimated buy "),
-                                    // TextSpan(text: estimated.toString()),
-                                    // TextSpan(text: " THB"),
-                                  ],
-                                ),
-                              ),
-                              RichText(
-                                overflow: TextOverflow.ellipsis,
-                                text: TextSpan(
-                                  style: TextStyle(fontSize: 8),
-                                  children: <TextSpan>[
-                                    TextSpan(text: "NET energy price "),
-                                    // TextSpan(text: price.toString()),
-                                    // TextSpan(text: " THB/kWh"),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              RichText(
-                                overflow: TextOverflow.ellipsis,
-                                text: TextSpan(
-                                  children: <TextSpan>[
-                                    TextSpan(
-                                      text: estimatedBuy.toStringAsFixed(2),
-                                      style: TextStyle(fontSize: 12),
-                                    ),
-                                    TextSpan(
-                                        text: " THB",
-                                        style: TextStyle(fontSize: 8)),
-                                  ],
-                                ),
-                              ),
-                              RichText(
-                                overflow: TextOverflow.ellipsis,
-                                text: TextSpan(
-                                  style: TextStyle(fontSize: 10),
-                                  children: <TextSpan>[
-                                    TextSpan(
-                                        text: netEstimated.toStringAsFixed(2),
-                                        style: TextStyle(fontSize: 12)),
-                                    TextSpan(
-                                        text: "\nTHB/kWh",
-                                        style: TextStyle(fontSize: 8)),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
+                    VerticalDivider(
+                      color: Colors.white,
+                      thickness: 1,
                     ),
-                  ),
-                ],
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        FittedBox(
+                          child: Text(
+                            "Estimated buy ${item.estimatedBuy.toStringAsFixed(2)} THB",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 10,
+                            ),
+                          ),
+                        ),
+                        FittedBox(
+                          child: Text(
+                            "NET energy price ${item.netEnergyPrice.toStringAsFixed(2)} THB/kWh",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 8,
+                              fontWeight: FontWeight.w300,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
-          )
+          ),
+          AnimatedRotation(
+            turns: expanded ? 0.5 : 0,
+            duration: Duration(milliseconds: 150),
+            child: const Icon(Icons.arrow_drop_down),
+          ),
         ],
       ),
     );
   }
 }
 
-_convertIndexToAlphabatical(int index) {
-  if (index <= 0) {
-    return '';
-  }
+class _BuyItemBody extends StatelessWidget {
+  final BilateralBuyItem item;
+  final bool selected;
+  final bool expanded;
 
-  String alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-  return _convertIndexToAlphabatical(index ~/ 24) + alphabet[index % 24];
+  const _BuyItemBody({
+    Key? key,
+    required this.item,
+    required this.selected,
+    required this.expanded,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedSize(
+      duration: Duration(milliseconds: 150),
+      child: ConstrainedBox(
+        constraints: BoxConstraints(
+          maxHeight: expanded ? double.infinity : 0,
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 64, vertical: 8),
+          child: Column(
+            children: [
+              _BuyItemDetail(
+                title: 'Energy to buy',
+                value: item.energyToBuy,
+                unit: 'kWh',
+                fontSize: 15,
+              ),
+              _BuyItemDetail(
+                title: 'Energy tariff ',
+                value: item.energyTariff,
+                unit: 'THB/kWh',
+                fontSize: 12,
+              ),
+              _BuyItemDetail(
+                title: 'Energy price',
+                value: item.energyPrice,
+                unit: 'THB',
+                fontSize: 15,
+              ),
+              _BuyItemDetail(
+                title: 'Wheeling charge Tariff',
+                value: item.wheelingChargeTariff,
+                unit: 'THB/kWh',
+                fontSize: 12,
+              ),
+              _BuyItemDetail(
+                title: 'Wheeling charge',
+                value: item.wheelingCharge,
+                unit: 'THB',
+                fontSize: 15,
+              ),
+              _BuyItemDetail(
+                title: 'Trading fee',
+                value: item.energyToBuy,
+                unit: 'THB',
+                fontSize: 12,
+              ),
+              _BuyItemDetail(
+                title: 'Vat (7%)',
+                value: item.vat,
+                unit: 'THB',
+                fontSize: 12,
+              ),
+              _BuyItemDetail(
+                title: 'Estimated buy',
+                value: item.estimatedBuy,
+                unit: 'THB',
+                fontSize: 15,
+              ),
+              _BuyItemDetail(
+                title: 'NET estimated energy price',
+                value: item.netEnergyPrice,
+                unit: 'THB',
+                fontSize: 8,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _BuyItemDetail extends StatelessWidget {
+  final String title;
+  final double value;
+  final String unit;
+
+  final double fontSize;
+
+  const _BuyItemDetail({
+    Key? key,
+    required this.title,
+    required this.value,
+    required this.unit,
+    this.fontSize = 15,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        FittedBox(
+          child: Text(title, style: TextStyle(fontSize: fontSize)),
+        ),
+        Text(
+          "${value.toStringAsFixed(2)} $unit",
+          style: TextStyle(
+            fontSize: fontSize,
+            fontWeight: FontWeight.w300,
+          ),
+        ),
+      ],
+    );
+  }
 }

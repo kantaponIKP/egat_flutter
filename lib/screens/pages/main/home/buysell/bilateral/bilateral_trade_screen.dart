@@ -207,7 +207,7 @@ class _TradeItemCard extends StatelessWidget {
       padding: EdgeInsets.symmetric(vertical: 4, horizontal: 8),
       decoration: BoxDecoration(borderRadius: BorderRadius.circular(5)),
       child: GestureDetector(
-        onTap: item.status == BilateralTradeItemStatus.OPEN ? onTap : null,
+        onTap: item.status != BilateralTradeItemStatus.CLOSE ? onTap : null,
         child: Card(
           child: IntrinsicHeight(
             child: Column(
