@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:egat_flutter/i18n/app_localizations.dart';
 import 'package:egat_flutter/screens/pages/main/home/settlement/models/contract_direction.dart';
 import 'package:egat_flutter/screens/pages/main/home/settlement/models/contract_status.dart';
@@ -234,18 +235,18 @@ class _TitleSecondRow extends StatelessWidget {
     switch (status) {
       case ContractStatus.OPEN:
         displayColor = Color(0xFFFEC908);
-        displayStatus = AppLocalizations.of(context)
-              .translate('settlement-open');
+        displayStatus =
+            AppLocalizations.of(context).translate('settlement-open');
         break;
       case ContractStatus.MATCHED:
         displayColor = Color(0xFF99FF75);
-        displayStatus = AppLocalizations.of(context)
-              .translate('settlement-matched');
+        displayStatus =
+            AppLocalizations.of(context).translate('settlement-matched');
         break;
       default:
         displayColor = Color(0xFFFEC908);
-        displayStatus = AppLocalizations.of(context)
-              .translate('settlement-open');
+        displayStatus =
+            AppLocalizations.of(context).translate('settlement-open');
         break;
     }
 
@@ -253,8 +254,8 @@ class _TitleSecondRow extends StatelessWidget {
     if (targetName != null) {
       toTargetName = RichText(
         text: TextSpan(
-          text: '${AppLocalizations.of(context)
-              .translate('settlement-order-to')} ',
+          text:
+              '${AppLocalizations.of(context).translate('settlement-order-to')} ',
           style: TextStyle(
             color: Colors.white,
             fontSize: 12,
@@ -320,28 +321,40 @@ class _TitleFirstRow extends StatelessWidget {
 
     switch (direction) {
       case TransferDirection.CHOOSE_TO_BUY:
-        members.add(Text(AppLocalizations.of(context).translate('settlement-order-chooseToBuy'),
+        members.add(Text(
+            AppLocalizations.of(context)
+                .translate('settlement-order-chooseToBuy'),
             style: TextStyle(fontSize: 15, color: Color(0xFFF6645A))));
         break;
       case TransferDirection.BID_TO_BUY:
-        members.add(Text(AppLocalizations.of(context).translate('settlement-order-bidToBuy'),
+        members.add(Text(
+            AppLocalizations.of(context).translate('settlement-order-bidToBuy'),
             style: TextStyle(fontSize: 15, color: Color(0xFFF6645A))));
         break;
       case TransferDirection.OFFER_TO_SELL:
-        members.add(Text(AppLocalizations.of(context).translate('settlement-order-offerToSell'),
+        members.add(Text(
+            AppLocalizations.of(context)
+                .translate('settlement-order-offerToSell'),
             style: TextStyle(fontSize: 15, color: Color(0xFF99FF75))));
         break;
       case TransferDirection.OFFER_TO_SELL_BID:
-        members.add(Text(AppLocalizations.of(context).translate('settlement-order-offerToSell'),
+        members.add(Text(
+            AppLocalizations.of(context)
+                .translate('settlement-order-offerToSell'),
             style: TextStyle(fontSize: 15, color: Color(0xFF99FF75))));
         break;
     }
 
     if (contractId != null) {
-      members.add(Padding(
-        padding: const EdgeInsets.only(left: 16),
-        child: Text("Contract #$contractId", style: TextStyle(fontSize: 15)),
-      ));
+      members.add(
+        Padding(
+          padding: const EdgeInsets.only(left: 16),
+          child: Text(
+            "Contract \n#$contractId",
+            style: TextStyle(fontSize: 12),
+          ),
+        ),
+      );
     }
 
     final expendedIcon = AnimatedRotation(
@@ -353,10 +366,18 @@ class _TitleFirstRow extends StatelessWidget {
 
     return GestureDetector(
       child: Row(
+        mainAxisSize: MainAxisSize.max,
         children: [
           Expanded(
-            child: Row(
-              children: members,
+            child: LayoutBuilder(
+              builder: (context,constraints) {
+                return SizedBox(
+                  width: constraints.maxWidth,
+                  child: Row(
+                    children: members,
+                  ),
+                );
+              }
             ),
           ),
           expendedIcon,

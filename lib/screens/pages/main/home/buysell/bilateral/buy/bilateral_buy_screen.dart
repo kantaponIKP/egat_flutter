@@ -743,106 +743,117 @@ class _BuyItemHeader extends StatelessWidget {
                 : null,
           ),
           Expanded(
-            child: IntrinsicHeight(
-              child: Padding(
-                padding: const EdgeInsets.only(bottom: 8, top: 12),
-                child: Row(
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(top: 4, right: 4),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: Color(0xFFFEC908),
-                              borderRadius: BorderRadius.circular(1000),
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                return IntrinsicHeight(
+                  child: SizedBox(
+                    width: constraints.maxWidth,
+                    child: FittedBox(
+                      child: Padding(
+                        padding: const EdgeInsets.only(bottom: 8, top: 12),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.max,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.only(top: 4, right: 4),
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: Color(0xFFFEC908),
+                                      borderRadius: BorderRadius.circular(1000),
+                                    ),
+                                    width: 17,
+                                    height: 17,
+                                    child: Center(
+                                      child: Text(
+                                        _convertIndexToAlphabatical(index),
+                                        style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 12,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                )
+                              ],
                             ),
-                            width: 17,
-                            height: 17,
-                            child: Center(
-                              child: Text(
-                                _convertIndexToAlphabatical(index),
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 12,
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                FittedBox(
+                                  child: Text(
+                                    item.name,
+                                    style: TextStyle(fontSize: 15),
+                                  ),
                                 ),
-                              ),
+                                Text(createDateString,
+                                    style: TextStyle(fontSize: 12)),
+                              ],
                             ),
-                          ),
-                        )
-                      ],
-                    ),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        FittedBox(
-                          child: Text(
-                            item.name,
-                            style: TextStyle(fontSize: 15),
-                          ),
-                        ),
-                        Text(createDateString, style: TextStyle(fontSize: 12)),
-                      ],
-                    ),
-                    VerticalDivider(
-                      color: Colors.white,
-                      thickness: 1,
-                    ),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        Text(
-                          "${item.energyTariff.toStringAsFixed(2)}",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 15,
-                          ),
-                        ),
-                        Text(
-                          "kWh",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 10,
-                            fontWeight: FontWeight.w300,
-                          ),
-                        ),
-                      ],
-                    ),
-                    VerticalDivider(
-                      color: Colors.white,
-                      thickness: 1,
-                    ),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        FittedBox(
-                          child: Text(
-                            "Estimated buy ${item.estimatedBuy.toStringAsFixed(2)} THB",
-                            style: TextStyle(
+                            VerticalDivider(
                               color: Colors.white,
-                              fontSize: 10,
+                              thickness: 1,
                             ),
-                          ),
-                        ),
-                        FittedBox(
-                          child: Text(
-                            "NET energy price ${item.netEnergyPrice.toStringAsFixed(2)} THB/kWh",
-                            style: TextStyle(
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                Text(
+                                  "${item.energyTariff.toStringAsFixed(2)}",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 15,
+                                  ),
+                                ),
+                                Text(
+                                  "kWh",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.w300,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            VerticalDivider(
                               color: Colors.white,
-                              fontSize: 8,
-                              fontWeight: FontWeight.w300,
+                              thickness: 1,
                             ),
-                          ),
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                FittedBox(
+                                  child: Text(
+                                    "Estimated buy ${item.estimatedBuy.toStringAsFixed(2)} THB",
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 10,
+                                    ),
+                                  ),
+                                ),
+                                FittedBox(
+                                  child: Text(
+                                    "NET energy price ${item.netEnergyPrice.toStringAsFixed(2)} THB/kWh",
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 8,
+                                      fontWeight: FontWeight.w300,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
                         ),
-                      ],
+                      ),
                     ),
-                  ],
-                ),
-              ),
+                  ),
+                );
+              },
             ),
           ),
           AnimatedRotation(

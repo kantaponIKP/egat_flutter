@@ -47,17 +47,41 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
     _phoneNumberController = TextEditingController();
     _emailController = TextEditingController();
 
-    _getPersonalInformation();
+    _getInformation();
+  }
+
+  void _getInformation() async {
+    var model = Provider.of<PersonalInfoState>(context, listen: false);
+
+    if (model.info.fullName == null) {
+      await model.getPersonalInformation();
+    }else{
+      if (model.info.fullName != null) {
+        _fullNameController!.text = model.info.fullName!;
+        _fullName = model.info.fullName!;
+      }
+      if (model.info.phoneNumber != null) {
+        _phoneNumberController!.text = model.info.phoneNumber!;
+        _phoneNumber = model.info.phoneNumber!;
+      }
+      if (model.info.email != null) {
+        _emailController!.text = model.info.email!;
+        _email = model.info.email!;
+      }
+      if (model.info.photo != null) {
+        setState(() {
+          _imageBase64 = model.info.photo!;
+        });
+      }
+    }
   }
 
   void _getPersonalInformation() async {
     var model = Provider.of<PersonalInfoState>(context, listen: false);
-    
+
     try {
-      if(model.info.fullName == null){
-        await showLoading();
-        await model.getPersonalInformation();
-      }
+      await showLoading();
+      await model.getPersonalInformation();
     } catch (e) {
       showException(context, e.toString());
     } finally {
@@ -426,9 +450,8 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
       var model = Provider.of<PersonalInfoState>(context, listen: false);
       await model.changePhoto(base64Image);
       _getPersonalInformation();
-      showSuccessSnackBar(context, AppLocalizations.of(context)
-            .translate('message-changeSuccessfully'));
-      
+      showSuccessSnackBar(context,
+          AppLocalizations.of(context).translate('message-changeSuccessfully'));
     } catch (e) {
       showIntlException(context, e);
     } finally {
@@ -445,6 +468,8 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
       var model = Provider.of<PersonalInfoState>(context, listen: false);
       await model.removePhoto();
       _getPersonalInformation();
+      showSuccessSnackBar(context,
+          AppLocalizations.of(context).translate('message-changeSuccessfully'));
     } catch (e) {
       showIntlException(context, e);
     } finally {
@@ -463,6 +488,8 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
           phoneNumber: _phoneNumberController!.text,
           email: _emailController!.text);
       _getPersonalInformation();
+      showSuccessSnackBar(context,
+          AppLocalizations.of(context).translate('message-changeSuccessfully'));
     } catch (e) {
       showIntlException(context, e);
     } finally {

@@ -36,6 +36,13 @@ class _BilateralTradeScreenState extends State<BilateralTradeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final titleState =
+        Provider.of<MainScreenTitleState>(context, listen: false);
+
+    titleState.setTitleTwoTitles(
+      title: 'Bilateral',
+      secondaryTitle: 'Trade',
+    );
     return Container(
       decoration: BoxDecoration(
         gradient: RadialGradient(
@@ -52,14 +59,6 @@ class _BilateralTradeScreenState extends State<BilateralTradeScreen> {
   @override
   void initState() {
     super.initState();
-
-    final titleState =
-        Provider.of<MainScreenTitleState>(context, listen: false);
-
-    titleState.setTitleTwoTitles(
-      title: 'Bilateral',
-      secondaryTitle: 'Trade',
-    );
   }
 
   Padding _buildAction(BuildContext context) {

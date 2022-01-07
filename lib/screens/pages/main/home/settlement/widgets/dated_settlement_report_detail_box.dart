@@ -198,7 +198,7 @@ class _TitleFirstRow extends StatelessWidget {
     if (contractId != null) {
       members.add(Padding(
         padding: const EdgeInsets.only(left: 16),
-        child: Text("Contract #$contractId", style: TextStyle(fontSize: 15)),
+        child: Text("Contract \n#$contractId", style: TextStyle(fontSize: 12)),
       ));
     }
 
