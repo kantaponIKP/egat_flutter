@@ -86,6 +86,7 @@
   "title-changePin-second": "PIN",
 
   "message-changePasswordSuccessfully": "เปลี่ยนรหัสผ่านสำเร็จแล้ว",
+  "message-changeSuccessfully": "เปลี่ยนแปลงข้อมูลสำเร็จแล้ว",
 
   "error-connectionError": "ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์ได้",
   "error-incorrectInformationError": "ข้อมูลผิดพลาด",

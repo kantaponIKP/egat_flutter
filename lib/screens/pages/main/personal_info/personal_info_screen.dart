@@ -10,6 +10,7 @@ import 'package:egat_flutter/screens/pages/main/states/main_screen_title_state.d
 import 'package:egat_flutter/screens/pages/main/states/personal_info_state.dart';
 import 'package:egat_flutter/screens/widgets/loading_dialog.dart';
 import 'package:egat_flutter/screens/widgets/show_exception.dart';
+import 'package:egat_flutter/screens/widgets/show_success_snackbar.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -425,6 +426,9 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
       var model = Provider.of<PersonalInfoState>(context, listen: false);
       await model.changePhoto(base64Image);
       _getPersonalInformation();
+      showSuccessSnackBar(context, AppLocalizations.of(context)
+            .translate('message-changeSuccessfully'));
+      
     } catch (e) {
       showIntlException(context, e);
     } finally {

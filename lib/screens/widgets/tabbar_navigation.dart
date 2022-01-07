@@ -100,24 +100,34 @@ class TabBarNavigation<T> extends StatelessWidget {
             child: Container(
               height: 32,
               child: Center(
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    item.buildIcon(context, isSelected: isSelected),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 8),
-                      child: RichText(
-                        textAlign: TextAlign.left,
-                        text: TextSpan(
-                          children: [
-                            ...titles,
-                          ],
-                        ),
+                child: LayoutBuilder(builder: (context, constraints) {
+                  return ConstrainedBox(
+                    constraints: BoxConstraints(
+                      minWidth: constraints.maxWidth,
+                    ),
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          item.buildIcon(context, isSelected: isSelected),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 8),
+                            child: RichText(
+                              textAlign: TextAlign.left,
+                              text: TextSpan(
+                                children: [
+                                  ...titles,
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                  ],
-                ),
+                  );
+                }),
               ),
             ),
           ),
