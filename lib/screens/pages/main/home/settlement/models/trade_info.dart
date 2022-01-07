@@ -155,7 +155,9 @@ class MatchedOfferToSellTradeInfo extends TradeInfo {
     return MatchedOfferToSellTradeInfo(
       date: date,
       contractId: json['contractId'] as String,
-      targetName: json['targetName'] as List<String>,
+      targetName: (json['targetName'] as List<dynamic>)
+          .map((e) => e.toString())
+          .toList(),
       amount: (json['amount'] as num).toDouble(),
       offerToSell: (json['offerToSell'] as num).toDouble(),
       tradingFee: (json['tradingFee'] as num).toDouble(),
@@ -220,7 +222,9 @@ class MatchedChooseToBuyTradeInfo extends TradeInfo {
     return MatchedChooseToBuyTradeInfo(
       date: date,
       contractId: json['contractId'] as String,
-      targetName: json['targetName'] as List<String>,
+      targetName: (json['targetName'] as List<dynamic>)
+          .map((e) => e.toString())
+          .toList(),
       amount: (json['amount'] as num).toDouble(),
       netBuy: (json['netBuy'] as num).toDouble(),
       netEnergyPrice: (json['netEnergyPrice'] as num).toDouble(),
@@ -279,7 +283,9 @@ class MatchedOfferToSellBidTradeInfo extends TradeInfo {
     return MatchedOfferToSellBidTradeInfo(
       date: date,
       contractId: json['contractId'] as String,
-      targetName: json['targetName'] as List<String>,
+      targetName: (json['targetName'] as List<dynamic>)
+          .map((e) => e.toString())
+          .toList(),
       offeredAmount: (json['offeredAmount'] as num).toDouble(),
       matchedAmount: (json['matchedAmount'] as num).toDouble(),
       offerToSell: (json['offerToSell'] as num).toDouble(),
@@ -355,7 +361,9 @@ class MatchedBidToBuyTradeInfo extends TradeInfo {
     return MatchedBidToBuyTradeInfo(
       date: date,
       contractId: json['contractId'] as String,
-      targetName: json['targetName'] as List<String>,
+      targetName: (json['targetName'] as List<dynamic>)
+          .map((e) => e.toString())
+          .toList(),
       biddedAmount: (json['biddedAmount'] as num).toDouble(),
       matchedAmount: (json['matchedAmount'] as num).toDouble(),
       bidToBuy: (json['bidToBuy'] as num).toDouble(),

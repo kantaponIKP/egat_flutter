@@ -1,3 +1,9 @@
+import 'dart:convert';
+
+import 'package:egat_flutter/Utils/http/get.dart';
+import 'package:egat_flutter/constant.dart';
+import 'package:http/http.dart';
+
 import '../../models/energy_transfer_info.dart';
 
 class EnergyTransferApi {
@@ -5,15 +11,33 @@ class EnergyTransferApi {
     required DateTime date,
     required String accessToken,
   }) async {
-    // TODO: use real data
+    Response response;
+
+    var dateRequest = date.toUtc().toIso8601String();
+
+    var url = Uri.parse(
+      "$apiBaseUrlReport/report/energy-transfer/$dateRequest",
+    );
+
+    response = await httpGetJson(
+      url: url,
+      accessToken: accessToken,
+    ).timeout(Duration(seconds: 10));
+
+    final jsonMap = json.decode(response.body);
+
+    return [
+      for (var item in jsonMap) EnergyTransferInfo.fromJson(item),
+    ];
+
     await Future.delayed(Duration(seconds: 1));
 
     final now = DateTime.now();
-    final date = DateTime(now.year, now.month, now.day);
+    final dateMock = DateTime(now.year, now.month, now.day);
 
     return <EnergyTransferInfo>[
       ScheduledOfferToSellEnergyTransferInfo(
-        date: date,
+        date: dateMock,
         contractId: "contractId",
         targetName: ["targetName"],
         commitedAmount: 1,
@@ -23,7 +47,7 @@ class EnergyTransferApi {
         netEnergyPrice: 1,
       ),
       CompletedOfferToSellEnergyTransferInfo(
-          date: date.add(Duration(hours: 1)),
+          date: dateMock.add(Duration(hours: 1)),
           contractId: "contractId",
           targetName: ["targetName"],
           commitedAmount: 1,
@@ -36,7 +60,7 @@ class EnergyTransferApi {
           sellerImbalance: 1,
           tradingFee: 1),
       ScheduledChooseToBuyEnergyTransferInfo(
-          date: date.add(Duration(hours: 2)),
+          date: dateMock.add(Duration(hours: 2)),
           contractId: "contractId",
           targetName: ["targetName"],
           commitedAmount: 1,
@@ -50,7 +74,7 @@ class EnergyTransferApi {
           tradingFee: 1,
           vat: 1),
       CompletedChooseToBuyEnergyTransferInfo(
-          date: date.add(Duration(hours: 3)),
+          date: dateMock.add(Duration(hours: 3)),
           contractId: "contractId",
           targetName: ["targetName"],
           commitedAmount: 1,
@@ -67,7 +91,7 @@ class EnergyTransferApi {
           tradingFee: 1,
           vat: 1),
       ScheduledOfferToSellBidEnergyTransferInfo(
-          date: date.add(Duration(hours: 4)),
+          date: dateMock.add(Duration(hours: 4)),
           contractId: "contractId",
           targetName: ["targetName"],
           offeredAmount: 1,
@@ -76,7 +100,7 @@ class EnergyTransferApi {
           netEnergyPrice: 1,
           tradingFee: 1),
       CompletedOfferToSellBidEnergyTransferInfo(
-          date: date.add(Duration(hours: 5)),
+          date: dateMock.add(Duration(hours: 5)),
           contractId: "contractId",
           targetName: ["targetName"],
           offeredAmount: 1,
@@ -89,7 +113,7 @@ class EnergyTransferApi {
           sellerImbalance: 1,
           tradingFee: 1),
       ScheduledBidToBuyEnergyTransferInfo(
-          date: date.add(Duration(hours: 6)),
+          date: dateMock.add(Duration(hours: 6)),
           contractId: "contractId",
           targetName: ["targetName"],
           bidedAmount: 1,
@@ -104,7 +128,7 @@ class EnergyTransferApi {
           tradingFee: 1,
           vat: 1),
       CompletedBidToBuyEnergyTransferInfo(
-          date: date.add(Duration(hours: 7)),
+          date: dateMock.add(Duration(hours: 7)),
           contractId: "contractId",
           targetName: ["targetName"],
           bidedAmount: 1,

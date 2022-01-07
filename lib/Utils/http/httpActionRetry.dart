@@ -13,7 +13,7 @@ Future<Response> httpActionRetry({
       final response = await callFunction();
 
       if (httpShouldRetry(response)) {
-        await Future.delayed(Duration(milliseconds: 500 * (retryCount + 1)));
+        await Future.delayed(Duration(milliseconds: 150 * (retryCount + 1)));
         continue;
       }
 

@@ -18,7 +18,7 @@ class CompletedOfferToSellEnergyTransferInfoBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final timeStart = tradeInfo.date;
+    final timeStart = tradeInfo.date.toLocal();
     final timeStartHour = DateTime(
       timeStart.year,
       timeStart.month,
@@ -67,7 +67,8 @@ class CompletedOfferToSellEnergyTransferInfoBox extends StatelessWidget {
           fontSize: 13,
         ),
         DatedEnergyDetailBoxItem(
-          name: '${AppLocalizations.of(context).translate('settlement-netEnergyPrice')}(${AppLocalizations.of(context).translate('settlement-netSales')}/${AppLocalizations.of(context).translate('settlement-energyDelivered')})',
+          name:
+              '${AppLocalizations.of(context).translate('settlement-netEnergyPrice')}(${AppLocalizations.of(context).translate('settlement-netSales')}/${AppLocalizations.of(context).translate('settlement-energyDelivered')})',
           value: '${tradeInfo.netEnergyPrice.toStringAsFixed(2)} THB/kWh',
           fontSize: 10,
         ),
@@ -80,7 +81,7 @@ class CompletedOfferToSellEnergyTransferInfoBox extends StatelessWidget {
         DatedEnergyDetailBoxItem(
           name: AppLocalizations.of(context)
               .translate('settlement-sellerImbalanceAmount'),
-          value: '${tradeInfo.sellerImbalanceAmount.toStringAsFixed(2)} THB',
+          value: '${tradeInfo.sellerImbalanceAmount.toStringAsFixed(2)} kWh',
           fontSize: 13,
           fontColor: Color(0xFFA10C09),
         ),

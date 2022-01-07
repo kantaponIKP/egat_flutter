@@ -337,6 +337,7 @@ class _BilateralBuyScreenState extends State<BilateralBuyScreen> {
         id: item.id,
         accessToken: accessToken,
       );
+      Navigator.of(context).pop();
     } catch (e) {
       showException(context, e.toString());
     } finally {

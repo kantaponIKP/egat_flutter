@@ -1,3 +1,9 @@
+import 'dart:convert';
+
+import 'package:egat_flutter/Utils/http/get.dart';
+import 'package:egat_flutter/constant.dart';
+import 'package:http/http.dart';
+
 import '../../models/trade_info.dart';
 
 class OrderApi {
@@ -5,6 +11,25 @@ class OrderApi {
     required DateTime date,
     required String accessToken,
   }) async {
+    Response response;
+
+    var dateRequest = date.toUtc().toIso8601String();
+
+    var url = Uri.parse(
+      "$apiBaseUrlReport/report/order/$dateRequest",
+    );
+
+    response = await httpGetJson(
+      url: url,
+      accessToken: accessToken,
+    ).timeout(Duration(seconds: 10));
+
+    final jsonMap = json.decode(response.body);
+
+    return [
+      for (var item in jsonMap) TradeInfo.fromJson(item),
+    ];
+
     // TODO: use real data
     await Future.delayed(Duration(seconds: 1));
 
