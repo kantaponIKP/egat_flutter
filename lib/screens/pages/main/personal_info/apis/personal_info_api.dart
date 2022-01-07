@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:egat_flutter/Utils/http/delete.dart';
 import 'package:egat_flutter/Utils/http/get.dart';
+import 'package:egat_flutter/Utils/http/post.dart';
 import 'package:egat_flutter/Utils/http/put.dart';
 import 'package:egat_flutter/constant.dart';
 import 'package:egat_flutter/errors/IntlException.dart';
@@ -58,7 +59,7 @@ class PersonalInfoApi {
 
     var requestJson = request.toJSON();
 
-    final httpRequest = httpPutJson(
+    final httpRequest = httpPostJson(
         uri: url, body: requestJson, accessToken: access.accessToken);
 
     Response response;
@@ -97,7 +98,7 @@ class PersonalInfoApi {
 
     var requestJson = request.toJSON();
 
-    final httpRequest = httpPutJson(
+    final httpRequest = httpPostJson(
         uri: url, body: requestJson, accessToken: access.accessToken);
 
     Response response;
@@ -128,11 +129,11 @@ class PersonalInfoApi {
 
   Future<Response> removePhoto(AccessRequest access) async {
     var url = Uri.parse(
-      "$apiBaseUrlProfileManage/users/${access.userId}/photo", //TODO
+      "$apiBaseUrlProfileManage/users/${access.userId}/photo/delete",
     );
 
     final httpRequest =
-        httpDeleteJson(url: url, accessToken: access.accessToken);
+        httpPostJson(uri: url, accessToken: access.accessToken);
 
     Response response;
     try {
