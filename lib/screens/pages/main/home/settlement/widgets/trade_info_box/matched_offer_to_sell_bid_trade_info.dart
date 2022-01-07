@@ -18,7 +18,7 @@ class MatchedOfferToSellBidTradeInfoBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final timeStart = tradeInfo.date;
+    final timeStart = tradeInfo.date.toLocal();
 
     final timeStartHour = DateTime(
       timeStart.year,

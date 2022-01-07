@@ -17,7 +17,7 @@ class CompletedOfferToSellBidEnergyTransferInfoBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final timeStart = tradeInfo.date;
+    final timeStart = tradeInfo.date.toLocal();
     final timeStartHour = DateTime(
       timeStart.year,
       timeStart.month,
@@ -76,7 +76,7 @@ class CompletedOfferToSellBidEnergyTransferInfoBox extends StatelessWidget {
         ),
         DatedEnergyDetailBoxItem(
           name: 'Seller imbalance amount',
-          value: '${tradeInfo.sellerImbalanceAmount.toStringAsFixed(2)} THB',
+          value: '${tradeInfo.sellerImbalanceAmount.toStringAsFixed(2)} kWh',
           fontSize: 13,
           fontColor: Color(0xFFA10C09),
         ),

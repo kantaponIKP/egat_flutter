@@ -181,7 +181,9 @@ class BilateralBuyerEnergyShortfallSettlementReportInfo
       wheelingCharge: (json['wheelingCharge'] as num).toDouble(),
       netEnergyPrice: (json['netEnergyPrice'] as num).toDouble(),
       contractId: json['contractId'] as String,
-      targetName: json['targetName'] as List<String>,
+      targetName: (json['targetName'] as List<dynamic>)
+          .map((e) => e.toString())
+          .toList(),
       date: DateTime.parse(json['date'] as String),
     );
   }
@@ -245,7 +247,9 @@ class PoolBuyerEnergyShortfallSettlementReportInfo
       wheelingCharge: (json['wheelingCharge'] as num).toDouble(),
       netEnergyPrice: (json['netEnergyPrice'] as num).toDouble(),
       contractId: json['contractId'] as String,
-      targetName: json['targetName'] as List<String>,
+      targetName: (json['targetName'] as List<dynamic>)
+          .map((e) => e.toString())
+          .toList(),
       date: DateTime.parse(json['date'] as String),
     );
   }
@@ -293,7 +297,9 @@ class BilateralBuyerEnergyExcessSettlementReportInfo
       sellerImbalanceAmount: (json['sellerImbalanceAmount'] as num).toDouble(),
       sellerImbalance: (json['sellerImbalance'] as num).toDouble(),
       contractId: json['contractId'] as String,
-      targetName: json['targetName'] as List<String>,
+      targetName: (json['targetName'] as List<dynamic>)
+          .map((e) => e.toString())
+          .toList(),
       date: DateTime.parse(json['date'] as String),
     );
   }
@@ -340,7 +346,9 @@ class PoolBuyerEnergyExcessSettlementReportInfo extends SettlementReportInfo {
       sellerImbalanceAmount: (json['sellerImbalanceAmount'] as num).toDouble(),
       sellerImbalance: (json['sellerImbalance'] as num).toDouble(),
       contractId: json['contractId'] as String,
-      targetName: json['targetName'] as List<String>,
+      targetName: (json['targetName'] as List<dynamic>)
+          .map((e) => e.toString())
+          .toList(),
       date: DateTime.parse(json['date'] as String),
     );
   }
@@ -396,7 +404,9 @@ class BilateralSellerEnergyShortfallSettlementReportInfo
       sellerImbalance: (json['sellerImbalance'] as num).toDouble(),
       netEnergyPrice: (json['netEnergyPrice'] as num).toDouble(),
       contractId: json['contractId'] as String,
-      targetName: json['targetName'] as List<String>,
+      targetName: (json['targetName'] as List<dynamic>)
+          .map((e) => e.toString())
+          .toList(),
       date: DateTime.parse(json['date'] as String),
     );
   }
@@ -452,7 +462,9 @@ class BilateralSellerEnergyExcessSettlementReportInfo
       sellerImbalance: (json['sellerImbalance'] as num).toDouble(),
       netEnergyPrice: (json['netEnergyPrice'] as num).toDouble(),
       contractId: json['contractId'] as String,
-      targetName: json['targetName'] as List<String>,
+      targetName: (json['targetName'] as List<dynamic>)
+          .map((e) => e.toString())
+          .toList(),
       date: DateTime.parse(json['date'] as String),
     );
   }
@@ -500,7 +512,9 @@ class PoolSellerEnergyShortfallSettlementReportInfo
       sellerImbalanceAmount: (json['sellerImbalanceAmount'] as num).toDouble(),
       sellerImbalance: (json['sellerImbalance'] as num).toDouble(),
       contractId: json['contractId'] as String,
-      targetName: json['targetName'] as List<String>,
+      targetName: (json['targetName'] as List<dynamic>)
+          .map((e) => e.toString())
+          .toList(),
       date: DateTime.parse(json['date'] as String),
     );
   }
@@ -547,7 +561,9 @@ class PoolSellerEnergyExcessSettlementReportInfo extends SettlementReportInfo {
       sellerImbalanceAmount: (json['sellerImbalanceAmount'] as num).toDouble(),
       sellerImbalance: (json['sellerImbalance'] as num).toDouble(),
       contractId: json['contractId'] as String,
-      targetName: json['targetName'] as List<String>,
+      targetName: (json['targetName'] as List<dynamic>)
+          .map((e) => e.toString())
+          .toList(),
       date: DateTime.parse(json['date'] as String),
     );
   }

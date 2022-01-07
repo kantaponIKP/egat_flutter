@@ -162,7 +162,9 @@ class CompletedBidToBuyEnergyTransferInfo extends EnergyTransferInfo {
 
     return CompletedBidToBuyEnergyTransferInfo(
       contractId: json['contractId'] as String,
-      targetName: json['targetName'] as List<String>,
+      targetName: (json['targetName'] as List<dynamic>)
+          .map((e) => e.toString())
+          .toList(),
       date: DateTime.parse(json['date']),
       bidedAmount: json['bidedAmount'].toDouble(),
       energyUsed: json['energyUsed'].toDouble(),
@@ -244,7 +246,9 @@ class CompletedChooseToBuyEnergyTransferInfo extends EnergyTransferInfo {
 
     return CompletedChooseToBuyEnergyTransferInfo(
       contractId: json['contractId'] as String,
-      targetName: json['targetName'] as List<String>,
+      targetName: (json['targetName'] as List<dynamic>)
+          .map((e) => e.toString())
+          .toList(),
       date: DateTime.parse(json['date']),
       commitedAmount: json['commitedAmount'].toDouble(),
       energyUsed: json['energyUsed'].toDouble(),
@@ -314,7 +318,9 @@ class CompletedOfferToSellBidEnergyTransferInfo extends EnergyTransferInfo {
 
     return CompletedOfferToSellBidEnergyTransferInfo(
       contractId: json['contractId'] as String,
-      targetName: json['targetName'] as List<String>,
+      targetName: (json['targetName'] as List<dynamic>)
+          .map((e) => e.toString())
+          .toList(),
       date: DateTime.parse(json['date']),
       offeredAmount: json['offeredAmount'].toDouble(),
       energyDelivered: json['energyDelivered'].toDouble(),
@@ -379,7 +385,9 @@ class CompletedOfferToSellEnergyTransferInfo extends EnergyTransferInfo {
 
     return CompletedOfferToSellEnergyTransferInfo(
       contractId: json['contractId'] as String,
-      targetName: json['targetName'] as List<String>,
+      targetName: (json['targetName'] as List<dynamic>)
+          .map((e) => e.toString())
+          .toList(),
       date: DateTime.parse(json['date']),
       commitedAmount: json['commitedAmount'].toDouble(),
       energyDelivered: json['energyDelivered'].toDouble(),
@@ -454,7 +462,9 @@ class ScheduledBidToBuyEnergyTransferInfo extends EnergyTransferInfo {
 
     return ScheduledBidToBuyEnergyTransferInfo(
       contractId: json['contractId'] as String,
-      targetName: json['targetName'] as List<String>,
+      targetName: (json['targetName'] as List<dynamic>)
+          .map((e) => e.toString())
+          .toList(),
       date: DateTime.parse(json['date']),
       bidedAmount: json['bidedAmount'].toDouble(),
       marketClearingPrice: json['marketClearingPrice'].toDouble(),
@@ -524,7 +534,9 @@ class ScheduledChooseToBuyEnergyTransferInfo extends EnergyTransferInfo {
 
     return ScheduledChooseToBuyEnergyTransferInfo(
       contractId: json['contractId'] as String,
-      targetName: json['targetName'] as List<String>,
+      targetName: (json['targetName'] as List<dynamic>)
+          .map((e) => e.toString())
+          .toList(),
       date: DateTime.parse(json['date']),
       commitedAmount: json['commitedAmount'].toDouble(),
       netBuy: json['netBuy'].toDouble(),
@@ -579,7 +591,9 @@ class ScheduledOfferToSellBidEnergyTransferInfo extends EnergyTransferInfo {
 
     return ScheduledOfferToSellBidEnergyTransferInfo(
       contractId: json['contractId'] as String,
-      targetName: json['targetName'] as List<String>,
+      targetName: (json['targetName'] as List<dynamic>)
+          .map((e) => e.toString())
+          .toList(),
       date: DateTime.parse(json['date']),
       offeredAmount: json['offeredAmount'].toDouble(),
       marketClearingPrice: json['marketClearingPrice'].toDouble(),
@@ -628,7 +642,9 @@ class ScheduledOfferToSellEnergyTransferInfo extends EnergyTransferInfo {
 
     return ScheduledOfferToSellEnergyTransferInfo(
       contractId: json['contractId'] as String,
-      targetName: json['targetName'] as List<String>,
+      targetName: (json['targetName'] as List<dynamic>)
+          .map((e) => e.toString())
+          .toList(),
       date: DateTime.parse(json['date']),
       commitedAmount: json['commitedAmount'].toDouble(),
       sellingPrice: json['sellingPrice'].toDouble(),
