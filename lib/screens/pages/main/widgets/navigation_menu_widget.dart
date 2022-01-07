@@ -3,9 +3,9 @@ import 'dart:convert';
 
 import 'package:egat_flutter/constant.dart';
 import 'package:egat_flutter/i18n/app_localizations.dart';
-import 'package:egat_flutter/screens/page/state/personal_info.dart';
 import 'package:egat_flutter/screens/pages/main/states/main_screen_navigation_state.dart';
 import 'package:egat_flutter/screens/pages/main/states/main_screen_title_state.dart';
+import 'package:egat_flutter/screens/pages/main/states/personal_info_state.dart';
 import 'package:egat_flutter/screens/widgets/loading_dialog.dart';
 import 'package:egat_flutter/screens/widgets/show_exception.dart';
 import 'package:flutter/cupertino.dart';
@@ -194,36 +194,42 @@ class _NavigationMenuWidgetState extends State<NavigationMenuWidget> {
           text: '${AppLocalizations.of(context).translate('home')}',
           icon: Icons.home,
           onAction: _onHomeMenuPressed,
+          page: MainScreenNavigationPage.HOME,
         ),
         _buildMenuItem(
           context: context,
           text: '${AppLocalizations.of(context).translate('personal-info')}',
           icon: Icons.account_circle,
           onAction: _onPersonalInfoMenuPressed,
+          page: MainScreenNavigationPage.PERSONAL_INFORMATION,
         ),
         _buildMenuItem(
           context: context,
           text: '${AppLocalizations.of(context).translate('change-password')}',
           icon: Icons.lock_sharp,
           onAction: _onChangePasswordMenuPressed,
+          page: MainScreenNavigationPage.CHANGE_PASSWORD,
         ),
         _buildMenuItem(
           context: context,
           text: '${AppLocalizations.of(context).translate('contact-us')}',
           icon: Icons.contact_page,
           onAction: _onContactUsMenuPressed,
+          page: MainScreenNavigationPage.CONTACT_US,
         ),
         _buildMenuItem(
           context: context,
           text: '${AppLocalizations.of(context).translate('news')}',
           icon: Icons.campaign_sharp,
           onAction: _onNewsMenuPressed,
+          page: MainScreenNavigationPage.NEWS,
         ),
         _buildMenuItem(
           context: context,
           text: '${AppLocalizations.of(context).translate('setting')}',
           icon: Icons.settings,
           onAction: _onSettingMenuPressed,
+          page: MainScreenNavigationPage.SETTING,
         ),
       ],
     );
@@ -234,7 +240,9 @@ class _NavigationMenuWidgetState extends State<NavigationMenuWidget> {
     required String text,
     required IconData icon,
     required Function() onAction,
+    required MainScreenNavigationPage page,
   }) {
+    var model = Provider.of<MainScreenNavigationState>(context, listen: false);
     Color color = whiteColor;
     const hoverColor = Colors.white70;
     return SizedBox(
@@ -242,6 +250,7 @@ class _NavigationMenuWidgetState extends State<NavigationMenuWidget> {
       child: Container(
         // color: Colors.black,
         child: ListTile(
+            tileColor: (model.currentPage == page) ? contentBgColor : surfaceGreyColor, 
             leading: Icon(
               icon,
               color: color,
@@ -249,7 +258,7 @@ class _NavigationMenuWidgetState extends State<NavigationMenuWidget> {
             title: Text(
               text,
               style: TextStyle(
-                color: color,
+                color: (model.currentPage == page) ? primaryColor : color,
               ),
             ),
             hoverColor: hoverColor,
@@ -279,7 +288,7 @@ class _NavigationMenuWidgetState extends State<NavigationMenuWidget> {
   Widget _buildUserHeader(BuildContext context, UserInfo userInfo) {
     return InkWell(
       child: Container(
-        color: HexColor('#262729'),
+        color: contentBgColor,
         height: 80,
         padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
         child: Row(
@@ -308,7 +317,7 @@ class _NavigationMenuWidgetState extends State<NavigationMenuWidget> {
   }
 
   void _getPersonalInformation() async {
-    var model = Provider.of<PersonalInfo>(context, listen: false);
+    var model = Provider.of<PersonalInfoState>(context, listen: false);
     print(model.info.fullName);
     if (model.info.fullName == null) {
       try {
@@ -355,6 +364,7 @@ class _NavigationMenuWidgetState extends State<NavigationMenuWidget> {
             .translate('title-changePassword-first'),
         secondaryTitle: AppLocalizations.of(context)
             .translate('title-changePassword-second'));
+    Navigator.pop(context);
   }
 
   void _onContactUsMenuPressed() {
@@ -364,29 +374,31 @@ class _NavigationMenuWidgetState extends State<NavigationMenuWidget> {
     MainScreenTitleState mainScreenTitle =
         Provider.of<MainScreenTitleState>(context, listen: false);
     mainScreenTitle.setTitleTwoTitles(
-        title: AppLocalizations.of(context)
-            .translate('title-Contact-first'),
-        secondaryTitle: AppLocalizations.of(context)
-            .translate('title-Us-second'));
+        title: AppLocalizations.of(context).translate('title-contactUs-first'),
+        secondaryTitle:
+            AppLocalizations.of(context).translate('title-contactUs-second'));
+    Navigator.pop(context);
   }
 
   void _onHomeMenuPressed() {
     MainScreenNavigationState mainScreenNavigation =
         Provider.of<MainScreenNavigationState>(context, listen: false);
     mainScreenNavigation.setPageToHome();
-        MainScreenTitleState mainScreenTitle =
+    MainScreenTitleState mainScreenTitle =
         Provider.of<MainScreenTitleState>(context, listen: false);
     mainScreenTitle.setTitleLogo();
+    Navigator.pop(context);
   }
 
   void _onNewsMenuPressed() {
     MainScreenNavigationState mainScreenNavigation =
         Provider.of<MainScreenNavigationState>(context, listen: false);
     mainScreenNavigation.setPageToNews();
-        MainScreenTitleState mainScreenTitle =
+    MainScreenTitleState mainScreenTitle =
         Provider.of<MainScreenTitleState>(context, listen: false);
-    mainScreenTitle.setTitleOneTitle(title: AppLocalizations.of(context)
-            .translate('title-news'));
+    mainScreenTitle.setTitleOneTitle(
+        title: AppLocalizations.of(context).translate('title-news'));
+    Navigator.pop(context);
   }
 
   void _onPersonalInfoMenuPressed() {
@@ -400,16 +412,18 @@ class _NavigationMenuWidgetState extends State<NavigationMenuWidget> {
             .translate('title-personalInformation-first'),
         secondaryTitle: AppLocalizations.of(context)
             .translate('title-personalInformation-second'));
+    Navigator.pop(context);
   }
 
   void _onSettingMenuPressed() {
     MainScreenNavigationState mainScreenNavigation =
         Provider.of<MainScreenNavigationState>(context, listen: false);
     mainScreenNavigation.setPageToSetting();
-        MainScreenTitleState mainScreenTitle =
+    MainScreenTitleState mainScreenTitle =
         Provider.of<MainScreenTitleState>(context, listen: false);
-    mainScreenTitle.setTitleOneTitle(title: AppLocalizations.of(context)
-            .translate('title-setting'));
+    mainScreenTitle.setTitleOneTitle(
+        title: AppLocalizations.of(context).translate('title-setting'));
+    Navigator.pop(context);
   }
 
   void _onSignOutPressed() {

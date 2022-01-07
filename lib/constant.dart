@@ -28,21 +28,27 @@ const disabledColor = Color(0xffC0C0C0);
 
 final menuBgColor = HexColor("#3E3E3E"); //
 
+final switchActiveColor = HexColor("#65C466");
 final greenColor = HexColor("#99FF75");
 final redColor = HexColor("#F6645A");
 
 final appTitle = 'EGAT P2P';
 
-// final apiBaseUrlRegister = "https://ercapip2p.egat.co.th";
-// final apiBaseUrlLogin = "https://ercapip2p.egat.co.th";
-final apiBaseUrlRegister = "https://egat-p2p-api.di.iknowplus.co.th";
-final apiBaseUrlLogin = "https://egat-p2p-api.di.iknowplus.co.th";
-final apiBaseUrlProfileManage =
-    "https://egat-p2p-profile-mange.di.iknowplus.co.th/";
-final apiBaseUrlBilateralTrade =
-    "https://egat-p2p-bilateral.di.iknowplus.co.th";
+final apiBaseUrlRegister = "https://ercapip2p.egat.co.th";
+final apiBaseUrlLogin = "https://ercapip2p.egat.co.th";
+final apiBaseUrlProfileManage = "https://ercapip2p.egat.co.th";
+final apiBaseUrlBilateralTrade = "https://ercapip2p.egat.co.th";
+// final apiBaseUrlRegister = "https://egat-p2p-api.di.iknowplus.co.th";
+// final apiBaseUrlLogin = "https://egat-p2p-api.di.iknowplus.co.th";
+
+// final apiBaseUrlProfileManage =
+//     "https://egat-p2p-profile-mange.di.iknowplus.co.th/";
+// final apiBaseUrlBilateralTrade =
+//     "https://egat-p2p-bilateral.di.iknowplus.co.th";
+
 final apiBaseUrlPoolMarketTrade = "https://egat-p2p-pool.di.iknowplus.co.th/";
-final authorizationBase64 = "ZWdhdDpmYjIyN2ZlMS1mNWNhLTRjOTItYmE2My03NTg1NjQ5MTU2NTg=";
+final authorizationBase64 =
+    "ZWdhdDpmYjIyN2ZlMS1mNWNhLTRjOTItYmE2My03NTg1NjQ5MTU2NTg=";
 final loggerPrinter = PrettyPrinter();
 final loggerLevel = Level.debug;
 

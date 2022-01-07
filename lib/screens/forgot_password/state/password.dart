@@ -30,6 +30,15 @@ class Password extends ChangeNotifier {
       // This must not happened.
       return false;
     }
+        logger.d(" " +
+        parent.session.info!.sessionId +
+        " " +
+        parent.session.info!.sessionToken +
+        " " +
+        parent.email.info.email! +
+        " " +
+        password
+    );
 
     var result = await parent.api.changeForgotPassword(
         ChangeForgotPasswordRequest(
@@ -39,15 +48,7 @@ class Password extends ChangeNotifier {
           password: password,
         ));
 
-    // logger.d(" " +
-    //     parent.session.info!.sessionId +
-    //     " " +
-    //     parent.session.info!.sessionToken +
-    //     " " +
-    //     parent.email.info.email! +
-    //     " " +
-    //     password
-    // );
+
 
     nextPage();
 

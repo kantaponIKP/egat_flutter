@@ -1,5 +1,5 @@
-import 'package:egat_flutter/screens/page/news/news_screen.dart';
-import 'package:egat_flutter/screens/page/news/state/news_state.dart';
+import 'package:egat_flutter/screens/pages/main/news/news_screen.dart';
+import 'package:egat_flutter/screens/pages/main/news/state/news_state.dart';
 import 'package:egat_flutter/screens/session.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';

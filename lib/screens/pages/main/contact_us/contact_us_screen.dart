@@ -22,7 +22,6 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PageAppbar(firstTitle: "Contact", secondTitle: "Us"),
       drawer: NavigationMenuWidget(),
       body: SafeArea(
         child: _buildAction(context),

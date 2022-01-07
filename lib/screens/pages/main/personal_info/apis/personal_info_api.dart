@@ -1,9 +1,15 @@
+import 'dart:async';
 
+import 'package:egat_flutter/Utils/http/delete.dart';
+import 'package:egat_flutter/Utils/http/get.dart';
+import 'package:egat_flutter/Utils/http/put.dart';
 import 'package:egat_flutter/constant.dart';
-import 'package:egat_flutter/screens/page/api/model/AccessRequest.dart';
-import 'package:egat_flutter/screens/page/api/model/ChangePersonalInfoRequest.dart';
-import 'package:egat_flutter/screens/page/api/model/ChangePhotoRequest.dart';
+import 'package:egat_flutter/errors/IntlException.dart';
 import 'package:egat_flutter/screens/page/api/model/PersonalInfoResponse.dart';
+import 'package:egat_flutter/screens/pages/main/personal_info/apis/models/AccessRequest.dart';
+import 'package:egat_flutter/screens/pages/main/personal_info/apis/models/ChangePersonalInfoRequest.dart';
+import 'package:egat_flutter/screens/pages/main/personal_info/apis/models/ChangePhotoRequest.dart';
+import 'package:flutter/services.dart';
 
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
@@ -16,28 +22,30 @@ class PersonalInfoApi {
       "$apiBaseUrlProfileManage/users/me",
     );
 
+    final httpRequest = httpGetJson(url: url, accessToken: request.accessToken);
+
     Response response;
-    response = await http.get(
-      url,
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ${request.accessToken}'
-      },
-    );
-
-    if (response.statusCode == 404) {
-      throw "ปฎิเสธเนื่องจากการเข้าสู่ระบบไม่ถูกต้องหรือโดนยกเลิก";
+    try {
+      response = await httpRequest.timeout(Duration(seconds: 60));
+    } on TimeoutException catch (_) {
+      throw IntlException(
+        message: "Time out",
+        intlMessage: "error-timeoutError",
+      );
     }
 
-    if (response.statusCode == 401) {
-      throw "ปฎิเสธเนื่องจากการเข้าสู่ระบบไม่ถูกต้อง กรุณาเข้าสู่ระบบอีกครั้ง";
+    if (response.statusCode >= 500) {
+      throw IntlException(
+        message: "ปฎิเสธ server ตอบกลับด้วยสถานะ ${response.statusCode}",
+        intlMessage: "error-connectionError",
+      );
     }
-
     if (response.statusCode >= 300) {
-      throw "ปฎิเสธ server ตอบกลับด้วยสถานะ ${response.statusCode}";
+      throw IntlException(
+        message: "ปฎิเสธ server ตอบกลับด้วยสถานะ ${response.statusCode}",
+        intlMessage: "error-incorrectInformationError",
+      );
     }
-
-    logger.d(response.body);
 
     return PersonalInfoResponse.fromJSON(response.body);
   }
@@ -47,33 +55,33 @@ class PersonalInfoApi {
     var url = Uri.parse(
       "$apiBaseUrlProfileManage/users/${access.userId}",
     );
-    print("request*****");
-    print(request.fullName);
-    print(request.phoneNumber);
-    print(request.email);
-    print("request******");
 
     var requestJson = request.toJSON();
 
-    var response = await http.put(
-      url,
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ${access.accessToken}'
-      },
-      body: requestJson,
-    );
+    final httpRequest = httpPutJson(
+        uri: url, body: requestJson, accessToken: access.accessToken);
 
-    if (response.statusCode == 404) {
-      throw "ปฎิเสธเนื่องจากการเข้าสู่ระบบไม่ถูกต้องหรือโดนยกเลิก";
+    Response response;
+    try {
+      response = await httpRequest.timeout(Duration(seconds: 60));
+    } on TimeoutException catch (_) {
+      throw IntlException(
+        message: "Time out",
+        intlMessage: "error-timeoutError",
+      );
     }
 
-    if (response.statusCode == 401) {
-      throw "ปฎิเสธเนื่องจากการเข้าสู่ระบบไม่ถูกต้อง กรุณาเข้าสู่ระบบอีกครั้ง";
+    if (response.statusCode >= 500) {
+      throw IntlException(
+        message: "ปฎิเสธ server ตอบกลับด้วยสถานะ ${response.statusCode}",
+        intlMessage: "error-connectionError",
+      );
     }
-
     if (response.statusCode >= 300) {
-      throw "ปฎิเสธ server ตอบกลับด้วยสถานะ ${response.statusCode}";
+      throw IntlException(
+        message: "ปฎิเสธ server ตอบกลับด้วยสถานะ ${response.statusCode}",
+        intlMessage: "error-incorrectInformationError",
+      );
     }
 
     return response;
@@ -89,30 +97,31 @@ class PersonalInfoApi {
 
     var requestJson = request.toJSON();
 
-    var response = await http.put(
-      url,
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ${access.accessToken}'
-      },
-      body: requestJson,
-    );
+    final httpRequest = httpPutJson(
+        uri: url, body: requestJson, accessToken: access.accessToken);
 
-    print(response.statusCode);
-
-    if (response.statusCode == 404) {
-      throw "ปฎิเสธเนื่องจากการเข้าสู่ระบบไม่ถูกต้องหรือโดนยกเลิก";
+    Response response;
+    try {
+      response = await httpRequest.timeout(Duration(seconds: 60));
+    } on TimeoutException catch (_) {
+      throw IntlException(
+        message: "Time out",
+        intlMessage: "error-timeoutError",
+      );
     }
 
-    if (response.statusCode == 401) {
-      throw "ปฎิเสธเนื่องจากการเข้าสู่ระบบไม่ถูกต้อง กรุณาเข้าสู่ระบบอีกครั้ง";
+    if (response.statusCode >= 500) {
+      throw IntlException(
+        message: "ปฎิเสธ server ตอบกลับด้วยสถานะ ${response.statusCode}",
+        intlMessage: "error-connectionError",
+      );
     }
-
     if (response.statusCode >= 300) {
-      throw "ปฎิเสธ server ตอบกลับด้วยสถานะ ${response.statusCode}";
+      throw IntlException(
+        message: "ปฎิเสธ server ตอบกลับด้วยสถานะ ${response.statusCode}",
+        intlMessage: "error-incorrectInformationError",
+      );
     }
-
-    logger.d(response.body);
 
     return response;
   }
@@ -122,30 +131,60 @@ class PersonalInfoApi {
       "$apiBaseUrlProfileManage/users/${access.userId}/photo", //TODO
     );
 
-    var response = await http.delete(
-      url,
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ${access.accessToken}'
-      },
-    );
+    final httpRequest =
+        httpDeleteJson(url: url, accessToken: access.accessToken);
 
-    if (response.statusCode == 404) {
-      throw "ปฎิเสธเนื่องจากการเข้าสู่ระบบไม่ถูกต้องหรือโดนยกเลิก";
+    Response response;
+    try {
+      response = await httpRequest.timeout(Duration(seconds: 60));
+    } on TimeoutException catch (_) {
+      throw IntlException(
+        message: "Time out",
+        intlMessage: "error-timeoutError",
+      );
     }
 
-    if (response.statusCode == 401) {
-      throw "ปฎิเสธเนื่องจากการเข้าสู่ระบบไม่ถูกต้อง กรุณาเข้าสู่ระบบอีกครั้ง";
+    if (response.statusCode >= 500) {
+      throw IntlException(
+        message: "ปฎิเสธ server ตอบกลับด้วยสถานะ ${response.statusCode}",
+        intlMessage: "error-connectionError",
+      );
     }
-
     if (response.statusCode >= 300) {
-      throw "ปฎิเสธ server ตอบกลับด้วยสถานะ ${response.statusCode}";
+      throw IntlException(
+        message: "ปฎิเสธ server ตอบกลับด้วยสถานะ ${response.statusCode}",
+        intlMessage: "error-incorrectInformationError",
+      );
     }
-
-    logger.d(response.body);
 
     return response;
   }
 }
 
+class PersonalInfoMockApi {
+  const PersonalInfoMockApi();
+
+  Future<PersonalInfoResponse> getPersonalInfo(AccessRequest request) async {
+    return PersonalInfoResponse.fromJSON(
+        await rootBundle.loadString('assets/mockdata/page/personal_info.json'));
+  }
+
+  Future<PersonalInfoResponse> changePersonalInfo(
+      ChangePersonalInfoRequest request, AccessRequest accessToken) async {
+    return PersonalInfoResponse.fromJSON(await rootBundle
+        .loadString('assets/mockdata/page/change_personal_info.json'));
+  }
+
+  Future<Response> changePhoto(
+      ChangePhotoRequest request, AccessRequest accessToken) async {
+    Response response = Response("", 200);
+    return response;
+  }
+
+  Future<Response> removePhoto(AccessRequest request) async {
+    Response response = Response("", 200);
+    return response;
+  }
+}
+// const personalInfoApi = const PersonalInfoMockApi();
 const personalInfoApi = const PersonalInfoApi();

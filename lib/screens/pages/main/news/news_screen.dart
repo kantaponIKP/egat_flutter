@@ -2,9 +2,8 @@ import 'dart:math';
 
 import 'package:egat_flutter/constant.dart';
 import 'package:egat_flutter/screens/forgot_password/widgets/forgot_password_cancellation_dialog.dart';
-import 'package:egat_flutter/screens/page/news/state/news_state.dart';
-import 'package:egat_flutter/screens/page/widgets/page_appbar.dart';
-import 'package:egat_flutter/screens/page/widgets/side_menu.dart';
+import 'package:egat_flutter/screens/pages/main/news/state/news_state.dart';
+import 'package:egat_flutter/screens/pages/main/widgets/navigation_menu_widget.dart';
 import 'package:egat_flutter/screens/widgets/single_child_scoped_scroll_view.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -27,7 +26,6 @@ class _NewsScreenState extends State<NewsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PageAppbar(firstTitle: "", secondTitle: "News"),
       drawer: NavigationMenuWidget(),
       body: SafeArea(
         child: _buildAction(context),

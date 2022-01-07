@@ -61,8 +61,8 @@ class PageModel extends ChangeNotifier {
   }
 
   // TODO : API
-  PageApi api = PageApi();
-  // PageApiMock api = PageApiMock();
+  // PageApi api = PageApi();
+  PageApiMock api = PageApiMock();
 
   void whenPageStatusChanged() {}
 }

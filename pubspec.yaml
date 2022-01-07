@@ -61,6 +61,7 @@ flutter:
   assets:
     - assets/images/
     - assets/images/icons/home/
+    - assets/images/icons/payment/
     - assets/images/icons/bottom_navigation_bar/
     - assets/mockdata/login/
     - assets/mockdata/registration/

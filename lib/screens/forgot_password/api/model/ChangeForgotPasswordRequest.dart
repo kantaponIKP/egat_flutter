@@ -18,6 +18,7 @@ class ChangeForgotPasswordRequest {
     jsonMap['sessionId'] = this.sessionId;
     jsonMap['email'] = this.email;
     jsonMap['password'] = this.password;
+    jsonMap['sessionToken'] = this.sessionToken;
 
     return jsonEncode(jsonMap);
   }

@@ -80,6 +80,12 @@
   "title-contactUs-second": "เรา",
   "title-news": "ข่าวสาร",
   "title-setting": "การตั้งค่า",
+  "title-addPayment": "เพิ่มวิธีชำระเงิน",
+  "title-cardPayment": "ชำระโดยบัตร",
+  "title-changePin-first": "เปลี่ยนรหัส",
+  "title-changePin-second": "PIN",
+
+  "message-changePasswordSuccessfully": "เปลี่ยนรหัสผ่านสำเร็จแล้ว",
 
   "error-connectionError": "ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์ได้",
   "error-incorrectInformationError": "ข้อมูลผิดพลาด",

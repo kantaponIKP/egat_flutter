@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 import 'package:egat_flutter/Utils/http/post.dart';
 import 'package:egat_flutter/errors/IntlException.dart';
 import 'package:egat_flutter/screens/forgot_password/api/model/ChangeForgotPasswordRequest.dart';
@@ -8,9 +7,6 @@ import 'package:egat_flutter/screens/forgot_password/api/model/OtpForgotPassword
 import 'package:egat_flutter/screens/forgot_password/api/model/OtpForgotPasswordResponse.dart';
 import 'package:egat_flutter/screens/forgot_password/api/model/SubmitOtpForgotPasswordRequest.dart';
 import 'package:egat_flutter/screens/forgot_password/api/model/SubmitOtpForgotPasswordResponse.dart';
-import 'package:egat_flutter/screens/registration/api/model/LocationResponse.dart';
-
-
 
 import 'package:egat_flutter/constant.dart';
 
@@ -21,8 +17,6 @@ class ForgotPasswordApi {
   Future<OtpForgotPasswordResponse> sendOtp(
     OtpForgotPasswordRequest request,
   ) async {
-    logger.d("Send OTP");
-    logger.d(request.email);
     var url = Uri.parse(
       "$apiBaseUrlLogin/forgotpassword-sessions/otp-send",
     );
@@ -30,7 +24,7 @@ class ForgotPasswordApi {
     var requestJson = request.toJSON();
 
     final httpRequest = httpPostJson(uri: url, body: requestJson);
-    
+
     Response response;
 
     try {
@@ -48,6 +42,14 @@ class ForgotPasswordApi {
         intlMessage: "error-connectionError",
       );
     }
+
+    if (response.statusCode == 401) {
+      throw IntlException(
+        message: "ปฎิเสธ server ตอบกลับด้วยสถานะ ${response.statusCode}",
+        intlMessage: "error-sessionExpired",
+      );
+    }
+
     if (response.statusCode >= 300) {
       throw IntlException(
         message: "ปฎิเสธ server ตอบกลับด้วยสถานะ ${response.statusCode}",
@@ -58,7 +60,7 @@ class ForgotPasswordApi {
     return OtpForgotPasswordResponse.fromJSON(response.body);
   }
 
-    Future<SubmitOtpForgotPasswordResponse> submitOtp(
+  Future<SubmitOtpForgotPasswordResponse> submitOtp(
       SubmitOtpForgotPasswordRequest request) async {
     var url = Uri.parse(
       "$apiBaseUrlLogin/forgotpassword-sessions/${request.sessionId}/otp-submit",
@@ -71,6 +73,7 @@ class ForgotPasswordApi {
 
     try {
       response = await httpRequest.timeout(Duration(seconds: 60));
+      print(response.statusCode);
     } on TimeoutException catch (_) {
       throw IntlException(
         message: "Time out",
@@ -84,6 +87,13 @@ class ForgotPasswordApi {
         intlMessage: "error-connectionError",
       );
     }
+
+    if (response.statusCode == 401) {
+      throw IntlException(
+        message: "ปฎิเสธ server ตอบกลับด้วยสถานะ ${response.statusCode}",
+        intlMessage: "error-sessionExpired",
+      );
+    }
     if (response.statusCode >= 300) {
       throw IntlException(
         message: "ปฎิเสธ server ตอบกลับด้วยสถานะ ${response.statusCode}",
@@ -94,7 +104,7 @@ class ForgotPasswordApi {
     return SubmitOtpForgotPasswordResponse.fromJSON(response.body);
   }
 
-  Future<ChangeForgotPasswordResponse> changeForgotPassword(
+  Future<Response> changeForgotPassword(
       ChangeForgotPasswordRequest request) async {
     var url = Uri.parse(
       "$apiBaseUrlLogin/forgotpassword-sessions/${request.sessionId}/forgotpassword",
@@ -103,7 +113,7 @@ class ForgotPasswordApi {
     var requestJson = request.toJSON();
 
     final httpRequest = httpPostJson(uri: url, body: requestJson);
-    
+
     Response response;
 
     try {
@@ -121,13 +131,21 @@ class ForgotPasswordApi {
         intlMessage: "error-connectionError",
       );
     }
+
+    if (response.statusCode == 401) {
+      throw IntlException(
+        message: "ปฎิเสธ server ตอบกลับด้วยสถานะ ${response.statusCode}",
+        intlMessage: "error-sessionExpired",
+      );
+    }
+
     if (response.statusCode >= 300) {
       throw IntlException(
         message: "ปฎิเสธ server ตอบกลับด้วยสถานะ ${response.statusCode}",
         intlMessage: "error-incorrectInformationError",
       );
     }
-    
-    return ChangeForgotPasswordResponse.fromJSON(response.body);
+
+    return response;
   }
 }

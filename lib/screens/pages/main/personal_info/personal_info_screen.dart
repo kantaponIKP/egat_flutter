@@ -4,9 +4,10 @@ import 'dart:io';
 
 import 'package:egat_flutter/constant.dart';
 import 'package:egat_flutter/i18n/app_localizations.dart';
-import 'package:egat_flutter/screens/page/state/personal_info.dart';
-import 'package:egat_flutter/screens/page/widgets/page_appbar.dart';
 import 'package:egat_flutter/screens/page/widgets/side_menu.dart';
+import 'package:egat_flutter/screens/pages/main/states/main_screen_navigation_state.dart';
+import 'package:egat_flutter/screens/pages/main/states/main_screen_title_state.dart';
+import 'package:egat_flutter/screens/pages/main/states/personal_info_state.dart';
 import 'package:egat_flutter/screens/widgets/loading_dialog.dart';
 import 'package:egat_flutter/screens/widgets/show_exception.dart';
 import 'package:flutter/gestures.dart';
@@ -49,10 +50,13 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
   }
 
   void _getPersonalInformation() async {
-    var model = Provider.of<PersonalInfo>(context, listen: false);
-    await showLoading();
+    var model = Provider.of<PersonalInfoState>(context, listen: false);
+    
     try {
-      await model.getPersonalInformation();
+      if(model.info.fullName == null){
+        await showLoading();
+        await model.getPersonalInformation();
+      }
     } catch (e) {
       showException(context, e.toString());
     } finally {
@@ -169,23 +173,22 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
   Widget _buildAvatar() {
     print("_imageBase64");
     print(_imageBase64);
-    try{
+    try {
       if (_imageBase64 == null || _imageBase64 == "") {
         print("if");
-          return CircleAvatar();
-        } else {
-          print("else");
-          // return CircleAvatar(child: ClipOval(child: _image)
-          return CircleAvatar(
-              child: ClipOval(child: Image.memory(base64Decode(_imageBase64!)))
-              // child: ClipOval(child: Image.memory(base64Decode("")))
-              // backgroundImage: AssetImage("assets/images/Profile Image.png"),
-              );
-        }
-    }catch (e){
+        return CircleAvatar();
+      } else {
+        print("else");
+        // return CircleAvatar(child: ClipOval(child: _image)
+        return CircleAvatar(
+            child: ClipOval(child: Image.memory(base64Decode(_imageBase64!)))
+            // child: ClipOval(child: Image.memory(base64Decode("")))
+            // backgroundImage: AssetImage("assets/images/Profile Image.png"),
+            );
+      }
+    } catch (e) {
       return CircleAvatar();
     }
-  
   }
 
   Widget _buildNameSection() {
@@ -193,7 +196,7 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
       text: TextSpan(
         style: TextStyle(fontSize: 22),
         children: <TextSpan>[
-          TextSpan(text: "Logan venial"),
+          TextSpan(text: _fullName),
         ],
       ),
     );
@@ -392,8 +395,18 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
   }
 
   void _onChangePasswordPressed() {
-    var model = Provider.of<PersonalInfo>(context, listen: false);
-    model.setPageChangePassword();
+    // var model = Provider.of<PersonalInfoState>(context, listen: false);
+    // model.setPageChangePassword();
+    MainScreenNavigationState mainScreenNavigation =
+        Provider.of<MainScreenNavigationState>(context, listen: false);
+    mainScreenNavigation.setPageToChangePassword();
+    MainScreenTitleState mainScreenTitle =
+        Provider.of<MainScreenTitleState>(context, listen: false);
+    mainScreenTitle.setTitleTwoTitles(
+        title: AppLocalizations.of(context)
+            .translate('title-changePassword-first'),
+        secondaryTitle: AppLocalizations.of(context)
+            .translate('title-changePassword-second'));
   }
 
   Future<void> _onSelectPhotoPressed() async {
@@ -407,19 +420,16 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
     final file = File(xfile.path);
     final bytes = file.readAsBytesSync();
     String base64Image = base64Encode(bytes);
-       log(base64Image.toString());
-     try {
-      var model = Provider.of<PersonalInfo>(context, listen: false);
-      log("base print");
-      log(base64Image);
+    log(base64Image.toString());
+    try {
+      var model = Provider.of<PersonalInfoState>(context, listen: false);
       await model.changePhoto(base64Image);
       _getPersonalInformation();
     } catch (e) {
-      showException(context, e.toString());
+      showIntlException(context, e);
     } finally {
       await hideLoading();
     }
-
   }
 
   void _onPressedRemovePhoto() async {
@@ -428,11 +438,11 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
 
     await showLoading();
     try {
-      var model = Provider.of<PersonalInfo>(context, listen: false);
+      var model = Provider.of<PersonalInfoState>(context, listen: false);
       await model.removePhoto();
       _getPersonalInformation();
     } catch (e) {
-      showException(context, e.toString());
+      showIntlException(context, e);
     } finally {
       await hideLoading();
     }
@@ -443,14 +453,14 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
 
     await showLoading();
     try {
-      var model = Provider.of<PersonalInfo>(context, listen: false);
+      var model = Provider.of<PersonalInfoState>(context, listen: false);
       await model.changePersonalInformation(
           fullName: _fullNameController!.text,
           phoneNumber: _phoneNumberController!.text,
           email: _emailController!.text);
       _getPersonalInformation();
     } catch (e) {
-      showException(context, e.toString());
+      showIntlException(context, e);
     } finally {
       await hideLoading();
     }

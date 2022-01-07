@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 class LocationResponse {
   String? location;
   num? zoomLevel;
@@ -5,15 +7,14 @@ class LocationResponse {
 
   LocationResponse({this.location, this.zoomLevel, this.position});
 
-  factory LocationResponse.fromJSON(Map<String, dynamic> parsedJson) {
-    return LocationResponse(
-        location: parsedJson['location'],
-        zoomLevel: parsedJson['zoomLevel'],
-        position: Position.fromJson(parsedJson['position']));  
+  LocationResponse.fromJSON(String jsonString) {
+    Map<String, dynamic> jsonMap = jsonDecode(jsonString);
+    this.location = jsonMap["location"];
+    this.zoomLevel = jsonMap["zoomLevel"];
+    this.position = Position.fromJson(jsonMap["position"]);
   }
 
 }
-
 class Position {
   num? lat;
   num? lng;

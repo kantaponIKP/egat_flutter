@@ -30,6 +30,7 @@ class _OtpScreenState extends State<OtpScreen> {
   TextEditingController? _pinController;
   Timer? _timer;
   int _countdown = 20;
+  bool _validated = false;
 
   @override
   void dispose() {
@@ -41,8 +42,9 @@ class _OtpScreenState extends State<OtpScreen> {
   void initState() {
     super.initState();
     _pinController = TextEditingController();
-    // _sendOTP();
-    startTimer();
+    _sendOTP();
+
+    // startTimer();
   }
 
   void startTimer() {
@@ -129,7 +131,7 @@ class _OtpScreenState extends State<OtpScreen> {
                           actionLabel: Text(
                               '${AppLocalizations.of(context).translate('next')}'),
                           onAction: (_formKey.currentState != null)
-                              ? (_formKey.currentState!.validate())
+                              ? (_validated)
                                   ? _onNextPressed
                                   : null
                               : null),
@@ -190,6 +192,16 @@ class _OtpScreenState extends State<OtpScreen> {
               decimal: false,
             ),
             length: 6,
+            onChanged: (value) {
+              setState(() {
+                _validated = false;
+              });
+            },
+            onCompleted: (v) {
+              setState(() {
+                _validated = true;
+              });
+            },
             validator: (value) {
               if (value == null) {
                 return "Must be number 6 digits";
@@ -206,7 +218,6 @@ class _OtpScreenState extends State<OtpScreen> {
               return null;
             },
             controller: _pinController,
-            onChanged: (String value) {},
             appContext: context,
           ),
         ),
@@ -323,7 +334,7 @@ class _OtpScreenState extends State<OtpScreen> {
       // await otp.submitFirstTimeOtp();
       await otp.sendOtp();
     } catch (e) {
-      showException(context, e.toString());
+      showIntlException(context, e);
     } finally {
       await hideLoading();
     }
@@ -345,7 +356,7 @@ class _OtpScreenState extends State<OtpScreen> {
       _timer!.cancel();
       otp.nextPage();
     } catch (e) {
-      showException(context, e.toString());
+      showIntlException(context, e);
     } finally {
       await hideLoading();
     }

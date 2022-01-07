@@ -80,6 +80,15 @@
   "title-contactUs-second": "Us",
   "title-news": "News",
   "title-setting": "Setting",
+  "title-addPayment": "Add Payment",
+  "title-cardPayment": "Card Payment",
+  "title-changePin-first": "Change",
+  "title-changePin-second": "PIN",
+
+  "payment-cardPayment": "Card Payment",
+  "payment-promptPay": "PromptPay",
+
+  "message-changePasswordSuccessfully": "Your password has been changed successfully.",
   
   "error-connectionError": "Can't connect the server.",
   "error-incorrectInformationError": "Incorrect information.",

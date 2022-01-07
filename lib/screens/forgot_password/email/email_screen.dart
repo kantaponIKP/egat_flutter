@@ -235,7 +235,7 @@ class _EmailScreenState extends State<EmailScreen> {
       // );
       await model.sendOtp(email: _emailController!.text);
     } catch (e) {
-      showException(context, e.toString());
+      showIntlException(context, e);
     } finally {
       await hideLoading();
     }

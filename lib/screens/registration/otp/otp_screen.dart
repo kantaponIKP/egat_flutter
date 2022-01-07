@@ -29,6 +29,7 @@ class _OtpScreenState extends State<OtpScreen> {
   TextEditingController? _pinController;
   Timer? _timer;
   int _countdown = 20;
+  bool _validated = false;
 
   @override
   void dispose() {
@@ -55,14 +56,13 @@ class _OtpScreenState extends State<OtpScreen> {
             timer.cancel();
           });
         } else {
-          if(mounted){
-             setState(() {
-            _countdown--;
-          });
-          }else{
+          if (mounted) {
+            setState(() {
+              _countdown--;
+            });
+          } else {
             _timer!.cancel();
           }
-         
         }
       },
     );
@@ -167,7 +167,7 @@ class _OtpScreenState extends State<OtpScreen> {
                           actionLabel: Text(
                               '${AppLocalizations.of(context).translate('sign-up')}'),
                           onAction: (_formKey.currentState != null)
-                              ? (_formKey.currentState!.validate())
+                              ? (_validated)
                                   ? _onSignUpPressed
                                   : null
                               : null),
@@ -320,6 +320,16 @@ class _OtpScreenState extends State<OtpScreen> {
               decimal: false,
             ),
             length: 6,
+            onChanged: (value) {
+              setState(() {
+                _validated = false;
+              });
+            },
+            onCompleted: (v) {
+              setState(() {
+                _validated = true;
+              });
+            },
             validator: (value) {
               if (value == null) {
                 return "Must be number 6 digits";
@@ -332,11 +342,9 @@ class _OtpScreenState extends State<OtpScreen> {
               if (!_isNumeric(value)) {
                 return "Must be number 6 digits";
               }
-
               return null;
             },
             controller: _pinController,
-            onChanged: (value) {},
             appContext: context,
           ),
         ),

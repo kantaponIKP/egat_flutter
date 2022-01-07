@@ -1,8 +1,8 @@
-import 'package:egat_flutter/screens/page/api/model/AccessRequest.dart';
-import 'package:egat_flutter/screens/page/api/model/ChangePersonalInfoRequest.dart';
-import 'package:egat_flutter/screens/page/api/model/ChangePhotoRequest.dart';
 import 'package:egat_flutter/screens/page/page_model.dart';
-import 'package:egat_flutter/screens/pages/main/personal_info/apis/page_api.dart';
+import 'package:egat_flutter/screens/pages/main/personal_info/apis/models/AccessRequest.dart';
+import 'package:egat_flutter/screens/pages/main/personal_info/apis/models/ChangePersonalInfoRequest.dart';
+import 'package:egat_flutter/screens/pages/main/personal_info/apis/models/ChangePhotoRequest.dart';
+import 'package:egat_flutter/screens/pages/main/personal_info/apis/personal_info_api.dart';
 import 'package:egat_flutter/screens/session.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -20,17 +20,23 @@ class PersonalInfoModel {
   });
 }
 
-class PersonalInfo extends ChangeNotifier {
+class PersonalInfoState extends ChangeNotifier {
   LoginSession? _loginSession;
   PersonalInfoModel _info = PersonalInfoModel();
 
   LoginSession? get loginSession => _loginSession;
-  final userId = "";
-  //TODO:
+  
+    void setLoginSession(LoginSession state) {
+    if (_loginSession == state) {
+      return;
+    }
 
-  final PageModel parent;
+    _loginSession = state;
+    notifyListeners();
+  }
 
-  PersonalInfo(this.parent);
+
+  PersonalInfoState();
 
   PersonalInfoModel get info => _info;
 
@@ -98,7 +104,7 @@ class PersonalInfo extends ChangeNotifier {
       changePersonalInfo,
       AccessRequest(
         accessToken: accessToken,
-        userId: userId,
+        userId: loginSession!.info!.userId,
       ),
     );
 
@@ -111,7 +117,7 @@ class PersonalInfo extends ChangeNotifier {
       ChangePhotoRequest(photo: photo),
       AccessRequest(
         accessToken: accessToken,
-        userId: userId,
+        userId: loginSession!.info!.userId,
       ),
     );
   }
@@ -121,7 +127,7 @@ class PersonalInfo extends ChangeNotifier {
     var response = await personalInfoApi.removePhoto(
       AccessRequest(
         accessToken: accessToken,
-        userId: userId,
+        userId: loginSession!.info!.userId,
       ),
     );
   }
@@ -131,7 +137,7 @@ class PersonalInfo extends ChangeNotifier {
     var response = await personalInfoApi.getPersonalInfo(
       AccessRequest(
         accessToken: accessToken,
-        userId: userId,
+        userId: loginSession!.info!.userId,
       ),
     );
 
@@ -143,7 +149,7 @@ class PersonalInfo extends ChangeNotifier {
   }
 
   void setPageChangePassword() {
-    parent.status.setStateChangePassword();
+    // parent.status.setStateChangePassword();
     //TODO:
   }
 

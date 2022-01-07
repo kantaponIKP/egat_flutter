@@ -1,15 +1,13 @@
-import 'package:egat_flutter/i18n/app_language.dart';
 import 'package:egat_flutter/i18n/app_localizations.dart';
 import 'package:egat_flutter/screens/forgot_password/forgot_password_model.dart';
 import 'package:egat_flutter/screens/forgot_password/forgot_password_step_indicator.dart';
-import 'package:egat_flutter/screens/forgot_password/state/email.dart';
 import 'package:egat_flutter/screens/forgot_password/state/password.dart';
 import 'package:egat_flutter/screens/registration/widgets/login_text_button.dart';
 import 'package:egat_flutter/screens/registration/widgets/registration_action.dart';
 import 'package:egat_flutter/screens/widgets/loading_dialog.dart';
 import 'package:egat_flutter/screens/widgets/show_exception.dart';
+import 'package:egat_flutter/screens/widgets/show_success_snackbar.dart';
 import 'package:flutter/material.dart';
-import 'package:egat_flutter/constant.dart';
 import 'package:provider/provider.dart';
 
 class PasswordScreen extends StatefulWidget {
@@ -189,6 +187,8 @@ class _PasswordScreenState extends State<PasswordScreen> {
                   return "Required";
                 } else if (value.length < 6) {
                   return "Must be contain at least 6 digits";
+                } else if (!_isPasswordValid(value)) {
+                  return "Password must be including UPPER/lowercase and \nthe number";
                 }
                 return null;
               },
@@ -253,24 +253,31 @@ class _PasswordScreenState extends State<PasswordScreen> {
     }
   }
 
+    bool _isPasswordValid(String password){
+    return RegExp(
+            r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{6,}$")
+        .hasMatch(password);
+  }
+
   void _onResetPasswordPressed() async {
     await showLoading();
 
     try {
       var model = Provider.of<Password>(context, listen: false);
       await model.resetPassword(_passwordController!.text);
-    } catch (e) {
-      showException(context, e.toString());
-    } finally {
-      await hideLoading();
       var forgotPasswordModel =
           Provider.of<ForgotPasswordModel>(context, listen: false);
-    String message = 'Your password has been changed successfully.';
-    ScaffoldMessenger.of(context).clearSnackBars();
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: Text(message),
-    ));
+      showSuccessSnackBar(context,AppLocalizations.of(context).translate('message-changePasswordSuccessfully'));
+      // ScaffoldMessenger.of(context).clearSnackBars();
+      
+      // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      //   content: Text(message),
+      // ));
       forgotPasswordModel.finish();
+    } catch (e) {
+      showIntlException(context, e);
+    } finally {
+      await hideLoading();
     }
   }
 

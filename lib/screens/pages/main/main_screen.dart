@@ -2,9 +2,11 @@ import 'package:egat_flutter/screens/page/widgets/page_appbar.dart';
 import 'package:egat_flutter/screens/pages/main/change_password/change_password_page.dart';
 import 'package:egat_flutter/screens/pages/main/contact_us/contact_us_screen.dart';
 import 'package:egat_flutter/screens/pages/main/home/home_page.dart';
+import 'package:egat_flutter/screens/pages/main/news/news_page.dart';
 import 'package:egat_flutter/screens/pages/main/news/news_screen.dart';
 import 'package:egat_flutter/screens/pages/main/personal_info/personal_info_screen.dart';
-import 'package:egat_flutter/screens/pages/main/setting/setting_screen.dart';
+import 'package:egat_flutter/screens/pages/main/setting/main/main_screen.dart';
+import 'package:egat_flutter/screens/pages/main/setting/setting_page.dart';
 import 'package:egat_flutter/screens/pages/main/states/main_screen_title_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -67,10 +69,10 @@ class _AppBody extends StatelessWidget {
         widget = ContactUsScreen(key: Key('contact_us'));
         break;
       case MainScreenNavigationPage.NEWS:
-        widget = NewsScreen(key: Key('news'));
+        widget = NewsPage(key: Key('news'));
         break;
       case MainScreenNavigationPage.SETTING:
-        widget = SettingScreen(key: Key('setting'));
+        widget = SettingPage(key: Key('setting'));
         break;
       default:
         widget = Container(key: Key('blank'));

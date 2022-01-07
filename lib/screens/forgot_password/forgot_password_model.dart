@@ -26,8 +26,8 @@ class ForgotPasswordModel extends ChangeNotifier {
   }
 
   // TODO
-  ForgotPasswordApiMock api = ForgotPasswordApiMock();
-  // ForgotPasswordApi api = ForgotPasswordApi();
+  // ForgotPasswordApiMock api = ForgotPasswordApiMock();
+  ForgotPasswordApi api = ForgotPasswordApi();
 
   Future<void> cancelRegistration() async {
     status.setStateDismiss();

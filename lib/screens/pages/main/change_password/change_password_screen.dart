@@ -236,7 +236,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                 } else if (value.length < 6) {
                   return "Must be contain at least 6 digits";
                 } else if (!_isPasswordValid(value)) {
-                  return "Password must be including UPPER/lowercase and the number";
+                  return "Password must be including UPPER/lowercase and \nthe number";
                 }
                 return null;
               },

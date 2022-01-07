@@ -37,10 +37,19 @@ class MainScreenTitleState extends ChangeNotifier {
       notifyListeners();
     });
   }
+
+  void setNoneTitle() {
+    _type = MainScreenTitleType.NONE;
+
+    Future<void>.delayed(const Duration(milliseconds: 0), () {
+      notifyListeners();
+    });
+  }
 }
 
 enum MainScreenTitleType {
   LOGO,
   ONE_TITLE,
   TWO_TITLE,
+  NONE,
 }
