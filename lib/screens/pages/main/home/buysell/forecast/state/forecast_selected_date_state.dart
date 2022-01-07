@@ -15,6 +15,13 @@ class ForecastSelectedDateState extends ChangeNotifier {
   ForecastData? get nextDayForecastData =>
       _nextDayForecastData?.asUnmodifiable();
 
+  bool get isToday {
+    var now = DateTime.now();
+
+    return DateTime(_selectedDate.year, _selectedDate.month, _selectedDate.day)
+        .isAtSameMomentAs(DateTime(now.year, now.month, now.day));
+  }
+
   List<DateTime> _availableDateTimes = [];
   List<DateTime> get availableDateTimes =>
       UnmodifiableListView(_availableDateTimes);

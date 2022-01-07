@@ -4,8 +4,10 @@ import 'package:egat_flutter/constant.dart';
 import 'package:egat_flutter/screens/forgot_password/widgets/forgot_password_cancellation_dialog.dart';
 import 'package:egat_flutter/screens/page/trade/bottom_button.dart';
 import 'package:egat_flutter/screens/page/widgets/page_appbar.dart';
+import 'package:egat_flutter/screens/pages/main/home/buysell/bilateral/buy/controller/buy_item_controller.dart';
+import 'package:egat_flutter/screens/pages/main/home/buysell/bilateral/buy/dialogs/buy_confirmation_dialog.dart';
+import '../apis/models/BilateralBuyItem.dart';
 import 'package:egat_flutter/screens/pages/main/home/buysell/bilateral/apis/models/TransactionSubmitItem.dart';
-import '../apis/models/BilateralSellItem.dart';
 import '../apis/bilateral_api.dart';
 import 'package:egat_flutter/screens/session.dart';
 import 'package:flutter/material.dart';
@@ -13,6 +15,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
+import 'long_term/long_term_buy_page.dart';
 import 'short_term/bilateral_short_term_sell_page.dart';
 
 class BilateralBuyScreen extends StatefulWidget {
@@ -59,14 +62,36 @@ class _BilateralBuyScreenState extends State<BilateralBuyScreen> {
   _OfferOrder _selectedOrder =
       const _OfferOrder(_OfferOrderType.PRICE, _OfferOrderDirection.DESC);
 
-  Set<BilateralSellItem> _selectedItems = Set();
+  Set<BilateralBuyItem> _selectedItems = Set();
 
   Completer<GoogleMapController> _controller = Completer();
+
+  BuyItemController _buyItemController = BuyItemController();
+
+  bool _isAtLeastOneItemSelected = false;
 
   @override
   void initState() {
     super.initState();
     _getData();
+
+    _buyItemController = BuyItemController();
+    _isAtLeastOneItemSelected = false;
+
+    _buyItemController.addListener(_onSelectedItemChanged);
+  }
+
+  void _onSelectedItemChanged() {
+    setState(() {
+      _isAtLeastOneItemSelected = _buyItemController.items.isNotEmpty;
+    });
+  }
+
+  @override
+  void dispose() {
+    _buyItemController.removeListener(_onSelectedItemChanged);
+
+    super.dispose();
   }
 
   @override
@@ -74,7 +99,7 @@ class _BilateralBuyScreenState extends State<BilateralBuyScreen> {
     return Scaffold(
       appBar: PageAppbar(firstTitle: "Bilateral", secondTitle: "Buy"),
       body: SafeArea(
-        child: FutureBuilder<List<BilateralSellItem>>(
+        child: FutureBuilder<List<BilateralBuyItem>>(
           future: _getData(),
           builder: (context, snapshot) {
             if (snapshot.hasError) {
@@ -94,7 +119,7 @@ class _BilateralBuyScreenState extends State<BilateralBuyScreen> {
     );
   }
 
-  Widget _buildBody(BuildContext context, List<BilateralSellItem> items) {
+  Widget _buildBody(BuildContext context, List<BilateralBuyItem> items) {
     return Container(
       decoration: BoxDecoration(
         gradient: RadialGradient(
@@ -110,7 +135,7 @@ class _BilateralBuyScreenState extends State<BilateralBuyScreen> {
 
   Padding _buildAction(
     BuildContext context,
-    List<BilateralSellItem> _bilateralItemList,
+    List<BilateralBuyItem> _bilateralItemList,
   ) {
     LoginSession loginModel = Provider.of<LoginSession>(context);
 
@@ -128,9 +153,9 @@ class _BilateralBuyScreenState extends State<BilateralBuyScreen> {
       _bilateralItemList.sort(
         (a, b) {
           if (_selectedOrder.direction == _OfferOrderDirection.ASC) {
-            return a.price.compareTo(b.price);
+            return a.energyPrice.compareTo(b.energyPrice);
           } else {
-            return b.price.compareTo(a.price);
+            return b.energyPrice.compareTo(a.energyPrice);
           }
         },
       );
@@ -138,9 +163,9 @@ class _BilateralBuyScreenState extends State<BilateralBuyScreen> {
       _bilateralItemList.sort(
         (a, b) {
           if (_selectedOrder.direction == _OfferOrderDirection.ASC) {
-            return a.energy.compareTo(b.energy);
+            return a.netEnergyPrice.compareTo(b.netEnergyPrice);
           } else {
-            return b.energy.compareTo(a.energy);
+            return b.netEnergyPrice.compareTo(a.netEnergyPrice);
           }
         },
       );
@@ -190,15 +215,11 @@ class _BilateralBuyScreenState extends State<BilateralBuyScreen> {
                                 visible: (_bilateralItemList[index].isLongterm)
                                     ? false
                                     : true,
-                                child: _SellItemCard(
-                                  index: index,
+                                child: _BuyItem(
                                   item: _bilateralItemList[index],
-                                  isChecked: _selectedItems.contains(
-                                    _bilateralItemList[index],
-                                  ),
-                                  onTap: () => _onItemTap(
-                                    _bilateralItemList[index],
-                                  ),
+                                  controller: _buyItemController,
+                                  key: Key('item-$index'),
+                                  index: index,
                                 ),
                               );
                             },
@@ -210,11 +231,13 @@ class _BilateralBuyScreenState extends State<BilateralBuyScreen> {
                 ),
               ),
               BottomButton(
-                onAction: isSubmitable ? _onPlaceOrderPressed : null,
+                onAction: isSubmitable && _isAtLeastOneItemSelected
+                    ? _onPlaceOrderPressed
+                    : null,
                 actionLabel: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 8),
                   child: Text(
-                    "Place Order",
+                    "Submit",
                     style: TextStyle(
                       fontWeight: FontWeight.w300,
                       fontSize: 20,
@@ -253,20 +276,24 @@ class _BilateralBuyScreenState extends State<BilateralBuyScreen> {
   }
 
   void _onPlaceOrderPressed() async {
-    await Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => BilateralShortTermSellPage(
-          requestItems: [
-            TransactionSubmitItem(date: widget.date, amount: 1, price: 3)
-          ],
-        ),
-      ),
+    final items = _buyItemController.items.values.toList();
+
+    final dialogAnswer = await showDialog<bool>(
+      context: context,
+      builder: (context) {
+        return BuyConfirmationDialog(
+          items: items,
+          forDate: widget.date,
+        );
+      },
     );
 
-    Navigator.pop(context);
+    if (dialogAnswer == true) {
+      _placeOrder(items[0]);
+    }
   }
 
-  Future<List<BilateralSellItem>> _getData() async {
+  Future<List<BilateralBuyItem>> _getData() async {
     final loginSession = Provider.of<LoginSession>(context, listen: false);
 
     if (loginSession.info == null) {
@@ -276,7 +303,7 @@ class _BilateralBuyScreenState extends State<BilateralBuyScreen> {
 
     final accessToken = loginSession.info!.accessToken;
 
-    var data = await bilateralApi.getBilateralShortTermSellInfo(
+    var data = await bilateralApi.getBilateralShortTermBuyInfo(
       requestDate: widget.date,
       accessToken: accessToken,
     );
@@ -284,14 +311,37 @@ class _BilateralBuyScreenState extends State<BilateralBuyScreen> {
     return data.bilateralList;
   }
 
-  _onItemTap(BilateralSellItem sellItem) {
+  _onItemTap(BilateralBuyItem buyItem) {
     setState(() {
-      if (_selectedItems.contains(sellItem)) {
-        _selectedItems.remove(sellItem);
+      if (_selectedItems.contains(buyItem)) {
+        _selectedItems.remove(buyItem);
       } else {
-        _selectedItems.add(sellItem);
+        _selectedItems.add(buyItem);
       }
     });
+  }
+
+  void _placeOrder(BilateralBuyItem item) async {
+    showLoading();
+    try {
+      final loginSession = Provider.of<LoginSession>(context, listen: false);
+
+      if (loginSession.info == null) {
+        showException(context, "No login session provided");
+        throw Exception("No login session provided");
+      }
+
+      final accessToken = loginSession.info!.accessToken;
+
+      await bilateralApi.bilateralShortTermBuy(
+        id: item.id,
+        accessToken: accessToken,
+      );
+    } catch (e) {
+      showException(context, e.toString());
+    } finally {
+      hideLoading();
+    }
   }
 }
 
@@ -426,7 +476,17 @@ class _SelectionSection extends StatelessWidget {
 class _HeaderSection extends StatelessWidget {
   const _HeaderSection({Key? key}) : super(key: key);
 
-  onLongTermPressed() {}
+  onLongTermPressed(BuildContext context) async {
+    final result = await Navigator.of(context).push<bool>(
+      MaterialPageRoute(
+        builder: (context) => LongTermBuyPage(),
+      ),
+    );
+
+    if (result != null && result) {
+      Navigator.pop(context, true);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -439,11 +499,13 @@ class _HeaderSection extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Offer to sell',
-                style: TextStyle(fontSize: 24, color: greenColor),
+                'Choose to buy',
+                style: TextStyle(fontSize: 24, color: redColor),
               ),
-              Text("Short term Bilateral",
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w200)),
+              Text(
+                "Short term Bilateral",
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w200),
+              ),
             ],
           ),
         ),
@@ -452,7 +514,7 @@ class _HeaderSection extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             ElevatedButton(
-              onPressed: onLongTermPressed,
+              onPressed: () => onLongTermPressed(context),
               child: Row(
                 children: [
                   Icon(Icons.refresh),
@@ -531,141 +593,347 @@ class _DateSection extends StatelessWidget {
   }
 }
 
-class _SellItemCard extends StatelessWidget {
-  final BilateralSellItem item;
-  final int index;
-  final Function()? onTap;
-  final bool isChecked;
+String _convertIndexToAlphabatical(int index) {
+  String alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
-  const _SellItemCard({
+  if (index ~/ 24 > 0) {
+    return _convertIndexToAlphabatical(index ~/ 24) + alphabet[index % 24];
+  } else {
+    return alphabet[index % 24];
+  }
+}
+
+class _BuyItem extends StatefulWidget {
+  final BilateralBuyItem item;
+  final BuyItemController controller;
+  final int index;
+
+  const _BuyItem({
     Key? key,
     required this.item,
+    required this.controller,
     required this.index,
-    required this.isChecked,
-    this.onTap,
+  }) : super(key: key);
+
+  @override
+  __BuyItemState createState() => __BuyItemState();
+}
+
+class __BuyItemState extends State<_BuyItem> {
+  bool _selected = false;
+  bool _expanded = true;
+
+  Object get _key => this.widget.key ?? this;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _selected = false;
+    _expanded = true;
+
+    widget.controller.addListener(_selectedListener);
+  }
+
+  void _selectedListener() {
+    setState(() {
+      _selected = widget.controller.isOwnerSelected(_key);
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+
+    widget.controller.removeListener(_selectedListener);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 16),
+      child: Container(
+        decoration: BoxDecoration(
+          color: Color(0xFF3E3E3E),
+          borderRadius: BorderRadius.circular(5),
+        ),
+        child: Column(
+          children: [
+            _BuyItemHeader(
+              item: widget.item,
+              selected: _selected,
+              expanded: _expanded,
+              index: widget.index,
+              onChanged: _onChange,
+              onExpand: _onExpand,
+            ),
+            _BuyItemBody(
+              item: widget.item,
+              selected: _selected,
+              expanded: _expanded,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _onChange(bool newState) {
+    if (newState) {
+      widget.controller.addItem(_key, widget.item);
+    } else {
+      widget.controller.removeItem(_key);
+    }
+  }
+
+  void _onExpand(bool p1) {
+    setState(() {
+      _expanded = !_expanded;
+    });
+  }
+}
+
+class _BuyItemHeader extends StatelessWidget {
+  final BilateralBuyItem item;
+  final bool selected;
+  final bool expanded;
+  final int index;
+
+  final void Function(bool)? onChanged;
+  final void Function(bool)? onExpand;
+
+  const _BuyItemHeader({
+    Key? key,
+    required this.item,
+    required this.selected,
+    required this.expanded,
+    required this.index,
+    this.onChanged,
+    this.onExpand,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    var dateFormat = DateFormat('HH:mm, dd MMM');
+    final dateFormat = DateFormat('HH:mm, dd MMM');
+    final createDateString = dateFormat.format(item.date);
 
-    return Container(
-      padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-      decoration: BoxDecoration(borderRadius: BorderRadius.circular(5)),
-      child: GestureDetector(
-        onTap: onTap,
-        child: Card(
-          child: IntrinsicHeight(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(left: 4.0),
-                  child: Container(
-                    width: 24,
-                    height: 24,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: primaryColor,
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Text(
-                          _convertIndexToAlphabatical(index),
-                          style: TextStyle(color: blackColor),
-                        ),
+    return GestureDetector(
+      onTap: onExpand != null
+          ? () {
+              if (onChanged != null) {
+                onExpand?.call(!selected);
+              }
+            }
+          : null,
+      behavior: HitTestBehavior.translucent,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisSize: MainAxisSize.max,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Checkbox(
+            value: selected,
+            onChanged: onChanged != null
+                ? (newValue) {
+                    if (newValue != null) {
+                      onChanged?.call(newValue);
+                    }
+                  }
+                : null,
+          ),
+          Expanded(
+            child: IntrinsicHeight(
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 8, top: 12),
+                child: Row(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(top: 4, right: 4),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Color(0xFFFEC908),
+                              borderRadius: BorderRadius.circular(1000),
+                            ),
+                            width: 17,
+                            height: 17,
+                            child: Center(
+                              child: Text(
+                                _convertIndexToAlphabatical(index),
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 12,
+                                ),
+                              ),
+                            ),
+                          ),
+                        )
                       ],
                     ),
-                  ),
-                ),
-                Expanded(
-                  child: Container(
-                    padding: EdgeInsets.all(12),
-                    child: Column(
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          item.name,
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: isChecked ? primaryColor : whiteColor,
+                        FittedBox(
+                          child: Text(
+                            item.name,
+                            style: TextStyle(fontSize: 15),
                           ),
-                          overflow: TextOverflow.ellipsis,
+                        ),
+                        Text(createDateString, style: TextStyle(fontSize: 12)),
+                      ],
+                    ),
+                    VerticalDivider(
+                      color: Colors.white,
+                      thickness: 1,
+                    ),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Text(
+                          "${item.energyTariff.toStringAsFixed(2)}",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 15,
+                          ),
                         ),
                         Text(
-                          dateFormat.format(
-                            DateTime.parse(item.date).toLocal(),
-                          ),
+                          "kWh",
                           style: TextStyle(
-                            color: isChecked ? primaryColor : whiteColor,
+                            color: Colors.white,
+                            fontSize: 10,
+                            fontWeight: FontWeight.w300,
                           ),
                         ),
                       ],
                     ),
-                  ),
-                ),
-                VerticalDivider(
-                  indent: 10,
-                  endIndent: 10,
-                  width: 12,
-                  thickness: 2,
-                  color: greyColor,
-                ),
-                Container(
-                  padding: EdgeInsets.all(12),
-                  child: Column(
-                    children: [
-                      Text(
-                        item.energy.toString(),
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: isChecked ? primaryColor : whiteColor,
+                    VerticalDivider(
+                      color: Colors.white,
+                      thickness: 1,
+                    ),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        FittedBox(
+                          child: Text(
+                            "Estimated buy ${item.estimatedBuy.toStringAsFixed(2)} THB",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 10,
+                            ),
+                          ),
                         ),
-                      ),
-                      Text(
-                        "kWh",
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: isChecked ? primaryColor : whiteColor,
+                        FittedBox(
+                          child: Text(
+                            "NET energy price ${item.netEnergyPrice.toStringAsFixed(2)} THB/kWh",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 8,
+                              fontWeight: FontWeight.w300,
+                            ),
+                          ),
                         ),
-                      )
-                    ],
-                  ),
+                      ],
+                    ),
+                  ],
                 ),
-                VerticalDivider(
-                  indent: 10,
-                  endIndent: 10,
-                  width: 12,
-                  thickness: 2,
-                  color: greyColor,
-                ),
-                Container(
-                  padding:
-                      EdgeInsets.only(top: 12, bottom: 12, left: 12, right: 24),
-                  child: Column(
-                    children: [
-                      Text(
-                        item.price.toStringAsFixed(2),
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: isChecked ? primaryColor : whiteColor,
-                        ),
-                      ),
-                      Text(
-                        "THB",
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: isChecked ? primaryColor : whiteColor,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
+              ),
             ),
+          ),
+          AnimatedRotation(
+            turns: expanded ? 0.5 : 0,
+            duration: Duration(milliseconds: 150),
+            child: const Icon(Icons.arrow_drop_down),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _BuyItemBody extends StatelessWidget {
+  final BilateralBuyItem item;
+  final bool selected;
+  final bool expanded;
+
+  const _BuyItemBody({
+    Key? key,
+    required this.item,
+    required this.selected,
+    required this.expanded,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedSize(
+      duration: Duration(milliseconds: 150),
+      child: ConstrainedBox(
+        constraints: BoxConstraints(
+          maxHeight: expanded ? double.infinity : 0,
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 64, vertical: 8),
+          child: Column(
+            children: [
+              _BuyItemDetail(
+                title: 'Energy to buy',
+                value: item.energyToBuy,
+                unit: 'kWh',
+                fontSize: 15,
+              ),
+              _BuyItemDetail(
+                title: 'Energy tariff ',
+                value: item.energyTariff,
+                unit: 'THB/kWh',
+                fontSize: 12,
+              ),
+              _BuyItemDetail(
+                title: 'Energy price',
+                value: item.energyPrice,
+                unit: 'THB',
+                fontSize: 15,
+              ),
+              _BuyItemDetail(
+                title: 'Wheeling charge Tariff',
+                value: item.wheelingChargeTariff,
+                unit: 'THB/kWh',
+                fontSize: 12,
+              ),
+              _BuyItemDetail(
+                title: 'Wheeling charge',
+                value: item.wheelingCharge,
+                unit: 'THB',
+                fontSize: 15,
+              ),
+              _BuyItemDetail(
+                title: 'Trading fee',
+                value: item.energyToBuy,
+                unit: 'THB',
+                fontSize: 12,
+              ),
+              _BuyItemDetail(
+                title: 'Vat (7%)',
+                value: item.vat,
+                unit: 'THB',
+                fontSize: 12,
+              ),
+              _BuyItemDetail(
+                title: 'Estimated buy',
+                value: item.estimatedBuy,
+                unit: 'THB',
+                fontSize: 15,
+              ),
+              _BuyItemDetail(
+                title: 'NET estimated energy price',
+                value: item.netEnergyPrice,
+                unit: 'THB',
+                fontSize: 8,
+              ),
+            ],
           ),
         ),
       ),
@@ -673,11 +941,38 @@ class _SellItemCard extends StatelessWidget {
   }
 }
 
-_convertIndexToAlphabatical(int index) {
-  if (index <= 0) {
-    return '';
-  }
+class _BuyItemDetail extends StatelessWidget {
+  final String title;
+  final double value;
+  final String unit;
 
-  String alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-  return _convertIndexToAlphabatical(index ~/ 24) + alphabet[index % 24];
+  final double fontSize;
+
+  const _BuyItemDetail({
+    Key? key,
+    required this.title,
+    required this.value,
+    required this.unit,
+    this.fontSize = 15,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        FittedBox(
+          child: Text(title, style: TextStyle(fontSize: fontSize)),
+        ),
+        Text(
+          "${value.toStringAsFixed(2)} $unit",
+          style: TextStyle(
+            fontSize: fontSize,
+            fontWeight: FontWeight.w300,
+          ),
+        ),
+      ],
+    );
+  }
 }

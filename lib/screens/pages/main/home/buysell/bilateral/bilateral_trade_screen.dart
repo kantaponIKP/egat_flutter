@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
+import 'buy/bilateral_buy_page.dart';
 import 'states/bilateral_state.dart';
 
 enum _ViewModeType { OFFER_TO_SELL, CHOOSE_TO_BUY }
@@ -108,7 +109,9 @@ class _BilateralTradeScreenState extends State<BilateralTradeScreen> {
                         Expanded(
                           child:
                               (_viewModeSelected == _ViewModeType.CHOOSE_TO_BUY)
-                                  ? _BuyItemList()
+                                  ? _BuyItemList(
+                                      onItemTap: _onListTileBuyPressed,
+                                    )
                                   : _SellItemList(
                                       onItemTap: _onListTileSellPressed,
                                     ),
@@ -125,24 +128,32 @@ class _BilateralTradeScreenState extends State<BilateralTradeScreen> {
     );
   }
 
-  // void _onListTileBuyPressed(String isoDate) async {
-  //   // DateTime newDate = DateTime.parse(_dateInit).add(new Duration(hours: int.parse(time.substring(0,2))));
-  //   DateTime newDate = DateTime.parse(isoDate);
-  //   await showLoading();
-  //   BilateralBuy bilateralBuy =
-  //       Provider.of<BilateralBuy>(context, listen: false);
+  void _onListTileBuyPressed(BilateralTradeItemModel item) async {
+    final isoDate = item.time;
 
-  //   try {
-  //     await bilateralBuy.getBilateralShortTermBuyInfo(
-  //         date: newDate.toUtc().toIso8601String());
-  //   } catch (e) {
-  //     showException(context, e.toString());
-  //   } finally {
-  //     await hideLoading();
-  //   }
-  //   BilateralTrade model = Provider.of<BilateralTrade>(context, listen: false);
-  //   model.setPageBilateralBuy();
-  // }
+    await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => BilateralBuyPage(date: isoDate),
+      ),
+    );
+
+    await _reloadContent();
+  }
+
+  Future<void> _reloadContent() async {
+    final bilateralState = Provider.of<BilateralState>(context, listen: false);
+    final selectedTimeState =
+        Provider.of<BilateralSelectedTimeState>(context, listen: false);
+
+    showLoading();
+    try {
+      await bilateralState.fetchTradeAtTime(selectedTimeState.selectedTime);
+    } catch (e) {
+      showException(context, 'Loading Bilaterals failed');
+    } finally {
+      await hideLoading();
+    }
+  }
 
   void _onListTileSellPressed(BilateralTradeItemModel item) async {
     final isoDate = item.time;
@@ -153,18 +164,7 @@ class _BilateralTradeScreenState extends State<BilateralTradeScreen> {
       ),
     );
 
-    final bilateralState = Provider.of<BilateralState>(context, listen: false);
-    final selectedTime =
-        Provider.of<BilateralSelectedTimeState>(context, listen: false);
-
-    showLoading();
-    try {
-      await bilateralState.fetchTradeAtTime(selectedTime.selectedTime);
-    } catch (e) {
-      showException(context, 'Loading Bilaterals failed');
-    } finally {
-      await hideLoading();
-    }
+    _reloadContent();
   }
 }
 
@@ -207,7 +207,7 @@ class _TradeItemCard extends StatelessWidget {
       padding: EdgeInsets.symmetric(vertical: 4, horizontal: 8),
       decoration: BoxDecoration(borderRadius: BorderRadius.circular(5)),
       child: GestureDetector(
-        onTap: item.status == BilateralTradeItemStatus.OPEN ? onTap : null,
+        onTap: item.status != BilateralTradeItemStatus.CLOSE ? onTap : null,
         child: Card(
           child: IntrinsicHeight(
             child: Column(

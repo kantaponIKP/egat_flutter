@@ -6,9 +6,13 @@ import 'package:egat_flutter/constant.dart';
 import 'package:egat_flutter/screens/pages/main/home/buysell/bilateral/apis/models/TransactionSubmitItem.dart';
 import 'package:http/http.dart';
 import 'package:logger/logger.dart';
-import 'models/BilateralShortTermBuyInfoRequest.dart';
+import 'models/BilateralLongTermBuyInfoRequest.dart';
+import 'models/BilateralLongTermBuyInfoResponse.dart';
+import 'models/BilateralLongTermSellInfoRequest.dart';
+import 'models/BilateralLongTermSellInfoResponse.dart';
+import 'models/BilateralLongTermSellRequest.dart';
 import 'models/BilateralShortTermBuyInfoResponse.dart';
-import 'models/BilateralShortTermSellInfoRequest.dart';
+import 'models/BilateralShortTermBuyRequest.dart';
 import 'models/BilateralShortTermSellRequest.dart';
 import 'models/BilateralTradingFeeRequest.dart';
 import 'models/BilateralTradingFeeResponse.dart';
@@ -151,14 +155,136 @@ class BilateralApi {
 
     final jsonMap = json.decode(response.body);
 
-    // assert(
-    //   jsonMap.runtimeType.toString() == "List<dynamic>",
-    //   'Invalid response from server (not a list of object)',
-    // );
+    return BilateralShortTermBuyInfoResponse.fromJSON(jsonMap);
+  }
 
-    var result = GetBilateralTradeResponse.fromJSON(jsonMap as List<dynamic>);
+  Future<void> bilateralShortTermBuy({
+    required String id,
+    required String accessToken,
+  }) async {
+    Response response;
 
-    return BilateralShortTermBuyInfoResponse.fromJSON(response.body);
+    var url = Uri.parse(
+      "$apiBaseUrlBilateralTrade/bilateral-app/choose-to-buy/${id}",
+    );
+
+    response = await httpPostJson(
+      uri: url,
+      accessToken: accessToken,
+    );
+
+    if (response.statusCode == 409) {
+      throw Exception('Found duplicate offer!');
+    }
+
+    if (response.statusCode >= 300) {
+      logger.log(
+        Level.debug,
+        'BilateralApi.bilateralShortTermBuy: Error response from server: ${response.statusCode}',
+      );
+      throw Exception('Failed to submit data code ${response.statusCode}');
+    }
+  }
+
+  Future<BilateralLongTermSellInfoResponse> getBilateralLongTermSellInfo({
+    required DateTime date,
+    required String accessToken,
+  }) async {
+    Response response;
+
+    var dateRequest = date.toUtc().toIso8601String();
+
+    var url = Uri.parse(
+      "$apiBaseUrlBilateralTrade/bilateral-app/offer-to-sell/longterm/listing/$dateRequest",
+    );
+
+    response = await httpGetJson(
+      url: url,
+      accessToken: accessToken,
+    );
+
+    final jsonMap = json.decode(response.body);
+
+    return BilateralLongTermSellInfoResponse.fromJSON(jsonMap);
+  }
+
+  Future<Response> bilateralLongTermSell({
+    required List<BilateralLongtermSellItem> submitItems,
+    required String accessToken,
+  }) async {
+    List<Map<String, dynamic>> jsonMap = <Map<String, dynamic>>[];
+    for (var bilateral in submitItems) {
+      Map<String, dynamic> bilateralMap = bilateral.toJson();
+      jsonMap.add(bilateralMap);
+    }
+
+    var requestJson = jsonEncode(jsonMap);
+
+    Response response;
+
+    var url = Uri.parse(
+      "$apiBaseUrlBilateralTrade/bilateral-app/offer-to-sell/longterm",
+    );
+    response = await httpPostJson(
+      uri: url,
+      accessToken: accessToken,
+      body: requestJson,
+    );
+
+    if (response.statusCode == 409) {
+      throw Exception('Found duplicate offer!');
+    }
+
+    if (response.statusCode >= 300) {
+      logger.log(
+        Level.debug,
+        'BilateralApi.bilateralLongTermSell: Error response from server: ${response.statusCode}',
+      );
+      throw Exception('Failed to submit data code ${response.statusCode}');
+    }
+
+    return response;
+  }
+
+  Future<BilateralLongTermBuyInfoResponse> getBilateralLongTermBuyInfo({
+    required String date,
+    required int days,
+    required String accessToken,
+  }) async {
+    Response response;
+
+    var url = Uri.parse(
+      "$apiBaseUrlBilateralTrade/bilateral-app/choose-to-buy/longterm/listing/$date",
+    ).replace(queryParameters: {'days': days.toString()});
+
+    response = await httpGetJson(
+      url: url,
+      accessToken: accessToken,
+    );
+
+    return BilateralLongTermBuyInfoResponse.fromJSON(response.body);
+  }
+
+  Future<Response> bilateralLongTermBuy({
+    required String id,
+    required String accessToken,
+  }) async {
+    var requestJson = {
+      'id': id,
+    };
+
+    Response response;
+
+    var url = Uri.parse(
+      "$apiBaseUrlBilateralTrade/bilateral-app/choose-to-buy/longterm/$id",
+    );
+    response = await httpPostJson(
+      uri: url,
+      accessToken: accessToken,
+      body: jsonEncode(requestJson),
+    );
+
+    return response;
   }
 }
 

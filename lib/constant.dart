@@ -34,19 +34,17 @@ final redColor = HexColor("#F6645A");
 
 final appTitle = 'EGAT P2P';
 
+//Local "https://egat-p2p-api.di.iknowplus.co.th"
+//Production "https://ercapip2p.egat.co.th"
+
 final apiBaseUrlRegister = "https://ercapip2p.egat.co.th";
 final apiBaseUrlLogin = "https://ercapip2p.egat.co.th";
 final apiBaseUrlProfileManage = "https://ercapip2p.egat.co.th";
 final apiBaseUrlBilateralTrade = "https://ercapip2p.egat.co.th";
-// final apiBaseUrlRegister = "https://egat-p2p-api.di.iknowplus.co.th";
-// final apiBaseUrlLogin = "https://egat-p2p-api.di.iknowplus.co.th";
 
-// final apiBaseUrlProfileManage =
-//     "https://egat-p2p-profile-mange.di.iknowplus.co.th/";
-// final apiBaseUrlBilateralTrade =
-//     "https://egat-p2p-bilateral.di.iknowplus.co.th";
+final apiBaseUrlPoolMarketTrade = "https://ercapip2p.egat.co.th";
+final apiBaseUrlReport = "https://ercapip2p.egat.co.th";
 
-final apiBaseUrlPoolMarketTrade = "https://egat-p2p-pool.di.iknowplus.co.th/";
 final authorizationBase64 =
     "ZWdhdDpmYjIyN2ZlMS1mNWNhLTRjOTItYmE2My03NTg1NjQ5MTU2NTg=";
 final loggerPrinter = PrettyPrinter();

@@ -13,6 +13,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
+import 'long_term/bilateral_long_term_sell_page.dart';
 import 'short_term/bilateral_short_term_sell_page.dart';
 
 class BilateralSellScreen extends StatefulWidget {
@@ -426,7 +427,17 @@ class _SelectionSection extends StatelessWidget {
 class _HeaderSection extends StatelessWidget {
   const _HeaderSection({Key? key}) : super(key: key);
 
-  onLongTermPressed() {}
+  onLongTermPressed(BuildContext context) async {
+    final result = await Navigator.of(context).push<bool>(
+      MaterialPageRoute(
+        builder: (context) => BilateralLongTermSellPage(),
+      ),
+    );
+
+    if (result != null && result) {
+      Navigator.pop(context, true);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -452,7 +463,7 @@ class _HeaderSection extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             ElevatedButton(
-              onPressed: onLongTermPressed,
+              onPressed: () => onLongTermPressed(context),
               child: Row(
                 children: [
                   Icon(Icons.refresh),
