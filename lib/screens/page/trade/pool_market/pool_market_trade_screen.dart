@@ -1,10 +1,10 @@
-<<<<<<< HEAD
+//<<<<<<< HEAD
 import 'package:egat_flutter/screens/page/settlement/energy_transfer_screen.dart';
 import 'package:egat_flutter/screens/page/settlement/settlement_screen.dart';
-=======
+//=======
 import 'package:egat_flutter/screens/page/state/pool_market/pool_market_short_term_buy.dart';
 import 'package:egat_flutter/screens/page/state/pool_market/pool_market_short_term_sell.dart';
->>>>>>> 0cf2df24e85fd525199cdd9a8887aac16eeeed59
+//>>>>>>> 0cf2df24e85fd525199cdd9a8887aac16eeeed59
 import 'package:egat_flutter/screens/page/state/pool_market/pool_market_trade.dart';
 import 'package:egat_flutter/screens/page/widgets/logo_appbar.dart';
 import 'package:egat_flutter/screens/page/widgets/page_appbar.dart';
@@ -528,7 +528,8 @@ class _PoolMarketTradeScreenState extends State<PoolMarketTradeScreen> {
                                       Text(offer.toString(),
                                           style: TextStyle(
                                               fontSize: 24,
-                                              color: (isMatched! && status == "CLOSE")
+                                              color: (isMatched! &&
+                                                      status == "CLOSE")
                                                   ? primaryColor
                                                   : whiteColor)),
                                       Container(
@@ -539,7 +540,8 @@ class _PoolMarketTradeScreenState extends State<PoolMarketTradeScreen> {
                                               ? "Offers \nto buy"
                                               : "Offers \nto sell",
                                           style: TextStyle(
-                                              color: (isMatched && status == "CLOSE")
+                                              color: (isMatched &&
+                                                      status == "CLOSE")
                                                   ? primaryColor
                                                   : whiteColor),
                                         ),
@@ -673,7 +675,7 @@ class _PoolMarketTradeScreenState extends State<PoolMarketTradeScreen> {
   void _onListTileBuyPressed(String isoDate) async {
     //Navigate
     DateTime newDate = DateTime.parse(isoDate);
-        // .add(new Duration(hours: int.parse(_time.substring(0, 2))));
+    // .add(new Duration(hours: int.parse(_time.substring(0, 2))));
 
     PoolMarketShortTermBuy poolMarketShortTermBuy =
         Provider.of<PoolMarketShortTermBuy>(context, listen: false);
@@ -696,11 +698,11 @@ class _PoolMarketTradeScreenState extends State<PoolMarketTradeScreen> {
   void _onListTileSellPressed(String isoDate) {
     //Navigate
     DateTime newDate = DateTime.parse(isoDate);
-        // .add(new Duration(hours: int.parse(_time.substring(0, 2))));
+    // .add(new Duration(hours: int.parse(_time.substring(0, 2))));
 
     PoolMarketShortTermSell poolMarketShortTermSell =
         Provider.of<PoolMarketShortTermSell>(context, listen: false);
-        print(newDate.toUtc().toIso8601String());
+    print(newDate.toUtc().toIso8601String());
     poolMarketShortTermSell.info.dateList = [newDate.toUtc().toIso8601String()];
     PoolMarketTrade poolMarketTrade =
         Provider.of<PoolMarketTrade>(context, listen: false);

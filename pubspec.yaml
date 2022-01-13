@@ -41,10 +41,19 @@ dependencies:
   http: ^0.13.3
   shared_preferences: ^2.0.7
   image_picker: ^0.8.4+3
+  flutter_launcher_icons: ^0.9.2
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  flutter_launcher_icons: ^0.9.2
+
+flutter_icons:
+    android: true
+    ios: true
+    image_path: "assets/images/launcher_icon/EgatP2P_Icon.png"
+    adaptive_icon_background: "#000000"
+    adaptive_icon_foreground: "assets/images/launcher_icon/EgatP2P_Icon.png"
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -61,6 +70,8 @@ flutter:
     - assets/images/
     - assets/images/icons/home/
     - assets/images/icons/bottom_navigation_bar/
+    - assets/images/icons/sidebar/
+    - assets/images/icons/tabbar/
     - assets/mockdata/login/
     - assets/mockdata/registration/
     - assets/mockdata/forgot_password/

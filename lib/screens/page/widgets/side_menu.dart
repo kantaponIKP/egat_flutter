@@ -4,6 +4,7 @@ import 'package:egat_flutter/i18n/app_localizations.dart';
 import 'package:egat_flutter/screens/page/state/sidebar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:provider/provider.dart';
 
@@ -48,37 +49,41 @@ class _NavigationMenuWidgetState extends State<NavigationMenuWidget> {
         _buildMenuItem(
           context: context,
           text: '${AppLocalizations.of(context).translate('home')}',
-          icon: Icons.home,
+          icon: SvgPicture.asset('assets/images/icons/sidebar/home_icon.svg'),
           onAction: _onHomeMenuPressed,
         ),
         _buildMenuItem(
           context: context,
           text: '${AppLocalizations.of(context).translate('personal-info')}',
-          icon: Icons.account_circle,
+          icon: SvgPicture.asset(
+              'assets/images/icons/sidebar/personal_info_icon.svg'),
           onAction: _onPersonalInfoMenuPressed,
         ),
         _buildMenuItem(
           context: context,
           text: '${AppLocalizations.of(context).translate('change-password')}',
-          icon: Icons.lock_sharp,
+          icon: SvgPicture.asset(
+              'assets/images/icons/sidebar/change_password_icon.svg'),
           onAction: _onChangePasswordMenuPressed,
         ),
         _buildMenuItem(
           context: context,
           text: '${AppLocalizations.of(context).translate('contact-us')}',
-          icon: Icons.contact_page,
+          icon:
+              SvgPicture.asset('assets/images/icons/sidebar/contact_icon.svg'),
           onAction: _onContactUsMenuPressed,
         ),
         _buildMenuItem(
           context: context,
           text: '${AppLocalizations.of(context).translate('news')}',
-          icon: Icons.campaign_sharp,
+          icon: SvgPicture.asset('assets/images/icons/sidebar/news_icon.svg'),
           onAction: _onNewsMenuPressed,
         ),
         _buildMenuItem(
           context: context,
           text: '${AppLocalizations.of(context).translate('setting')}',
-          icon: Icons.settings,
+          icon:
+              SvgPicture.asset('assets/images/icons/sidebar/setting_icon.svg'),
           onAction: _onSettingMenuPressed,
         ),
       ],
@@ -122,24 +127,25 @@ class _NavigationMenuWidgetState extends State<NavigationMenuWidget> {
   Widget _buildMenuItem({
     required BuildContext context,
     required String text,
-    required IconData icon,
+    required SvgPicture icon,
     required Function() onAction,
   }) {
-    Color color = whiteColor;
+    Color textcolor = whiteColor;
+    Color iconcolor = Colors.transparent;
     const hoverColor = Colors.white70;
     return SizedBox(
       // height: 24,
       child: Container(
         // color: Colors.black,
         child: ListTile(
-            leading: Icon(
-              icon,
-              color: color,
+            leading: Container(
+              child: icon,
+              color: iconcolor,
             ),
             title: Text(
               text,
               style: TextStyle(
-                color: color,
+                color: textcolor,
               ),
             ),
             hoverColor: hoverColor,
