@@ -107,7 +107,8 @@ class _OrderScreenState extends State<OrderScreen> {
           mainAxisSize: MainAxisSize.min,
           children: [
             _FilterCheckbox(
-              title: AppLocalizations.of(context).translate('settlement-order-bilateralTrade'),
+              title: AppLocalizations.of(context)
+                  .translate('settlement-order-bilateralTrade'),
               isSelected: isBilateralSelected,
               onTap: () {
                 setState(() {
@@ -116,7 +117,8 @@ class _OrderScreenState extends State<OrderScreen> {
               },
             ),
             _FilterCheckbox(
-              title: AppLocalizations.of(context).translate('settlement-order-poolMarketTrade'),
+              title: AppLocalizations.of(context)
+                  .translate('settlement-order-poolMarketTrade'),
               isSelected: isPoolMarketSelected,
               onTap: () {
                 setState(() {
@@ -294,7 +296,7 @@ class _MonthSelectionDropdown extends StatelessWidget {
     final now = DateTime.now();
 
     final selectableMonthes = <DateTime>[];
-    for (var i = 0; i < 24; i++) {
+    for (var i = -12; i < 24; i++) {
       selectableMonthes.add(DateTime(now.year, now.month - i, 1));
     }
 
@@ -377,21 +379,10 @@ class _DateSelectionDropdown extends StatelessWidget {
     final now = DateTime.now();
 
     final selectableDates = <DateTime>[];
-    if (now.month == selectedDate.month && now.year == selectedDate.year) {
-      for (var i = 0; i < now.day; i++) {
-        selectableDates.add(
-          DateTime(selectedDate.year, selectedDate.month, i + 1),
-        );
-      }
-    } else {
-      final daysInMonth =
-          DateTime(selectedDate.year, selectedDate.month + 1, 0).day;
-
-      for (var i = 0; i < daysInMonth; i++) {
-        selectableDates.add(
-          DateTime(selectedDate.year, selectedDate.month, i + 1),
-        );
-      }
+    for (var i = 0; i < now.day; i++) {
+      selectableDates.add(
+        DateTime(selectedDate.year, selectedDate.month, i + 1),
+      );
     }
 
     return Container(

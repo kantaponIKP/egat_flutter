@@ -228,6 +228,13 @@ class _DailyDataDisplaySection extends StatelessWidget {
                 textStyle: defaultImbalanceTextStyle,
               ),
               CollapsableReportRow(
+                title: Text(
+                  "Buyer Imbalance",
+                ),
+                value: Text('${report.buyerImbalance.toStringAsFixed(2)} THB'),
+                textStyle: defaultImbalanceTextStyle,
+              ),
+              CollapsableReportRow(
                 title: RichText(
                   text: TextSpan(
                     children: [
@@ -495,6 +502,19 @@ class _MonthlyDataDisplaySection extends StatelessWidget {
                   ),
                 ),
                 value: Text('${report.netBuy.toStringAsFixed(2)} THB'),
+                textStyle: defaulTextStyle,
+              ),
+              CollapsableReportRow(
+                title: RichText(
+                  text: TextSpan(
+                    children: [
+                      TextSpan(
+                        text: "NET Sales",
+                      ),
+                    ],
+                  ),
+                ),
+                value: Text('${report.netSell.toStringAsFixed(2)} THB'),
                 textStyle: defaulTextStyle,
               ),
               CollapsableReportRow(
@@ -796,7 +816,8 @@ class _SettlementReportScreenState extends State<SettlementReportScreen> {
                       children: [
                         SizedBox(height: 16),
                         _DateSelectionBar(),
-                        _filterSelectionBar(),
+                        // _filterSelectionBar(),
+                        SizedBox(height: 8),
                         Expanded(
                           child: _DataDisplaySection(
                             isSellerSelected: _isSellerSelected,

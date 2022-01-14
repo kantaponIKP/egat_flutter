@@ -34,21 +34,47 @@ final redColor = HexColor("#F6645A");
 
 final appTitle = 'EGAT P2P';
 
-String local = "https://egat-p2p-api.di.iknowplus.co.th";
-String production = "https://ercapip2p.egat.co.th";
-String path = local;
-final apiBaseUrlRegister = path;
-final apiBaseUrlLogin = path;
-final apiBaseUrlProfileManage = path;
-final apiBaseUrlBilateralTrade = path;
+//Local "https://egat-p2p-api.di.iknowplus.co.th"
+//Production "https://ercapip2p.egat.co.th"
 
-final apiBaseUrlPoolMarketTrade = path;
-final apiBaseUrlReport = path;
+final bool isDev = true;
 
-final authorizationBase64 =
+var _apiBaseUrlRegister = isDev
+    ? "https://egat-p2p-register.di.iknowplus.co.th"
+    : "https://ercapip2p.egat.co.th";
+var _apiBaseUrlLogin = isDev
+    ? "https://egat-p2p-login.di.iknowplus.co.th"
+    : "https://ercapip2p.egat.co.th";
+var _apiBaseUrlProfileManage = isDev
+    ? "https://egat-p2p-profile-mange.di.iknowplus.co.th/"
+    : "https://ercapip2p.egat.co.th";
+var _apiBaseUrlBilateralTrade = isDev
+    ? "https://egat-p2p-bilateral.di.iknowplus.co.th"
+    : "https://ercapip2p.egat.co.th";
+
+var _apiBaseUrlPoolMarketTrade = isDev
+    ? "https://egat-p2p-pool.di.iknowplus.co.th"
+    : "https://ercapip2p.egat.co.th";
+var _apiBaseUrlReport = isDev
+    ? "https://egat-p2p-report.di.iknowplus.co.th"
+    : "https://ercapip2p.egat.co.th";
+
+var _authorizationBase64 =
     "ZWdhdDpmYjIyN2ZlMS1mNWNhLTRjOTItYmE2My03NTg1NjQ5MTU2NTg=";
-final loggerPrinter = PrettyPrinter();
-final loggerLevel = Level.debug;
+var _loggerPrinter = PrettyPrinter();
+var _loggerLevel = Level.debug;
+
+final authorizationBase64 = _authorizationBase64;
+final loggerPrinter = _loggerPrinter;
+final loggerLevel = _loggerLevel;
+
+final apiBaseUrlRegister = _apiBaseUrlRegister;
+final apiBaseUrlLogin = _apiBaseUrlLogin;
+final apiBaseUrlProfileManage = _apiBaseUrlProfileManage;
+final apiBaseUrlBilateralTrade = _apiBaseUrlBilateralTrade;
+
+final apiBaseUrlPoolMarketTrade = _apiBaseUrlPoolMarketTrade;
+final apiBaseUrlReport = _apiBaseUrlReport;
 
 final Logger logger = Logger(
   printer: loggerPrinter,

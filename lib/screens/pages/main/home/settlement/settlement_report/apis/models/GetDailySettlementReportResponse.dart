@@ -18,8 +18,10 @@ class GetDailySettlementReportResponse {
   final double buyerEnergyUsed;
 
   final double netSales;
+  final double netBuy;
   final double imbalanceAmount;
   final double sellerImbalance;
+  final double buyerImbalance;
   final double netEnergyPrice;
 
   final List<SettlementReportInfo> settlementReportInfos;
@@ -38,8 +40,10 @@ class GetDailySettlementReportResponse {
     required this.buyerEnergyCommited,
     required this.buyerEnergyUsed,
     required this.netSales,
+    required this.netBuy,
     required this.imbalanceAmount,
     required this.sellerImbalance,
+    required this.buyerImbalance,
     required this.netEnergyPrice,
     required this.settlementReportInfos,
   });
@@ -58,8 +62,10 @@ class GetDailySettlementReportResponse {
     assert(json['buyerEnergyCommited'] is num);
     assert(json['buyerEnergyUsed'] is num);
     assert(json['netSales'] is num);
+    assert(json['netBuy'] is num);
     assert(json['imbalanceAmount'] is num);
     assert(json['sellerImbalance'] is num);
+    assert(json['buyerImbalance'] is num);
     assert(json['netEnergyPrice'] is num);
     assert(json['settlementReportInfos'] is List);
 
@@ -83,10 +89,12 @@ class GetDailySettlementReportResponse {
       buyerEnergyCommited: (json['buyerEnergyCommited'] as num).toDouble(),
       buyerEnergyUsed: (json['buyerEnergyUsed'] as num).toDouble(),
       netSales: (json['netSales'] as num).toDouble(),
+      netBuy: (json['netBuy'] as num).toDouble(),
       imbalanceAmount: (json['imbalanceAmount'] as num).toDouble(),
       sellerImbalance: (json['sellerImbalance'] as num).toDouble(),
+      buyerImbalance: (json['buyerImbalance'] as num).toDouble(),
       netEnergyPrice: (json['netEnergyPrice'] as num).toDouble(),
-      settlementReportInfos: (json['settlementReportInfo'] as List<dynamic>)
+      settlementReportInfos: (json['settlementReportInfos'] as List<dynamic>)
           .map((e) => SettlementReportInfo.fromJson(e))
           .toList(),
     );

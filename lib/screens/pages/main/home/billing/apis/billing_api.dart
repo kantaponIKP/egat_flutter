@@ -1,5 +1,10 @@
+import 'dart:convert';
+
+import 'package:egat_flutter/Utils/http/get.dart';
+import 'package:egat_flutter/constant.dart';
 import 'package:egat_flutter/screens/pages/main/home/billing/apis/models/GetBillingSummaryResponse.dart';
 import 'package:egat_flutter/screens/pages/main/home/billing/apis/models/GetPreliminaryInvoiceResponse.dart';
+import 'package:http/http.dart';
 
 import 'models/GetInvoiceResponse.dart';
 
@@ -8,6 +13,23 @@ class BillingApi {
     required DateTime date,
     required String accessToken,
   }) async {
+    Response response;
+
+    var dateRequest = date.toUtc().toIso8601String();
+
+    var url = Uri.parse(
+      "$apiBaseUrlReport/report/billing/summary/$dateRequest",
+    );
+
+    response = await httpGetJson(
+      url: url,
+      accessToken: accessToken,
+    ).timeout(Duration(seconds: 10));
+
+    final jsonMap = json.decode(response.body);
+
+    return GetBillingSummaryResponse.fromJson(jsonMap);
+
     // TODO: use real data
     await Future.delayed(Duration(seconds: 1));
 
@@ -21,6 +43,23 @@ class BillingApi {
   Future<GetPreliminaryInvoiceResponse> fetchPreliminaryInvoice({
     required String accessToken,
   }) async {
+    Response response;
+
+    var dateRequest = DateTime.now().toUtc().toIso8601String();
+
+    var url = Uri.parse(
+      "$apiBaseUrlReport/report/billing/preliminary-invoice/$dateRequest",
+    );
+
+    response = await httpGetJson(
+      url: url,
+      accessToken: accessToken,
+    ).timeout(Duration(seconds: 10));
+
+    final jsonMap = json.decode(response.body);
+
+    return GetPreliminaryInvoiceResponse.fromJson(jsonMap);
+
     // TODO: use real data
     await Future.delayed(Duration(seconds: 1));
 
@@ -68,6 +107,23 @@ class BillingApi {
     required DateTime month,
     required String accessToken,
   }) async {
+    Response response;
+
+    var dateRequest = month.toUtc().toIso8601String();
+
+    var url = Uri.parse(
+      "$apiBaseUrlReport/report/billing/invoice/$dateRequest",
+    );
+
+    response = await httpGetJson(
+      url: url,
+      accessToken: accessToken,
+    ).timeout(Duration(seconds: 10));
+
+    final jsonMap = json.decode(response.body);
+
+    return GetInvoiceResponse.fromJson(jsonMap);
+
     var issueDate = DateTime(month.year, month.month + 1, 0);
     await Future.delayed(Duration(seconds: 1));
 
