@@ -19,10 +19,10 @@ class GetBillingSummaryResponse {
 
     return GetBillingSummaryResponse(
       netEnergyTradingPayment:
-          (json['netEnergyTradingPaymentas'] as num).toDouble(),
-      gridPrice: (json['gridPriceas'] as num).toDouble(),
-      wheelingCharge: (json['wheelingChargeas'] as num).toDouble(),
-      estimatedNetPayment: (json['estimatedNetPaymentas'] as num).toDouble(),
+          (json['netEnergyTradingPayment'] as num).toDouble(),
+      gridPrice: (json['gridPrice'] as num).toDouble(),
+      wheelingCharge: (json['wheelingCharge'] as num).toDouble(),
+      estimatedNetPayment: (json['estimatedNetPayment'] as num).toDouble(),
     );
   }
 }

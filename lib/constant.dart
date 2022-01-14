@@ -37,18 +37,44 @@ final appTitle = 'EGAT P2P';
 //Local "https://egat-p2p-api.di.iknowplus.co.th"
 //Production "https://ercapip2p.egat.co.th"
 
-final apiBaseUrlRegister = "https://ercapip2p.egat.co.th";
-final apiBaseUrlLogin = "https://ercapip2p.egat.co.th";
-final apiBaseUrlProfileManage = "https://ercapip2p.egat.co.th";
-final apiBaseUrlBilateralTrade = "https://ercapip2p.egat.co.th";
+final bool isDev = true;
 
-final apiBaseUrlPoolMarketTrade = "https://ercapip2p.egat.co.th";
-final apiBaseUrlReport = "https://ercapip2p.egat.co.th";
+var _apiBaseUrlRegister = isDev
+    ? "https://egat-p2p-register.di.iknowplus.co.th"
+    : "https://ercapip2p.egat.co.th";
+var _apiBaseUrlLogin = isDev
+    ? "https://egat-p2p-login.di.iknowplus.co.th"
+    : "https://ercapip2p.egat.co.th";
+var _apiBaseUrlProfileManage = isDev
+    ? "https://egat-p2p-profile-mange.di.iknowplus.co.th/"
+    : "https://ercapip2p.egat.co.th";
+var _apiBaseUrlBilateralTrade = isDev
+    ? "https://egat-p2p-bilateral.di.iknowplus.co.th"
+    : "https://ercapip2p.egat.co.th";
 
-final authorizationBase64 =
+var _apiBaseUrlPoolMarketTrade = isDev
+    ? "https://egat-p2p-pool.di.iknowplus.co.th"
+    : "https://ercapip2p.egat.co.th";
+var _apiBaseUrlReport = isDev
+    ? "https://egat-p2p-report.di.iknowplus.co.th"
+    : "https://ercapip2p.egat.co.th";
+
+var _authorizationBase64 =
     "ZWdhdDpmYjIyN2ZlMS1mNWNhLTRjOTItYmE2My03NTg1NjQ5MTU2NTg=";
-final loggerPrinter = PrettyPrinter();
-final loggerLevel = Level.debug;
+var _loggerPrinter = PrettyPrinter();
+var _loggerLevel = Level.debug;
+
+final authorizationBase64 = _authorizationBase64;
+final loggerPrinter = _loggerPrinter;
+final loggerLevel = _loggerLevel;
+
+final apiBaseUrlRegister = _apiBaseUrlRegister;
+final apiBaseUrlLogin = _apiBaseUrlLogin;
+final apiBaseUrlProfileManage = _apiBaseUrlProfileManage;
+final apiBaseUrlBilateralTrade = _apiBaseUrlBilateralTrade;
+
+final apiBaseUrlPoolMarketTrade = _apiBaseUrlPoolMarketTrade;
+final apiBaseUrlReport = _apiBaseUrlReport;
 
 final Logger logger = Logger(
   printer: loggerPrinter,

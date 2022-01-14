@@ -1,3 +1,9 @@
+import 'dart:convert';
+
+import 'package:egat_flutter/Utils/http/get.dart';
+import 'package:egat_flutter/constant.dart';
+import 'package:http/http.dart';
+
 import '../../models/settlement_report_info.dart';
 import 'models/GetDailySettlementReportResponse.dart';
 import 'models/GetMonthlySettlementReportResponse.dart';
@@ -9,6 +15,23 @@ class SettlementReportApi {
     required DateTime date,
     required String accessToken,
   }) async {
+    Response response;
+
+    var dateRequest = date.toUtc().toIso8601String();
+
+    var url = Uri.parse(
+      "$apiBaseUrlReport/report/settlement/monthly/$dateRequest",
+    );
+
+    response = await httpGetJson(
+      url: url,
+      accessToken: accessToken,
+    ).timeout(Duration(seconds: 10));
+
+    final jsonMap = json.decode(response.body);
+
+    return GetMonthlySettlementReportResponse.fromJson(jsonMap);
+
     // TODO: use real data
     await Future.delayed(Duration(seconds: 1));
 
@@ -40,11 +63,28 @@ class SettlementReportApi {
     required DateTime date,
     required String accessToken,
   }) async {
+    Response response;
+
+    var dateRequest = date.toUtc().toIso8601String();
+
+    var url = Uri.parse(
+      "$apiBaseUrlReport/report/settlement/daily/$dateRequest",
+    );
+
+    response = await httpGetJson(
+      url: url,
+      accessToken: accessToken,
+    ).timeout(Duration(seconds: 10));
+
+    final jsonMap = json.decode(response.body);
+
+    return GetDailySettlementReportResponse.fromJson(jsonMap);
+
     // TODO: use real data
     await Future.delayed(Duration(seconds: 1));
 
     final now = DateTime.now();
-    final date = DateTime(now.year, now.month, now.day);
+    final mockDate = DateTime(now.year, now.month, now.day);
 
     return GetDailySettlementReportResponse(
       completedContracts: 1,
@@ -63,6 +103,8 @@ class SettlementReportApi {
       imbalanceAmount: 1,
       sellerImbalance: 1,
       netEnergyPrice: 1,
+      buyerImbalance: 0,
+      netBuy: 0,
       settlementReportInfos: [
         BilateralBuyerEnergyShortfallSettlementReportInfo(
           energyCommitted: 1,
@@ -75,7 +117,7 @@ class SettlementReportApi {
           netEnergyPrice: 1,
           contractId: "contractId",
           targetName: ["targetName"],
-          date: date,
+          date: mockDate,
         ),
         PoolBuyerEnergyShortfallSettlementReportInfo(
           energyCommitted: 1,
@@ -88,7 +130,7 @@ class SettlementReportApi {
           netEnergyPrice: 1,
           contractId: "contractId",
           targetName: ["targetName"],
-          date: date.add(Duration(hours: 1)),
+          date: mockDate.add(Duration(hours: 1)),
         ),
         BilateralBuyerEnergyExcessSettlementReportInfo(
           energyCommitted: 1,
@@ -97,7 +139,7 @@ class SettlementReportApi {
           sellerImbalance: 1,
           contractId: "contractId",
           targetName: ["targetName"],
-          date: date.add(Duration(hours: 2)),
+          date: mockDate.add(Duration(hours: 2)),
         ),
         PoolBuyerEnergyExcessSettlementReportInfo(
           energyCommitted: 1,
@@ -106,7 +148,7 @@ class SettlementReportApi {
           sellerImbalance: 1,
           contractId: "contractId",
           targetName: ["targetName"],
-          date: date.add(Duration(hours: 3)),
+          date: mockDate.add(Duration(hours: 3)),
         ),
         BilateralSellerEnergyShortfallSettlementReportInfo(
           energyCommitted: 1,
@@ -117,7 +159,7 @@ class SettlementReportApi {
           netEnergyPrice: 1,
           contractId: "contractId",
           targetName: ["targetName"],
-          date: date.add(Duration(hours: 4)),
+          date: mockDate.add(Duration(hours: 4)),
         ),
         BilateralSellerEnergyExcessSettlementReportInfo(
           energyCommitted: 1,
@@ -128,7 +170,7 @@ class SettlementReportApi {
           netEnergyPrice: 1,
           contractId: "contractId",
           targetName: ["targetName"],
-          date: date.add(Duration(hours: 5)),
+          date: mockDate.add(Duration(hours: 5)),
         ),
         PoolSellerEnergyShortfallSettlementReportInfo(
           energyMatched: 1,
@@ -137,7 +179,7 @@ class SettlementReportApi {
           sellerImbalance: 1,
           contractId: "contractId",
           targetName: ["targetName"],
-          date: date.add(Duration(hours: 6)),
+          date: mockDate.add(Duration(hours: 6)),
         ),
         PoolSellerEnergyExcessSettlementReportInfo(
           energyMatched: 1,
@@ -146,7 +188,7 @@ class SettlementReportApi {
           sellerImbalance: 1,
           contractId: "contractId",
           targetName: ["targetName"],
-          date: date.add(Duration(hours: 7)),
+          date: mockDate.add(Duration(hours: 7)),
         ),
       ],
     );
