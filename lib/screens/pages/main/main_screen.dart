@@ -3,9 +3,7 @@ import 'package:egat_flutter/screens/pages/main/change_password/change_password_
 import 'package:egat_flutter/screens/pages/main/contact_us/contact_us_screen.dart';
 import 'package:egat_flutter/screens/pages/main/home/home_page.dart';
 import 'package:egat_flutter/screens/pages/main/news/news_page.dart';
-import 'package:egat_flutter/screens/pages/main/news/news_screen.dart';
 import 'package:egat_flutter/screens/pages/main/personal_info/personal_info_screen.dart';
-import 'package:egat_flutter/screens/pages/main/setting/main/main_screen.dart';
 import 'package:egat_flutter/screens/pages/main/setting/setting_page.dart';
 import 'package:egat_flutter/screens/pages/main/states/main_screen_title_state.dart';
 import 'package:flutter/material.dart';

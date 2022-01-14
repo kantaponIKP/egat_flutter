@@ -41,6 +41,12 @@ class PersonalInfoApi {
         intlMessage: "error-connectionError",
       );
     }
+    if (response.statusCode == 401) {
+      throw IntlException(
+        message: "ปฎิเสธ server ตอบกลับด้วยสถานะ ${response.statusCode}",
+        intlMessage: "error-sessionExpired",
+      );
+    }
     if (response.statusCode >= 300) {
       throw IntlException(
         message: "ปฎิเสธ server ตอบกลับด้วยสถานะ ${response.statusCode}",
@@ -76,6 +82,12 @@ class PersonalInfoApi {
       throw IntlException(
         message: "ปฎิเสธ server ตอบกลับด้วยสถานะ ${response.statusCode}",
         intlMessage: "error-connectionError",
+      );
+    }
+    if (response.statusCode == 401) {
+      throw IntlException(
+        message: "ปฎิเสธ server ตอบกลับด้วยสถานะ ${response.statusCode}",
+        intlMessage: "error-sessionExpired",
       );
     }
     if (response.statusCode >= 300) {
@@ -117,6 +129,12 @@ class PersonalInfoApi {
         intlMessage: "error-connectionError",
       );
     }
+    if (response.statusCode == 401) {
+      throw IntlException(
+        message: "ปฎิเสธ server ตอบกลับด้วยสถานะ ${response.statusCode}",
+        intlMessage: "error-sessionExpired",
+      );
+    }
     if (response.statusCode >= 300) {
       throw IntlException(
         message: "ปฎิเสธ server ตอบกลับด้วยสถานะ ${response.statusCode}",
@@ -132,8 +150,7 @@ class PersonalInfoApi {
       "$apiBaseUrlProfileManage/users/${access.userId}/photo/delete",
     );
 
-    final httpRequest =
-        httpPostJson(uri: url, accessToken: access.accessToken);
+    final httpRequest = httpPostJson(uri: url, accessToken: access.accessToken);
 
     Response response;
     try {
@@ -149,6 +166,12 @@ class PersonalInfoApi {
       throw IntlException(
         message: "ปฎิเสธ server ตอบกลับด้วยสถานะ ${response.statusCode}",
         intlMessage: "error-connectionError",
+      );
+    }
+    if (response.statusCode == 401) {
+      throw IntlException(
+        message: "ปฎิเสธ server ตอบกลับด้วยสถานะ ${response.statusCode}",
+        intlMessage: "error-sessionExpired",
       );
     }
     if (response.statusCode >= 300) {
@@ -187,5 +210,6 @@ class PersonalInfoMockApi {
     return response;
   }
 }
+
 // const personalInfoApi = const PersonalInfoMockApi();
 const personalInfoApi = const PersonalInfoApi();

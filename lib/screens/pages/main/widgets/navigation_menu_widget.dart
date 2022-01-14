@@ -3,6 +3,8 @@ import 'dart:convert';
 
 import 'package:egat_flutter/constant.dart';
 import 'package:egat_flutter/i18n/app_localizations.dart';
+import 'package:egat_flutter/screens/login/state/login_model.dart';
+import 'package:egat_flutter/screens/login/state/login_session.dart';
 import 'package:egat_flutter/screens/pages/main/states/main_screen_navigation_state.dart';
 import 'package:egat_flutter/screens/pages/main/states/main_screen_title_state.dart';
 import 'package:egat_flutter/screens/pages/main/states/personal_info_state.dart';
@@ -71,6 +73,7 @@ class _NavigationMenuWidgetState extends State<NavigationMenuWidget> {
     Color color = HexColor('#F6645A');
     const hoverColor = Colors.white70;
     return showModalBottomSheet(
+      backgroundColor: whiteColor,
       context: context,
       builder: (context) {
         return Wrap(
@@ -90,6 +93,7 @@ class _NavigationMenuWidgetState extends State<NavigationMenuWidget> {
               ),
             ),
             Divider(
+              color: greyColor,
               indent: 10,
               endIndent: 10,
               thickness: 1,
@@ -99,7 +103,7 @@ class _NavigationMenuWidgetState extends State<NavigationMenuWidget> {
                   child: Text(
                     'Sign Out',
                     style: TextStyle(
-                      color: color,
+                      color: redColor,
                     ),
                   ),
                 ),
@@ -108,6 +112,7 @@ class _NavigationMenuWidgetState extends State<NavigationMenuWidget> {
                   _onSignOutPressed();
                 }),
             Divider(
+              color: greyColor,
               indent: 10,
               endIndent: 10,
               thickness: 1,
@@ -117,7 +122,7 @@ class _NavigationMenuWidgetState extends State<NavigationMenuWidget> {
                   child: Text(
                     'Cancel',
                     style: TextStyle(
-                      color: textButton,
+                      color: textButtonTheme,
                     ),
                   ),
                 ),
@@ -250,7 +255,8 @@ class _NavigationMenuWidgetState extends State<NavigationMenuWidget> {
       child: Container(
         // color: Colors.black,
         child: ListTile(
-            tileColor: (model.currentPage == page) ? contentBgColor : surfaceGreyColor, 
+            tileColor:
+                (model.currentPage == page) ? contentBgColor : surfaceGreyColor,
             leading: Icon(
               icon,
               color: color,
@@ -426,10 +432,20 @@ class _NavigationMenuWidgetState extends State<NavigationMenuWidget> {
     Navigator.pop(context);
   }
 
-  void _onSignOutPressed() {
+  Future<void> _onSignOutPressed() async {
     MainScreenNavigationState mainScreenNavigation =
         Provider.of<MainScreenNavigationState>(context, listen: false);
-    mainScreenNavigation.setPageToSignOut();
+    LoginModel loginModel = Provider.of<LoginModel>(context, listen: false);
+    try {
+      print(loginModel.loginSession.info!.accessToken);
+      await loginModel.processLogout();
+      mainScreenNavigation.setPageToSignOut();
+    } catch (e) {
+      print(e);
+      showIntlException(context, e);
+    } finally {
+      await hideLoading();
+    }
   }
 }
 

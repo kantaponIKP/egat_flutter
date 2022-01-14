@@ -1,3 +1,4 @@
+import 'package:egat_flutter/errors/IntlException.dart';
 import 'package:egat_flutter/screens/page/page_model.dart';
 import 'package:egat_flutter/screens/pages/main/personal_info/apis/models/AccessRequest.dart';
 import 'package:egat_flutter/screens/pages/main/personal_info/apis/models/ChangePersonalInfoRequest.dart';
@@ -25,8 +26,8 @@ class PersonalInfoState extends ChangeNotifier {
   PersonalInfoModel _info = PersonalInfoModel();
 
   LoginSession? get loginSession => _loginSession;
-  
-    void setLoginSession(LoginSession state) {
+
+  void setLoginSession(LoginSession state) {
     if (_loginSession == state) {
       return;
     }
@@ -34,7 +35,6 @@ class PersonalInfoState extends ChangeNotifier {
     _loginSession = state;
     notifyListeners();
   }
-
 
   PersonalInfoState();
 
@@ -88,6 +88,15 @@ class PersonalInfoState extends ChangeNotifier {
       String? email,
       String? photo}) async {
     final accessToken = loginSession!.info!.accessToken;
+    final userId = loginSession!.info!.userId;
+
+    if (accessToken == "") {
+      throw IntlException(
+        message: "Invalid session",
+        intlMessage: "error-invalidSession",
+      );
+    }
+
     ChangePersonalInfoRequest changePersonalInfo =
         new ChangePersonalInfoRequest();
 
@@ -104,7 +113,7 @@ class PersonalInfoState extends ChangeNotifier {
       changePersonalInfo,
       AccessRequest(
         accessToken: accessToken,
-        userId: loginSession!.info!.userId,
+        userId: userId,
       ),
     );
 
@@ -113,31 +122,58 @@ class PersonalInfoState extends ChangeNotifier {
 
   Future<void> changePhoto(String photo) async {
     final accessToken = loginSession!.info!.accessToken;
+    final userId = loginSession!.info!.userId;
+
+    if (accessToken == "") {
+      throw IntlException(
+        message: "Invalid session",
+        intlMessage: "error-invalidSession",
+      );
+    }
+
     var response = await personalInfoApi.changePhoto(
       ChangePhotoRequest(photo: photo),
       AccessRequest(
         accessToken: accessToken,
-        userId: loginSession!.info!.userId,
+        userId: userId,
       ),
     );
   }
 
   Future<void> removePhoto() async {
     final accessToken = loginSession!.info!.accessToken;
+    final userId = loginSession!.info!.userId;
+
+    if (accessToken == "") {
+      throw IntlException(
+        message: "Invalid session",
+        intlMessage: "error-invalidSession",
+      );
+    }
+
     var response = await personalInfoApi.removePhoto(
       AccessRequest(
         accessToken: accessToken,
-        userId: loginSession!.info!.userId,
+        userId: userId,
       ),
     );
   }
 
   Future<void> getPersonalInformation() async {
     final accessToken = loginSession!.info!.accessToken;
+    final userId = loginSession!.info!.userId;
+
+    if (accessToken == "") {
+      throw IntlException(
+        message: "Invalid session",
+        intlMessage: "error-invalidSession",
+      );
+    }
+
     var response = await personalInfoApi.getPersonalInfo(
       AccessRequest(
         accessToken: accessToken,
-        userId: loginSession!.info!.userId,
+        userId: userId,
       ),
     );
 

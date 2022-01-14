@@ -1,10 +1,9 @@
 import 'package:egat_flutter/constant.dart';
 import 'package:egat_flutter/i18n/app_localizations.dart';
-import 'package:egat_flutter/screens/pages/main/setting/addPayment_status.dart';
+import 'package:egat_flutter/screens/page/widgets/page_appbar.dart';
 import 'package:egat_flutter/screens/pages/main/setting/addPayment_step_indicator.dart';
-import 'package:egat_flutter/screens/pages/main/setting/state/setting_screen_navigation_state.dart';
-import 'package:egat_flutter/screens/pages/main/states/main_screen_title_state.dart';
-import 'package:egat_flutter/screens/pages/main/widgets/navigation_menu_widget.dart';
+import 'package:egat_flutter/screens/pages/main/setting/add_payment/states/add_payment_state.dart';
+import 'package:egat_flutter/screens/pages/main/setting/card_payment/card_payment_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
@@ -31,10 +30,26 @@ class _AddPaymentScreenState extends State<AddPaymentScreen> {
   //   titleState.setTitleOneTitle(title: 'Add Payment');
   // }
 
+    @override
+  void initState() {
+    super.initState();
+    setSettingScreenNavigation();
+  }
+
+  void setSettingScreenNavigation() {
+    // SettingScreenNavigationState addPayment =
+    //     Provider.of<SettingScreenNavigationState>(context, listen: false);
+    // addPayment.setPageToAddPayment();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: NavigationMenuWidget(),
+      appBar: PageAppbar(
+          firstTitle: "",
+          secondTitle:
+              AppLocalizations.of(context).translate('title-addPayment')),
+      // drawer: NavigationMenuWidget(),
       body: SafeArea(
         child: _buildAction(context),
       ),
@@ -104,7 +119,13 @@ class _AddPaymentScreenState extends State<AddPaymentScreen> {
           value: _isChecked[index],
           onChanged: (bool? value) {
             setState(() {
-              _isChecked[index] = value!;
+              if(index == 0){
+                _isChecked[0] = true;
+                _isChecked[1] = false;
+              }else if(index == 1){
+                _isChecked[0] = false;
+                _isChecked[1] = true;
+              }
             });
           },
           // controlAffinity: ListTileControlAffinity.leading,
@@ -145,13 +166,38 @@ class _AddPaymentScreenState extends State<AddPaymentScreen> {
     );
   }
 
-  void onNextPressed() {
-    SettingScreenNavigationState addPayment =
-        Provider.of<SettingScreenNavigationState>(context, listen: false);
-    addPayment.setPageToCardPayment();
-     MainScreenTitleState mainScreenTitle =
-        Provider.of<MainScreenTitleState>(context, listen: false);
-    mainScreenTitle.setTitleOneTitle(
-        title: AppLocalizations.of(context).translate('title-cardPayment'));
+  Route _createRoute() {
+    return PageRouteBuilder(
+      pageBuilder: (context, animation, secondaryAnimation) =>
+          const CardPaymentPage(),
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        // const begin = Offset(1.0, 0.0);
+        // const end = Offset.zero;
+        // const curve = Curves.ease;
+        // var tween =
+        //     Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+        return child;
+      },
+    );
+  }
+
+  Future<void> onNextPressed() async {
+
+    final result = await Navigator.of(context).push(_createRoute());
+
+    if (result != null && result) {
+      Navigator.pop(context, true);
+    }
+
+    // AddPaymentState addPayment = Provider.of<AddPaymentState>(context, listen: false);
+    // addPayment.nextPage();
+
+    // SettingScreenNavigationState addPayment =
+    //     Provider.of<SettingScreenNavigationState>(context, listen: false);
+    // addPayment.setPageToCardPayment();
+    //  MainScreenTitleState mainScreenTitle =
+    //     Provider.of<MainScreenTitleState>(context, listen: false);
+    // mainScreenTitle.setTitleOneTitle(
+    //     title: AppLocalizations.of(context).translate('title-cardPayment'));
   }
 }
