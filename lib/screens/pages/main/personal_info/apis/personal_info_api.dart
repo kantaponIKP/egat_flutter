@@ -211,5 +211,5 @@ class PersonalInfoMockApi {
   }
 }
 
-// const personalInfoApi = const PersonalInfoMockApi();
-const personalInfoApi = const PersonalInfoApi();
+const personalInfoApi = const PersonalInfoMockApi();
+// const personalInfoApi = const PersonalInfoApi();

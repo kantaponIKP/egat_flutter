@@ -20,8 +20,8 @@ class LoginModel extends ChangeNotifier {
     loginSession = session;
   }
 
-  LoginApi api = LoginApi();
-  // LoginApiMock api = LoginApiMock();
+  // LoginApi api = LoginApi();
+  LoginApiMock api = LoginApiMock();
 
   Future<void> processLogin({
     required String email,
