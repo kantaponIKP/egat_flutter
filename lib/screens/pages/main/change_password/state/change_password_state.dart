@@ -19,7 +19,6 @@ class ChangePasswordState extends ChangeNotifier {
       ChangePasswordModel(isErrorPasswordIncorrect: false);
 
   LoginSession? get loginSession => _loginSession;
-  final userId = "";
 
   void setLoginSession(LoginSession state) {
     if (_loginSession == state) {
@@ -53,37 +52,17 @@ class ChangePasswordState extends ChangeNotifier {
 
   ChangePasswordModel get info => _info;
 
-  Future<bool> changePassword(String oldPassword, String newPassword) async {
-    final accessToken = loginSession!.info!.accessToken;
+  Future<void> changePassword(String oldPassword, String newPassword) async {
+    
     Response response;
     // try {
       response = await changePasswordApi.changePassword(
         ChangePasswordRequest(
             oldPassword: oldPassword, newPassword: newPassword),
         AccessRequest(
-          accessToken: accessToken,
-          userId: userId,
+          accessToken: loginSession!.info!.accessToken,
+          userId: loginSession!.info!.userId,
         ),
       );
-      if (response.statusCode == 404) { //TODO
-       print("404!");
-        updateInfo(isErrorPasswordIncorrect: true);
-        return false;
-      }
-      else if(response.statusCode == 409){
-        print("409!");
-        throw "Your new password cannot be the same as your current password";
-      }else if(response.statusCode == 204){
-        return true;
-      }else{
-        throw "ปฎิเสธ server ตอบกลับด้วยสถานะ ${response.statusCode}";
-      }
-    // return false;
   }
-
-  //   void goToHomePage() {
-
-
-  //   parent.status.setStateHome();
-  // }
 }

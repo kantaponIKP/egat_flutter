@@ -1,6 +1,7 @@
 import 'package:egat_flutter/constant.dart';
 import 'package:egat_flutter/i18n/app_localizations.dart';
 import 'package:egat_flutter/screens/pages/main/change_password/state/change_password_state.dart';
+import 'package:egat_flutter/screens/pages/main/states/main_screen_navigation_state.dart';
 import 'package:egat_flutter/screens/pages/main/widgets/navigation_menu_widget.dart';
 import 'package:egat_flutter/screens/widgets/loading_dialog.dart';
 import 'package:egat_flutter/screens/widgets/show_exception.dart';
@@ -307,39 +308,29 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
         .hasMatch(password);
   }
 
-  bool _isEmailValid(String email) {
-    return RegExp(
-            r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-        .hasMatch(email);
-  }
-
-  bool _isNumeric(String string) {
-    final numericRegex = RegExp(r'^-?(([0-9]*)|(([0-9]*)\.([0-9]*)))$');
-
-    return numericRegex.hasMatch(string);
-  }
-
   Future<void> _onChangePasswordPressed() async {
-    bool isSuccess = false;
-    var model;
     await showLoading();
     try {
-      model = Provider.of<ChangePasswordState>(context, listen: false);
-      isSuccess = await model.changePassword(
+      ChangePasswordState changePasswordState =
+          Provider.of<ChangePasswordState>(context, listen: false);
+      MainScreenNavigationState mainScreenNavigationState =
+          Provider.of<MainScreenNavigationState>(context, listen: false);
+      await changePasswordState.changePassword(
           _oldPasswordController!.text, _newPasswordController!.text);
+      showSuccessSnackBar(
+          context,
+          AppLocalizations.of(context)
+              .translate('message-changePasswordSuccessfully'));
+      mainScreenNavigationState.setPageToHome();
     } catch (e) {
-      showException(context, e.toString());
+      showIntlException(context, e);
     } finally {
       await hideLoading();
-      if (isSuccess) {
-        showSuccessSnackBar(context, "Change Password Successful.");
-        clearText();
-        // model.goToHomePage();
-      }
+      clearText();
     }
   }
 
-  void clearText(){
+  void clearText() {
     _oldPasswordController!.text = "";
     _newPasswordController!.text = "";
     _confirmPasswordController!.text = "";

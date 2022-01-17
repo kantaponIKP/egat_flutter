@@ -87,6 +87,9 @@
 
   "payment-cardPayment": "Card Payment",
   "payment-promptPay": "PromptPay",
+  "payment-add": "Add",
+
+  "pin-register": "Not registered",
 
   "message-changePasswordSuccessfully": "Your password has been changed successfully.",
   "message-changeSuccessfully": "Changed successfully.",
@@ -98,6 +101,9 @@
   "error-unauthorized": "Unauthorized",
   "error-sessionExpired": "Session expired",
   "error-conflict": "Conflict",
+  "error-passwordSameAsOldPassword": "Your new password cannot be the same as your current password",
+  "error-incorrectPassword": "Incorrect password",
+  "error-invalidSession": "Invalid session",
 
   "bottomNavigation-home": "Home",
   "bottomNavigation-buySell": "Buy/Sell",
