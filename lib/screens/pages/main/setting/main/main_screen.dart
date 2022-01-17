@@ -1,4 +1,5 @@
 import 'package:egat_flutter/constant.dart';
+import 'package:egat_flutter/i18n/app_language.dart';
 import 'package:egat_flutter/i18n/app_localizations.dart';
 import 'package:egat_flutter/screens/page/widgets/page_appbar.dart';
 import 'package:egat_flutter/screens/page/widgets/side_menu.dart';
@@ -36,6 +37,7 @@ class _SettingMainScreenState extends State<SettingMainScreen> {
     super.initState();
     _getCards();
     _getPin();
+    _setLanguage();
   }
 
   Future<void> _getCards() async {
@@ -43,6 +45,19 @@ class _SettingMainScreenState extends State<SettingMainScreen> {
     setState(() {
       _cards = prefs.getStringList('cards') ?? [];
     });
+  }
+
+  void _setLanguage() {
+    // Locale _nowLocale = Localizations.localeOf(context);
+    // if (_nowLocale.toString() == 'th') {
+    //   setState(() {
+    //     _languageValue = 'Thai';
+    //   });
+    // } else {
+    //   setState(() {
+    //     _languageValue = 'English';
+    //   });
+    // }
   }
 
   void _getPin() {
@@ -115,15 +130,28 @@ class _SettingMainScreenState extends State<SettingMainScreen> {
             },
           ).toList(),
           onChanged: (val) {
-            setState(
-              () {
-                _languageValue = val.toString();
-              },
-            );
+            _changeLanguage(val);
+            
+            // setState(
+            //   () {
+            //     _languageValue = val.toString();
+            //   },
+            // );
           },
         ),
       ],
     );
+  }
+
+  void _changeLanguage(val){
+    AppLocale locale = Provider.of<AppLocale>(context, listen: false);
+    print(val.toString());
+    if (val.toString() == "English") {
+        locale.changeLanguage(Locale("en"));
+      } else {
+        locale.changeLanguage(Locale("th"));
+      }
+    //   _setLanguage();
   }
 
   Widget _buildNotificationSection() {
@@ -165,7 +193,7 @@ class _SettingMainScreenState extends State<SettingMainScreen> {
   }
 
   Widget _buildPinSection() {
-      PinState pinState = Provider.of<PinState>(context, listen: false);
+    PinState pinState = Provider.of<PinState>(context, listen: false);
     return Column(children: [
       Align(
           alignment: Alignment.centerLeft,
@@ -176,7 +204,8 @@ class _SettingMainScreenState extends State<SettingMainScreen> {
         SizedBox(
           child: ElevatedButton(
             onPressed: onAddPinPressed, // null return disabled
-            child: Text((pinState.hasPin())?'Edit PIN':'Add PIN', style: TextStyle(color: primaryColor)),
+            child: Text((pinState.hasPin()) ? 'Edit PIN' : 'Add PIN',
+                style: TextStyle(color: primaryColor)),
             style: ElevatedButton.styleFrom(
               primary: surfaceGreyColor,
               elevation: 0,
@@ -188,7 +217,6 @@ class _SettingMainScreenState extends State<SettingMainScreen> {
   }
 
   Widget _buildPinMessage({required bool hasPin}) {
-    
     String message = "";
     if (hasPin == true) {
       return Text("******");

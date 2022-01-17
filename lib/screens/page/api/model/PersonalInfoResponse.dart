@@ -1,13 +1,13 @@
 import 'dart:convert';
 
 class PersonalInfoResponse {
-  String? fullName;
+  String? username;
   String? phoneNumber;
   String? email;
   String? photo;
 
   PersonalInfoResponse({
-    required this.fullName,
+    required this.username,
     required this.phoneNumber,
     required this.email,
     required this.photo,
@@ -16,7 +16,7 @@ class PersonalInfoResponse {
   PersonalInfoResponse.fromJSON(String jsonString) {
     Map<String, dynamic> jsonMap = jsonDecode(jsonString);
 
-    this.fullName = jsonMap['fullName'];
+    this.username = jsonMap['username'];
     this.phoneNumber= jsonMap['phoneNumber'];
     this.email = jsonMap['email'];
     this.photo = jsonMap['photo'];

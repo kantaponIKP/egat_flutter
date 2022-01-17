@@ -40,13 +40,16 @@ final appTitle = 'EGAT P2P';
 final bool isDev = true;
 
 var _apiBaseUrlRegister = isDev
-    ? "https://egat-p2p-register.di.iknowplus.co.th"
+    // ? "https://egat-p2p-register.di.iknowplus.co.th"
+    ? "https://egat-p2p-api.di.iknowplus.co.th"
     : "https://ercapip2p.egat.co.th";
 var _apiBaseUrlLogin = isDev
-    ? "https://egat-p2p-login.di.iknowplus.co.th"
+    // ? "https://egat-p2p-login.di.iknowplus.co.th"
+    ? "https://egat-p2p-api.di.iknowplus.co.th"
     : "https://ercapip2p.egat.co.th";
 var _apiBaseUrlProfileManage = isDev
-    ? "https://egat-p2p-profile-mange.di.iknowplus.co.th/"
+    // ? "https://egat-p2p-profile-mange.di.iknowplus.co.th"
+    ? "https://egat-p2p-api.di.iknowplus.co.th"
     : "https://ercapip2p.egat.co.th";
 var _apiBaseUrlBilateralTrade = isDev
     ? "https://egat-p2p-bilateral.di.iknowplus.co.th"
@@ -57,6 +60,10 @@ var _apiBaseUrlPoolMarketTrade = isDev
     : "https://ercapip2p.egat.co.th";
 var _apiBaseUrlReport = isDev
     ? "https://egat-p2p-report.di.iknowplus.co.th"
+    : "https://ercapip2p.egat.co.th";
+
+var _apiBaseUrlNew = isDev
+    ? "https://egat-p2p-api.di.iknowplus.co.th"
     : "https://ercapip2p.egat.co.th";
 
 var _authorizationBase64 =
@@ -72,6 +79,7 @@ final apiBaseUrlRegister = _apiBaseUrlRegister;
 final apiBaseUrlLogin = _apiBaseUrlLogin;
 final apiBaseUrlProfileManage = _apiBaseUrlProfileManage;
 final apiBaseUrlBilateralTrade = _apiBaseUrlBilateralTrade;
+final apiBaseUrlNew = _apiBaseUrlNew;
 
 final apiBaseUrlPoolMarketTrade = _apiBaseUrlPoolMarketTrade;
 final apiBaseUrlReport = _apiBaseUrlReport;

@@ -5,6 +5,8 @@ import 'package:egat_flutter/screens/forgot_password/widgets/forgot_password_can
 import 'package:egat_flutter/screens/pages/main/news/news_description_screen.dart';
 import 'package:egat_flutter/screens/pages/main/news/state/news_state.dart';
 import 'package:egat_flutter/screens/pages/main/widgets/navigation_menu_widget.dart';
+import 'package:egat_flutter/screens/widgets/show_exception.dart';
+import 'package:egat_flutter/screens/widgets/show_snackbar.dart';
 import 'package:egat_flutter/screens/widgets/single_child_scoped_scroll_view.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -20,8 +22,20 @@ class NewsScreen extends StatefulWidget {
 class _NewsScreenState extends State<NewsScreen> {
   initState() {
     super.initState();
-    final newsState = Provider.of<NewsState>(context, listen: false);
-    newsState.init();
+    fetchNews();
+    
+  }
+
+  Future<void> fetchNews() async {
+    await showLoading();
+        try {
+      final newsState = Provider.of<NewsState>(context, listen: false);
+      await newsState.init();
+    } catch (e) {
+      showIntlException(context, e);
+    } finally {
+      await hideLoading();
+    }
   }
 
   @override
@@ -237,7 +251,7 @@ class _NewsPaginationSection extends StatelessWidget {
     try {
       await function();
     } catch (e) {
-      showException(context, e.toString());
+      showSnackbar(context, e.toString()); //TODO
     }
   }
 
@@ -246,7 +260,7 @@ class _NewsPaginationSection extends StatelessWidget {
       print("Page: " + page.toString());
       await newsState.fetchNewsAtPage(page);
     } catch (e) {
-      showException(context, e.toString());
+      showSnackbar(context, e.toString());
     }
   }
 }

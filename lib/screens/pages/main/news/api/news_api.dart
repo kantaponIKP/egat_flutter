@@ -1,11 +1,17 @@
+import 'dart:async';
+
+import 'package:egat_flutter/Utils/http/get.dart';
+import 'package:egat_flutter/constant.dart';
+import 'package:egat_flutter/errors/IntlException.dart';
 import 'package:egat_flutter/screens/pages/main/news/api/models/NewsResponse.dart';
 import 'package:egat_flutter/screens/pages/main/news/state/news_state.dart';
 import 'package:http/http.dart' as http;
+import 'package:http/http.dart';
 
 class NewsApi {
-  Future<NewsBulletResponse> fetchNewsBulletsAtPage({
+  Future<NewsBulletResponse> fetchNewsBullets({
     // required int page,
-    required String authToken,
+    required authToken,
   }) async {
     // TODO: real one
     // if (page >= 4) {
@@ -22,21 +28,36 @@ class NewsApi {
     //   );
       
     // }
-
-    var bullet = NewsBullet(
-      title:
-          'รวมพลังกลุ่ม กฟผ. มอบเงิน 3 ล้านบาท จัดหายาฟ้าทะลายโจรช่วยผู้ป่วยโควิด-19',
-      description: 'วันนี้ (13 สิงหาคม 2564) นายกิจจา ศรีพัฒากุระ กรรมการ',
-      createdAt: DateTime.now(),
+        var url = Uri.parse(
+      "$apiBaseUrlNew/mobile/news",
     );
-    List<NewsBullet> news = [];
-    for(int i = 0; i < 20; i++){
-      NewsBullet bullet = NewsBullet(title: "Title "+i.toString(),description: "description",createdAt: DateTime.now());
-      news.add(bullet);
+
+    final httpRequest = httpGetJson(url: url,accessToken: authToken);
+
+    Response response;
+    try {
+      response = await httpRequest.timeout(Duration(seconds: 60));
+    } on TimeoutException catch (_) {
+      throw IntlException(
+        message: "Time out",
+        intlMessage: "error-timeoutError",
+      );
     }
-    // print("for ");
-    // print([for (int i = 0; i < 4; i++) i].toString());
-    return NewsBulletResponse(newsList: news);
+
+    if (response.statusCode >= 500) {
+      throw IntlException(
+        message: "ปฎิเสธ server ตอบกลับด้วยสถานะ ${response.statusCode}",
+        intlMessage: "error-connectionError",
+      );
+    }
+    if (response.statusCode == 401) {
+      throw IntlException(
+        message: "ปฎิเสธ server ตอบกลับด้วยสถานะ ${response.statusCode}",
+        intlMessage: "error-sessionExpired",
+      );
+    }
+
+    return NewsBulletResponse.fromJSON(response.body);
     // NewsBulletFetchResponse(newsBullets: [
     //   for (int i = 0; i < 4; i++) bullet,
     // ], totalPage: 10);

@@ -41,7 +41,7 @@ class Email extends ChangeNotifier {
     setInfo(newInfo);
   }
 
-  Future<void> sendOtp({fullName, phoneNumber, email, password}) async {
+  Future<void> sendOtp({userName, phoneNumber, email, password}) async {
     // setInfo(UserInfoModel(fullName: fullName, phoneNumber: phoneNumber, email: email, password: password));
     var response =
         await parent.session.requestNewForgotPasswordSession(email: email);

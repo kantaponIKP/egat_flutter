@@ -21,7 +21,7 @@ class UserInfoScreen extends StatefulWidget {
 
 class _UserInfoScreenState extends State<UserInfoScreen> {
   final _formKey = GlobalKey<FormState>();
-  TextEditingController? _fullNameController;
+  TextEditingController? _usernameController;
   TextEditingController? _phoneNumberController;
   TextEditingController? _emailController;
   TextEditingController? _passwordController;
@@ -35,7 +35,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
   void initState() {
     super.initState();
 
-    _fullNameController = TextEditingController();
+    _usernameController = TextEditingController();
     _phoneNumberController = TextEditingController();
     _emailController = TextEditingController();
     _passwordController = TextEditingController();
@@ -121,11 +121,11 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
           Container(
             padding: const EdgeInsets.symmetric(vertical: 8),
             child: TextFormField(
-              controller: _fullNameController,
+              controller: _usernameController,
               decoration: InputDecoration(
                 counterText: '',
                 labelText:
-                    '${AppLocalizations.of(context).translate('full-name')}',
+                    '${AppLocalizations.of(context).translate('username')}',
               ),
               onChanged: (newValue) {
                 _setValidated();
@@ -390,25 +390,12 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
       var model = Provider.of<UserInfo>(context, listen: false);
 
       model.setInfo(UserInfoModel(
-          fullName: _fullNameController!.text,
+          username: _usernameController!.text,
           phoneNumber: _phoneNumberController!.text,
           email: _emailController!.text,
           password: _passwordController!.text));
-
-      // //TODO
-      // model.nextPage();
-      // await hideLoading();
-      // return ;
-      // // //
-      logger.d(_fullNameController!.text +
-          " " +
-          _phoneNumberController!.text +
-          " " +
-          _emailController!.text +
-          " " +
-          _passwordController!.text);
       await model.submitUserInfo(
-        fullName: _fullNameController!.text,
+        username: _usernameController!.text,
         phoneNumber: _phoneNumberController!.text,
         email: _emailController!.text,
         password: _passwordController!.text,
