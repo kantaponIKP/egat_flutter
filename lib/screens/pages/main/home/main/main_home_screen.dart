@@ -1,11 +1,18 @@
+import 'dart:async';
+
+import 'package:egat_flutter/constant.dart';
 import 'package:egat_flutter/screens/pages/main/home/main/states/main_selected_date_state.dart';
 import 'package:egat_flutter/screens/pages/main/states/main_screen_title_state.dart';
 import 'package:egat_flutter/screens/widgets/loading_dialog.dart';
 import 'package:egat_flutter/screens/widgets/show_exception.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+
+import 'states/main_state.dart';
 
 class MainHomeScreen extends StatefulWidget {
   MainHomeScreen({Key? key}) : super(key: key);
@@ -23,6 +30,18 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
         Provider.of<MainScreenTitleState>(context, listen: false);
 
     titleState.setTitleLogo();
+
+    Future.delayed(Duration(milliseconds: 10), () async {
+      final MainHomeSelectedDateState dateState =
+          Provider.of<MainHomeSelectedDateState>(context, listen: false);
+
+      showLoading();
+      try {
+        await dateState.notifyParent();
+      } catch (e) {
+        showIntlException(context, e);
+      }
+    });
   }
 
   @override
@@ -46,14 +65,264 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
         height: constraints.maxHeight,
         child: SingleChildScrollView(
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               SizedBox(height: 12),
               _DateSelectionBar(),
+              SizedBox(height: 8),
+              _CurrentTimeDisplay(),
+              _MainSection(),
+              _SummarySection(),
             ],
           ),
         ),
       );
     });
+  }
+}
+
+class _MainSection extends StatelessWidget {
+  const _MainSection({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return AspectRatio(aspectRatio: 1);
+  }
+}
+
+class _SummarySection extends StatelessWidget {
+  const _SummarySection({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final state = Provider.of<MainHomeState>(context);
+
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.end,
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    'Energy can be sold in 1 day advance',
+                    style: TextStyle(
+                      fontSize: 11,
+                    ),
+                  ),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Text(
+                        state.value.totalSaleForecastUnit.toStringAsFixed(2),
+                        style: TextStyle(
+                          fontSize: 25,
+                        ),
+                      ),
+                      SizedBox(width: 8),
+                      Text(
+                        'kWh',
+                        style: TextStyle(
+                          fontSize: 15,
+                          color: const Color(0xFF939393),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(right: 25),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    'Total ${state.value.totalRec.toStringAsFixed(2)} REC',
+                    style: TextStyle(
+                      fontSize: 10,
+                      color: const Color(0xFFB9B9B9),
+                    ),
+                  ),
+                  Text(
+                    'Acc ${state.value.accumulatedRec.toStringAsFixed(3)} REC',
+                    style: TextStyle(
+                      fontSize: 10,
+                      color: const Color(0xFFB9B9B9),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+        Row(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: Padding(
+                padding: EdgeInsets.all(10),
+                child: _SummaryBox(
+                  label: 'Trade Sell',
+                  value: state.value.totalSales,
+                  unit: 'Baht',
+                  valueColor: Color(0xFF99FF75),
+                  icon: SvgPicture.asset(
+                      'assets/images/icons/home/net_sales_icon.svg'),
+                ),
+              ),
+            ),
+            Expanded(
+              child: Padding(
+                padding: EdgeInsets.all(10),
+                child: _SummaryBox(
+                  label: 'Trade Buy',
+                  value: state.value.totalSales,
+                  unit: 'Baht',
+                  valueColor: Color(0xFFF6645A),
+                  icon: SvgPicture.asset(
+                      'assets/images/icons/home/net_buy_icon.svg'),
+                ),
+              ),
+            ),
+            Expanded(
+              child: Padding(
+                padding: EdgeInsets.all(10),
+                child: _SummaryBox(
+                  label: 'Grid Used',
+                  value: state.value.totalSales,
+                  unit: 'Baht',
+                  valueColor: Color(0xFFF6645A),
+                  icon: SvgPicture.asset(
+                      'assets/images/icons/home/net_buy_from_grid_icon.svg'),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+}
+
+class _SummaryBox extends StatelessWidget {
+  final Widget icon;
+  final double value;
+  final String unit;
+  final String label;
+  final Color valueColor;
+  final Function()? onTap;
+
+  _SummaryBox({
+    Key? key,
+    required this.icon,
+    required this.value,
+    required this.unit,
+    required this.label,
+    required this.valueColor,
+    this.onTap,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      behavior: HitTestBehavior.opaque,
+      child: Container(
+        decoration: BoxDecoration(
+          color: Color(0xFF262729),
+          borderRadius: BorderRadius.circular(5),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: SizedBox(
+            height: 70,
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Column(
+                  children: [
+                    icon,
+                    FittedBox(
+                      child: Text(
+                        "${value.toStringAsFixed(2)} $unit",
+                        style: TextStyle(fontSize: 15, color: valueColor),
+                      ),
+                    ),
+                    Text(label, style: TextStyle(fontSize: 12)),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _CurrentTimeDisplay extends StatefulWidget {
+  _CurrentTimeDisplay({Key? key}) : super(key: key);
+
+  @override
+  _CurrentTimeDisplayState createState() => _CurrentTimeDisplayState();
+}
+
+class _CurrentTimeDisplayState extends State<_CurrentTimeDisplay> {
+  DateTime _currentTime = DateTime.now();
+  Timer? _timer;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+      final now = DateTime.now();
+
+      if (_currentTime.year != now.year ||
+          _currentTime.month != now.month ||
+          _currentTime.day != now.day ||
+          _currentTime.hour != now.hour ||
+          _currentTime.minute != now.minute) {
+        setState(() {
+          _currentTime = now;
+        });
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+
+    _timer?.cancel();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final dateFormat = DateFormat('dd MMMM yyyy');
+    final timeFormat = DateFormat('HH:mm');
+
+    final dateString = dateFormat.format(_currentTime);
+    final timeString = timeFormat.format(_currentTime);
+
+    return Text(
+      "$dateString เวลา $timeString",
+      style: TextStyle(
+        fontSize: 15,
+        color: Colors.white,
+      ),
+    );
   }
 }
 
@@ -77,14 +346,13 @@ class _DateSelectionBar extends StatelessWidget {
         ),
         Padding(
           padding: const EdgeInsets.only(
-            left: 20,
             right: 4,
           ),
           child: _MonthSelectionDropdown(),
         ),
         Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 8,
+          padding: const EdgeInsets.only(
+            right: 8,
           ),
           child: _DateSelectionDropdown(),
         ),
@@ -92,6 +360,34 @@ class _DateSelectionBar extends StatelessWidget {
           flex: 3,
           // fit: FlexFit.tight,
           child: Container(),
+        ),
+        _DateSelectModeSwitch(),
+        SizedBox(width: 5)
+      ],
+    );
+  }
+}
+
+class _DateSelectModeSwitch extends StatelessWidget {
+  const _DateSelectModeSwitch({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final selectedDateState = Provider.of<MainHomeSelectedDateState>(context);
+
+    return Row(
+      children: [
+        Text('Daily'),
+        Switch(
+          value: selectedDateState.isMonthly,
+          activeColor: primaryColor,
+          onChanged: (_) {
+            if (selectedDateState.isMonthly) {
+              selectedDateState.setDaily();
+            } else {
+              selectedDateState.setMonthly();
+            }
+          },
         ),
       ],
     );
@@ -106,6 +402,10 @@ class _DateSelectionDropdown extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final selectedDateState = Provider.of<MainHomeSelectedDateState>(context);
+
+    if (selectedDateState.isDaily) {
+      return Container();
+    }
 
     final selectedDate = selectedDateState.selectedDate;
 
@@ -178,7 +478,7 @@ class _DateSelectionDropdown extends StatelessWidget {
     try {
       await selectedTimeState.setSelectedDate(newDate);
     } catch (e) {
-      showException(context, e.toString());
+      showIntlException(context, e.toString());
     } finally {
       hideLoading();
     }
@@ -201,8 +501,14 @@ class _MonthSelectionDropdown extends StatelessWidget {
     final now = DateTime.now();
 
     final selectableMonthes = <DateTime>[];
-    for (var i = 0; i < 24; i++) {
-      selectableMonthes.add(DateTime(now.year, now.month - i, 1));
+    if (now.year == selectedMonth.year) {
+      for (var i = 0; i < 12; i++) {
+        selectableMonthes.add(DateTime(now.year, i + 1, 1));
+      }
+    } else {
+      for (var i = 0; i <= now.month; i++) {
+        selectableMonthes.add(DateTime(now.year, i + 1, 1));
+      }
     }
 
     return Container(
@@ -223,14 +529,14 @@ class _MonthSelectionDropdown extends StatelessWidget {
             var newDate = DateTime(
               newValue.year,
               newValue.month,
-              selectedDate.day,
+              selectedDateState.isDaily ? selectedDate.day : 1,
             );
 
             if (newDate.month != newValue.month) {
               newDate = DateTime(
                 newDate.year,
                 newDate.month,
-                0,
+                selectedDateState.isDaily ? selectedDate.day : 1,
               );
             }
 
@@ -263,7 +569,7 @@ class _MonthSelectionDropdown extends StatelessWidget {
     try {
       await selectedTimeState.setSelectedDate(newDate);
     } catch (e) {
-      showException(context, e.toString());
+      showIntlException(context, e.toString());
     } finally {
       hideLoading();
     }
@@ -286,7 +592,7 @@ class _YearSelectionDropdown extends StatelessWidget {
     final now = DateTime.now();
 
     final selectableYears = <DateTime>[];
-    for (var i = 0; i < 2; i++) {
+    for (var i = 0; i < 4; i++) {
       selectableYears.add(DateTime(now.year - i));
     }
 
@@ -308,7 +614,7 @@ class _YearSelectionDropdown extends StatelessWidget {
             var newDate = DateTime(
               newValue.year,
               selectedDate.month,
-              selectedDate.day,
+              selectedDateState.isDaily ? selectedDate.day : 1,
             );
 
             if (newDate.month != newValue.month) {
@@ -344,7 +650,7 @@ class _YearSelectionDropdown extends StatelessWidget {
     try {
       await selectedTimeState.setSelectedDate(newDate);
     } catch (e) {
-      showException(context, e.toString());
+      showIntlException(context, e.toString());
     } finally {
       hideLoading();
     }

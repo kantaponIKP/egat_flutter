@@ -3,10 +3,11 @@ import 'dart:async';
 import 'package:egat_flutter/screens/forgot_password/widgets/forgot_password_cancellation_dialog.dart';
 import 'package:flutter/cupertino.dart';
 
-class MainHomeSelectedDateState extends ChangeNotifier {
-  // BillingState? _billingState;
-  // BillingState? get billingState => _billingState;
+import 'main_state.dart';
 
+enum _Mode { DAILY, MONTHLY }
+
+class MainHomeSelectedDateState extends ChangeNotifier {
   bool _isTimeSettedToCurrentPeriod = true;
   bool get isTimeSettedToCurrentPeriod => _isTimeSettedToCurrentPeriod;
 
@@ -14,8 +15,26 @@ class MainHomeSelectedDateState extends ChangeNotifier {
 
   DateTime get selectedDate => _selectedDate;
 
-  bool _isDaily = true;
-  bool get isDaily => _isDaily;
+  _Mode _mode = _Mode.DAILY;
+  bool get isDaily => _mode == _Mode.DAILY;
+  bool get isMonthly => _mode == _Mode.MONTHLY;
+
+  MainHomeState? _mainHomeState;
+  setMainHomeState(MainHomeState mainHomeState) {
+    _mainHomeState = mainHomeState;
+  }
+
+  setDaily() {
+    _mode = _Mode.DAILY;
+    notifyListeners();
+    notifyParent();
+  }
+
+  setMonthly() {
+    _mode = _Mode.MONTHLY;
+    notifyListeners();
+    notifyParent();
+  }
 
   MainHomeSelectedDateState() {
     _setDefaultSelectedTime(notify: false);
@@ -46,32 +65,22 @@ class MainHomeSelectedDateState extends ChangeNotifier {
       final previousSelectedTime = _selectedDate;
       if (previousSelectedTime.difference(_selectedDate).inSeconds > 0) {
         notifyListeners();
-        // _notifyParent();
+        notifyParent();
       }
     }
   }
 
-  // void setBillingState(BillingState billingState) {
-  //   if (_billingState == billingState) {
-  //     return;
-  //   }
+  notifyParent() async {
+    if (_mainHomeState != null) {
+      showLoading();
 
-  //   _billingState = billingState;
-
-  //   _notifyParent();
-  // }
-
-  // _notifyParent() async {
-  //   if (_billingState != null) {
-  //     showLoading();
-
-  //     try {
-  //       await _billingState!.fetchBillingSummaryAtTime(selectedDate);
-  //     } finally {
-  //       hideLoading();
-  //     }
-  //   }
-  // }
+      try {
+        await _mainHomeState!.fetch(selectedDate, isDaily);
+      } finally {
+        hideLoading();
+      }
+    }
+  }
 
   updateIsDateSettedToCurrentPeriod() {
     final now = DateTime.now();
@@ -94,11 +103,10 @@ class MainHomeSelectedDateState extends ChangeNotifier {
       selectedDate.year,
       selectedDate.month,
       selectedDate.day,
-      selectedDate.hour,
     );
 
     updateIsDateSettedToCurrentPeriod();
     notifyListeners();
-    // await _notifyParent();
+    await notifyParent();
   }
 }
