@@ -1,11 +1,9 @@
-import 'dart:math';
-
-import 'package:egat_flutter/constant.dart';
-import 'package:egat_flutter/i18n/app_localizations.dart';
+import 'package:egat_flutter/screens/pages/main/home/main/states/main_selected_date_state.dart';
 import 'package:egat_flutter/screens/pages/main/states/main_screen_title_state.dart';
+import 'package:egat_flutter/screens/widgets/loading_dialog.dart';
+import 'package:egat_flutter/screens/widgets/show_exception.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
@@ -21,354 +19,334 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
   void initState() {
     super.initState();
 
-    final mainScreenTitleState =
+    final MainScreenTitleState titleState =
         Provider.of<MainScreenTitleState>(context, listen: false);
-    mainScreenTitleState.setTitleLogo();
+
+    titleState.setTitleLogo();
   }
 
   @override
   Widget build(BuildContext context) {
-    return _buildAction(context);
+    return Container(
+      decoration: BoxDecoration(
+        gradient: RadialGradient(
+          colors: [
+            Color(0xFF303030),
+            Colors.black,
+          ],
+        ),
+      ),
+      child: _buildBody(context),
+    );
   }
 
-  Padding _buildAction(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 12, right: 12, bottom: 6),
-      child: LayoutBuilder(
-        builder: (BuildContext context, BoxConstraints constraints) {
-          return SingleChildScrollView(
-            child: Container(
-              constraints: BoxConstraints(
-                minHeight: constraints.maxHeight,
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  _buildDateSection(),
-                  Placeholder(),
-                  Column(
-                    children: [
-                      _buildBalanceSection(),
-                      _buildFundSection(),
-                    ],
-                  )
-                ],
-              ),
+  Widget _buildBody(BuildContext context) {
+    return LayoutBuilder(builder: (context, constraints) {
+      return SizedBox(
+        height: constraints.maxHeight,
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              SizedBox(height: 12),
+              _DateSelectionBar(),
+            ],
+          ),
+        ),
+      );
+    });
+  }
+}
+
+class _DateSelectionBar extends StatelessWidget {
+  const _DateSelectionBar({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      mainAxisSize: MainAxisSize.max,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(
+            left: 20,
+            right: 4,
+          ),
+          child: _YearSelectionDropdown(),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(
+            left: 20,
+            right: 4,
+          ),
+          child: _MonthSelectionDropdown(),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: 8,
+          ),
+          child: _DateSelectionDropdown(),
+        ),
+        Flexible(
+          flex: 3,
+          // fit: FlexFit.tight,
+          child: Container(),
+        ),
+      ],
+    );
+  }
+}
+
+class _DateSelectionDropdown extends StatelessWidget {
+  const _DateSelectionDropdown({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final selectedDateState = Provider.of<MainHomeSelectedDateState>(context);
+
+    final selectedDate = selectedDateState.selectedDate;
+
+    final now = DateTime.now();
+
+    final selectableDates = <DateTime>[];
+    if (now.month == selectedDate.month && now.year == selectedDate.year) {
+      for (var i = 0; i < now.day; i++) {
+        selectableDates.add(
+          DateTime(selectedDate.year, selectedDate.month, i + 1),
+        );
+      }
+    } else {
+      final daysInMonth =
+          DateTime(selectedDate.year, selectedDate.month + 1, 0).day;
+
+      for (var i = 0; i < daysInMonth; i++) {
+        selectableDates.add(
+          DateTime(selectedDate.year, selectedDate.month, i + 1),
+        );
+      }
+    }
+
+    return Container(
+      height: 35,
+      padding: EdgeInsets.symmetric(horizontal: 3),
+      decoration: BoxDecoration(
+        color: Colors.grey[900],
+        borderRadius: BorderRadius.circular(5),
+      ),
+      child: DropdownButton<DateTime>(
+        value: selectedDate,
+        icon: Icon(Icons.arrow_drop_down_rounded),
+        iconSize: 20,
+        alignment: Alignment.center,
+        borderRadius: BorderRadius.circular(20),
+        onChanged: (DateTime? newValue) {
+          if (newValue != null) {
+            final newDate = DateTime(
+              newValue.year,
+              newValue.month,
+              newValue.day,
+            );
+            _setSelectedDate(context, selectedDateState, newDate);
+          }
+        },
+        items: selectableDates.map((
+          DateTime item,
+        ) {
+          return DropdownMenuItem(
+            value: item,
+            child: Text(
+              DateFormat('d').format(item.toLocal()),
             ),
           );
-        },
+        }).toList(),
+        underline: DropdownButtonHideUnderline(
+          child: Container(),
+        ),
       ),
     );
   }
 
-  void setYear(int year) {
-    // TODO: set state
+  _setSelectedDate(
+    BuildContext context,
+    MainHomeSelectedDateState selectedTimeState,
+    DateTime newDate,
+  ) async {
+    showLoading();
+    try {
+      await selectedTimeState.setSelectedDate(newDate);
+    } catch (e) {
+      showException(context, e.toString());
+    } finally {
+      hideLoading();
+    }
   }
+}
 
-  void setMonth(int month) {
-    // TODO: set state
-  }
+class _MonthSelectionDropdown extends StatelessWidget {
+  const _MonthSelectionDropdown({
+    Key? key,
+  }) : super(key: key);
 
-  Widget _buildDateSection() {
+  @override
+  Widget build(BuildContext context) {
+    final selectedDateState = Provider.of<MainHomeSelectedDateState>(context);
+
+    final selectedDate = selectedDateState.selectedDate;
+
+    final selectedMonth = DateTime(selectedDate.year, selectedDate.month, 1);
+
     final now = DateTime.now();
 
-    final availableMinYear = 2019;
-    final availableMaxYear = DateTime.now().year;
-
-    var availableYears = List<int>.generate(
-      availableMaxYear - availableMinYear + 1,
-      (index) => availableMinYear + index,
-    );
-
-    // TODO: use state.
-    var yearSelected = now.year;
-
-    final availableMinMonth = 1;
-    var availableMaxMonth = 12;
-
-    if (yearSelected == now.year) {
-      availableMaxMonth = now.month;
+    final selectableMonthes = <DateTime>[];
+    for (var i = 0; i < 24; i++) {
+      selectableMonthes.add(DateTime(now.year, now.month - i, 1));
     }
 
-    var availableMonths = List<int>.generate(
-      availableMaxMonth - availableMinMonth + 1,
-      (index) => availableMinMonth + index,
+    return Container(
+      height: 35,
+      padding: EdgeInsets.symmetric(horizontal: 3),
+      decoration: BoxDecoration(
+        color: Colors.grey[900],
+        borderRadius: BorderRadius.circular(5),
+      ),
+      child: DropdownButton<DateTime>(
+        value: selectedMonth,
+        icon: Icon(Icons.arrow_drop_down_rounded),
+        iconSize: 20,
+        alignment: Alignment.center,
+        borderRadius: BorderRadius.circular(20),
+        onChanged: (DateTime? newValue) {
+          if (newValue != null) {
+            var newDate = DateTime(
+              newValue.year,
+              newValue.month,
+              selectedDate.day,
+            );
+
+            if (newDate.month != newValue.month) {
+              newDate = DateTime(
+                newDate.year,
+                newDate.month,
+                0,
+              );
+            }
+
+            _setSelectedDate(context, selectedDateState, newDate);
+          }
+        },
+        items: selectableMonthes.map((
+          DateTime item,
+        ) {
+          return DropdownMenuItem(
+            value: item,
+            child: Text(
+              DateFormat('MMMM').format(item.toLocal()),
+            ),
+          );
+        }).toList(),
+        underline: DropdownButtonHideUnderline(
+          child: Container(),
+        ),
+      ),
     );
+  }
 
-    // TODO: use state
-    var monthSelected = now.month;
-    var monthFormat = DateFormat.MMMM();
-    var monthNameSelected =
-        monthFormat.format(DateTime(yearSelected, monthSelected));
+  _setSelectedDate(
+    BuildContext context,
+    MainHomeSelectedDateState selectedTimeState,
+    DateTime newDate,
+  ) async {
+    showLoading();
+    try {
+      await selectedTimeState.setSelectedDate(newDate);
+    } catch (e) {
+      showException(context, e.toString());
+    } finally {
+      hideLoading();
+    }
+  }
+}
 
-    final minDate = 1;
-    var maxDate = DateTime(yearSelected, monthSelected + 1)
-        .subtract(Duration(days: 1))
-        .day;
+class _YearSelectionDropdown extends StatelessWidget {
+  const _YearSelectionDropdown({
+    Key? key,
+  }) : super(key: key);
 
-    if (yearSelected == now.year && monthSelected == now.month) {
-      maxDate = now.day;
+  @override
+  Widget build(BuildContext context) {
+    final selectedDateState = Provider.of<MainHomeSelectedDateState>(context);
+
+    final selectedDate = selectedDateState.selectedDate;
+
+    final selectedYear = DateTime(selectedDate.year);
+
+    final now = DateTime.now();
+
+    final selectableYears = <DateTime>[];
+    for (var i = 0; i < 2; i++) {
+      selectableYears.add(DateTime(now.year - i));
     }
 
-    var dateAvailables = List<int>.generate(
-      maxDate - minDate + 1,
-      (index) => minDate + index,
-    );
+    return Container(
+      height: 35,
+      padding: EdgeInsets.symmetric(horizontal: 3),
+      decoration: BoxDecoration(
+        color: Colors.grey[900],
+        borderRadius: BorderRadius.circular(5),
+      ),
+      child: DropdownButton<DateTime>(
+        value: selectedYear,
+        icon: Icon(Icons.arrow_drop_down_rounded),
+        iconSize: 20,
+        alignment: Alignment.center,
+        borderRadius: BorderRadius.circular(20),
+        onChanged: (DateTime? newValue) {
+          if (newValue != null) {
+            var newDate = DateTime(
+              newValue.year,
+              selectedDate.month,
+              selectedDate.day,
+            );
 
-    var dateSelected = min(now.day, maxDate);
+            if (newDate.month != newValue.month) {
+              newDate = DateTime(newDate.year, 0);
+            }
 
-    // TODO: use state
-    var isDaily = false;
-
-    var latestUpdateDate = now;
-    var latestUpdateDateForamt = DateFormat("yyyy MMMM dd at HH:mm");
-    var latestUpdateDateString =
-        latestUpdateDateForamt.format(latestUpdateDate);
-
-    return Column(children: [
-      Row(children: [
-        Expanded(
-          child: DropdownButton<int>(
-            isExpanded: true,
-            value: yearSelected,
-            iconSize: 24.0,
-            items: availableYears.map(
-              (val) {
-                return DropdownMenuItem<int>(
-                  value: val,
-                  child: Text(val.toString()),
-                );
-              },
-            ).toList(),
-            onChanged: (value) {
-              if (value != null) {
-                setYear(value);
-              }
-            },
-          ),
+            _setSelectedDate(context, selectedDateState, newDate);
+          }
+        },
+        items: selectableYears.map((
+          DateTime item,
+        ) {
+          return DropdownMenuItem(
+            value: item,
+            child: Text(
+              DateFormat('yyyy').format(item.toLocal()),
+            ),
+          );
+        }).toList(),
+        underline: DropdownButtonHideUnderline(
+          child: Container(),
         ),
-        SizedBox(width: 16),
-        Expanded(
-          child: DropdownButton<int>(
-            isExpanded: true,
-            value: monthSelected,
-            iconSize: 24.0,
-            items: availableMonths.map(
-              (month) {
-                
-                final monthNameFormat = DateFormat.MMMM(AppLocalizations.of(context).getLocale().toString());
-                final monthName =
-                    monthNameFormat.format(DateTime(yearSelected, month));
-
-                return DropdownMenuItem<int>(
-                  value: month,
-                  child: Text(monthName),
-                );
-              },
-            ).toList(),
-            onChanged: (month) {
-              if (month != null) {
-                setMonth(month);
-              }
-            },
-          ),
-        ),
-        SizedBox(width: 16),
-        Expanded(
-            child: Text('${AppLocalizations.of(context).translate('daily')}')),
-        Switch(
-          materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-          value: isDaily,
-          onChanged: (val) {
-            setDaily(enabled: val);
-          },
-        )
-      ]),
-      Text(latestUpdateDateString),
-    ]);
-  }
-
-  Widget _buildBalanceSection() {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Expanded(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                  '${AppLocalizations.of(context).translate('energy-can-be-sold')}'),
-              Row(
-                children: [
-                  Text("33.64", style: TextStyle(fontSize: (24))),
-                  SizedBox(width: 16),
-                  Text("kWh", style: TextStyle(fontSize: (16))),
-                ],
-              ),
-            ],
-          ),
-        ),
-        // Spacer(),
-        Expanded(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Text("Total 0.001 REC"),
-              Text("Acc 0.201 REC"),
-            ],
-          ),
-        ),
-      ],
+      ),
     );
   }
 
-  Widget _buildFundSection() {
-    return Row(
-      children: [
-        Expanded(
-          child: Card(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8.0),
-            ),
-            child: InkWell(
-              onTap: () {
-                onTradeSellPressed();
-              },
-              child: SizedBox(
-                height: 80,
-                child: Center(
-                    child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                      SizedBox(
-                        height: 32,
-                        width: 56,
-                        child: SvgPicture.asset(
-                          'assets/images/icons/home/total_sell.svg',
-                          fit: BoxFit.contain,
-                          height: 32,
-                        ),
-                      ),
-                      Text('492.80 Bath', style: TextStyle(color: greenColor)),
-                      Text('Trade Sell')
-                    ])),
-              ),
-            ),
-          ),
-        ),
-        Expanded(
-          child: Card(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8.0),
-            ),
-            child: InkWell(
-              onTap: () {
-                onTradeBuyPressed();
-              },
-              child: SizedBox(
-                height: 80,
-                child: Center(
-                    child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                      SizedBox(
-                        height: 32,
-                        width: 56,
-                        child: SvgPicture.asset(
-                          'assets/images/icons/home/total_buy.svg',
-                          fit: BoxFit.contain,
-                          height: 32,
-                        ),
-                      ),
-                      Text('211.75 Bath', style: TextStyle(color: redColor)),
-                      Text('Trade Buy')
-                    ])),
-              ),
-            ),
-          ),
-        ),
-        Expanded(
-          child: Card(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8.0),
-            ),
-            child: InkWell(
-              onTap: () {
-                onGridUsedPressed();
-              },
-              child: SizedBox(
-                height: 80,
-                child: Center(
-                    child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                      SizedBox(
-                        height: 32,
-                        width: 56,
-                        child: Image(
-                          image: AssetImage(
-                            'assets/images/icons/home/total_grid.png',
-                            // fit: BoxFit.contain,
-                            // height: 32,
-                          ),
-                        ),
-                      ),
-                      Text('104.65 Bath', style: TextStyle(color: redColor)),
-                      Text('Grid Used')
-                    ])),
-              ),
-            ),
-          ),
-        ),
-      ],
-    );
+  _setSelectedDate(
+    BuildContext context,
+    MainHomeSelectedDateState selectedTimeState,
+    DateTime newDate,
+  ) async {
+    showLoading();
+    try {
+      await selectedTimeState.setSelectedDate(newDate);
+    } catch (e) {
+      showException(context, e.toString());
+    } finally {
+      hideLoading();
+    }
   }
-
-  void onTradeSellPressed() {
-    // var model = Provider.of<Home>(context, listen: false);
-    // model.setPageGraph();
-  }
-
-  void onTradeBuyPressed() {
-    // var model = Provider.of<Home>(context, listen: false);
-    // model.setPageGraph();
-  }
-
-  void onGridUsedPressed() {
-    // var model = Provider.of<Home>(context, listen: false);
-    // model.setPageGraph();
-  }
-
-  void onEnergyStoragePressed() {
-    // var model = Provider.of<Home>(context, listen: false);
-    // model.setPageGraph();
-  }
-
-  void onPVPressed() {
-    // var model = Provider.of<Home>(context, listen: false);
-    // model.setPageGraph();
-  }
-
-  void onGridPressed() {
-    // var model = Provider.of<Home>(context, listen: false);
-    // model.setPageGraph();
-  }
-
-  Widget buildSlideTransition(Widget child, Animation<double> animation) {
-    const begin = Offset(1.0, 0.0);
-    const end = Offset.zero;
-    const curve = Curves.ease;
-
-    var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-
-    return SlideTransition(
-      position: animation.drive(tween),
-      child: child,
-    );
-  }
-
-  void setDaily({required bool enabled}) {}
 }

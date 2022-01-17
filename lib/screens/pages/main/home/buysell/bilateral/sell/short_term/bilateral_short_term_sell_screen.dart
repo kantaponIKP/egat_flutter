@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:egat_flutter/constant.dart';
 import 'package:egat_flutter/screens/forgot_password/widgets/forgot_password_cancellation_dialog.dart';
 import 'package:egat_flutter/screens/page/widgets/page_appbar.dart';
+import 'package:egat_flutter/screens/pages/main/home/buysell/bilateral/sell/long_term/bilateral_long_term_sell_page.dart';
 import 'package:egat_flutter/screens/session.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -306,20 +307,34 @@ class _HeaderSection extends StatelessWidget {
             borderRadius: BorderRadius.circular(5),
             color: primaryColor,
           ),
-          child: Padding(
-            padding: const EdgeInsets.all(4),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(
-                  Icons.more_time_rounded,
-                  color: Colors.black,
+          child: GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            onTap: () async {
+              final result = await Navigator.of(context).push<bool>(
+                MaterialPageRoute(
+                  builder: (context) => BilateralLongTermSellPage(),
                 ),
-                Text(
-                  'Register to long term Bilateral',
-                  style: TextStyle(color: Colors.black),
-                ),
-              ],
+              );
+
+              if (result != null && result) {
+                Navigator.pop(context, true);
+              }
+            },
+            child: Padding(
+              padding: const EdgeInsets.all(4),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    Icons.more_time_rounded,
+                    color: Colors.black,
+                  ),
+                  Text(
+                    'Register to long term Bilateral',
+                    style: TextStyle(color: Colors.black),
+                  ),
+                ],
+              ),
             ),
           ),
         ),

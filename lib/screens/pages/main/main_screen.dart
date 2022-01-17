@@ -25,7 +25,7 @@ class _AppBar extends StatelessWidget with PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     final titleState = Provider.of<MainScreenTitleState>(context);
-    PreferredSizeWidget title = const LogoAppbar();
+    PreferredSizeWidget title;
     switch (titleState.type) {
       case MainScreenTitleType.LOGO:
         title = const LogoAppbar();
@@ -38,6 +38,9 @@ class _AppBar extends StatelessWidget with PreferredSizeWidget {
           firstTitle: titleState.titles[0],
           secondTitle: titleState.titles[1],
         );
+        break;
+      case MainScreenTitleType.NONE:
+        title = const LogoAppbar();
         break;
     }
     return title;

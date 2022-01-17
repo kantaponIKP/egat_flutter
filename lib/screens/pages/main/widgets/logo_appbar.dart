@@ -8,7 +8,7 @@ class LogoAppbar extends StatelessWidget with PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      backgroundColor: Colors.transparent,
+      backgroundColor: Colors.black,
       title: Padding(
         padding: const EdgeInsets.only(right: 60),
         child: Row(

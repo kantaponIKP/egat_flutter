@@ -20,6 +20,15 @@ class ForecastGraph extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final powerData = [...this.powerData];
+    final nowLimit = DateTime.now().add(Duration(hours: -1));
+    for (final entry in powerData.asMap().entries) {
+      final entryTime = startHour.add(Duration(hours: entry.key));
+      if (entryTime.isAfter(nowLimit)) {
+        powerData[entry.key] = null;
+      }
+    }
+
     return SizedBox(
       child: Scrollbar(
         child: SingleChildScrollView(
@@ -73,7 +82,7 @@ class _LineGraphPainter extends CustomPainter {
   final List<double?> powerData;
 
   get powerMaxValue => powerData.reduce((a, b) => max(a ?? 0, b ?? 0));
-  get forecastMaxValue => powerData.reduce((a, b) => max(a ?? 0, b ?? 0));
+  get forecastMaxValue => forecastData.reduce((a, b) => max(a ?? 0, b ?? 0));
 
   get maxValue => max<double>(forecastMaxValue, powerMaxValue);
 

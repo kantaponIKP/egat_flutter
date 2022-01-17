@@ -46,7 +46,7 @@ var _apiBaseUrlLogin = isDev
     ? "https://egat-p2p-login.di.iknowplus.co.th"
     : "https://ercapip2p.egat.co.th";
 var _apiBaseUrlProfileManage = isDev
-    ? "https://egat-p2p-profile-mange.di.iknowplus.co.th/"
+    ? "https://egat-p2p-profile-mange.di.iknowplus.co.th"
     : "https://ercapip2p.egat.co.th";
 var _apiBaseUrlBilateralTrade = isDev
     ? "https://egat-p2p-bilateral.di.iknowplus.co.th"
@@ -57,6 +57,10 @@ var _apiBaseUrlPoolMarketTrade = isDev
     : "https://ercapip2p.egat.co.th";
 var _apiBaseUrlReport = isDev
     ? "https://egat-p2p-report.di.iknowplus.co.th"
+    : "https://ercapip2p.egat.co.th";
+
+var _apiBaseUrlNotification = isDev
+    ? "https://egat-p2p-notification.di.iknowplus.co.th"
     : "https://ercapip2p.egat.co.th";
 
 var _authorizationBase64 =
@@ -75,6 +79,7 @@ final apiBaseUrlBilateralTrade = _apiBaseUrlBilateralTrade;
 
 final apiBaseUrlPoolMarketTrade = _apiBaseUrlPoolMarketTrade;
 final apiBaseUrlReport = _apiBaseUrlReport;
+final apiBaseUrlNotification = _apiBaseUrlNotification;
 
 final Logger logger = Logger(
   printer: loggerPrinter,
