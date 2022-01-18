@@ -11,6 +11,7 @@ import 'package:provider/provider.dart';
 import 'package:get_it/get_it.dart';
 
 GetIt getIt = GetIt.instance;
+final navigatorKey = GlobalKey<NavigatorState>();
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -58,6 +59,7 @@ class EgatApp extends StatelessWidget {
       child: Consumer<AppLocale>(
         builder: (context, provider, child) {
           return MaterialApp(
+            navigatorKey: navigatorKey,
             supportedLocales: [
               Locale('en', 'US'),
               Locale('th'),

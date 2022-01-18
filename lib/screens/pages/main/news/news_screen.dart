@@ -9,7 +9,9 @@ import 'package:egat_flutter/screens/widgets/show_exception.dart';
 import 'package:egat_flutter/screens/widgets/show_snackbar.dart';
 import 'package:egat_flutter/screens/widgets/single_child_scoped_scroll_view.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:intl/intl.dart';
+import 'package:markdown/markdown.dart' as markdown;
 import 'package:provider/provider.dart';
 
 class NewsScreen extends StatefulWidget {
@@ -23,12 +25,11 @@ class _NewsScreenState extends State<NewsScreen> {
   initState() {
     super.initState();
     fetchNews();
-    
   }
 
   Future<void> fetchNews() async {
     await showLoading();
-        try {
+    try {
       final newsState = Provider.of<NewsState>(context, listen: false);
       await newsState.init();
     } catch (e) {
@@ -101,14 +102,25 @@ class _NewsCardSection extends StatelessWidget {
   final String content;
   final void Function()? onTap;
 
-  void _onNewPressed({required BuildContext context, required String fullContent}) {
+  void _onNewPressed(
+      {required BuildContext context, required String fullContent}) {
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (BuildContext context) {
-          return NewsDescriptionScreen(title: title,content: fullContent);
+          return NewsDescriptionScreen(title: title, content: fullContent);
         },
       ),
     );
+  }
+
+  String removeAllHtmlTags(String htmlText) {
+    RegExp exp = RegExp(
+      r"<[^>]*>",
+      multiLine: true,
+      caseSensitive: true
+    );
+
+    return htmlText.replaceAll(exp, '');
   }
 
   @override
@@ -116,8 +128,12 @@ class _NewsCardSection extends StatelessWidget {
     // Content can't have more than 60 characters
     // If title is more than 60 characters, it will be cut off
     final fullContent = this.content;
-    final content = this.content.length > 60
-        ? this.content.substring(0, 57) + '...'
+    final htmlText = markdown.markdownToHtml(this.content);
+    final plainText = removeAllHtmlTags(htmlText);
+
+
+    final content = this.content.length > 49
+        ? this.content.substring(0, 46) + '...'
         : this.content;
 
     var dateFormatter = DateFormat('dd MMM yyyy');
@@ -127,7 +143,7 @@ class _NewsCardSection extends StatelessWidget {
       padding: const EdgeInsets.all(2.0),
       child: GestureDetector(
         onTap: () {
-          _onNewPressed(context: context,fullContent: fullContent);
+          _onNewPressed(context: context, fullContent: fullContent);
         },
         child: Card(
           shape: RoundedRectangleBorder(
@@ -155,39 +171,59 @@ class _NewsCardSection extends StatelessWidget {
                       ],
                     )),
                   ),
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: RichText(
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      text: TextSpan(
-                        children: [
-                          TextSpan(
-                            text: title,
-                            style: TextStyle(
-                              color: primaryColor,
-                              fontSize: 16,
-                            ),
-                          ),
-                        ],
-                      ),
+                  Container(
+                    constraints: BoxConstraints(
+                      minHeight: 45,
+                      maxHeight: 45,
                     ),
-                  ),
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: RichText(
-                        maxLines: 1,
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: RichText(
+                        maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                         text: TextSpan(
                           children: [
                             TextSpan(
-                              text: content,
+                              text: title,
                               style: TextStyle(
-                                fontSize: 14,
+                                color: primaryColor,
+                                fontSize: 16,
                               ),
                             ),
                           ],
-                        )),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Container(
+                    constraints: BoxConstraints(
+                      minHeight: 35,
+                      maxHeight: 35,
+                    ),
+                    child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: 
+                        // Markdown(
+                        //   physics: NeverScrollableScrollPhysics(),
+                        //   // controller: null,
+                        //   // softLineBreak: true,
+                        //   data: content,
+                        //   shrinkWrap: true,
+                        // )
+                        RichText(
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            text: TextSpan(
+                              children: [
+                                TextSpan(
+                                  text: plainText,
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                  ),
+                                ),
+                              ],
+                            )),
+                        ),
                   ),
                 ]),
               )),

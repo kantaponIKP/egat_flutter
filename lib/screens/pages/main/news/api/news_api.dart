@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:egat_flutter/Utils/http/get.dart';
 import 'package:egat_flutter/constant.dart';
@@ -57,7 +58,7 @@ class NewsApi {
       );
     }
 
-    return NewsBulletResponse.fromJSON(response.body);
+    return NewsBulletResponse.fromJSON(utf8.decode(response.bodyBytes));
     // NewsBulletFetchResponse(newsBullets: [
     //   for (int i = 0; i < 4; i++) bullet,
     // ], totalPage: 10);

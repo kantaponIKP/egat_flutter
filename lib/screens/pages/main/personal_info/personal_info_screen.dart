@@ -309,7 +309,7 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
               decoration: InputDecoration(
                 counterText: '',
                 labelText:
-                    '${AppLocalizations.of(context).translate('full-name')}',
+                    '${AppLocalizations.of(context).translate('username')}',
               ),
               onChanged: (newValue) {
                 _setValidated();
