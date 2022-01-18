@@ -19,6 +19,7 @@ import '../widgets/energy_info_box/scheduled_offer_to_sell_bid_energy_transfer_i
 import '../widgets/energy_info_box/scheduled_offer_to_sell_energy_transfer_info.dart';
 import 'states/energy_transfer_selected_date_state.dart';
 import 'states/energy_transfer_state.dart';
+import 'widgets/energy_transfer_graph.dart';
 
 class EnergyTransferScreen extends StatefulWidget {
   EnergyTransferScreen({Key? key}) : super(key: key);
@@ -106,6 +107,10 @@ class _DataDisplaySection extends StatelessWidget {
       defaultExpanded = false;
     }
 
+    final selectedDateState =
+        Provider.of<EnergyTransferSelectedDateState>(context);
+    final selectedDate = selectedDateState.selectedDate;
+
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -113,7 +118,10 @@ class _DataDisplaySection extends StatelessWidget {
           children: [
             AspectRatio(
               aspectRatio: 2,
-              child: Placeholder(),
+              child: EnergyTransferGraph(
+                energyData: infos,
+                startHour: selectedDate,
+              ),
             ),
             SizedBox(height: 16),
             ...boxes.map((box) =>
@@ -329,7 +337,7 @@ class _EnergyTransferScreenState extends State<EnergyTransferScreen> {
           children: [
             _FilterCheckbox(
               title: AppLocalizations.of(context)
-              .translate('settlement-bilateralTrade'),
+                  .translate('settlement-bilateralTrade'),
               isSelected: isBilateralSelected,
               onTap: () {
                 setState(() {
@@ -339,7 +347,7 @@ class _EnergyTransferScreenState extends State<EnergyTransferScreen> {
             ),
             _FilterCheckbox(
               title: AppLocalizations.of(context)
-              .translate('settlement-poolMarketTrade'),
+                  .translate('settlement-poolMarketTrade'),
               isSelected: isPoolMarketSelected,
               onTap: () {
                 setState(() {

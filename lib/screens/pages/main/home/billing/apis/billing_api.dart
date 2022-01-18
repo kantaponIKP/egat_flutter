@@ -26,7 +26,7 @@ class BillingApi {
       accessToken: accessToken,
     ).timeout(Duration(seconds: 10));
 
-    final jsonMap = json.decode(response.body);
+    final jsonMap = json.decode(utf8.decode(response.bodyBytes));
 
     return GetBillingSummaryResponse.fromJson(jsonMap);
 
@@ -56,7 +56,7 @@ class BillingApi {
       accessToken: accessToken,
     ).timeout(Duration(seconds: 10));
 
-    final jsonMap = json.decode(response.body);
+    final jsonMap = json.decode(utf8.decode(response.bodyBytes));
 
     return GetPreliminaryInvoiceResponse.fromJson(jsonMap);
 
@@ -120,7 +120,7 @@ class BillingApi {
       accessToken: accessToken,
     ).timeout(Duration(seconds: 10));
 
-    final jsonMap = json.decode(response.body);
+    final jsonMap = json.decode(utf8.decode(response.bodyBytes));
 
     return GetInvoiceResponse.fromJson(jsonMap);
 

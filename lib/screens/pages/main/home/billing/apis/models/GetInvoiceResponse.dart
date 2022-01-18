@@ -114,50 +114,50 @@ class GetInvoiceResponse {
     assert(json['meterInvoiceNo'] is String);
     assert(json['meterType'] is String);
 
-    assert(json['netEnergySalesUnit'] is double);
-    assert(json['netEnergySalesBaht'] is double);
+    assert(json['netEnergySalesUnit'] is num);
+    assert(json['netEnergySalesBaht'] is num);
 
-    assert(json['netEnergyBuyUnit'] is double);
-    assert(json['netEnergyBuyBaht'] is double);
+    assert(json['netEnergyBuyUnit'] is num);
+    assert(json['netEnergyBuyBaht'] is num);
 
-    assert(json['netImbalanceUnit'] is double);
-    assert(json['netImbalanceBaht'] is double);
+    assert(json['netImbalanceUnit'] is num);
+    assert(json['netImbalanceBaht'] is num);
 
-    assert(json['netBuyerImbalanceOverCommitUnit'] is double);
-    assert(json['netBuyerImbalanceOverCommitBaht'] is double);
+    assert(json['netBuyerImbalanceOverCommitUnit'] is num);
+    assert(json['netBuyerImbalanceOverCommitBaht'] is num);
 
-    assert(json['netBuyerImbalanceUnderCommitUnit'] is double);
-    assert(json['netBuyerImbalanceUnderCommitBaht'] is double);
+    assert(json['netBuyerImbalanceUnderCommitUnit'] is num);
+    assert(json['netBuyerImbalanceUnderCommitBaht'] is num);
 
-    assert(json['netSellerImbalanceOverCommitUnit'] is double);
-    assert(json['netSellerImbalanceOverCommitBaht'] is double);
+    assert(json['netSellerImbalanceOverCommitUnit'] is num);
+    assert(json['netSellerImbalanceOverCommitBaht'] is num);
 
-    assert(json['netSellerImbalanceUnderCommitUnit'] is double);
-    assert(json['netSellerImbalanceUnderCommitBaht'] is double);
+    assert(json['netSellerImbalanceUnderCommitUnit'] is num);
+    assert(json['netSellerImbalanceUnderCommitBaht'] is num);
 
-    assert(json['appTransactionFee'] is double);
-    assert(json['discountAppFee'] is double);
-    assert(json['vat'] is double);
-    assert(json['netEnergyTradingPayment'] is double);
+    assert(json['appTransactionFee'] is num);
+    assert(json['discountAppFee'] is num);
+    assert(json['vat'] is num);
+    assert(json['netEnergyTradingPayment'] is num);
 
-    assert(json['gridUsedUnit'] is double);
-    assert(json['gridUsedBaht'] is double);
+    assert(json['gridUsedUnit'] is num);
+    assert(json['gridUsedBaht'] is num);
 
-    assert(json['gridServiceCharge'] is double);
-    assert(json['gridFt'] is double);
-    assert(json['gridDiscount'] is double);
-    assert(json['gridNetWheelingChargeBeforeVat'] is double);
-    assert(json['gridNetBought'] is double);
+    assert(json['gridServiceCharge'] is num);
+    assert(json['gridFt'] is num);
+    assert(json['gridDiscount'] is num);
+    assert(json['gridNetWheelingChargeBeforeVat'] is num);
+    assert(json['gridNetBought'] is num);
 
-    assert(json['wheelingChargeAsServiceCharge'] is double);
-    assert(json['wheelingChargeTServiceCharge'] is double);
-    assert(json['wheelingChargeDServiceCharge'] is double);
-    assert(json['wheelingChargeReServiceCharge'] is double);
-    assert(json['wheelingChargeBeforeVat'] is double);
-    assert(json['wheelingChargeVat'] is double);
-    assert(json['wheelingChargeNet'] is double);
+    assert(json['wheelingChargeAsServiceCharge'] is num);
+    assert(json['wheelingChargeTServiceCharge'] is num);
+    assert(json['wheelingChargeDServiceCharge'] is num);
+    assert(json['wheelingChargeReServiceCharge'] is num);
+    assert(json['wheelingChargeBeforeVat'] is num);
+    assert(json['wheelingChargeVat'] is num);
+    assert(json['wheelingChargeNet'] is num);
 
-    assert(json['estimateNetPayment'] is double);
+    assert(json['estimateNetPayment'] is num);
 
     return GetInvoiceResponse(
       issueDate: DateTime.parse(json['issueDate']),

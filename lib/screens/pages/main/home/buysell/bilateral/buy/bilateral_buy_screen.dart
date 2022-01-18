@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:egat_flutter/constant.dart';
 import 'package:egat_flutter/screens/forgot_password/widgets/forgot_password_cancellation_dialog.dart';
@@ -194,7 +195,7 @@ class _BilateralBuyScreenState extends State<BilateralBuyScreen> {
                         SizedBox(height: 12),
                         SizedBox(
                           height: 170,
-                          child: _buildMap(context),
+                          child: _buildMap(context, _bilateralItemList),
                         ),
                         SizedBox(height: 12),
                         _SelectionSection(
@@ -252,26 +253,84 @@ class _BilateralBuyScreenState extends State<BilateralBuyScreen> {
     );
   }
 
-  Widget _buildMap(BuildContext context) {
+  double getZoomLevel(double radius) {
+    double zoomLevel = 13;
+
+    if (radius > 0) {
+      double radiusElevated = radius + radius / 2;
+      double scale = radiusElevated / 500;
+      zoomLevel = 16 - log(scale) / log(2);
+    }
+
+    zoomLevel = zoomLevel;
+    return zoomLevel;
+  }
+
+  Widget _buildMap(BuildContext context, List<BilateralBuyItem> items) {
+    final markers = <Marker>[];
+    for (final entry in items.asMap().entries) {
+      final item = entry.value;
+      final index = entry.key;
+
+      markers.add(Marker(
+        draggable: false,
+        markerId: MarkerId(index.toString()),
+        position: LatLng(item.lat, item.lng),
+        icon: BitmapDescriptor.defaultMarker,
+        infoWindow: InfoWindow(
+          title: _convertIndexToAlphabatical(index),
+        ),
+      ));
+    }
+
+    LatLng position = LatLng(15.87, 100.99);
+
+    double zoomRadius = 2000000;
+    if (items.length != 0) {
+      double topLeftX = items.first.lng;
+      double topLeftY = items.first.lat;
+      double bottomRightX = items.first.lng;
+      double bottomRightY = items.first.lat;
+
+      for (final item in items) {
+        if (item.lat > topLeftX) {
+          topLeftX = item.lng;
+        }
+
+        if (item.lng > topLeftY) {
+          topLeftY = item.lat;
+        }
+
+        if (item.lat > bottomRightX) {
+          bottomRightX = item.lng;
+        }
+
+        if (item.lat < bottomRightY) {
+          bottomRightY = item.lat;
+        }
+      }
+
+      zoomRadius = max(topLeftX - bottomRightX, topLeftY - bottomRightY).abs();
+      zoomRadius *= 200000;
+
+      if (zoomRadius == 0) {
+        zoomRadius = 200;
+      }
+
+      position = LatLng(
+        (topLeftY + bottomRightY) / 2,
+        (topLeftX + bottomRightX) / 2,
+      );
+    }
+
     return GoogleMap(
       mapType: MapType.normal,
-      initialCameraPosition: CameraPosition(target: LatLng(101, 202), zoom: 1),
+      initialCameraPosition:
+          CameraPosition(target: position, zoom: getZoomLevel(zoomRadius)),
       onMapCreated: (GoogleMapController controller) {
         _controller.complete(controller);
       },
-      markers: Set<Marker>.of(
-        <Marker>[
-          Marker(
-            draggable: true,
-            markerId: MarkerId("1"),
-            position: LatLng(101, 202),
-            icon: BitmapDescriptor.defaultMarker,
-            infoWindow: const InfoWindow(
-              title: 'Your location',
-            ),
-          )
-        ],
-      ),
+      markers: Set<Marker>.of(markers),
     );
   }
 

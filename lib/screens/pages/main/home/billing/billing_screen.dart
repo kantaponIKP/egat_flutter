@@ -21,6 +21,16 @@ class BillingScreen extends StatefulWidget {
 
 class _BillingScreenState extends State<BillingScreen> {
   @override
+  void initState() {
+    super.initState();
+
+    final MainScreenTitleState titleState =
+        Provider.of<MainScreenTitleState>(context, listen: false);
+
+    titleState.setTitleLogo();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
@@ -33,16 +43,6 @@ class _BillingScreenState extends State<BillingScreen> {
       ),
       child: _buildBody(context),
     );
-  }
-
-  @override
-  void initState() {
-    super.initState();
-
-    final MainScreenTitleState titleState =
-        context.read<MainScreenTitleState>();
-
-    titleState.setTitleLogo();
   }
 
   Widget _buildBody(BuildContext context) {

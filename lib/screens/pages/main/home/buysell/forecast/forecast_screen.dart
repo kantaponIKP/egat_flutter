@@ -81,7 +81,8 @@ class __BuySellSectionHeaderState extends State<_BuySellSectionHeader> {
                           }
                         },
                       ),
-                      Text(AppLocalizations.of(context).translate('trade-forecast-all')),
+                      Text(AppLocalizations.of(context)
+                          .translate('trade-forecast-all')),
                     ]),
                   ),
                   Flexible(
@@ -89,7 +90,9 @@ class __BuySellSectionHeaderState extends State<_BuySellSectionHeader> {
                     flex: 2,
                     child: RichText(
                       overflow: TextOverflow.ellipsis,
-                      text: TextSpan(text: AppLocalizations.of(context).translate('trade-forecast-period')),
+                      text: TextSpan(
+                          text: AppLocalizations.of(context)
+                              .translate('trade-forecast-period')),
                     ),
                   ),
                   Flexible(
@@ -103,7 +106,9 @@ class __BuySellSectionHeaderState extends State<_BuySellSectionHeader> {
                             padding: const EdgeInsets.only(left: 8.0),
                             child: RichText(
                               overflow: TextOverflow.ellipsis,
-                              text: TextSpan(text: AppLocalizations.of(context).translate('trade-forecast-canSell')),
+                              text: TextSpan(
+                                  text: AppLocalizations.of(context)
+                                      .translate('trade-forecast-canSell')),
                             ),
                           ),
                         ],
@@ -121,7 +126,9 @@ class __BuySellSectionHeaderState extends State<_BuySellSectionHeader> {
                           padding: const EdgeInsets.only(left: 8.0),
                           child: RichText(
                             overflow: TextOverflow.ellipsis,
-                            text: TextSpan(text: AppLocalizations.of(context).translate('trade-forecast-mustBuy')),
+                            text: TextSpan(
+                                text: AppLocalizations.of(context)
+                                    .translate('trade-forecast-mustBuy')),
                           ),
                         ),
                       ],
@@ -998,17 +1005,30 @@ class _ForecastScreenState extends State<ForecastScreen>
     with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(builder: (context, constraints) {
-      return ConstrainedBox(
-        constraints: BoxConstraints(
-          minHeight: constraints.maxHeight,
-          maxHeight: constraints.maxHeight,
-        ),
-        child: Column(
-          children: [
-            Expanded(child: _buildBody(context)),
-            // _SubmitSection(),
+    return Container(
+      decoration: BoxDecoration(
+        gradient: RadialGradient(
+          colors: [
+            Color(0xFF303030),
+            Colors.black,
           ],
+        ),
+      ),
+      child: _buildLayout(context),
+    );
+  }
+
+  Widget _buildLayout(BuildContext context) {
+    return LayoutBuilder(builder: (context, constraints) {
+      return SizedBox(
+        height: constraints.maxHeight,
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              SizedBox(height: 12),
+              _buildBody(context),
+            ],
+          ),
         ),
       );
     });
@@ -1059,37 +1079,35 @@ class _ForecastScreenState extends State<ForecastScreen>
       0,
     );
 
-    return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.only(top: 0, bottom: 6),
-        child: Column(
-          mainAxisSize: MainAxisSize.max,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildEnergyBalance(),
-            _ForecastEnergyWidgetListTile(),
-            SizedBox(height: 20),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 32),
-              child: ForecastGraph(
-                forecastData: selectedDateState.forecastData != null
-                    ? selectedDateState.forecastData!.forecastInGrids
-                        .map((e) => e != null ? -e : null)
-                        .toList()
-                    : [],
-                powerData: selectedDateState.forecastData != null
-                    ? selectedDateState.forecastData!.powerInGrids
-                        .map((e) => e != null ? -e : null)
-                        .toList()
-                    : [],
-                startHour: startHour,
-              ),
+    return Padding(
+      padding: const EdgeInsets.only(top: 0, bottom: 6),
+      child: Column(
+        mainAxisSize: MainAxisSize.max,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _buildEnergyBalance(),
+          _ForecastEnergyWidgetListTile(),
+          SizedBox(height: 20),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 32),
+            child: ForecastGraph(
+              forecastData: selectedDateState.forecastData != null
+                  ? selectedDateState.forecastData!.forecastInGrids
+                      .map((e) => e != null ? -e : null)
+                      .toList()
+                  : [],
+              powerData: selectedDateState.forecastData != null
+                  ? selectedDateState.forecastData!.powerInGrids
+                      .map((e) => e != null ? -e : null)
+                      .toList()
+                  : [],
+              startHour: startHour,
             ),
-            _BuySellSection(
-              controller: _buySellActionController,
-            ),
-          ],
-        ),
+          ),
+          _BuySellSection(
+            controller: _buySellActionController,
+          ),
+        ],
       ),
     );
   }

@@ -1,17 +1,19 @@
 import 'dart:math';
 
 import 'package:egat_flutter/constant.dart';
+import 'package:egat_flutter/screens/pages/main/home/settlement/models/contract_status.dart';
 import 'package:egat_flutter/screens/pages/main/home/settlement/models/energy_transfer_info.dart';
+import 'package:egat_flutter/screens/pages/main/home/settlement/models/trade_info.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 
-class EnergyTransferGraph extends StatelessWidget {
-  final List<EnergyTransferInfo> energyData;
+class OrderGraph extends StatelessWidget {
+  final List<TradeInfo> energyData;
 
   final DateTime startHour;
 
-  const EnergyTransferGraph({
+  const OrderGraph({
     Key? key,
     required this.energyData,
     required this.startHour,
@@ -39,7 +41,7 @@ class EnergyTransferGraph extends StatelessWidget {
 }
 
 class _BarGraph extends StatefulWidget {
-  final List<EnergyTransferInfo> data;
+  final List<TradeInfo> data;
   final DateTime startHour;
 
   _BarGraph({
@@ -59,8 +61,8 @@ class _BarGraphState extends State<_BarGraph> {
       for (var i = 0; i < 24; i++) 0,
     ];
 
-    List<EnergyTransferStatus> transferStatuses = [
-      for (var i = 0; i < 24; i++) EnergyTransferStatus.SCHEDULED,
+    List<ContractStatus> contractStatuses = [
+      for (var i = 0; i < 24; i++) ContractStatus.OPEN,
     ];
 
     for (final data in widget.data) {
@@ -70,26 +72,20 @@ class _BarGraphState extends State<_BarGraph> {
       }
 
       double value = 0;
-      if (data is CompletedBidToBuyEnergyTransferInfo) {
-        value = data.netEnergyPrice;
-      } else if (data is CompletedChooseToBuyEnergyTransferInfo) {
-        value = data.netEnergyPrice;
-      } else if (data is CompletedOfferToSellBidEnergyTransferInfo) {
-        value = data.netEnergyPrice;
-      } else if (data is CompletedOfferToSellEnergyTransferInfo) {
-        value = data.netEnergyPrice;
-      } else if (data is ScheduledBidToBuyEnergyTransferInfo) {
-        value = data.netEnergyPrice;
-      } else if (data is ScheduledChooseToBuyEnergyTransferInfo) {
-        value = data.netEnergyPrice;
-      } else if (data is ScheduledOfferToSellBidEnergyTransferInfo) {
-        value = data.netEnergyPrice;
-      } else if (data is ScheduledOfferToSellEnergyTransferInfo) {
-        value = data.netEnergyPrice;
+      if (data is OpenOfferToSellTradeInfo) {
+        value = data.estimatedSales;
+      } else if (data is MatchedOfferToSellTradeInfo) {
+        value = data.estimatedSales;
+      } else if (data is MatchedChooseToBuyTradeInfo) {
+        value = data.netBuy;
+      } else if (data is MatchedOfferToSellBidTradeInfo) {
+        value = data.estimatedSales;
+      } else if (data is MatchedBidToBuyTradeInfo) {
+        value = data.marketClearingPrice;
       }
 
       energyData[diffHours] = energyData[diffHours] + value;
-      transferStatuses[diffHours] = data.status;
+      contractStatuses[diffHours] = data.status;
     }
 
     double maxValue = 0;
@@ -108,7 +104,7 @@ class _BarGraphState extends State<_BarGraph> {
             _Bar(
               value: value.value,
               maxValue: maxValue <= 0 ? 1 : maxValue,
-              transferStatus: transferStatuses[value.key],
+              contractStatus: contractStatuses[value.key],
               key: Key('bar-${value.key}'),
             )
         ],
@@ -120,13 +116,13 @@ class _BarGraphState extends State<_BarGraph> {
 class _Bar extends StatelessWidget {
   final double value;
   final double maxValue;
-  final EnergyTransferStatus transferStatus;
+  final ContractStatus contractStatus;
 
   const _Bar({
     Key? key,
     required this.value,
     required this.maxValue,
-    required this.transferStatus,
+    required this.contractStatus,
   }) : super(key: key);
 
   @override
@@ -147,9 +143,11 @@ class _Bar extends StatelessWidget {
           height: size,
           child: Container(
             key: this.key,
-            color: transferStatus == EnergyTransferStatus.COMPLETED
-                ? Color(0xFF99FF75)
-                : Color(0xFFF8E295),
+            color: contractStatus == ContractStatus.OPEN
+                ? Color(0xFFFEC908)
+                : (contractStatus == ContractStatus.MATCHED
+                    ? Color(0xFF99FF55)
+                    : Color(0xFFF6645A)),
           ),
         ),
       ),

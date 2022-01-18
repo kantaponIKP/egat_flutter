@@ -3,6 +3,7 @@ import 'package:egat_flutter/screens/pages/main/home/settlement/models/contract_
 import 'package:egat_flutter/screens/pages/main/home/settlement/models/contract_status.dart';
 import 'package:egat_flutter/screens/pages/main/home/settlement/models/trade_info.dart';
 import 'package:egat_flutter/screens/pages/main/home/settlement/order/states/order_selected_date_state.dart';
+import 'package:egat_flutter/screens/pages/main/home/settlement/order/widgets/order_graph.dart';
 import 'package:egat_flutter/screens/pages/main/home/settlement/widgets/dated_trade_detail_box.dart';
 import 'package:egat_flutter/screens/pages/main/home/settlement/widgets/trade_info_box/matched_bid_to_buy_trade_info_box.dart';
 import 'package:egat_flutter/screens/pages/main/home/settlement/widgets/trade_info_box/matched_choose_to_buy_trade_info_box.dart';
@@ -227,6 +228,9 @@ class _DataDisplaySection extends StatelessWidget {
       defaultExpanded = false;
     }
 
+    final selectedDateState = Provider.of<OrderSelectedDateState>(context);
+    final selectedDate = selectedDateState.selectedDate;
+
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -234,7 +238,10 @@ class _DataDisplaySection extends StatelessWidget {
           children: [
             AspectRatio(
               aspectRatio: 2,
-              child: Placeholder(),
+              child: OrderGraph(
+                startHour: selectedDate,
+                energyData: infos,
+              ),
             ),
             SizedBox(height: 16),
             ...boxes.map((box) =>

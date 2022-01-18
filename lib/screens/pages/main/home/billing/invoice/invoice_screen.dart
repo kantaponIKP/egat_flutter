@@ -358,7 +358,8 @@ class _MeterInfoSection extends StatelessWidget {
         direction: Axis.horizontal,
         spacing: 16,
         runSpacing: 16,
-        alignment: WrapAlignment.spaceBetween,
+        alignment: WrapAlignment.center,
+        crossAxisAlignment: WrapCrossAlignment.center,
         children: [
           _MeterInfoGridItem(
             title: "บัญขีแสดงสัญญา",
@@ -445,8 +446,8 @@ class _ElectricUserInfo extends StatelessWidget {
         alignment: WrapAlignment.spaceBetween,
         children: [
           Text('ชื่อผู้ใช้ไฟฟ้า (Name) : ${data.electricUserName}'),
-          Text('Meter Name : ${data.electricUserName}'),
-          Text('Meter Id : ${data.electricUserName}'),
+          Text('Meter Name : ${data.meterName}'),
+          Text('Meter Id : ${data.meterId}'),
         ],
       ),
     );

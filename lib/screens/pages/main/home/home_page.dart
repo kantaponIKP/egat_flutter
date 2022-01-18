@@ -1,3 +1,5 @@
+import 'package:egat_flutter/screens/pages/main/home/states/notification.state.dart';
+import 'package:egat_flutter/screens/session.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 
@@ -12,6 +14,16 @@ class HomePage extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => HomeScreenNavigationState()),
+        ChangeNotifierProxyProvider<LoginSession, NotificationState>(
+          create: (_) => NotificationState(),
+          update: (_, LoginSession loginSession, notificationState) {
+            if (notificationState == null) {
+              notificationState = NotificationState();
+            }
+
+            return notificationState..setLoginSession(loginSession);
+          },
+        ),
       ],
       child: HomeScreen(),
     );

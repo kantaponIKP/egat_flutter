@@ -508,8 +508,8 @@ class _ElectricUserInfo extends StatelessWidget {
         alignment: WrapAlignment.spaceBetween,
         children: [
           Text('ชื่อผู้ใช้ไฟฟ้า (Name) : ${data.electricUserName}'),
-          Text('Meter Name : ${data.electricUserName}'),
-          Text('Meter Id : ${data.electricUserName}'),
+          Text('Meter Name : ${data.meterName}'),
+          Text('Meter Id : ${data.meterId}'),
         ],
       ),
     );

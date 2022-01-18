@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:egat_flutter/screens/pages/main/home/billing/billing_page.dart';
 import 'package:egat_flutter/screens/pages/main/home/buysell/buy_sell_page.dart';
+import 'package:egat_flutter/screens/pages/main/home/notification/notification_page.dart';
 import 'package:egat_flutter/screens/pages/main/home/settlement/settlement_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -43,6 +44,9 @@ class _HomeScreenState extends State<HomeScreen> {
         break;
       case HomeScreenNavigationPage.BILLING:
         widget = BillingPage(key: Key('billing_screen'));
+        break;
+      case HomeScreenNavigationPage.NOTIFICATION:
+        widget = NotificationPage(key: Key('notification_screen'));
         break;
       default:
         widget = Container(key: Key('main_blank_screen'));

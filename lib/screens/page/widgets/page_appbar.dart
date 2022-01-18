@@ -25,14 +25,16 @@ class PageAppbar extends StatelessWidget with PreferredSizeWidget {
             TextSpan(
                 text: firstTitle,
                 style: TextStyle(color: Theme.of(context).primaryColor)),
-            (AppLocalizations.of(context).getLocale().toString() == "th")?TextSpan(text:''):TextSpan(text:' '),
+            (AppLocalizations.of(context).getLocale().toString() == "th")
+                ? TextSpan(text: '')
+                : TextSpan(text: ' '),
             TextSpan(
               text: '$secondTitle',
             ),
           ],
         ),
       ),
-      backgroundColor: Colors.transparent,
+      backgroundColor: Colors.black,
     );
   }
 
