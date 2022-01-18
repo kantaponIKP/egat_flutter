@@ -65,7 +65,7 @@ class _LineGraph extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 200,
+      height: 220,
       width: (forecastData.length + 1) * 45,
       child: CustomPaint(
         painter: _LineGraphPainter(
@@ -145,7 +145,7 @@ class _LineGraphPainter extends CustomPainter {
 
       if (data != null) {
         final dataHeight = data / maxValue! * 100;
-        final dataY = 100 - dataHeight;
+        final dataY = 110 - dataHeight;
 
         if (!hasPainted) {
           hasPainted = true;
@@ -183,7 +183,7 @@ class _LineGraphPainter extends CustomPainter {
 
       if (data != null) {
         final dataHeight = data / maxValue! * 100;
-        final dataY = 100 - dataHeight;
+        final dataY = 110 - dataHeight;
 
         if (!hasPainted) {
           hasPainted = true;
@@ -227,7 +227,7 @@ class _BarGraphState extends State<_BarGraph> {
     }
 
     return SizedBox(
-      height: 200,
+      height: 220,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -262,10 +262,10 @@ class _Bar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var size = value.abs() / maxValue * 100;
-    var paddingTop = (100.0 - size);
+    var paddingTop = (110.0 - size);
 
     if (value < 0) {
-      paddingTop = 100.0;
+      paddingTop = 110.0;
     }
 
     return Padding(
