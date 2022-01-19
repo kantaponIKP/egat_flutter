@@ -86,10 +86,6 @@
   "title-changePin-first": "Change",
   "title-changePin-second": "PIN",
 
-  "payment-cardPayment": "Card Payment",
-  "payment-promptPay": "PromptPay",
-  "payment-add": "Add",
-
   "pin-register": "Not registered",
 
   "message-changePasswordSuccessfully": "Your password has been changed successfully.",
@@ -111,6 +107,21 @@
   "bottomNavigation-settlement": "Settlement",
   "bottomNavigation-billing": "Billing",
   "bottomNavigation-notification": "Notification",
+
+  "setting-changeLanguage": "Change Language",
+  "setting-notification": "Notification",
+  "setting-notification-message": "Message",
+  "setting-notification-email": "Email",
+  "setting-pin": "PIN",
+  "setting-notRegistered": "Not registered",
+  "setting-paymentMethods": "Payment Methods",
+  "setting-addPin": "Add PIN",
+  "setting-editPin": "Edit PIN",
+  "setting-addPayment": "Add payment",
+
+  "payment-cardPayment": "Card Payment",
+  "payment-promptPay": "PromptPay",
+  "payment-add": "Add",
 
   "trade-menu-forecast": "Forecast",
   "trade-menu-bilateral-top": "Bilatertal",
