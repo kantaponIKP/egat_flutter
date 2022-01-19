@@ -2,11 +2,16 @@ import 'dart:math';
 
 import 'package:egat_flutter/constant.dart';
 import 'package:egat_flutter/screens/forgot_password/widgets/forgot_password_cancellation_dialog.dart';
+import 'package:egat_flutter/screens/pages/main/news/news_description_screen.dart';
 import 'package:egat_flutter/screens/pages/main/news/state/news_state.dart';
 import 'package:egat_flutter/screens/pages/main/widgets/navigation_menu_widget.dart';
+import 'package:egat_flutter/screens/widgets/show_exception.dart';
+import 'package:egat_flutter/screens/widgets/show_snackbar.dart';
 import 'package:egat_flutter/screens/widgets/single_child_scoped_scroll_view.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:intl/intl.dart';
+import 'package:markdown/markdown.dart' as markdown;
 import 'package:provider/provider.dart';
 
 class NewsScreen extends StatefulWidget {
@@ -19,8 +24,19 @@ class NewsScreen extends StatefulWidget {
 class _NewsScreenState extends State<NewsScreen> {
   initState() {
     super.initState();
-    final newsState = Provider.of<NewsState>(context, listen: false);
-    newsState.init();
+    fetchNews();
+  }
+
+  Future<void> fetchNews() async {
+    await showLoading();
+    try {
+      final newsState = Provider.of<NewsState>(context, listen: false);
+      await newsState.init();
+    } catch (e) {
+      showIntlException(context, e);
+    } finally {
+      await hideLoading();
+    }
   }
 
   @override
@@ -63,9 +79,9 @@ class _NewsListSection extends StatelessWidget {
       children: [
         for (var news in newsState.newsOnCurrentPage)
           _NewsCardSection(
-            date: news.createdAt,
-            title: news.title,
-            content: news.description,
+            date: news.createdAt!,
+            title: news.title!,
+            content: news.description!,
           ),
       ],
     );
@@ -86,78 +102,133 @@ class _NewsCardSection extends StatelessWidget {
   final String content;
   final void Function()? onTap;
 
+  void _onNewPressed(
+      {required BuildContext context, required String fullContent}) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (BuildContext context) {
+          return NewsDescriptionScreen(title: title, content: fullContent);
+        },
+      ),
+    );
+  }
+
+  String removeAllHtmlTags(String htmlText) {
+    RegExp exp = RegExp(
+      r"<[^>]*>",
+      multiLine: true,
+      caseSensitive: true
+    );
+
+    return htmlText.replaceAll(exp, '');
+  }
+
   @override
   Widget build(BuildContext context) {
     // Content can't have more than 60 characters
     // If title is more than 60 characters, it will be cut off
-    final content = this.content.length > 60
-        ? this.content.substring(0, 57) + '...'
+    final fullContent = this.content;
+    final htmlText = markdown.markdownToHtml(this.content);
+    final plainText = removeAllHtmlTags(htmlText);
+
+
+    final content = this.content.length > 49
+        ? this.content.substring(0, 46) + '...'
         : this.content;
 
     var dateFormatter = DateFormat('dd MMM yyyy');
     var date = dateFormatter.format(this.date);
 
-    return Card(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(8.0),
-      ),
-      child: InkWell(
-        onTap: this.onTap,
-        child: SizedBox(
-          child: Center(
-              child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(children: [
-              Align(
-                alignment: Alignment.centerRight,
-                child: RichText(
-                    text: TextSpan(
-                  children: [
-                    TextSpan(
-                      text: date,
-                      style: TextStyle(
-                        fontSize: 16,
-                      ),
-                    ),
-                  ],
-                )),
-              ),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: RichText(
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  text: TextSpan(
-                    children: [
-                      TextSpan(
-                        text: title,
-                        style: TextStyle(
-                          color: primaryColor,
-                          fontSize: 16,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: RichText(
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    text: TextSpan(
+    return Padding(
+      padding: const EdgeInsets.all(2.0),
+      child: GestureDetector(
+        onTap: () {
+          _onNewPressed(context: context, fullContent: fullContent);
+        },
+        child: Card(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(4.0),
+          ),
+          child: InkWell(
+            onTap: this.onTap,
+            child: SizedBox(
+              child: Center(
+                  child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(children: [
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: RichText(
+                        text: TextSpan(
                       children: [
                         TextSpan(
-                          text: content,
+                          text: date,
                           style: TextStyle(
-                            fontSize: 16,
+                            color: greyColor,
+                            fontSize: 14,
                           ),
                         ),
                       ],
                     )),
-              ),
-            ]),
-          )),
+                  ),
+                  Container(
+                    constraints: BoxConstraints(
+                      minHeight: 45,
+                      maxHeight: 45,
+                    ),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: RichText(
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        text: TextSpan(
+                          children: [
+                            TextSpan(
+                              text: title,
+                              style: TextStyle(
+                                color: primaryColor,
+                                fontSize: 16,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  Container(
+                    constraints: BoxConstraints(
+                      minHeight: 35,
+                      maxHeight: 35,
+                    ),
+                    child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: 
+                        // Markdown(
+                        //   physics: NeverScrollableScrollPhysics(),
+                        //   // controller: null,
+                        //   // softLineBreak: true,
+                        //   data: content,
+                        //   shrinkWrap: true,
+                        // )
+                        RichText(
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            text: TextSpan(
+                              children: [
+                                TextSpan(
+                                  text: plainText,
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                  ),
+                                ),
+                              ],
+                            )),
+                        ),
+                  ),
+                ]),
+              )),
+            ),
+          ),
         ),
       ),
     );
@@ -172,14 +243,14 @@ class _NewsPaginationSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final newsState = Provider.of<NewsState>(context);
-
-    final startFrom = max(0, newsState.currentPage - 2);
-    final endAt = min(newsState.totalPage, newsState.currentPage + 1);
+    final startFrom = max(0, newsState.currentPage - 1);
+    final endAt = min(newsState.totalPage - 1, newsState.currentPage + 1);
 
     var items = <int>[];
     for (var i = startFrom; i <= endAt && items.length < 3; i++) {
       items.add(i + 1);
     }
+    print(items);
 
     return Row(mainAxisAlignment: MainAxisAlignment.center, children: [
       TextButton(
@@ -192,7 +263,7 @@ class _NewsPaginationSection extends StatelessWidget {
             ? TextButton(
                 child: Text(
                   item.toString(),
-                  style: TextStyle(color: textColor),
+                  style: TextStyle(color: primaryColor),
                 ),
                 onPressed: () => tryFetchPage(context, newsState, item - 1),
               )
@@ -216,15 +287,16 @@ class _NewsPaginationSection extends StatelessWidget {
     try {
       await function();
     } catch (e) {
-      showException(context, e.toString());
+      showSnackbar(context, e.toString()); //TODO
     }
   }
 
   tryFetchPage(BuildContext context, NewsState newsState, int page) async {
     try {
+      print("Page: " + page.toString());
       await newsState.fetchNewsAtPage(page);
     } catch (e) {
-      showException(context, e.toString());
+      showSnackbar(context, e.toString());
     }
   }
 }

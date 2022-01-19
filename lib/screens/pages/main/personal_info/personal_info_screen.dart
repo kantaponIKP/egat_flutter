@@ -26,12 +26,12 @@ class PersonalInfoScreen extends StatefulWidget {
 
 class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
   final _formKey = GlobalKey<FormState>();
-  TextEditingController? _fullNameController;
+  TextEditingController? _usernameController;
   TextEditingController? _phoneNumberController;
   TextEditingController? _emailController;
   final ImagePicker _picker = ImagePicker();
   XFile? _file;
-  String? _fullName;
+  String? _username;
   String? _phoneNumber;
   String? _email;
   bool _isValidated = false;
@@ -43,7 +43,7 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
   void initState() {
     super.initState();
 
-    _fullNameController = TextEditingController();
+    _usernameController = TextEditingController();
     _phoneNumberController = TextEditingController();
     _emailController = TextEditingController();
 
@@ -53,12 +53,12 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
   void _getInformation() async {
     var model = Provider.of<PersonalInfoState>(context, listen: false);
 
-    if (model.info.fullName == null) {
+    if (model.info.username == null) {
       await model.getPersonalInformation();
     }else{
-      if (model.info.fullName != null) {
-        _fullNameController!.text = model.info.fullName!;
-        _fullName = model.info.fullName!;
+      if (model.info.username != null) {
+        _usernameController!.text = model.info.username!;
+        _username = model.info.username!;
       }
       if (model.info.phoneNumber != null) {
         _phoneNumberController!.text = model.info.phoneNumber!;
@@ -85,9 +85,9 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
     } catch (e) {
       showException(context, e.toString());
     } finally {
-      if (model.info.fullName != null) {
-        _fullNameController!.text = model.info.fullName!;
-        _fullName = model.info.fullName!;
+      if (model.info.username != null) {
+        _usernameController!.text = model.info.username!;
+        _username = model.info.username!;
       }
       if (model.info.phoneNumber != null) {
         _phoneNumberController!.text = model.info.phoneNumber!;
@@ -221,7 +221,7 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
       text: TextSpan(
         style: TextStyle(fontSize: 22),
         children: <TextSpan>[
-          TextSpan(text: _fullName),
+          TextSpan(text: _username),
         ],
       ),
     );
@@ -305,11 +305,11 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
           Container(
             padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 32),
             child: TextFormField(
-              controller: _fullNameController,
+              controller: _usernameController,
               decoration: InputDecoration(
                 counterText: '',
                 labelText:
-                    '${AppLocalizations.of(context).translate('full-name')}',
+                    '${AppLocalizations.of(context).translate('username')}',
               ),
               onChanged: (newValue) {
                 _setValidated();
@@ -394,7 +394,7 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
   }
 
   void _setIsFormChanged() {
-    if (_fullNameController!.text != _fullName ||
+    if (_usernameController!.text != _username ||
         _phoneNumberController!.text != _phoneNumber ||
         _emailController!.text != _email) {
       setState(() {
@@ -484,7 +484,7 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
     try {
       var model = Provider.of<PersonalInfoState>(context, listen: false);
       await model.changePersonalInformation(
-          fullName: _fullNameController!.text,
+          username: _usernameController!.text,
           phoneNumber: _phoneNumberController!.text,
           email: _emailController!.text);
       _getPersonalInformation();

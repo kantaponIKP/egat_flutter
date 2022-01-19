@@ -6,13 +6,13 @@ import 'package:egat_flutter/screens/session.dart';
 import 'package:flutter/cupertino.dart';
 
 class PersonalInfoModel {
-  final String? fullName;
+  final String? username;
   final String? phoneNumber;
   final String? email;
   final String? photo;
 
   PersonalInfoModel({
-    this.fullName,
+    this.username,
     this.phoneNumber,
     this.email,
     this.photo,
@@ -43,7 +43,7 @@ class PersonalInfo extends ChangeNotifier {
     String? photo,
   }) {
     if (fullName == null) {
-      fullName = info.fullName;
+      fullName = info.username;
     }
 
     if (phoneNumber == null) {
@@ -59,7 +59,7 @@ class PersonalInfo extends ChangeNotifier {
     }
 
     var newInfo = PersonalInfoModel(
-      fullName: fullName,
+      username: fullName,
       phoneNumber: phoneNumber,
       email: email,
       photo: photo,
@@ -74,7 +74,7 @@ class PersonalInfo extends ChangeNotifier {
   }
 
   Future<void> changePersonalInformation(
-      {String? fullName,
+      {String? username,
       String? phoneNumber,
       String? email,
       String? photo}) async {
@@ -82,8 +82,8 @@ class PersonalInfo extends ChangeNotifier {
     ChangePersonalInfoRequest changePersonalInfo =
         new ChangePersonalInfoRequest();
 
-    if (info.fullName != fullName) {
-      changePersonalInfo.setFullName(fullName!);
+    if (info.username != username) {
+      changePersonalInfo.setUsername(username!);
     }
     if (info.phoneNumber != phoneNumber) {
       changePersonalInfo.setPhoneNumber(phoneNumber!);
@@ -132,7 +132,7 @@ class PersonalInfo extends ChangeNotifier {
       ),
     );
     updateInfo(
-      fullName: response.fullName,
+      fullName: response.username,
       phoneNumber: response.phoneNumber,
       email: response.email,
       photo: response.photo,

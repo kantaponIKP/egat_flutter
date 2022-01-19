@@ -1,20 +1,20 @@
 import 'dart:convert';
 
 class ChangePersonalInfoRequest {
-  String? fullName;
+  String? username;
   String? phoneNumber;
   String? email;
 
   ChangePersonalInfoRequest({
-    this.fullName,
+    this.username,
     this.phoneNumber,
     this.email,
   });
 
   String toJSON() {
     Map<String, dynamic> jsonMap = Map<String, dynamic>();
-    if(fullName != null){
-      jsonMap['fullName'] = this.fullName;
+    if(username != null){
+      jsonMap['username'] = this.username;
     }
     if(phoneNumber != null){
       jsonMap['phoneNumber'] = this.phoneNumber;
@@ -26,8 +26,8 @@ class ChangePersonalInfoRequest {
     return jsonEncode(jsonMap);
   }
 
-  void setFullName(String fullName){
-    this.fullName = fullName;
+  void setUsername(String username){
+    this.username = username;
   }
 
   void setPhoneNumber(String phoneNumber){
