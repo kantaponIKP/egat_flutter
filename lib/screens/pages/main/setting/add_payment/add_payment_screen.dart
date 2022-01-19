@@ -31,14 +31,14 @@ class _AddPaymentScreenState extends State<AddPaymentScreen> {
   //   titleState.setTitleOneTitle(title: 'Add Payment');
   // }
 
-    @override
+  @override
   void initState() {
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-     SettingScreenNavigationState settingScreenNavigationState =
+    SettingScreenNavigationState settingScreenNavigationState =
         Provider.of<SettingScreenNavigationState>(context, listen: false);
     settingScreenNavigationState.setPageToAddPayment();
     return Scaffold(
@@ -48,7 +48,17 @@ class _AddPaymentScreenState extends State<AddPaymentScreen> {
               AppLocalizations.of(context).translate('title-addPayment')),
       // drawer: NavigationMenuWidget(),
       body: SafeArea(
-        child: _buildAction(context),
+        child: Container(
+          decoration: BoxDecoration(
+            gradient: RadialGradient(
+              colors: [
+                Color(0xFF303030),
+                Colors.black,
+              ],
+            ),
+          ),
+          child: _buildAction(context),
+        ),
       ),
     );
   }
@@ -116,10 +126,10 @@ class _AddPaymentScreenState extends State<AddPaymentScreen> {
           value: _isChecked[index],
           onChanged: (bool? value) {
             setState(() {
-              if(index == 0){
+              if (index == 0) {
                 _isChecked[0] = true;
                 _isChecked[1] = false;
-              }else if(index == 1){
+              } else if (index == 1) {
                 _isChecked[0] = false;
                 _isChecked[1] = true;
               }
@@ -179,7 +189,6 @@ class _AddPaymentScreenState extends State<AddPaymentScreen> {
   }
 
   Future<void> onNextPressed() async {
-
     final result = await Navigator.of(context).push(_createRoute());
 
     if (result != null && result) {

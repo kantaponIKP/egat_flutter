@@ -8,17 +8,17 @@ import '../states/settlement_navigation_state.dart';
 class SettlementNavigationWidget extends StatelessWidget {
   final _tabBarItems = const <TabBarNavigationItem<SettlementNavigationPage>>[
     const TabBarNavigationItem(
-      icon: Icons.home,
+      svgIcon: 'assets/images/icons/tabbar/forecast.svg',
       title: 'Order',
       value: SettlementNavigationPage.ORDER,
     ),
     const TabBarNavigationItem(
-      icon: Icons.handyman,
+      svgIcon: 'assets/images/icons/tabbar/bilateral.svg',
       title: 'Energy Transfer',
       value: SettlementNavigationPage.ENERGY_TRANSFER,
     ),
     const TabBarNavigationItem(
-      icon: Icons.refresh,
+      svgIcon: 'assets/images/icons/tabbar/poolMarket.svg',
       title: 'Settlement',
       secondaryTitle: 'Report',
       value: SettlementNavigationPage.SETTLEMENT_REPORT,

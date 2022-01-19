@@ -4,10 +4,10 @@ import 'dart:io';
 
 import 'package:egat_flutter/constant.dart';
 import 'package:egat_flutter/i18n/app_localizations.dart';
-import 'package:egat_flutter/screens/page/widgets/side_menu.dart';
 import 'package:egat_flutter/screens/pages/main/states/main_screen_navigation_state.dart';
 import 'package:egat_flutter/screens/pages/main/states/main_screen_title_state.dart';
 import 'package:egat_flutter/screens/pages/main/states/personal_info_state.dart';
+import 'package:egat_flutter/screens/pages/main/widgets/navigation_menu_widget.dart';
 import 'package:egat_flutter/screens/widgets/loading_dialog.dart';
 import 'package:egat_flutter/screens/widgets/show_exception.dart';
 import 'package:egat_flutter/screens/widgets/show_success_snackbar.dart';
@@ -55,7 +55,7 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
 
     if (model.info.username == null) {
       await model.getPersonalInformation();
-    }else{
+    } else {
       if (model.info.username != null) {
         _usernameController!.text = model.info.username!;
         _username = model.info.username!;
@@ -112,7 +112,17 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
       // appBar: PageAppbar(firstTitle: "Personal", secondTitle: "Information"),
       drawer: NavigationMenuWidget(),
       body: SafeArea(
-        child: _buildAction(context),
+        child: Container(
+          decoration: BoxDecoration(
+            gradient: RadialGradient(
+              colors: [
+                Color(0xFF303030),
+                Colors.black,
+              ],
+            ),
+          ),
+          child: _buildAction(context),
+        ),
       ),
     );
   }

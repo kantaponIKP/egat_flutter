@@ -23,7 +23,7 @@ Future<void> showLoading() async {
   }
 
   await EasyLoading.show(
-    status: "กรุณารอสักครู่...",
+    // status: "กรุณารอสักครู่...",
     maskType: EasyLoadingMaskType.black,
   );
 }

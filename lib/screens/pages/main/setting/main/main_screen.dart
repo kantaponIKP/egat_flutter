@@ -1,14 +1,10 @@
 import 'package:egat_flutter/constant.dart';
 import 'package:egat_flutter/i18n/app_language.dart';
 import 'package:egat_flutter/i18n/app_localizations.dart';
-import 'package:egat_flutter/screens/page/widgets/page_appbar.dart';
-import 'package:egat_flutter/screens/page/widgets/side_menu.dart';
 import 'package:egat_flutter/screens/pages/main/setting/add_payment/add_payment_page.dart';
 import 'package:egat_flutter/screens/pages/main/setting/change_pin/change_pin_page.dart';
-import 'package:egat_flutter/screens/pages/main/setting/change_pin/states/change_pin_state.dart';
 import 'package:egat_flutter/screens/pages/main/setting/change_pin/states/pin_state.dart';
-import 'package:egat_flutter/screens/pages/main/setting/state/setting_screen_navigation_state.dart';
-import 'package:egat_flutter/screens/pages/main/states/main_screen_title_state.dart';
+import 'package:egat_flutter/screens/pages/main/widgets/navigation_menu_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
@@ -82,14 +78,23 @@ class _SettingMainScreenState extends State<SettingMainScreen> {
       });
     }
     return Scaffold(
-      // appBar: PageAppbar(
-      //     firstTitle: AppLocalizations.of(context).translate('title-setting'),secondTitle: ""
-      //   ),
-      drawer: NavigationMenuWidget(),
-      body: SafeArea(
-        child: _buildAction(context),
-      ),
-    );
+        // appBar: PageAppbar(
+        //     firstTitle: AppLocalizations.of(context).translate('title-setting'),secondTitle: ""
+        //   ),
+        drawer: NavigationMenuWidget(),
+        body: SafeArea(
+          child: Container(
+            decoration: BoxDecoration(
+              gradient: RadialGradient(
+                colors: [
+                  Color(0xFF303030),
+                  Colors.black,
+                ],
+              ),
+            ),
+            child: _buildAction(context),
+          ),
+        ));
   }
 
   Padding _buildAction(BuildContext context) {
@@ -125,8 +130,10 @@ class _SettingMainScreenState extends State<SettingMainScreen> {
       children: [
         Align(
             alignment: Alignment.centerLeft,
-            child:
-                Text(AppLocalizations.of(context).translate('setting-changeLanguage'), style: TextStyle(color: primaryColor))),
+            child: Text(
+                AppLocalizations.of(context)
+                    .translate('setting-changeLanguage'),
+                style: TextStyle(color: primaryColor))),
         DropdownButton(
           isExpanded: true,
           value: _languageValue,
@@ -141,7 +148,7 @@ class _SettingMainScreenState extends State<SettingMainScreen> {
           ).toList(),
           onChanged: (val) {
             _changeLanguage(val);
-            
+
             // setState(
             //   () {
             //     _languageValue = val.toString();
@@ -153,14 +160,14 @@ class _SettingMainScreenState extends State<SettingMainScreen> {
     );
   }
 
-  void _changeLanguage(val){
+  void _changeLanguage(val) {
     AppLocale locale = Provider.of<AppLocale>(context, listen: false);
     print(val.toString());
     if (val.toString() == "English") {
-        locale.changeLanguage(Locale("en"));
-      } else {
-        locale.changeLanguage(Locale("th"));
-      }
+      locale.changeLanguage(Locale("en"));
+    } else {
+      locale.changeLanguage(Locale("th"));
+    }
     //   _setLanguage();
   }
 
@@ -168,9 +175,12 @@ class _SettingMainScreenState extends State<SettingMainScreen> {
     return Column(children: [
       Align(
           alignment: Alignment.centerLeft,
-          child: Text(AppLocalizations.of(context).translate('setting-notification'), style: TextStyle(color: primaryColor))),
+          child: Text(
+              AppLocalizations.of(context).translate('setting-notification'),
+              style: TextStyle(color: primaryColor))),
       Row(children: [
-        Text(AppLocalizations.of(context).translate('setting-notification-message')),
+        Text(AppLocalizations.of(context)
+            .translate('setting-notification-message')),
         Spacer(),
         Switch(
           activeColor: switchActiveColor,
@@ -185,7 +195,8 @@ class _SettingMainScreenState extends State<SettingMainScreen> {
         )
       ]),
       Row(children: [
-        Text(AppLocalizations.of(context).translate('setting-notification-email')),
+        Text(AppLocalizations.of(context)
+            .translate('setting-notification-email')),
         Spacer(),
         Switch(
           activeColor: switchActiveColor,
@@ -214,7 +225,10 @@ class _SettingMainScreenState extends State<SettingMainScreen> {
         SizedBox(
           child: ElevatedButton(
             onPressed: onAddPinPressed, // null return disabled
-            child: Text((pinState.hasPin()) ? AppLocalizations.of(context).translate('setting-editPin') : AppLocalizations.of(context).translate('setting-addPin'),
+            child: Text(
+                (pinState.hasPin())
+                    ? AppLocalizations.of(context).translate('setting-editPin')
+                    : AppLocalizations.of(context).translate('setting-addPin'),
                 style: TextStyle(color: primaryColor)),
             style: ElevatedButton.styleFrom(
               primary: surfaceGreyColor,
@@ -385,10 +399,10 @@ class _SettingMainScreenState extends State<SettingMainScreen> {
         onPressed: onAddPaymentPressed, // null return disabled
         child: Container(
           width: 120,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-            Text(AppLocalizations.of(context).translate('payment-addPayment'), style: TextStyle(color: primaryColor)),
+          child:
+              Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+            Text(AppLocalizations.of(context).translate('payment-addPayment'),
+                style: TextStyle(color: primaryColor)),
             Icon(Icons.add_circle_outline, color: primaryColor, size: 16),
           ]),
         ), //TODO plus icon
