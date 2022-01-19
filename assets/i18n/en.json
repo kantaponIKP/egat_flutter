@@ -97,7 +97,7 @@
   "error-timeoutError": "Request time out",
   "error-unauthorized": "Unauthorized",
   "error-sessionExpired": "Session expired",
-  "error-conflict": "Conflict",
+  "error-conflict": "Already used",
   "error-passwordSameAsOldPassword": "Your new password cannot be the same as your current password",
   "error-incorrectPassword": "Incorrect password",
   "error-invalidSession": "Invalid session",
@@ -118,6 +118,10 @@
   "setting-addPin": "Add PIN",
   "setting-editPin": "Edit PIN",
   "setting-addPayment": "Add payment",
+
+  "setting-pin-enterYourCurrentPin": "Enter your current PIN",
+  "setting-pin-enterYourNewPin": "Enter your new PIN",
+  "setting-pin-verifyYourNewPin": "Verify your new PIN",
 
   "payment-addPayment": "Add Payment",
   "payment-cardPayment": "Card Payment",

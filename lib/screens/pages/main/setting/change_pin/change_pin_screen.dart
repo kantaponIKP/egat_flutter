@@ -65,6 +65,18 @@ class _ChangePinScreenState extends State<ChangePinScreen> {
         _title = "Verify your new PIN";
       });
     }
+    //   setState(() {
+    //     _title = AppLocalizations.of(context).translate('setting-pin-enterYourCurrentPin');
+    //   });
+    // } else if (state.currentStatus == PinStatus.EnterNewPIN) {
+    //   setState(() {
+    //     _title = AppLocalizations.of(context).translate('setting-pin-enterYourNewPin');
+    //   });
+    // } else if (state.currentStatus == PinStatus.VerifyNewPIN) {
+    //   setState(() {
+    //     _title = AppLocalizations.of(context).translate('setting-pin-verifyYourNewPin');
+    //   });
+    // }
   }
 
   @override
@@ -74,7 +86,7 @@ class _ChangePinScreenState extends State<ChangePinScreen> {
           firstTitle:
               AppLocalizations.of(context).translate('title-changePin-first'),
           secondTitle:
-              AppLocalizations.of(context).translate('title-changePin-second')),
+              " "+AppLocalizations.of(context).translate('title-changePin-second')),
       // drawer: NavigationMenuWidget(),
       body: SafeArea(
         child: _buildAction(context),

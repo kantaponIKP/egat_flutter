@@ -263,7 +263,7 @@ class _NavigationMenuWidgetState extends State<NavigationMenuWidget> {
             ),
             title: Text(
               text,
-              style: TextStyle(
+              style: TextStyle(fontSize:16,
                 color: (model.currentPage == page) ? primaryColor : color,
               ),
             ),
@@ -308,7 +308,7 @@ class _NavigationMenuWidgetState extends State<NavigationMenuWidget> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text(userInfo.username),
+                      Text(userInfo.username,style: TextStyle(fontSize:20)),
                       Text(userInfo.email),
                     ],
                   ),

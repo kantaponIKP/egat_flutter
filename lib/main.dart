@@ -31,7 +31,6 @@ class EgatApp extends StatelessWidget {
     required this.preferredAppLanguage,
     Key? key,
   }) : super(key: key);
-  
 
   @override
   Widget build(BuildContext context) {
@@ -133,11 +132,41 @@ class EgatApp extends StatelessWidget {
                   fontWeight: FontWeight.w300,
                   color: textColor,
                 ),
-                subtitle1:
-                    //TextFormField textStyle
-                    TextStyle(
+                subtitle1: TextStyle(
                   color: textColor,
                 ),
+                // subtitle2: TextStyle(
+                //   fontWeight: FontWeight.w300,
+                //   color: textColor,
+                // ),
+                bodyText1: TextStyle(
+                  fontWeight: FontWeight.w300,
+                  color: textColor,
+                ),
+                // headline1: TextStyle(
+                //   fontWeight: FontWeight.w300,
+                //   color: textColor,
+                // ),
+                // headline2: TextStyle(
+                //   fontWeight: FontWeight.w300,
+                //   color: textColor,
+                // ),
+                // headline3: TextStyle(
+                //   fontWeight: FontWeight.w300,
+                //   color: textColor,
+                // ),
+                // headline4: TextStyle(
+                //   fontWeight: FontWeight.w300,
+                //   color: textColor,
+                // ),
+                // headline5: TextStyle(
+                //   fontWeight: FontWeight.w300,
+                //   color: textColor,
+                // ),
+                // headline6: TextStyle(
+                //   fontWeight: FontWeight.w300,
+                //   color: textColor,
+                // ),
               ),
               textButtonTheme: TextButtonThemeData(
                 style: ButtonStyle(

@@ -25,7 +25,7 @@ class _SettingMainScreenState extends State<SettingMainScreen> {
   final _formKey = GlobalKey<FormState>();
 
   String _languageValue = 'English';
-  List<String> _languages = ['English', 'Thai'];
+  List<String> _languages = ['English', 'ไทย'];
   bool _isNotiMessage = false;
   bool _isNotiEmail = true;
   List<String> _cards = [];
@@ -71,6 +71,16 @@ class _SettingMainScreenState extends State<SettingMainScreen> {
 
   @override
   Widget build(BuildContext context) {
+    Locale _nowLocale = Localizations.localeOf(context);
+    if (_nowLocale.toString() == 'th') {
+      setState(() {
+        _languageValue = 'ไทย';
+      });
+    } else {
+      setState(() {
+        _languageValue = 'English';
+      });
+    }
     return Scaffold(
       // appBar: PageAppbar(
       //     firstTitle: AppLocalizations.of(context).translate('title-setting'),secondTitle: ""
@@ -116,7 +126,7 @@ class _SettingMainScreenState extends State<SettingMainScreen> {
         Align(
             alignment: Alignment.centerLeft,
             child:
-                Text('Change Language', style: TextStyle(color: primaryColor))),
+                Text(AppLocalizations.of(context).translate('setting-changeLanguage'), style: TextStyle(color: primaryColor))),
         DropdownButton(
           isExpanded: true,
           value: _languageValue,
@@ -158,9 +168,9 @@ class _SettingMainScreenState extends State<SettingMainScreen> {
     return Column(children: [
       Align(
           alignment: Alignment.centerLeft,
-          child: Text('Notification', style: TextStyle(color: primaryColor))),
+          child: Text(AppLocalizations.of(context).translate('setting-notification'), style: TextStyle(color: primaryColor))),
       Row(children: [
-        Text('Message'),
+        Text(AppLocalizations.of(context).translate('setting-notification-message')),
         Spacer(),
         Switch(
           activeColor: switchActiveColor,
@@ -175,7 +185,7 @@ class _SettingMainScreenState extends State<SettingMainScreen> {
         )
       ]),
       Row(children: [
-        Text('Email'),
+        Text(AppLocalizations.of(context).translate('setting-notification-email')),
         Spacer(),
         Switch(
           activeColor: switchActiveColor,
@@ -204,7 +214,7 @@ class _SettingMainScreenState extends State<SettingMainScreen> {
         SizedBox(
           child: ElevatedButton(
             onPressed: onAddPinPressed, // null return disabled
-            child: Text((pinState.hasPin()) ? 'Edit PIN' : 'Add PIN',
+            child: Text((pinState.hasPin()) ? AppLocalizations.of(context).translate('setting-editPin') : AppLocalizations.of(context).translate('setting-addPin'),
                 style: TextStyle(color: primaryColor)),
             style: ElevatedButton.styleFrom(
               primary: surfaceGreyColor,
@@ -288,7 +298,7 @@ class _SettingMainScreenState extends State<SettingMainScreen> {
         Align(
           alignment: Alignment.centerLeft,
           child: Text(
-            'Payment Methods',
+            AppLocalizations.of(context).translate('setting-paymentMethods'),
             style: TextStyle(color: primaryColor),
           ),
         ),
@@ -374,9 +384,11 @@ class _SettingMainScreenState extends State<SettingMainScreen> {
       child: ElevatedButton(
         onPressed: onAddPaymentPressed, // null return disabled
         child: Container(
-          width: 100,
-          child: Row(children: [
-            Text('Add Payment', style: TextStyle(color: primaryColor)),
+          width: 120,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+            Text(AppLocalizations.of(context).translate('payment-addPayment'), style: TextStyle(color: primaryColor)),
             Icon(Icons.add_circle_outline, color: primaryColor, size: 16),
           ]),
         ), //TODO plus icon
