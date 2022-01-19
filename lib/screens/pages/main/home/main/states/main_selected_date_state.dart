@@ -36,8 +36,25 @@ class MainHomeSelectedDateState extends ChangeNotifier {
     notifyParent();
   }
 
+  Timer? _timer;
+
   MainHomeSelectedDateState() {
     _setDefaultSelectedTime(notify: false);
+
+    _timer = Timer.periodic(Duration(seconds: 60), (timer) {
+      final now = DateTime.now();
+
+      if (isDaily &&
+          _selectedDate.year == now.year &&
+          _selectedDate.month == now.month &&
+          _selectedDate.day == now.day) {
+        notifyParent();
+      } else if (isMonthly &&
+          _selectedDate.year == now.year &&
+          _selectedDate.month == now.month) {
+        notifyParent();
+      }
+    });
 
     Timer.periodic(
       Duration(seconds: 60),
@@ -45,6 +62,12 @@ class MainHomeSelectedDateState extends ChangeNotifier {
         _checkSelectedDate();
       },
     );
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
   }
 
   void _checkSelectedDate() {

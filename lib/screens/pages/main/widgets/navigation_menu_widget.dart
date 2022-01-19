@@ -46,15 +46,17 @@ class _NavigationMenuWidgetState extends State<NavigationMenuWidget> {
   @override
   Widget build(BuildContext context) {
     return Drawer(
-        child: Material(
-            color: menuBgColor,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                _buildMenu(context),
-                _buildLogoutButton(context),
-              ],
-            )));
+      child: Material(
+        color: menuBgColor,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            _buildMenu(context),
+            _buildLogoutButton(context),
+          ],
+        ),
+      ),
+    );
   }
 
   void onLogout(BuildContext context) {

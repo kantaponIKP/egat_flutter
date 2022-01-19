@@ -112,6 +112,8 @@ class _LineGraphPainter extends CustomPainter {
     for (var path in powerPaths) {
       canvas.drawPath(path, powerPaint);
     }
+
+    _drawZero(canvas, size);
   }
 
   @override
@@ -124,6 +126,19 @@ class _LineGraphPainter extends CustomPainter {
 
   final Color powerColor = const Color(0xFFE75E57);
   final Color forecastColor = const Color(0xFFA1FC7F);
+
+  void _drawZero(Canvas canvas, Size size) {
+    Paint paint = Paint()
+      ..color = Colors.grey.withOpacity(0.3)
+      ..strokeWidth = 2.0
+      ..style = PaintingStyle.stroke;
+
+    final path = Path()
+      ..moveTo(0, 110)
+      ..lineTo(size.width, 110);
+
+    canvas.drawPath(path, paint);
+  }
 
   List<Path> getPowerPaths() {
     List<Path> paths = [];
@@ -144,7 +159,7 @@ class _LineGraphPainter extends CustomPainter {
       }
 
       if (data != null) {
-        final dataHeight = data / maxValue! * 100;
+        final dataHeight = data / maxValue! * 50;
         final dataY = 110 - dataHeight;
 
         if (!hasPainted) {
@@ -182,7 +197,7 @@ class _LineGraphPainter extends CustomPainter {
       }
 
       if (data != null) {
-        final dataHeight = data / maxValue! * 100;
+        final dataHeight = data / maxValue! * 50;
         final dataY = 110 - dataHeight;
 
         if (!hasPainted) {

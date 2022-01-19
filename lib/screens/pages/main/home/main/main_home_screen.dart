@@ -2,8 +2,10 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:egat_flutter/constant.dart';
+import 'package:egat_flutter/screens/pages/main/home/main/graph/graph_page.dart';
 import 'package:egat_flutter/screens/pages/main/home/main/states/main_selected_date_state.dart';
 import 'package:egat_flutter/screens/pages/main/states/main_screen_title_state.dart';
+import 'package:egat_flutter/screens/pages/main/states/personal_info_state.dart';
 import 'package:egat_flutter/screens/widgets/loading_dialog.dart';
 import 'package:egat_flutter/screens/widgets/show_exception.dart';
 import 'package:flutter/gestures.dart';
@@ -28,6 +30,12 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
   void initState() {
     super.initState();
 
+    final personalInfo = Provider.of<PersonalInfoState>(context, listen: false);
+    bool needPersonalInfoLoading = false;
+    if (personalInfo.info.fullName == null) {
+      needPersonalInfoLoading = true;
+    }
+
     final MainScreenTitleState titleState =
         Provider.of<MainScreenTitleState>(context, listen: false);
 
@@ -39,6 +47,9 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
 
       showLoading();
       try {
+        if (needPersonalInfoLoading) {
+          await personalInfo.getPersonalInformation();
+        }
         await dateState.notifyParent();
       } catch (e) {
         showIntlException(context, e);
@@ -97,6 +108,26 @@ class _MainSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final state = Provider.of<MainHomeState>(context);
+    final personalInfo = Provider.of<PersonalInfoState>(context);
+    final selectedDateState = Provider.of<MainHomeSelectedDateState>(context);
+
+    final dateKeyGetter = (int index) {
+      return index.toStringAsFixed(0);
+    };
+
+    final timeFormat = DateFormat('HH');
+    final timeKeyGetter = (int index) {
+      final newTime = DateTime.now();
+      final date =
+          DateTime(newTime.year, newTime.month, newTime.day, index + 1);
+      return timeFormat.format(date);
+    };
+
+    final dateMonthFormat = DateFormat('MMMM yyyy');
+    final dateDayFormat = DateFormat('dd MMMM yyyy');
+    final displayGraphTitle = selectedDateState.isDaily
+        ? dateDayFormat.format(selectedDateState.selectedDate)
+        : dateMonthFormat.format(selectedDateState.selectedDate);
 
     return AspectRatio(
       aspectRatio: 500 / 400,
@@ -132,56 +163,6 @@ class _MainSection extends StatelessWidget {
 
             return Stack(
               children: [
-                Positioned(
-                  top: percentageY(0.1),
-                  left: percentageX(0.05),
-                  child: _InfoWithIcon(
-                    icon: Image.asset(
-                      'assets/images/icons/home/battery_icon.png',
-                      height: 45,
-                      width: 45,
-                    ),
-                    label: 'Energy Storage',
-                    unit: 'kWh',
-                    value1: state.value.batteryInTotal,
-                    value1Color: Color(0xFF008DC1),
-                    value2: state.value.batteryOutTotal,
-                    value2Color: Color(0xFFF6645A),
-                  ),
-                ),
-                Positioned(
-                  top: percentageY(0.05),
-                  left: percentageX(0),
-                  right: percentageX(0),
-                  child: _InfoWithIcon(
-                    icon: Image.asset(
-                      'assets/images/icons/home/solar_icon.png',
-                      height: 45,
-                      width: 45,
-                    ),
-                    label: 'PV',
-                    unit: 'kWh',
-                    value1: state.value.pvTotal,
-                    value1Color: Color(0xFFF6645A),
-                  ),
-                ),
-                Positioned(
-                  top: percentageY(0.1),
-                  right: percentageX(0.05),
-                  child: _InfoWithIcon(
-                    icon: Image.asset(
-                      'assets/images/icons/home/grid_icon.png',
-                      height: 45,
-                      width: 45,
-                    ),
-                    label: 'Grid',
-                    unit: 'kWh',
-                    value1: state.value.gridInTotal,
-                    value1Color: Color(0xFFF6645A),
-                    value2: state.value.gridOutTotal,
-                    value2Color: Color(0xFF99FF75),
-                  ),
-                ),
                 Positioned(
                   top: percentageY(0.325),
                   left: percentageX(0.25),
@@ -286,6 +267,161 @@ class _MainSection extends StatelessWidget {
                     start: Offset(percentageX(0.85), percentageY(0.1) + 99),
                     end: Offset(percentageX(0.7725), percentageY(0.3) + 99),
                     key: Key('power-line-grid-reverse'),
+                  ),
+                ),
+                Positioned(
+                  top: percentageY(0.1),
+                  left: percentageX(0.05),
+                  child: GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) {
+                            return GraphPage(
+                              header: 'Energy Storage',
+                              headerIcon: Image.asset(
+                                'assets/images/icons/home/battery_icon.png',
+                                height: 45,
+                                width: 45,
+                              ),
+                              personalInfo: personalInfo.info,
+                              title: displayGraphTitle,
+                              valueName: 'Energy Storage (kWh)',
+                              total: state.value.batteryInTotal -
+                                  state.value.batteryOutTotal,
+                              totalUnit: 'kWh',
+                              unitName:
+                                  selectedDateState.isDaily ? 'เวลา' : 'วันที่',
+                              values: [
+                                for (var i = 0;
+                                    i < state.value.batteryIns.length;
+                                    i++)
+                                  (state.value.batteryIns.length <= i
+                                          ? state.value.batteryIns[i]
+                                          : 0) -
+                                      (state.value.batteryOuts.length <= i
+                                          ? state.value.batteryOuts[i]
+                                          : 0),
+                              ],
+                              keyGetter: selectedDateState.isDaily
+                                  ? timeKeyGetter
+                                  : dateKeyGetter,
+                            );
+                          },
+                        ),
+                      );
+                    },
+                    child: _InfoWithIcon(
+                      icon: Image.asset(
+                        'assets/images/icons/home/battery_icon.png',
+                        height: 45,
+                        width: 45,
+                      ),
+                      label: 'Energy Storage',
+                      unit: 'kWh',
+                      value1: state.value.batteryInTotal,
+                      value1Color: Color(0xFF008DC1),
+                      value2: state.value.batteryOutTotal,
+                      value2Color: Color(0xFFF6645A),
+                    ),
+                  ),
+                ),
+                Positioned(
+                  top: percentageY(0.05),
+                  left: percentageX(0),
+                  right: percentageX(0),
+                  child: GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) {
+                            return GraphPage(
+                              header: 'PV',
+                              headerIcon: Image.asset(
+                                'assets/images/icons/home/battery_icon.png',
+                                height: 45,
+                                width: 45,
+                              ),
+                              personalInfo: personalInfo.info,
+                              title: displayGraphTitle,
+                              valueName: 'PV (kWh)',
+                              total: state.value.pvTotal,
+                              totalUnit: 'kWh',
+                              unitName:
+                                  selectedDateState.isDaily ? 'เวลา' : 'วันที่',
+                              values: state.value.pvs,
+                              keyGetter: selectedDateState.isDaily
+                                  ? timeKeyGetter
+                                  : dateKeyGetter,
+                            );
+                          },
+                        ),
+                      );
+                    },
+                    child: _InfoWithIcon(
+                      icon: Image.asset(
+                        'assets/images/icons/home/solar_icon.png',
+                        height: 45,
+                        width: 45,
+                      ),
+                      label: 'PV',
+                      unit: 'kWh',
+                      value1: state.value.pvTotal,
+                      value1Color: Color(0xFFF6645A),
+                    ),
+                  ),
+                ),
+                Positioned(
+                  top: percentageY(0.1),
+                  right: percentageX(0.05),
+                  child: GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) {
+                            return GraphPage(
+                              header: 'Grid',
+                              headerIcon: Image.asset(
+                                'assets/images/icons/home/grid_icon.png',
+                                height: 45,
+                                width: 45,
+                              ),
+                              personalInfo: personalInfo.info,
+                              title: displayGraphTitle,
+                              valueName: 'Grid (kWh)',
+                              total: state.value.gridInTotal -
+                                  state.value.gridOutTotal,
+                              totalUnit: 'kWh',
+                              unitName:
+                                  selectedDateState.isDaily ? 'เวลา' : 'วันที่',
+                              values: state.value.pvs,
+                              keyGetter: selectedDateState.isDaily
+                                  ? timeKeyGetter
+                                  : dateKeyGetter,
+                            );
+                          },
+                        ),
+                      );
+                    },
+                    child: _InfoWithIcon(
+                      icon: Image.asset(
+                        'assets/images/icons/home/grid_icon.png',
+                        height: 45,
+                        width: 45,
+                      ),
+                      label: 'Grid',
+                      unit: 'kWh',
+                      value1: state.value.gridInTotal,
+                      value1Color: Color(0xFFF6645A),
+                      value2: state.value.gridOutTotal,
+                      value2Color: Color(0xFF99FF75),
+                    ),
                   ),
                 ),
               ],
@@ -716,20 +852,23 @@ class _InfoWithIcon extends StatelessWidget {
       );
     }
 
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        icon,
-        Row(
-          children: rows,
-          mainAxisAlignment: MainAxisAlignment.center,
-        ),
-        Text(
-          label,
-          style: TextStyle(fontSize: 15),
-        ),
-      ],
+    return SizedBox(
+      width: 130,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          icon,
+          Row(
+            children: rows,
+            mainAxisAlignment: MainAxisAlignment.center,
+          ),
+          Text(
+            label,
+            style: TextStyle(fontSize: 15),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -764,7 +903,8 @@ class _SummarySection extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       Text(
-                        state.value.totalSaleForecastUnit.toStringAsFixed(2),
+                        max(0, state.value.totalSaleForecastUnit)
+                            .toStringAsFixed(2),
                         style: TextStyle(
                           fontSize: 25,
                         ),

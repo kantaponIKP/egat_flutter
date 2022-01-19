@@ -30,7 +30,6 @@ class EgatApp extends StatelessWidget {
     required this.preferredAppLanguage,
     Key? key,
   }) : super(key: key);
-  
 
   @override
   Widget build(BuildContext context) {

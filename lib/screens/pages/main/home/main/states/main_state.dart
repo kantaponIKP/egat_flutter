@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:egat_flutter/screens/pages/main/home/main/apis/main_api.dart';
 import 'package:egat_flutter/screens/session.dart';
 import 'package:flutter/cupertino.dart';

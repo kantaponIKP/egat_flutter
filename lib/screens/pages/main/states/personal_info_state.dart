@@ -178,10 +178,11 @@ class PersonalInfoState extends ChangeNotifier {
     );
 
     updateInfo(
-        fullName: response.fullName,
-        phoneNumber: response.phoneNumber,
-        email: response.email,
-        photo: response.photo);
+      fullName: response.fullName,
+      phoneNumber: response.phoneNumber,
+      email: response.email,
+      photo: response.photo,
+    );
   }
 
   void setPageChangePassword() {
