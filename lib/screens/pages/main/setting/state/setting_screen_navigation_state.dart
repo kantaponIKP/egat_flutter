@@ -21,6 +21,7 @@ class SettingScreenNavigationState extends ChangeNotifier {
 
   void setPageToAddPayment() {
     setCurrentPage(page: SettingScreenNavigationPage.ADD_PAYMENT);
+    print("set");
   }
 
   void setPageToCardPayment() {

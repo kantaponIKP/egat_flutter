@@ -4,6 +4,7 @@ import 'package:egat_flutter/screens/page/widgets/page_appbar.dart';
 import 'package:egat_flutter/screens/pages/main/setting/addPayment_step_indicator.dart';
 import 'package:egat_flutter/screens/pages/main/setting/add_payment/states/add_payment_state.dart';
 import 'package:egat_flutter/screens/pages/main/setting/card_payment/card_payment_page.dart';
+import 'package:egat_flutter/screens/pages/main/setting/state/setting_screen_navigation_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
@@ -33,17 +34,13 @@ class _AddPaymentScreenState extends State<AddPaymentScreen> {
     @override
   void initState() {
     super.initState();
-    setSettingScreenNavigation();
-  }
-
-  void setSettingScreenNavigation() {
-    // SettingScreenNavigationState addPayment =
-    //     Provider.of<SettingScreenNavigationState>(context, listen: false);
-    // addPayment.setPageToAddPayment();
   }
 
   @override
   Widget build(BuildContext context) {
+     SettingScreenNavigationState settingScreenNavigationState =
+        Provider.of<SettingScreenNavigationState>(context, listen: false);
+    settingScreenNavigationState.setPageToAddPayment();
     return Scaffold(
       appBar: PageAppbar(
           firstTitle: "",

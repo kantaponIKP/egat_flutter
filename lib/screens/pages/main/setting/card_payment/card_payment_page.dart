@@ -10,8 +10,6 @@ class CardPaymentPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(providers: [
-      ChangeNotifierProvider<CardPaymentState>(
-          create: (_) => CardPaymentState()),
       ChangeNotifierProvider<SettingScreenNavigationState>(
         create: (_) => SettingScreenNavigationState(),
       ),

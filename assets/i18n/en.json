@@ -119,9 +119,14 @@
   "setting-editPin": "Edit PIN",
   "setting-addPayment": "Add payment",
 
+  "payment-addPayment": "Add Payment",
   "payment-cardPayment": "Card Payment",
   "payment-promptPay": "PromptPay",
   "payment-add": "Add",
+  "payment-cardNumber": "Card number",
+  "payment-expireDate": "Expire Date",
+  "payment-CVVCode": "CVV Code",
+  "message-addSuccessful": "Add Successful",
 
   "trade-menu-forecast": "Forecast",
   "trade-menu-bilateral-top": "Bilatertal",

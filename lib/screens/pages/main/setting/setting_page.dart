@@ -14,9 +14,10 @@ class SettingPage extends StatelessWidget {
         ChangeNotifierProvider<SettingScreenNavigationState>(
           create: (_) => SettingScreenNavigationState(),
         ),
-        ChangeNotifierProvider<AddPaymentStatus>(
-           create: (_) => AddPaymentStatus(),
-      ),
+      //   ChangeNotifierProvider<AddPaymentStatus>(
+      //      create: (_) => AddPaymentStatus(),
+      // ),
+      
       ],
       child: SettingMainScreen(),
     );

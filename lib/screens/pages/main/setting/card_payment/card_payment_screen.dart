@@ -4,9 +4,11 @@ import 'package:egat_flutter/constant.dart';
 import 'package:egat_flutter/i18n/app_localizations.dart';
 import 'package:egat_flutter/screens/page/widgets/page_appbar.dart';
 import 'package:egat_flutter/screens/pages/main/setting/addPayment_step_indicator.dart';
+import 'package:egat_flutter/screens/pages/main/setting/state/setting_screen_navigation_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CardPaymentScreen extends StatefulWidget {
@@ -26,21 +28,17 @@ class _CardPaymentScreenState extends State<CardPaymentScreen> {
   @override
   void initState() {
     super.initState();
-    setSettingScreenNavigation();
 
     _cardNumberController = TextEditingController();
     _expireDateController = TextEditingController();
     _cvvCodeController = TextEditingController();
   }
 
-  void setSettingScreenNavigation() {
-    // SettingScreenNavigationState addPayment =
-    //     Provider.of<SettingScreenNavigationState>(context, listen: false);
-    // addPayment.setPageToCardPayment();
-  }
-
   @override
   Widget build(BuildContext context) {
+         SettingScreenNavigationState settingScreenNavigationState =
+        Provider.of<SettingScreenNavigationState>(context, listen: false);
+    settingScreenNavigationState.setPageToCardPayment();
     return Scaffold(
       appBar: PageAppbar(
           firstTitle: "",

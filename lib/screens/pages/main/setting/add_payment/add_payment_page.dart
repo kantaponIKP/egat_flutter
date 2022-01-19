@@ -13,25 +13,25 @@ class AddPaymentPage extends StatelessWidget {
       ChangeNotifierProvider<SettingScreenNavigationState>(
         create: (_) => SettingScreenNavigationState(),
       ),
-      ChangeNotifierProxyProvider<SettingScreenNavigationState,
-          AddPaymentState>(create: (_) {
-        SettingScreenNavigationState settingState =
-            Provider.of<SettingScreenNavigationState>(context, listen: false);
-        return AddPaymentState(settingScreenNavigationState: settingState);
-      }, update: (
-        BuildContext context,
-        SettingScreenNavigationState model,
-        AddPaymentState? previous,
-      ) {
-        if (previous == null) {
-          SettingScreenNavigationState settingState =
-              Provider.of<SettingScreenNavigationState>(context, listen: false);
-          return AddPaymentState(settingScreenNavigationState: settingState);
-        } else {
-          previous.setNavigationState(model);
-          return previous;
-        }
-      }),
+      // ChangeNotifierProxyProvider<SettingScreenNavigationState,
+      //     AddPaymentState>(create: (_) {
+      //   SettingScreenNavigationState settingState =
+      //       Provider.of<SettingScreenNavigationState>(context, listen: false);
+      //   return AddPaymentState(settingScreenNavigationState: settingState);
+      // }, update: (
+      //   BuildContext context,
+      //   SettingScreenNavigationState model,
+      //   AddPaymentState? previous,
+      // ) {
+      //   if (previous == null) {
+      //     SettingScreenNavigationState settingState =
+      //         Provider.of<SettingScreenNavigationState>(context, listen: false);
+      //     return AddPaymentState(settingScreenNavigationState: settingState);
+      //   } else {
+      //     previous.setNavigationState(model);
+      //     return previous;
+      //   }
+      // }),
     ], child: AddPaymentScreen());
   }
 }
