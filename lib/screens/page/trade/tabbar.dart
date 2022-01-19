@@ -3,6 +3,7 @@ import 'package:egat_flutter/screens/page/state/page_status.dart';
 import 'package:egat_flutter/screens/page/state/trading_tabbar.dart';
 import 'package:flutter/material.dart';
 import 'package:egat_flutter/constant.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 
 class Tabbar extends StatefulWidget {
@@ -13,7 +14,6 @@ class Tabbar extends StatefulWidget {
 }
 
 class _TabbarState extends State<Tabbar> {
-
   @override
   Widget build(BuildContext context) {
     PageStatus model = Provider.of<PageStatus>(context);
@@ -23,7 +23,8 @@ class _TabbarState extends State<Tabbar> {
         Expanded(
           child: Stack(children: [
             Container(
-              color: model.state == PageState.Forecast? primaryColor:greyColor,
+              color:
+                  model.state == PageState.Forecast ? primaryColor : greyColor,
               child: InkWell(
                 onTap: () {
                   _onForecastTabPressed();
@@ -36,12 +37,24 @@ class _TabbarState extends State<Tabbar> {
                       text: TextSpan(
                         children: [
                           WidgetSpan(
-                            child: Icon(Icons.home,
-                                size: 18, color: model.state == PageState.Forecast? onPrimaryBgColor: whiteColor),
-                          ),
+                              child: SvgPicture.asset(
+                            'assets/images/icons/tabbar/trending.svg',
+                            color: model.state == PageState.Forecast
+                                ? onPrimaryBgColor
+                                : whiteColor,
+                          )
+                              // Icon(Icons.home,
+                              //     size: 18,
+                              //     color: model.state == PageState.Forecast
+                              //         ? onPrimaryBgColor
+                              //         : whiteColor),
+                              ),
                           TextSpan(
                               text: " Forecast",
-                              style: TextStyle(color: model.state == PageState.Forecast? onPrimaryBgColor: whiteColor)),
+                              style: TextStyle(
+                                  color: model.state == PageState.Forecast
+                                      ? onPrimaryBgColor
+                                      : whiteColor)),
                         ],
                       ),
                     ),
@@ -53,7 +66,9 @@ class _TabbarState extends State<Tabbar> {
               right: 0,
               child: CustomPaint(
                 painter: TrianglePainter(
-                  strokeColor: model.state == PageState.BilateralTrade? primaryColor:greyColor,
+                  strokeColor: model.state == PageState.BilateralTrade
+                      ? primaryColor
+                      : greyColor,
                   strokeWidth: 10,
                   paintingStyle: PaintingStyle.fill,
                 ),
@@ -68,7 +83,9 @@ class _TabbarState extends State<Tabbar> {
         Expanded(
           child: Stack(children: [
             Container(
-              color: model.state == PageState.BilateralTrade? primaryColor:greyColor,
+              color: model.state == PageState.BilateralTrade
+                  ? primaryColor
+                  : greyColor,
               child: InkWell(
                 onTap: () {
                   _onBilateralTabPressed();
@@ -81,16 +98,26 @@ class _TabbarState extends State<Tabbar> {
                       text: TextSpan(
                         children: [
                           WidgetSpan(
-                            child: Icon(Icons.handyman,
-                                size: 18, color: model.state == PageState.BilateralTrade? onPrimaryBgColor: whiteColor),
-                          ),
+                              alignment: PlaceholderAlignment.bottom,
+                              child: model.state == PageState.BilateralTrade
+                                  ? SvgPicture.asset(
+                                      'assets/images/icons/tabbar/bilateral_selected.svg')
+                                  : SvgPicture.asset(
+                                      'assets/images/icons/tabbar/bilateral.svg',
+                                    )),
                           TextSpan(
                               text: " Bilateral",
-                              style: TextStyle(color: model.state == PageState.BilateralTrade? onPrimaryBgColor: whiteColor)),
+                              style: TextStyle(
+                                  color: model.state == PageState.BilateralTrade
+                                      ? onPrimaryBgColor
+                                      : whiteColor)),
                           TextSpan(
                               text: "\nTrade",
-                              style:
-                                  TextStyle(color: model.state == PageState.BilateralTrade? onPrimaryBgColor: whiteColor, fontSize: 12)),
+                              style: TextStyle(
+                                  color: model.state == PageState.BilateralTrade
+                                      ? onPrimaryBgColor
+                                      : whiteColor,
+                                  fontSize: 12)),
                         ],
                       ),
                     ),
@@ -102,7 +129,9 @@ class _TabbarState extends State<Tabbar> {
               right: 0,
               child: CustomPaint(
                 painter: TrianglePainter(
-                  strokeColor: model.state == PageState.PoolMarketTrade? primaryColor:greyColor,
+                  strokeColor: model.state == PageState.PoolMarketTrade
+                      ? primaryColor
+                      : greyColor,
                   strokeWidth: 10,
                   paintingStyle: PaintingStyle.fill,
                 ),
@@ -116,7 +145,9 @@ class _TabbarState extends State<Tabbar> {
         ),
         Expanded(
           child: Container(
-            color: model.state == PageState.PoolMarketTrade? primaryColor:greyColor,
+            color: model.state == PageState.PoolMarketTrade
+                ? primaryColor
+                : greyColor,
             child: InkWell(
               onTap: () {
                 _onPoolMarketTabPressed();
@@ -129,16 +160,26 @@ class _TabbarState extends State<Tabbar> {
                     text: TextSpan(
                       children: [
                         WidgetSpan(
-                          child:
-                              Icon(Icons.refresh, size: 18, color: model.state == PageState.PoolMarketTrade? onPrimaryBgColor: whiteColor),
-                        ),
+                            child: SvgPicture.asset(
+                          'assets/images/icons/tabbar/poolmarket.svg',
+                          color: model.state == PageState.PoolMarketTrade
+                              ? onPrimaryBgColor
+                              : whiteColor,
+                        )),
                         TextSpan(
                           text: " Pool Market",
-                          style: TextStyle(color: model.state == PageState.PoolMarketTrade? onPrimaryBgColor: whiteColor),
+                          style: TextStyle(
+                              color: model.state == PageState.PoolMarketTrade
+                                  ? onPrimaryBgColor
+                                  : whiteColor),
                         ),
                         TextSpan(
                           text: "\nTrade",
-                          style: TextStyle(color: model.state == PageState.PoolMarketTrade? onPrimaryBgColor: whiteColor, fontSize: 12),
+                          style: TextStyle(
+                              color: model.state == PageState.PoolMarketTrade
+                                  ? onPrimaryBgColor
+                                  : whiteColor,
+                              fontSize: 12),
                         ),
                       ],
                     ),
@@ -152,19 +193,21 @@ class _TabbarState extends State<Tabbar> {
     );
   }
 
-
   void _onForecastTabPressed() {
-    TradingTabbar tradingTabbar = Provider.of<TradingTabbar>(context, listen: false);
+    TradingTabbar tradingTabbar =
+        Provider.of<TradingTabbar>(context, listen: false);
     tradingTabbar.setPageForecast();
   }
 
   void _onBilateralTabPressed() {
-    TradingTabbar tradingTabbar = Provider.of<TradingTabbar>(context, listen: false);
+    TradingTabbar tradingTabbar =
+        Provider.of<TradingTabbar>(context, listen: false);
     tradingTabbar.setPageBilateralTrade();
   }
 
   void _onPoolMarketTabPressed() {
-    TradingTabbar tradingTabbar = Provider.of<TradingTabbar>(context, listen: false);
+    TradingTabbar tradingTabbar =
+        Provider.of<TradingTabbar>(context, listen: false);
     tradingTabbar.setPagePoolMarketTrade();
   }
 }
