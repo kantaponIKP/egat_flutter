@@ -602,8 +602,9 @@ class _BuySellActionTileBottomSheet extends StatelessWidget {
   }
 
   void _onBilateralSelected(BuildContext context) async {
-    final state = Provider.of<ForecastState>(context);
-    final selectedDate = Provider.of<ForecastSelectedDateState>(context);
+    final state = Provider.of<ForecastState>(context, listen: false);
+    final selectedDate =
+        Provider.of<ForecastSelectedDateState>(context, listen: false);
 
     Navigator.pop(context);
     switch (action) {
@@ -636,8 +637,9 @@ class _BuySellActionTileBottomSheet extends StatelessWidget {
   }
 
   void _onPoolSelected(BuildContext context) async {
-    final state = Provider.of<ForecastState>(context);
-    final selectedDate = Provider.of<ForecastSelectedDateState>(context);
+    final state = Provider.of<ForecastState>(context, listen: false);
+    final selectedDate =
+        Provider.of<ForecastSelectedDateState>(context, listen: false);
 
     Navigator.pop(context);
     switch (action) {
