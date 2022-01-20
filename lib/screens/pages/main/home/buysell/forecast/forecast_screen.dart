@@ -601,18 +601,22 @@ class _BuySellActionTileBottomSheet extends StatelessWidget {
     );
   }
 
-  void _onBilateralSelected(BuildContext context) {
+  void _onBilateralSelected(BuildContext context) async {
+    final state = Provider.of<ForecastState>(context);
+    final selectedDate = Provider.of<ForecastSelectedDateState>(context);
+
     Navigator.pop(context);
     switch (action) {
       case BuySellAction.BUY:
-        Navigator.of(context).push(
+        await Navigator.of(context).push(
           MaterialPageRoute(
             builder: (context) => BilateralBuyPage(date: startDateTime),
           ),
         );
+        state.fetchForecastsFromDate(selectedDate.selectedDate);
         break;
       case BuySellAction.SELL:
-        Navigator.of(context).push(
+        await Navigator.of(context).push(
           MaterialPageRoute(
             builder: (context) => BilateralShortTermSellPage(
               requestItems: [
@@ -625,22 +629,27 @@ class _BuySellActionTileBottomSheet extends StatelessWidget {
             ),
           ),
         );
+        state.fetchForecastsFromDate(selectedDate.selectedDate);
         break;
       default:
     }
   }
 
-  void _onPoolSelected(BuildContext context) {
+  void _onPoolSelected(BuildContext context) async {
+    final state = Provider.of<ForecastState>(context);
+    final selectedDate = Provider.of<ForecastSelectedDateState>(context);
+
     Navigator.pop(context);
     switch (action) {
       case BuySellAction.BUY:
-        Navigator.of(context).push(
+        await Navigator.of(context).push(
           MaterialPageRoute(
             builder: (context) => PoolMarketShortTermBuyPage(
               isoDate: startDateTime.toUtc().toIso8601String(),
             ),
           ),
         );
+        state.fetchForecastsFromDate(selectedDate.selectedDate);
         break;
       case BuySellAction.SELL:
         Navigator.of(context).push(
@@ -649,6 +658,7 @@ class _BuySellActionTileBottomSheet extends StatelessWidget {
                 isoDate: [startDateTime.toUtc().toIso8601String()]),
           ),
         );
+        state.fetchForecastsFromDate(selectedDate.selectedDate);
         break;
       default:
     }
@@ -1047,6 +1057,9 @@ class __SubmitAllButtonState extends State<_SubmitAllButton> {
 
   @override
   Widget build(BuildContext context) {
+    final state = Provider.of<ForecastState>(context);
+    final selectedDate = Provider.of<ForecastSelectedDateState>(context);
+
     final items = widget.controller.buySellInfos
         .where((element) => element.isSelected)
         .toList();
@@ -1067,8 +1080,8 @@ class __SubmitAllButtonState extends State<_SubmitAllButton> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           ElevatedButton(
-            onPressed: () {
-              Navigator.of(context).push(
+            onPressed: () async {
+              await Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: (context) => BilateralShortTermSellPage(
                     requestItems: [
@@ -1082,8 +1095,9 @@ class __SubmitAllButtonState extends State<_SubmitAllButton> {
                   ),
                 ),
               );
+              state.fetchForecastsFromDate(selectedDate.selectedDate);
             },
-            child: Text('Sell All (Bilateral Trade)'),
+            child: Text('Offer to Sell (Bilateral Trade)'),
           ),
         ],
       ),
