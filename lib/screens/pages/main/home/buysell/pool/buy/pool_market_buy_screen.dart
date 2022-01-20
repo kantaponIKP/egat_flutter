@@ -772,7 +772,7 @@ class _TransactionItemState extends State<_TransactionItem> {
         _TransactionInput(
           title: 'Offer to Sell Price',
           secondaryTitle: 'Market price = THB 3.00',
-          unit: 'kWh',
+          unit: 'THB/kWh',
           controller: offerToSalePriceTextController,
         ),
         SizedBox(height: 16),

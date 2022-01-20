@@ -689,7 +689,7 @@ class _TransactionItemState extends State<_TransactionItem> {
         _TransactionInput(
           title: 'Offer to Sell Price',
           secondaryTitle: 'Market price = THB 3.00',
-          unit: 'THB',
+          unit: 'THB/kWh',
           controller: offerToSalePriceTextController,
           disabled: widget.disabled,
         ),
