@@ -1,14 +1,11 @@
-import 'package:egat_flutter/i18n/app_language.dart';
 import 'package:egat_flutter/i18n/app_localizations.dart';
 import 'package:egat_flutter/screens/forgot_password/forgot_password_step_indicator.dart';
 import 'package:egat_flutter/screens/forgot_password/state/email.dart';
-import 'package:egat_flutter/screens/forgot_password/state/otp.dart';
 import 'package:egat_flutter/screens/registration/widgets/login_text_button.dart';
 import 'package:egat_flutter/screens/registration/widgets/registration_action.dart';
 import 'package:egat_flutter/screens/widgets/loading_dialog.dart';
 import 'package:egat_flutter/screens/widgets/show_exception.dart';
 import 'package:flutter/material.dart';
-import 'package:egat_flutter/constant.dart';
 import 'package:provider/provider.dart';
 
 class EmailScreen extends StatefulWidget {

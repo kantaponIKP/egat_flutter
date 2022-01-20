@@ -73,6 +73,8 @@
   "setting": "การตั้งค่า",
   "sign-out": "ออกจากระบบ",
 
+  "pleaseWait": "กรุณารอสักครู่...",
+
   "title-personalInformation-first": "ข้อมูล",
   "title-personalInformation-second": "ส่วนตัว",
   "title-changePassword-first": "เปลี่ยน",
@@ -97,7 +99,7 @@
   "error-timeoutError": "เกินเวลาที่กำหนด",
   "error-unauthorized": "ไม่ได้รับอนุญาตในการเข้าถึง",
   "error-sessionExpired": "หมดระยะเวลาทำการ กรุณาลองใหม่อีกครั้ง",
-  "error-conflict": "ข้อมูลซ้ำ",
+  "error-conflict": "ข้อมูลถูกใช้แล้ว",
   "error-passwordSameAsOldPassword": "รหัสผ่านใหม่ไม่สามารถซ้ำกับรหัสผ่านเก่า",
   "error-incorrectPassword": "รหัสผ่านไม่ถูกต้อง",
   "error-invalidSession": "เซสชั่นไม่ถูกต้อง",
@@ -118,6 +120,10 @@
   "setting-addPin": "เพิ่ม PIN",
   "setting-editPin": "เปลี่ยน PIN",
   "setting-addPayment": "เพิ่มวิธีการชำระเงิน",
+
+  "setting-pin-enterYourCurrentPin": "ใส่รหัส PIN เก่า",
+  "setting-pin-enterYourNewPin": "ตั้งรหัส PIN ใหม่",
+  "setting-pin-verifyYourNewPin": "ยืนยันรหัส PIN ใหม่",
   
   "payment-addPayment": "เพิ่มวิธีชำระเงิน",
   "payment-cardPayment": "ชำระโดยบัตร",

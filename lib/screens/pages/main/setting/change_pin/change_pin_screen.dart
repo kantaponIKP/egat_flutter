@@ -35,8 +35,14 @@ class _ChangePinScreenState extends State<ChangePinScreen> {
   void initState() {
     super.initState();
     setPinState();
-    setTitle();
+    // setTitle();
     _pinController = TextEditingController();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    setTitle();
   }
 
   void setPinState() {
@@ -52,19 +58,23 @@ class _ChangePinScreenState extends State<ChangePinScreen> {
 
   void setTitle() {
     ChangePinState state = Provider.of<ChangePinState>(context, listen: false);
-    if (state.currentStatus == PinStatus.EnterCurrentPIN) {
-      setState(() {
-        _title = "Enter your current PIN";
-      });
-    } else if (state.currentStatus == PinStatus.EnterNewPIN) {
-      setState(() {
-        _title = "Enter your new PIN";
-      });
-    } else if (state.currentStatus == PinStatus.VerifyNewPIN) {
-      setState(() {
-        _title = "Verify your new PIN";
-      });
-    }
+    final appLocalizations = AppLocalizations.of(context);
+    Future.delayed(Duration.zero).then((value) {
+      if (state.currentStatus == PinStatus.EnterCurrentPIN) {
+        setState(() {
+          _title =
+              appLocalizations.translate('setting-pin-enterYourCurrentPin');
+        });
+      } else if (state.currentStatus == PinStatus.EnterNewPIN) {
+        setState(() {
+          _title = appLocalizations.translate('setting-pin-enterYourNewPin');
+        });
+      } else if (state.currentStatus == PinStatus.VerifyNewPIN) {
+        setState(() {
+          _title = appLocalizations.translate('setting-pin-verifyYourNewPin');
+        });
+      }
+    });
   }
 
   @override
@@ -73,11 +83,21 @@ class _ChangePinScreenState extends State<ChangePinScreen> {
       appBar: PageAppbar(
           firstTitle:
               AppLocalizations.of(context).translate('title-changePin-first'),
-          secondTitle:
+          secondTitle: " " +
               AppLocalizations.of(context).translate('title-changePin-second')),
       // drawer: NavigationMenuWidget(),
       body: SafeArea(
-        child: _buildAction(context),
+        child: Container(
+          decoration: BoxDecoration(
+            gradient: RadialGradient(
+              colors: [
+                Color(0xFF303030),
+                Colors.black,
+              ],
+            ),
+          ),
+          child: _buildAction(context),
+        ),
       ),
     );
   }
@@ -158,15 +178,14 @@ class _ChangePinScreenState extends State<ChangePinScreen> {
         break;
 
       case PinStatus.VerifyNewPIN:
-        if(_newPin == _pinController!.text){
-          print("_pinController:"+ _pinController!.text);
-          changePinState.pinState!.setPinStorage(pin: _pinController!.text);
+        if (_newPin == _pinController!.text) {
+          print("_pinController:" + _pinController!.text);
+          changePinState.pinState!.setPinToStorage(pin: _pinController!.text);
           pinState.setPin(pin: _pinController!.text);
-          print("_pin change pin:"+ pinState.currentPin);
+          print("_pin change pin:" + pinState.currentPin);
           _pinController!.clear();
-          Navigator.pop(context,true);
-
-        }else{
+          Navigator.pop(context, true);
+        } else {
           _pinController!.clear();
           showIntlException(
             context,

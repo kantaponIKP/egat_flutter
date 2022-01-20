@@ -1,10 +1,10 @@
 import 'dart:math';
 
 import 'package:egat_flutter/constant.dart';
-import 'package:egat_flutter/screens/forgot_password/widgets/forgot_password_cancellation_dialog.dart';
 import 'package:egat_flutter/screens/pages/main/news/news_description_screen.dart';
 import 'package:egat_flutter/screens/pages/main/news/state/news_state.dart';
 import 'package:egat_flutter/screens/pages/main/widgets/navigation_menu_widget.dart';
+import 'package:egat_flutter/screens/widgets/loading_dialog.dart';
 import 'package:egat_flutter/screens/widgets/show_exception.dart';
 import 'package:egat_flutter/screens/widgets/show_snackbar.dart';
 import 'package:egat_flutter/screens/widgets/single_child_scoped_scroll_view.dart';
@@ -44,7 +44,17 @@ class _NewsScreenState extends State<NewsScreen> {
     return Scaffold(
       drawer: NavigationMenuWidget(),
       body: SafeArea(
-        child: _buildAction(context),
+        child: Container(
+          decoration: BoxDecoration(
+            gradient: RadialGradient(
+              colors: [
+                Color(0xFF303030),
+                Colors.black,
+              ],
+            ),
+          ),
+          child: _buildAction(context),
+        ),
       ),
     );
   }
@@ -114,11 +124,7 @@ class _NewsCardSection extends StatelessWidget {
   }
 
   String removeAllHtmlTags(String htmlText) {
-    RegExp exp = RegExp(
-      r"<[^>]*>",
-      multiLine: true,
-      caseSensitive: true
-    );
+    RegExp exp = RegExp(r"<[^>]*>", multiLine: true, caseSensitive: true);
 
     return htmlText.replaceAll(exp, '');
   }
@@ -130,7 +136,6 @@ class _NewsCardSection extends StatelessWidget {
     final fullContent = this.content;
     final htmlText = markdown.markdownToHtml(this.content);
     final plainText = removeAllHtmlTags(htmlText);
-
 
     final content = this.content.length > 49
         ? this.content.substring(0, 46) + '...'
@@ -201,29 +206,29 @@ class _NewsCardSection extends StatelessWidget {
                       maxHeight: 35,
                     ),
                     child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: 
-                        // Markdown(
-                        //   physics: NeverScrollableScrollPhysics(),
-                        //   // controller: null,
-                        //   // softLineBreak: true,
-                        //   data: content,
-                        //   shrinkWrap: true,
-                        // )
-                        RichText(
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            text: TextSpan(
-                              children: [
-                                TextSpan(
-                                  text: plainText,
-                                  style: TextStyle(
-                                    fontSize: 14,
+                      alignment: Alignment.centerLeft,
+                      child:
+                          // Markdown(
+                          //   physics: NeverScrollableScrollPhysics(),
+                          //   // controller: null,
+                          //   // softLineBreak: true,
+                          //   data: content,
+                          //   shrinkWrap: true,
+                          // )
+                          RichText(
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              text: TextSpan(
+                                children: [
+                                  TextSpan(
+                                    text: plainText,
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                    ),
                                   ),
-                                ),
-                              ],
-                            )),
-                        ),
+                                ],
+                              )),
+                    ),
                   ),
                 ]),
               )),

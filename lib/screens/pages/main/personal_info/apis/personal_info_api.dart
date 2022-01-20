@@ -90,6 +90,12 @@ class PersonalInfoApi {
         intlMessage: "error-sessionExpired",
       );
     }
+    if (response.statusCode == 409) {
+      throw IntlException(
+        message: "ปฎิเสธ server ตอบกลับด้วยสถานะ ${response.statusCode}",
+        intlMessage: "error-conflict",
+      );
+    }
     if (response.statusCode >= 300) {
       throw IntlException(
         message: "ปฎิเสธ server ตอบกลับด้วยสถานะ ${response.statusCode}",

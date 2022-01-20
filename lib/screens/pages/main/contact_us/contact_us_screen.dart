@@ -1,13 +1,7 @@
 import 'package:egat_flutter/constant.dart';
-import 'package:egat_flutter/i18n/app_localizations.dart';
-import 'package:egat_flutter/screens/page/state/personal_info.dart';
-import 'package:egat_flutter/screens/page/widgets/logo_appbar.dart';
-import 'package:egat_flutter/screens/page/widgets/page_appbar.dart';
-import 'package:egat_flutter/screens/page/widgets/page_bottom_navigation_bar.dart';
-import 'package:egat_flutter/screens/page/widgets/side_menu.dart';
+import 'package:egat_flutter/screens/pages/main/widgets/navigation_menu_widget.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class ContactUsScreen extends StatefulWidget {
   const ContactUsScreen({Key? key}) : super(key: key);
@@ -24,7 +18,17 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
     return Scaffold(
       drawer: NavigationMenuWidget(),
       body: SafeArea(
-        child: _buildAction(context),
+        child: Container(
+          decoration: BoxDecoration(
+            gradient: RadialGradient(
+              colors: [
+                Color(0xFF303030),
+                Colors.black,
+              ],
+            ),
+          ),
+          child: _buildAction(context),
+        ),
       ),
     );
   }
@@ -83,10 +87,7 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
         RichText(
           text: TextSpan(
             children: [
-              TextSpan(
-                text: 'Tel.',
-                style: TextStyle(fontSize: 16)
-              ),
+              TextSpan(text: 'Tel.', style: TextStyle(fontSize: 16)),
               TextSpan(
                 text: '089-xxx-xxxx',
                 style: TextStyle(
@@ -106,9 +107,7 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
           text: TextSpan(
             children: [
               TextSpan(
-                text: 'egat.p2p@gmail.com',
-                style: TextStyle(fontSize: 16)
-              ),
+                  text: 'egat.p2p@gmail.com', style: TextStyle(fontSize: 16)),
             ],
           ),
         ),

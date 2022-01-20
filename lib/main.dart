@@ -2,6 +2,7 @@ import 'package:egat_flutter/constant.dart';
 import 'package:egat_flutter/i18n/app_language.dart';
 import 'package:egat_flutter/i18n/app_localizations.dart';
 import 'package:egat_flutter/screens/login/login.dart';
+import 'package:egat_flutter/screens/pages/main/setting/state/notification_state.dart';
 import 'package:egat_flutter/screens/pages/main/setting/change_pin/states/pin_state.dart';
 import 'package:egat_flutter/screens/session.dart';
 import 'package:flutter/material.dart';
@@ -41,9 +42,34 @@ class EgatApp extends StatelessWidget {
             return LoginSession();
           },
         ),
-        ChangeNotifierProvider<PinState>(
+        ChangeNotifierProxyProvider<LoginSession, PinState>(
           create: (context) {
-            return PinState();
+            var loginSession =
+                Provider.of<LoginSession>(context, listen: false);
+            return PinState(loginSession: loginSession);
+          },
+          update: (context, LoginSession value, PinState? previous) {
+            if (previous == null) {
+              return PinState(loginSession: value);
+            } else {
+              previous.setLoginSession(value);
+              return previous;
+            }
+          },
+        ),
+        ChangeNotifierProxyProvider<LoginSession, NotificationState>(
+          create: (context) {
+            var loginSession =
+                Provider.of<LoginSession>(context, listen: false);
+            return NotificationState(loginSession: loginSession);
+          },
+          update: (context, LoginSession value, NotificationState? previous) {
+            if (previous == null) {
+              return NotificationState(loginSession: value);
+            } else {
+              previous.setLoginSession(value);
+              return previous;
+            }
           },
         ),
         ChangeNotifierProvider<AppLocale>(
@@ -132,11 +158,41 @@ class EgatApp extends StatelessWidget {
                   fontWeight: FontWeight.w300,
                   color: textColor,
                 ),
-                subtitle1:
-                    //TextFormField textStyle
-                    TextStyle(
+                subtitle1: TextStyle(
                   color: textColor,
                 ),
+                // subtitle2: TextStyle(
+                //   fontWeight: FontWeight.w300,
+                //   color: textColor,
+                // ),
+                bodyText1: TextStyle(
+                  fontWeight: FontWeight.w300,
+                  color: textColor,
+                ),
+                // headline1: TextStyle(
+                //   fontWeight: FontWeight.w300,
+                //   color: textColor,
+                // ),
+                // headline2: TextStyle(
+                //   fontWeight: FontWeight.w300,
+                //   color: textColor,
+                // ),
+                // headline3: TextStyle(
+                //   fontWeight: FontWeight.w300,
+                //   color: textColor,
+                // ),
+                // headline4: TextStyle(
+                //   fontWeight: FontWeight.w300,
+                //   color: textColor,
+                // ),
+                // headline5: TextStyle(
+                //   fontWeight: FontWeight.w300,
+                //   color: textColor,
+                // ),
+                // headline6: TextStyle(
+                //   fontWeight: FontWeight.w300,
+                //   color: textColor,
+                // ),
               ),
               textButtonTheme: TextButtonThemeData(
                 style: ButtonStyle(

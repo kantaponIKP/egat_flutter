@@ -7,7 +7,7 @@ Future<void> showLoading() async {
 
   await EasyLoading.show(
     // status: "กรุณารอสักครู่...",
-    status: "Please wait...",
+    // status: AppLocalizations.of(context).translate('change-password'),
     maskType: EasyLoadingMaskType.black,
   );
 }

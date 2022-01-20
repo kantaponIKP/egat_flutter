@@ -1,11 +1,28 @@
+import 'package:egat_flutter/screens/session.dart';
 import 'package:flutter/cupertino.dart';
-// import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class PinState extends ChangeNotifier {
+  LoginSession loginSession;
   String _pin = "";
   String get currentPin => _pin;
+
+  PinState({
+    required this.loginSession,
+  });
+
+  setLoginSession(LoginSession loginSession) {
+    this.loginSession = loginSession;
+  }
+
+    String _getUserId() {
+    var loginInfo = loginSession.info;
+    if (loginInfo == null) {
+      throw Exception('No access token');
+    }
+
+    return loginInfo.userId;
+  }
 
   setPin({
     pin = "",
@@ -16,16 +33,16 @@ class PinState extends ChangeNotifier {
 
 
   void getPinFromStorage() async {
+    final userId = _getUserId();
     final storage = new FlutterSecureStorage();
-    String pin = await storage.read(key: 'pin') ?? "";
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.remove('pin');
+    String pin = await storage.read(key: 'pin_$userId') ?? "";
     setPin(pin: pin);
   }
 
-  void setPinStorage({required String pin}) async {
+  void setPinToStorage({required String pin}) async {
+    final userId = _getUserId();
     final storage = new FlutterSecureStorage();
-    await storage.write(key: 'pin', value: pin);
+    await storage.write(key: 'pin_$userId', value: pin);
   }
 
   bool hasPin() {

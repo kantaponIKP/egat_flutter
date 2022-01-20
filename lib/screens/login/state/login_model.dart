@@ -78,6 +78,8 @@ class LoginModel extends ChangeNotifier {
     loginSession.setAccessToken(
       LoginSessionInfo(accessToken: "", userId: "", refreshToken: ""),
     );
+    print("cancel");
+    _timer.cancel(); //TODO
   }
 
   @override

@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
   package="com.example.egat_flutter">
-  <application android:label="egat_flutter"
+  <application android:label="EGAT P2P"
     android:icon="@mipmap/ic_launcher">
     <activity android:name=".MainActivity"
       android:launchMode="singleTop"

@@ -4,7 +4,6 @@ import 'dart:convert';
 import 'package:egat_flutter/constant.dart';
 import 'package:egat_flutter/i18n/app_localizations.dart';
 import 'package:egat_flutter/screens/login/state/login_model.dart';
-import 'package:egat_flutter/screens/login/state/login_session.dart';
 import 'package:egat_flutter/screens/pages/main/states/main_screen_navigation_state.dart';
 import 'package:egat_flutter/screens/pages/main/states/main_screen_title_state.dart';
 import 'package:egat_flutter/screens/pages/main/states/personal_info_state.dart';
@@ -12,6 +11,7 @@ import 'package:egat_flutter/screens/widgets/loading_dialog.dart';
 import 'package:egat_flutter/screens/widgets/show_exception.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:provider/provider.dart';
 
@@ -199,42 +199,46 @@ class _NavigationMenuWidgetState extends State<NavigationMenuWidget> {
         _buildMenuItem(
           context: context,
           text: '${AppLocalizations.of(context).translate('home')}',
-          icon: Icons.home,
+          icon: SvgPicture.asset('assets/images/icons/sidebar/home_icon.svg'),
           onAction: _onHomeMenuPressed,
           page: MainScreenNavigationPage.HOME,
         ),
         _buildMenuItem(
           context: context,
           text: '${AppLocalizations.of(context).translate('personal-info')}',
-          icon: Icons.account_circle,
+          icon: SvgPicture.asset(
+              'assets/images/icons/sidebar/personal_info_icon.svg'),
           onAction: _onPersonalInfoMenuPressed,
           page: MainScreenNavigationPage.PERSONAL_INFORMATION,
         ),
         _buildMenuItem(
           context: context,
           text: '${AppLocalizations.of(context).translate('change-password')}',
-          icon: Icons.lock_sharp,
+          icon: SvgPicture.asset(
+              'assets/images/icons/sidebar/change_password_icon.svg'),
           onAction: _onChangePasswordMenuPressed,
           page: MainScreenNavigationPage.CHANGE_PASSWORD,
         ),
         _buildMenuItem(
           context: context,
           text: '${AppLocalizations.of(context).translate('contact-us')}',
-          icon: Icons.contact_page,
+          icon:
+              SvgPicture.asset('assets/images/icons/sidebar/contact_icon.svg'),
           onAction: _onContactUsMenuPressed,
           page: MainScreenNavigationPage.CONTACT_US,
         ),
         _buildMenuItem(
           context: context,
           text: '${AppLocalizations.of(context).translate('news')}',
-          icon: Icons.campaign_sharp,
+          icon: SvgPicture.asset('assets/images/icons/sidebar/news_icon.svg'),
           onAction: _onNewsMenuPressed,
           page: MainScreenNavigationPage.NEWS,
         ),
         _buildMenuItem(
           context: context,
           text: '${AppLocalizations.of(context).translate('setting')}',
-          icon: Icons.settings,
+          icon:
+              SvgPicture.asset('assets/images/icons/sidebar/setting_icon.svg'),
           onAction: _onSettingMenuPressed,
           page: MainScreenNavigationPage.SETTING,
         ),
@@ -245,7 +249,7 @@ class _NavigationMenuWidgetState extends State<NavigationMenuWidget> {
   Widget _buildMenuItem({
     required BuildContext context,
     required String text,
-    required IconData icon,
+    required Widget icon,
     required Function() onAction,
     required MainScreenNavigationPage page,
   }) {
@@ -253,19 +257,25 @@ class _NavigationMenuWidgetState extends State<NavigationMenuWidget> {
     Color color = whiteColor;
     const hoverColor = Colors.white70;
     return SizedBox(
-      // height: 24,
       child: Container(
-        // color: Colors.black,
+        decoration: BoxDecoration(
+            border: Border(
+          left: BorderSide(
+              width: 8.0,
+              color: (model.currentPage == page)
+                  ? primaryColor
+                  : surfaceGreyColor),
+        )),
         child: ListTile(
             tileColor:
                 (model.currentPage == page) ? contentBgColor : surfaceGreyColor,
-            leading: Icon(
-              icon,
-              color: color,
-            ),
+            leading: icon,
+            // color: color,
+            // ),
             title: Text(
               text,
               style: TextStyle(
+                fontSize: 16,
                 color: (model.currentPage == page) ? primaryColor : color,
               ),
             ),
@@ -310,7 +320,7 @@ class _NavigationMenuWidgetState extends State<NavigationMenuWidget> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text(userInfo.username),
+                      Text(userInfo.username, style: TextStyle(fontSize: 20)),
                       Text(userInfo.email),
                     ],
                   ),
@@ -440,6 +450,7 @@ class _NavigationMenuWidgetState extends State<NavigationMenuWidget> {
     LoginModel loginModel = Provider.of<LoginModel>(context, listen: false);
     try {
       print(loginModel.loginSession.info!.accessToken);
+      await showLoading();
       await loginModel.processLogout();
       mainScreenNavigation.setPageToSignOut();
     } catch (e) {
