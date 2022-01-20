@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:egat_flutter/Utils/http/delete.dart';
 import 'package:egat_flutter/Utils/http/get.dart';
@@ -54,7 +55,7 @@ class PersonalInfoApi {
       );
     }
 
-    return PersonalInfoResponse.fromJSON(response.body);
+    return PersonalInfoResponse.fromJSON(utf8.decode(response.bodyBytes));
   }
 
   Future<Response> changePersonalInfo(

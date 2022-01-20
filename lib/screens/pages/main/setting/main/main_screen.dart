@@ -1,7 +1,6 @@
 import 'package:egat_flutter/constant.dart';
 import 'package:egat_flutter/i18n/app_language.dart';
 import 'package:egat_flutter/i18n/app_localizations.dart';
-import 'package:egat_flutter/screens/pages/main/setting/add_payment/add_payment_page.dart';
 import 'package:egat_flutter/screens/pages/main/setting/add_payment/add_payment_screen.dart';
 import 'package:egat_flutter/screens/pages/main/setting/change_pin/change_pin_page.dart';
 import 'package:egat_flutter/screens/pages/main/setting/change_pin/states/pin_state.dart';
@@ -41,7 +40,7 @@ class _SettingMainScreenState extends State<SettingMainScreen> {
   void didChangeDependencies(){
     super.didChangeDependencies();
     _getReceiveNotificationFromState();
-    
+    // _getPin();
   }
 
       void _getReceiveNotificationFromState() {
@@ -59,8 +58,9 @@ class _SettingMainScreenState extends State<SettingMainScreen> {
     });
   }
 
-  void _getPin() {
+  Future<void> _getPin() async {
     PinState pinState = Provider.of<PinState>(context, listen: false);
+    // pinState.getPinFromStorage();
     pinState.getPinFromStorage();
   }
 
@@ -111,7 +111,7 @@ class _SettingMainScreenState extends State<SettingMainScreen> {
 
   Padding _buildAction(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(left: 48, right: 48, top: 12, bottom: 6),
+      padding: const EdgeInsets.only(left: 24, right: 24, top: 12, bottom: 6),
       child: LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) {
           return SingleChildScrollView(
@@ -219,7 +219,7 @@ class _SettingMainScreenState extends State<SettingMainScreen> {
   }
 
   Widget _buildPinSection() {
-    PinState pinState = Provider.of<PinState>(context, listen: false);
+    PinState pinState = Provider.of<PinState>(context, listen: true);
     return Column(children: [
       Align(
           alignment: Alignment.centerLeft,

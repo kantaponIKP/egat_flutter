@@ -1,7 +1,8 @@
 {
   "email": "อีเมล",
-  "forgot": "ลืม",
   "password": "รหัสผ่าน",
+  "forgotPasswotd-first": "ลืม",
+  "forgotPasswotd-second": "รหัสผ่าน",
   "confirm-password": "ยืนยันรหัสผ่าน",
   "remember-me": "จดจำฉันในระบบ",
   "forgot-password": "ลืมรหัสผ่าน ?",

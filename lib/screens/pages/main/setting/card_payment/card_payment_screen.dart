@@ -91,11 +91,11 @@ class _CardPaymentScreenState extends State<CardPaymentScreen> {
       autovalidateMode: AutovalidateMode.onUserInteraction,
       child: Column(
         children: [
-          Container(height: 90, child: _buildCardNumber()),
+          Container(height: 100, child: _buildCardNumber()),
           SizedBox(height: 24),
           // _buildSecondLine(),
           Container(
-            height: 90,
+            height: 100,
             child: Row(
               // mainAxisSize: MainAxisSize.max,
               // mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -126,6 +126,13 @@ class _CardPaymentScreenState extends State<CardPaymentScreen> {
           ),
         ),
         TextFormField(
+          inputFormatters: <TextInputFormatter>[
+            FilteringTextInputFormatter.digitsOnly
+          ],
+          keyboardType: TextInputType.numberWithOptions(
+            signed: false,
+            decimal: false,
+          ),
           controller: _cardNumberController,
           decoration: InputDecoration(
             contentPadding:
@@ -165,6 +172,10 @@ class _CardPaymentScreenState extends State<CardPaymentScreen> {
             alignment: Alignment.centerLeft,
             child: Text('Expire Date', style: TextStyle(color: primaryColor))),
         TextFormField(
+          keyboardType: TextInputType.numberWithOptions(
+            signed: false,
+            decimal: false,
+          ),
           controller: _expireDateController,
           inputFormatters: [CardExpireDateFormatter()],
           decoration: InputDecoration(
@@ -199,6 +210,13 @@ class _CardPaymentScreenState extends State<CardPaymentScreen> {
         Padding(
           padding: const EdgeInsets.only(top: 0.0),
           child: TextFormField(
+            inputFormatters: <TextInputFormatter>[
+              FilteringTextInputFormatter.digitsOnly
+            ],
+            keyboardType: TextInputType.numberWithOptions(
+              signed: false,
+              decimal: false,
+            ),
             controller: _cvvCodeController,
             decoration: InputDecoration(
               counter: Offstage(),
@@ -257,7 +275,8 @@ class _CardPaymentScreenState extends State<CardPaymentScreen> {
     String cardNumber = _cardNumberController!.text;
     String expireDate = _expireDateController!.text;
     String cvvCode = _cvvCodeController!.text;
-    List<String> cards = prefs.getStringList('cards-${login.info!.userId}') ?? [];
+    List<String> cards =
+        prefs.getStringList('cards-${login.info!.userId}') ?? [];
     cards.add(cardNumber + ";" + expireDate + ";" + cvvCode);
     await prefs.setStringList('cards-${login.info!.userId}', cards);
     // Navigator.of(context).popUntil((_) => count++ >= 2);
@@ -284,7 +303,6 @@ class CardExpireDateFormatter extends TextInputFormatter {
       TextEditingValue oldValue, TextEditingValue newValue) {
     var text = newValue.text;
     var selection = newValue.selection;
-
     if (newValue.selection.baseOffset == newValue.selection.extentOffset) {
       if (newValue.selection.baseOffset == text.length) {
         if (oldValue.text.length == 1 && newValue.text.length == 2) {
