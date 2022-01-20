@@ -33,6 +33,8 @@ class LoginModel extends ChangeNotifier {
         accessToken: response.accessToken!,
         userId: response.userId!,
         refreshToken: response.refreshToken!));
+    final storage = new FlutterSecureStorage();
+    await storage.write(key: 'refreshToken', value: response.refreshToken!);
   }
 
   setIsError(isError) {
