@@ -32,7 +32,7 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
 
     final personalInfo = Provider.of<PersonalInfoState>(context, listen: false);
     bool needPersonalInfoLoading = false;
-    if (personalInfo.info.fullName == null) {
+    if (personalInfo.info.username == null) {
       needPersonalInfoLoading = true;
     }
 
@@ -116,14 +116,13 @@ class _MainSection extends StatelessWidget {
     final selectedDateState = Provider.of<MainHomeSelectedDateState>(context);
 
     final dateKeyGetter = (int index) {
-      return index.toStringAsFixed(0);
+      return (index + 1).toStringAsFixed(0);
     };
 
     final timeFormat = DateFormat('HH');
     final timeKeyGetter = (int index) {
       final newTime = DateTime.now();
-      final date =
-          DateTime(newTime.year, newTime.month, newTime.day, index + 1);
+      final date = DateTime(newTime.year, newTime.month, newTime.day, index);
       return timeFormat.format(date);
     };
 
@@ -415,11 +414,11 @@ class _MainSection extends StatelessWidget {
                                 for (var i = 0;
                                     i < state.value.gridIns.length;
                                     i++)
-                                  (state.value.gridIns.length > i
-                                          ? state.value.gridIns[i]
-                                          : 0) -
-                                      (state.value.gridOuts.length > i
+                                  (state.value.gridOuts.length > i
                                           ? state.value.gridOuts[i]
+                                          : 0) -
+                                      (state.value.gridIns.length > i
+                                          ? state.value.gridIns[i]
                                           : 0),
                               ],
                               keyGetter: selectedDateState.isDaily
@@ -901,6 +900,26 @@ class _SummarySection extends StatelessWidget {
   Widget build(BuildContext context) {
     final state = Provider.of<MainHomeState>(context);
 
+    final personalInfo = Provider.of<PersonalInfoState>(context);
+    final selectedDateState = Provider.of<MainHomeSelectedDateState>(context);
+
+    final dateKeyGetter = (int index) {
+      return (index + 1).toStringAsFixed(0);
+    };
+
+    final timeFormat = DateFormat('HH');
+    final timeKeyGetter = (int index) {
+      final newTime = DateTime.now();
+      final date = DateTime(newTime.year, newTime.month, newTime.day, index);
+      return timeFormat.format(date);
+    };
+
+    final dateMonthFormat = DateFormat('MMMM yyyy');
+    final dateDayFormat = DateFormat('dd MMMM yyyy');
+    final displayGraphTitle = selectedDateState.isDaily
+        ? dateDayFormat.format(selectedDateState.selectedDate)
+        : dateMonthFormat.format(selectedDateState.selectedDate);
+
     return Column(
       children: [
         Row(
@@ -974,41 +993,131 @@ class _SummarySection extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Expanded(
-              child: Padding(
-                padding: EdgeInsets.all(10),
-                child: _SummaryBox(
-                  label: 'Trade Sell',
-                  value: state.value.totalSales,
-                  unit: 'Baht',
-                  valueColor: Color(0xFF99FF75),
-                  icon: SvgPicture.asset(
-                      'assets/images/icons/home/net_sales_icon.svg'),
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) {
+                        return GraphPage(
+                          header: 'Trade Sell',
+                          headerIcon: SvgPicture.asset(
+                            'assets/images/icons/home/net_sales_icon.svg',
+                            height: 45,
+                            width: 45,
+                          ),
+                          personalInfo: personalInfo.info,
+                          title: displayGraphTitle,
+                          valueName: 'Trade Sell (Baht)',
+                          total: state.value.totalSales,
+                          totalUnit: 'Baht',
+                          unitName:
+                              selectedDateState.isDaily ? 'เวลา' : 'วันที่',
+                          values: state.value.sales,
+                          keyGetter: selectedDateState.isDaily
+                              ? timeKeyGetter
+                              : dateKeyGetter,
+                        );
+                      },
+                    ),
+                  );
+                },
+                child: Padding(
+                  padding: EdgeInsets.all(10),
+                  child: _SummaryBox(
+                    label: 'Trade Sell',
+                    value: state.value.totalSales,
+                    unit: 'Baht',
+                    valueColor: Color(0xFF99FF75),
+                    icon: SvgPicture.asset(
+                        'assets/images/icons/home/net_sales_icon.svg'),
+                  ),
                 ),
               ),
             ),
             Expanded(
-              child: Padding(
-                padding: EdgeInsets.all(10),
-                child: _SummaryBox(
-                  label: 'Trade Buy',
-                  value: state.value.totalSales,
-                  unit: 'Baht',
-                  valueColor: Color(0xFFF6645A),
-                  icon: SvgPicture.asset(
-                      'assets/images/icons/home/net_buy_icon.svg'),
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) {
+                        return GraphPage(
+                          header: 'Trade Buy',
+                          headerIcon: SvgPicture.asset(
+                            'assets/images/icons/home/net_buy_icon.svg',
+                            height: 45,
+                            width: 45,
+                          ),
+                          personalInfo: personalInfo.info,
+                          title: displayGraphTitle,
+                          valueName: 'Trade Buy (Baht)',
+                          total: state.value.totalBuys,
+                          totalUnit: 'Baht',
+                          unitName:
+                              selectedDateState.isDaily ? 'เวลา' : 'วันที่',
+                          values: state.value.buys,
+                          keyGetter: selectedDateState.isDaily
+                              ? timeKeyGetter
+                              : dateKeyGetter,
+                        );
+                      },
+                    ),
+                  );
+                },
+                child: Padding(
+                  padding: EdgeInsets.all(10),
+                  child: _SummaryBox(
+                    label: 'Trade Buy',
+                    value: state.value.totalSales,
+                    unit: 'Baht',
+                    valueColor: Color(0xFFF6645A),
+                    icon: SvgPicture.asset(
+                        'assets/images/icons/home/net_buy_icon.svg'),
+                  ),
                 ),
               ),
             ),
             Expanded(
-              child: Padding(
-                padding: EdgeInsets.all(10),
-                child: _SummaryBox(
-                  label: 'Grid Used',
-                  value: state.value.totalSales,
-                  unit: 'Baht',
-                  valueColor: Color(0xFFF6645A),
-                  icon: Image.asset(
-                      'assets/images/icons/home/net_buy_from_grid_icon.png'),
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) {
+                        return GraphPage(
+                          header: 'Grid Used',
+                          headerIcon: Image.asset(
+                            'assets/images/icons/home/net_buy_from_grid_icon.png',
+                            height: 45,
+                            width: 45,
+                          ),
+                          personalInfo: personalInfo.info,
+                          title: displayGraphTitle,
+                          valueName: 'Grid Used (Baht)',
+                          total: state.value.totalBuyFromGrid,
+                          totalUnit: 'Baht',
+                          unitName:
+                              selectedDateState.isDaily ? 'เวลา' : 'วันที่',
+                          values: state.value.buyFromGrids,
+                          keyGetter: selectedDateState.isDaily
+                              ? timeKeyGetter
+                              : dateKeyGetter,
+                        );
+                      },
+                    ),
+                  );
+                },
+                child: Padding(
+                  padding: EdgeInsets.all(10),
+                  child: _SummaryBox(
+                    label: 'Grid Used',
+                    value: state.value.totalSales,
+                    unit: 'Baht',
+                    valueColor: Color(0xFFF6645A),
+                    icon: Image.asset(
+                        'assets/images/icons/home/net_buy_from_grid_icon.png'),
+                  ),
                 ),
               ),
             ),
@@ -1315,7 +1424,7 @@ class _MonthSelectionDropdown extends StatelessWidget {
         selectableMonthes.add(DateTime(now.year, i + 1, 1));
       }
     } else {
-      for (var i = 0; i <= 12; i++) {
+      for (var i = 0; i < 12; i++) {
         selectableMonthes.add(DateTime(selectedMonth.year, i + 1, 1));
       }
     }

@@ -90,7 +90,7 @@ class CompletedOfferToSellBidEnergyTransferInfoBox extends StatelessWidget {
         DatedEnergyDetailBoxItem(
           name: AppLocalizations.of(context)
               .translate('settlement-sellerImbalance'),
-          value: '${tradeInfo.sellerImbalance.toStringAsFixed(2)} kWh',
+          value: '${tradeInfo.sellerImbalance.toStringAsFixed(2)} THB',
           fontSize: 10,
         ),
         DatedEnergyDetailBoxItem(

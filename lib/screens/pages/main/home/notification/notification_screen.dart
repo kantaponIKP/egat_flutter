@@ -59,13 +59,15 @@ class _NotificationScreenState extends State<NotificationScreen> {
 
   _buildContent(BuildContext context) {
     final notificationState = Provider.of<NotificationState>(context);
+    final notifications = [...notificationState.notifications];
+    notifications.sort((a, b) => b.createTime.compareTo(a.createTime));
 
     return Padding(
       padding: EdgeInsets.all(16),
       child: Scrollbar(
         child: Column(
           children: [
-            for (final notification in notificationState.notifications)
+            for (final notification in notifications)
               Column(
                 children: [
                   _Notification(
@@ -96,8 +98,8 @@ class _Notification extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final dateFormat = DateFormat('dd MMM yyyy');
-    final dateString = dateFormat.format(notification.createTime);
+    final dateFormat = DateFormat('dd MMM yyyy  HH:mm');
+    final dateString = dateFormat.format(notification.createTime.toLocal());
 
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -137,6 +139,7 @@ class _Notification extends StatelessWidget {
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 15,
+                    fontWeight: FontWeight.w400,
                   ),
                 ),
                 SizedBox(height: 4),

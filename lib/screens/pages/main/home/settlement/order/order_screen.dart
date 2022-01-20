@@ -384,9 +384,10 @@ class _DateSelectionDropdown extends StatelessWidget {
     final selectedDate = selectedDateState.selectedDate;
 
     final now = DateTime.now();
+    final maxDate = DateTime(selectedDate.year, selectedDate.month, 0).day;
 
     final selectableDates = <DateTime>[];
-    for (var i = 0; i < now.day; i++) {
+    for (var i = 0; i < maxDate; i++) {
       selectableDates.add(
         DateTime(selectedDate.year, selectedDate.month, i + 1),
       );

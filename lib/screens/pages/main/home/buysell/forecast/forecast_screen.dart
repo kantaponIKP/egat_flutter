@@ -212,6 +212,7 @@ class _BuySellActionListTile extends StatelessWidget {
                 action.dateTime.toUtc().toIso8601String(),
               ),
             ),
+          SizedBox(height: 50),
         ],
       ),
     );
@@ -263,6 +264,14 @@ class _BuySellActionTileState extends State<_BuySellActionTile> {
       useDateTime.add(Duration(hours: 1)),
     );
 
+    var buySellInfo = widget.controller.getBuySellInfoAtDateTime(useDateTime);
+
+    if (!widget.controller.isNoneSelected &&
+        widget.controller.currentAction != widget.action &&
+        !widget.enabled) {
+      return Container();
+    }
+
     return AnimatedContainer(
       duration: Duration(milliseconds: 150),
       // height: _isSelectable ? 60 : 0,
@@ -294,38 +303,41 @@ class _BuySellActionTileState extends State<_BuySellActionTile> {
                           child: Align(
                             alignment: Alignment.centerLeft,
                             child: widget.action == BuySellAction.SELL
-                                ? Checkbox(
-                                    activeColor: widget.enabled
-                                        ? primaryColor
-                                        : greyColor,
-                                    value: widget.enabled
-                                        ? _isSelected
-                                        : widget.defaultSelected,
-                                    onChanged: (value) {
-                                      if (!widget.enabled) {
-                                        return;
-                                      }
+                                ? Opacity(
+                                    opacity: widget.enabled ? 1 : 0.3,
+                                    child: Checkbox(
+                                      activeColor: widget.enabled
+                                          ? primaryColor
+                                          : greyColor,
+                                      value: widget.enabled
+                                          ? buySellInfo?.isSelected ?? false
+                                          : widget.defaultSelected,
+                                      onChanged: (value) {
+                                        if (!widget.enabled) {
+                                          return;
+                                        }
 
-                                      if (value != null && value) {
-                                        widget.controller.updateOptions(
-                                          action: widget.action,
-                                          dateTime: useDateTime,
-                                          expectingAmount:
-                                              widget.expectingAmount,
-                                          isSelected: true,
-                                          uniqueKey: _buySellInfo!.key,
-                                        );
-                                      } else {
-                                        widget.controller.updateOptions(
-                                          action: widget.action,
-                                          dateTime: useDateTime,
-                                          expectingAmount:
-                                              widget.expectingAmount,
-                                          isSelected: false,
-                                          uniqueKey: _buySellInfo!.key,
-                                        );
-                                      }
-                                    },
+                                        if (value != null && value) {
+                                          widget.controller.updateOptions(
+                                            action: widget.action,
+                                            dateTime: useDateTime,
+                                            expectingAmount:
+                                                widget.expectingAmount,
+                                            isSelected: true,
+                                            uniqueKey: _buySellInfo!.key,
+                                          );
+                                        } else {
+                                          widget.controller.updateOptions(
+                                            action: widget.action,
+                                            dateTime: useDateTime,
+                                            expectingAmount:
+                                                widget.expectingAmount,
+                                            isSelected: false,
+                                            uniqueKey: _buySellInfo!.key,
+                                          );
+                                        }
+                                      },
+                                    ),
                                   )
                                 : SizedBox(),
                           ),
@@ -407,11 +419,11 @@ class _BuySellActionTileState extends State<_BuySellActionTile> {
   void dispose() {
     super.dispose();
 
+    widget.controller.removeListener(_controllerListener);
+
     if (!widget.enabled) {
       return;
     }
-
-    widget.controller.removeListener(_controllerListener);
 
     if (_buySellInfo != null) {
       widget.controller.removeOptions(
@@ -424,6 +436,8 @@ class _BuySellActionTileState extends State<_BuySellActionTile> {
   @override
   void initState() {
     super.initState();
+
+    widget.controller.addListener(_controllerListener);
 
     if (!widget.enabled) {
       return;
@@ -454,15 +468,9 @@ class _BuySellActionTileState extends State<_BuySellActionTile> {
 
     _isSelected = buySellInfo.isSelected;
     _isSelectable = buySellInfo.isSelectable;
-
-    widget.controller.addListener(_controllerListener);
   }
 
   void _controllerListener() {
-    if (!widget.enabled) {
-      return;
-    }
-
     var useDateTime = DateTime(
       widget.startDateTime.year,
       widget.startDateTime.month,
@@ -475,6 +483,9 @@ class _BuySellActionTileState extends State<_BuySellActionTile> {
     var buySellInfo = widget.controller.getBuySellInfoAtDateTime(useDateTime);
 
     if (buySellInfo == null) {
+      _isSelected = false;
+      _isSelectable = false;
+      setState(() {});
       return;
     }
 
@@ -1001,6 +1012,74 @@ class _SubmitSectionState extends State<_SubmitSection> {
   }
 }
 
+class _SubmitAllButton extends StatefulWidget {
+  final BuySellActionController controller;
+
+  _SubmitAllButton({
+    Key? key,
+    required this.controller,
+  }) : super(key: key);
+
+  @override
+  __SubmitAllButtonState createState() => __SubmitAllButtonState();
+}
+
+class __SubmitAllButtonState extends State<_SubmitAllButton> {
+  @override
+  void initState() {
+    super.initState();
+
+    widget.controller.addListener(() {
+      setState(() {});
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final items = widget.controller.buySellInfos
+        .where((element) => element.isSelected)
+        .toList();
+
+    if (items.isEmpty) {
+      return Container();
+    }
+
+    if (items[0].action == BuySellAction.BUY) {
+      return Container();
+    }
+
+    return Positioned(
+      bottom: 0,
+      left: 0,
+      right: 0,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          ElevatedButton(
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => BilateralShortTermSellPage(
+                    requestItems: [
+                      for (var item in items)
+                        TransactionSubmitItem(
+                          date: item.dateTime,
+                          amount: item.expectingAmount.abs(),
+                          price: 3,
+                        ),
+                    ],
+                  ),
+                ),
+              );
+            },
+            child: Text('Sell All (Bilateral Trade)'),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 class _ForecastScreenState extends State<ForecastScreen>
     with TickerProviderStateMixin {
   @override
@@ -1022,13 +1101,25 @@ class _ForecastScreenState extends State<ForecastScreen>
     return LayoutBuilder(builder: (context, constraints) {
       return SizedBox(
         height: constraints.maxHeight,
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              SizedBox(height: 12),
-              _buildBody(context),
-            ],
-          ),
+        child: Stack(
+          children: [
+            SingleChildScrollView(
+              child: Column(
+                children: [
+                  SizedBox(height: 12),
+                  _buildBody(context),
+                ],
+              ),
+            ),
+            Positioned(
+              bottom: 0,
+              left: 0,
+              right: 0,
+              child: _SubmitAllButton(
+                controller: _buySellActionController,
+              ),
+            ),
+          ],
         ),
       );
     });
