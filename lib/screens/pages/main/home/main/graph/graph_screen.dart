@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:math';
 
 import 'package:egat_flutter/screens/page/widgets/page_appbar.dart';
@@ -109,12 +110,14 @@ class _GraphScreenState extends State<GraphScreen> {
       children: [
         widget.personalInfo.photo != null
             ? CircleAvatar(
-                backgroundImage: NetworkImage(widget.personalInfo.photo!),
-                radius: 40,
+                backgroundImage:
+                    Image.memory(base64.decode(widget.personalInfo.photo!))
+                        .image,
+                radius: 50,
               )
             : SizedBox(
-                width: 40,
-                height: 40,
+                width: 100,
+                height: 100,
               ),
         SizedBox(width: 20),
         Column(
@@ -124,18 +127,37 @@ class _GraphScreenState extends State<GraphScreen> {
               child: const Text(
                 'ตั้งแต่ในระยะเวลา',
                 style: TextStyle(
-                  fontSize: 17,
+                  fontSize: 25,
                   fontWeight: FontWeight.w300,
                 ),
               ),
             ),
-            Text(
-              '${widget.total.toStringAsFixed(2)} ${widget.totalUnit}',
-              style: TextStyle(
-                fontSize: 23,
-                fontWeight: FontWeight.w300,
-              ),
+            RichText(
+              text: TextSpan(children: [
+                TextSpan(
+                  text: '${widget.total.toStringAsFixed(2)} ',
+                  style: TextStyle(
+                    fontSize: 25,
+                    fontWeight: FontWeight.w300,
+                  ),
+                ),
+                TextSpan(
+                  text: '${widget.totalUnit}',
+                  style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w300,
+                  ),
+                ),
+              ]),
             ),
+            Text(
+              '${widget.personalInfo.fullName ?? ''}',
+              style: TextStyle(
+                fontSize: 25,
+                fontWeight: FontWeight.w300,
+                color: Color(0xFFFEC908),
+              ),
+            )
           ],
         )
       ],

@@ -7,6 +7,7 @@ final httpPostJson = ({
   String? accessToken,
   String? body,
   int retryMax = 5,
+  Duration timeout = const Duration(seconds: 15),
 }) async {
   if (accessToken != null) {
     return await httpActionRetry(
@@ -19,13 +20,14 @@ final httpPostJson = ({
         body: body,
       ),
       retryMax: retryMax,
+      timeout: timeout,
     );
   } else {
     return await httpActionRetry(
       callFunction: () => post(
         uri,
         headers: {
-          'Authorization' : 'Basic $authorizationBase64',
+          'Authorization': 'Basic $authorizationBase64',
           'Content-Type': 'application/json',
         },
         body: body,

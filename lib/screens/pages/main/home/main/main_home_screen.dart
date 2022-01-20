@@ -47,10 +47,14 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
 
       showLoading();
       try {
+        List<Future> futures = [];
         if (needPersonalInfoLoading) {
-          await personalInfo.getPersonalInformation();
+          futures.add(personalInfo.getPersonalInformation());
         }
-        await dateState.notifyParent();
+
+        futures.add(dateState.notifyParent());
+
+        await Future.wait(futures);
       } catch (e) {
         showIntlException(context, e);
       }
@@ -298,10 +302,10 @@ class _MainSection extends StatelessWidget {
                                 for (var i = 0;
                                     i < state.value.batteryIns.length;
                                     i++)
-                                  (state.value.batteryIns.length <= i
+                                  (state.value.batteryIns.length > i
                                           ? state.value.batteryIns[i]
                                           : 0) -
-                                      (state.value.batteryOuts.length <= i
+                                      (state.value.batteryOuts.length > i
                                           ? state.value.batteryOuts[i]
                                           : 0),
                               ],
@@ -332,47 +336,54 @@ class _MainSection extends StatelessWidget {
                   top: percentageY(0.05),
                   left: percentageX(0),
                   right: percentageX(0),
-                  child: GestureDetector(
-                    behavior: HitTestBehavior.opaque,
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) {
-                            return GraphPage(
-                              header: 'PV',
-                              headerIcon: Image.asset(
-                                'assets/images/icons/home/battery_icon.png',
-                                height: 45,
-                                width: 45,
-                              ),
-                              personalInfo: personalInfo.info,
-                              title: displayGraphTitle,
-                              valueName: 'PV (kWh)',
-                              total: state.value.pvTotal,
-                              totalUnit: 'kWh',
-                              unitName:
-                                  selectedDateState.isDaily ? 'เวลา' : 'วันที่',
-                              values: state.value.pvs,
-                              keyGetter: selectedDateState.isDaily
-                                  ? timeKeyGetter
-                                  : dateKeyGetter,
-                            );
-                          },
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      GestureDetector(
+                        behavior: HitTestBehavior.opaque,
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) {
+                                return GraphPage(
+                                  header: 'PV',
+                                  headerIcon: Image.asset(
+                                    'assets/images/icons/home/battery_icon.png',
+                                    height: 45,
+                                    width: 45,
+                                  ),
+                                  personalInfo: personalInfo.info,
+                                  title: displayGraphTitle,
+                                  valueName: 'PV (kWh)',
+                                  total: state.value.pvTotal,
+                                  totalUnit: 'kWh',
+                                  unitName: selectedDateState.isDaily
+                                      ? 'เวลา'
+                                      : 'วันที่',
+                                  values: state.value.pvs,
+                                  keyGetter: selectedDateState.isDaily
+                                      ? timeKeyGetter
+                                      : dateKeyGetter,
+                                );
+                              },
+                            ),
+                          );
+                        },
+                        child: _InfoWithIcon(
+                          icon: Image.asset(
+                            'assets/images/icons/home/solar_icon.png',
+                            height: 45,
+                            width: 45,
+                          ),
+                          label: 'PV',
+                          unit: 'kWh',
+                          value1: state.value.pvTotal,
+                          value1Color: Color(0xFFF6645A),
                         ),
-                      );
-                    },
-                    child: _InfoWithIcon(
-                      icon: Image.asset(
-                        'assets/images/icons/home/solar_icon.png',
-                        height: 45,
-                        width: 45,
                       ),
-                      label: 'PV',
-                      unit: 'kWh',
-                      value1: state.value.pvTotal,
-                      value1Color: Color(0xFFF6645A),
-                    ),
+                    ],
                   ),
                 ),
                 Positioned(
@@ -400,7 +411,17 @@ class _MainSection extends StatelessWidget {
                               totalUnit: 'kWh',
                               unitName:
                                   selectedDateState.isDaily ? 'เวลา' : 'วันที่',
-                              values: state.value.pvs,
+                              values: [
+                                for (var i = 0;
+                                    i < state.value.gridIns.length;
+                                    i++)
+                                  (state.value.gridIns.length > i
+                                          ? state.value.gridIns[i]
+                                          : 0) -
+                                      (state.value.gridOuts.length > i
+                                          ? state.value.gridOuts[i]
+                                          : 0),
+                              ],
                               keyGetter: selectedDateState.isDaily
                                   ? timeKeyGetter
                                   : dateKeyGetter,
@@ -417,9 +438,9 @@ class _MainSection extends StatelessWidget {
                       ),
                       label: 'Grid',
                       unit: 'kWh',
-                      value1: state.value.gridInTotal,
+                      value1: state.value.gridOutTotal,
                       value1Color: Color(0xFFF6645A),
-                      value2: state.value.gridOutTotal,
+                      value2: state.value.gridInTotal,
                       value2Color: Color(0xFF99FF75),
                     ),
                   ),

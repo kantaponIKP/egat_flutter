@@ -7,13 +7,15 @@ typedef ActionRetryCallFunction = Future<Response> Function();
 Future<Response> httpActionRetry({
   required ActionRetryCallFunction callFunction,
   int retryMax = 5,
+  Duration timeout = const Duration(seconds: 15),
 }) async {
   for (var retryCount = 0; retryCount < retryMax - 1; retryCount++) {
     try {
       final response = await callFunction();
 
       if (httpShouldRetry(response)) {
-        await Future.delayed(Duration(milliseconds: 150 * (retryCount + 1)));
+        await Future.delayed(Duration(milliseconds: 150 * (retryCount + 1)))
+            .timeout(timeout);
         continue;
       }
 

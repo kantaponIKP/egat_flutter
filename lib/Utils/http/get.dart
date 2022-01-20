@@ -6,6 +6,7 @@ final httpGetJson = ({
   required Uri url,
   String? accessToken,
   int retryMax = 5,
+  Duration timeout = const Duration(seconds: 15),
 }) async {
   if (accessToken != null) {
     return await httpActionRetry(
@@ -17,13 +18,14 @@ final httpGetJson = ({
         },
       ),
       retryMax: retryMax,
+      timeout: timeout,
     );
   } else {
     return await httpActionRetry(
       callFunction: () => get(
         url,
         headers: {
-          'Authorization' : 'Basic $authorizationBase64',
+          'Authorization': 'Basic $authorizationBase64',
           'Content-Type': 'application/json',
         },
       ),
