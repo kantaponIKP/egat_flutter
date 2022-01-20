@@ -41,9 +41,19 @@ class EgatApp extends StatelessWidget {
             return LoginSession();
           },
         ),
-        ChangeNotifierProvider<PinState>(
+        ChangeNotifierProxyProvider<LoginSession, PinState>(
           create: (context) {
-            return PinState();
+            var loginSession =
+                Provider.of<LoginSession>(context, listen: false);
+            return PinState(loginSession: loginSession);
+          },
+          update: (context, LoginSession value, PinState? previous) {
+            if (previous == null) {
+              return PinState(loginSession: value);
+            } else {
+              previous.setLoginSession(value);
+              return previous;
+            }
           },
         ),
         ChangeNotifierProvider<AppLocale>(

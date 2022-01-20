@@ -5,6 +5,7 @@ import 'package:egat_flutter/screens/pages/main/setting/add_payment/add_payment_
 import 'package:egat_flutter/screens/pages/main/setting/change_pin/change_pin_page.dart';
 import 'package:egat_flutter/screens/pages/main/setting/change_pin/states/pin_state.dart';
 import 'package:egat_flutter/screens/pages/main/widgets/navigation_menu_widget.dart';
+import 'package:egat_flutter/screens/session.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
@@ -36,7 +37,10 @@ class _SettingMainScreenState extends State<SettingMainScreen> {
     _setLanguage();
   }
 
+
   Future<void> _getCards() async {
+    LoginSession login = Provider.of<LoginSession>(context, listen: false);
+    final userId = login.info!.userId;
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
       _cards = prefs.getStringList('cards') ?? [];
