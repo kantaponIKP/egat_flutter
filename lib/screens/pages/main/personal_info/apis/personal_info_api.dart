@@ -6,10 +6,10 @@ import 'package:egat_flutter/Utils/http/post.dart';
 import 'package:egat_flutter/Utils/http/put.dart';
 import 'package:egat_flutter/constant.dart';
 import 'package:egat_flutter/errors/IntlException.dart';
-import 'package:egat_flutter/screens/page/api/model/PersonalInfoResponse.dart';
 import 'package:egat_flutter/screens/pages/main/personal_info/apis/models/AccessRequest.dart';
 import 'package:egat_flutter/screens/pages/main/personal_info/apis/models/ChangePersonalInfoRequest.dart';
 import 'package:egat_flutter/screens/pages/main/personal_info/apis/models/ChangePhotoRequest.dart';
+import 'package:egat_flutter/screens/pages/main/personal_info/apis/models/PersonalInfoResponse.dart';
 import 'package:flutter/services.dart';
 
 import 'package:http/http.dart' as http;

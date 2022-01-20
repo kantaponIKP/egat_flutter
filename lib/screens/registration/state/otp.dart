@@ -47,7 +47,7 @@ class Otp extends ChangeNotifier {
         RegistrationRequest(
           sessionId: parent.session.info!.sessionId,
           sessionToken: parent.session.info!.sessionToken,
-          fullName: parent.userInfo.info.fullName!,
+          username: parent.userInfo.info.username!,
           phoneNumber: parent.userInfo.info.phoneNumber!,
           email: parent.userInfo.info.email!,
           password: parent.userInfo.info.password!,
@@ -59,7 +59,7 @@ class Otp extends ChangeNotifier {
         ));
 
     logger.d(" " +
-        parent.userInfo.info.fullName! +
+        parent.userInfo.info.username! +
         " " +
         parent.userInfo.info.phoneNumber! +
         " " +

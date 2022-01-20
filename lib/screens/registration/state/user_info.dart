@@ -3,13 +3,13 @@ import 'package:egat_flutter/screens/registration/state/meter.dart';
 import 'package:flutter/cupertino.dart';
 
 class UserInfoModel {
-  final String? fullName;
+  final String? username;
   final String? phoneNumber;
   final String? email;
   final String? password;
 
   UserInfoModel({
-    this.fullName,
+    this.username,
     this.phoneNumber,
     this.email,
     this.password,
@@ -31,13 +31,13 @@ class UserInfo extends ChangeNotifier {
   }
 
   updateInfo({
-    String? fullName,
+    String? username,
     String? phoneNumber,
     String? email,
     String? password,
   }) {
-    if (fullName == null) {
-      fullName = info.fullName;
+    if (username == null) {
+      username = info.username;
     }
 
     if (email == null) {
@@ -53,7 +53,7 @@ class UserInfo extends ChangeNotifier {
     }
 
     var newInfo = UserInfoModel(
-      fullName: fullName,
+      username: username,
       phoneNumber: phoneNumber,
       email: email,
       password: password,
@@ -82,13 +82,14 @@ class UserInfo extends ChangeNotifier {
   }
 
   //TODO
-  Future<void> submitUserInfo({fullName, phoneNumber, email, password}) async {
+  Future<void> submitUserInfo({username, phoneNumber, email, password}) async {
     // setInfo(UserInfoModel(fullName: fullName, phoneNumber: phoneNumber, email: email, password: password));
     var response = await parent.session
         .requestNewRegistrationSession(email: email, phoneNumber: phoneNumber,password: password);
-    if (parent.session.info == null) {
-      throw "Unable to submit new registration session.";
-    }
+    // if (parent.session.info == null) {
+    //   throw "Unable to submit new registration session.";
+    // }
+
     // parent.meter.setInfo(MeterModel(
     //     meterName: "",
     //     meterId: "",

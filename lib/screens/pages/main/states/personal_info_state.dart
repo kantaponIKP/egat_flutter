@@ -8,13 +8,13 @@ import 'package:egat_flutter/screens/session.dart';
 import 'package:flutter/cupertino.dart';
 
 class PersonalInfoModel {
-  final String? fullName;
+  final String? username;
   final String? phoneNumber;
   final String? email;
   final String? photo;
 
   PersonalInfoModel({
-    this.fullName,
+    this.username,
     this.phoneNumber,
     this.email,
     this.photo,
@@ -46,13 +46,13 @@ class PersonalInfoState extends ChangeNotifier {
   }
 
   updateInfo({
-    String? fullName,
+    String? username,
     String? phoneNumber,
     String? email,
     String? photo,
   }) {
-    if (fullName == null) {
-      fullName = info.fullName;
+    if (username == null) {
+      username = info.username;
     }
 
     if (phoneNumber == null) {
@@ -68,7 +68,7 @@ class PersonalInfoState extends ChangeNotifier {
     }
 
     var newInfo = PersonalInfoModel(
-      fullName: fullName,
+      username: username,
       phoneNumber: phoneNumber,
       email: email,
       photo: photo,
@@ -83,7 +83,7 @@ class PersonalInfoState extends ChangeNotifier {
   }
 
   Future<void> changePersonalInformation(
-      {String? fullName,
+      {String? username,
       String? phoneNumber,
       String? email,
       String? photo}) async {
@@ -100,8 +100,8 @@ class PersonalInfoState extends ChangeNotifier {
     ChangePersonalInfoRequest changePersonalInfo =
         new ChangePersonalInfoRequest();
 
-    if (info.fullName != fullName) {
-      changePersonalInfo.setFullName(fullName!);
+    if (info.username != username) {
+      changePersonalInfo.setUsername(username!);
     }
     if (info.phoneNumber != phoneNumber) {
       changePersonalInfo.setPhoneNumber(phoneNumber!);
@@ -178,11 +178,10 @@ class PersonalInfoState extends ChangeNotifier {
     );
 
     updateInfo(
-      fullName: response.fullName,
-      phoneNumber: response.phoneNumber,
-      email: response.email,
-      photo: response.photo,
-    );
+        username: response.username,
+        phoneNumber: response.phoneNumber,
+        email: response.email,
+        photo: response.photo);
   }
 
   void setPageChangePassword() {
@@ -191,5 +190,5 @@ class PersonalInfoState extends ChangeNotifier {
   }
 
   //TODO
-  Future<void> submitPersonalInfo({fullName, phoneNumber, email}) async {}
+  Future<void> submitPersonalInfo({username, phoneNumber, email}) async {}
 }

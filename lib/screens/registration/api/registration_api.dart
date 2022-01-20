@@ -159,10 +159,8 @@ class RegistrationApi {
         intlMessage: "error-incorrectInformationError",
       );
     }
-    // TODO :
-    print(utf8.decode(response.bodyBytes));
+    
     return LocationResponse.fromJSON(utf8.decode(response.bodyBytes));
-    // return LocationResponse.fromJSON(json.decode(response.body));
   }
 
   Future<OtpResponse> sendOtp(

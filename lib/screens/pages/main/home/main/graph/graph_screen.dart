@@ -151,7 +151,7 @@ class _GraphScreenState extends State<GraphScreen> {
               ]),
             ),
             Text(
-              '${widget.personalInfo.fullName ?? ''}',
+              '${widget.personalInfo.username ?? ''}',
               style: TextStyle(
                 fontSize: 25,
                 fontWeight: FontWeight.w300,

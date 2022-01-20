@@ -23,14 +23,14 @@ class NavigationMenuWidget extends StatefulWidget {
 }
 
 class UserInfo {
-  final String fullName;
+  final String username;
   final String email;
 
-  const UserInfo(this.fullName, this.email);
+  const UserInfo(this.username, this.email);
 }
 
 class _NavigationMenuWidgetState extends State<NavigationMenuWidget> {
-  String? _fullName;
+  String? _username;
   String? _email;
   String? _imageBase64;
 
@@ -310,7 +310,7 @@ class _NavigationMenuWidgetState extends State<NavigationMenuWidget> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text(userInfo.fullName),
+                      Text(userInfo.username),
                       Text(userInfo.email),
                     ],
                   ),
@@ -326,8 +326,8 @@ class _NavigationMenuWidgetState extends State<NavigationMenuWidget> {
 
   void _getPersonalInformation() async {
     var model = Provider.of<PersonalInfoState>(context, listen: false);
-    print(model.info.fullName);
-    if (model.info.fullName == null) {
+    print(model.info.username);
+    if (model.info.username == null) {
       try {
         await showLoading();
         await model.getPersonalInformation();
@@ -338,9 +338,9 @@ class _NavigationMenuWidgetState extends State<NavigationMenuWidget> {
       }
     }
 
-    if (model.info.fullName != null) {
+    if (model.info.username != null) {
       setState(() {
-        _fullName = model.info.fullName!;
+        _username = model.info.username!;
       });
     }
     if (model.info.email != null) {
@@ -354,9 +354,9 @@ class _NavigationMenuWidgetState extends State<NavigationMenuWidget> {
       });
     }
 
-    if (_fullName != null && _email != null) {
+    if (_username != null && _email != null) {
       setState(() {
-        _userInfo = new UserInfo(_fullName!, _email!);
+        _userInfo = new UserInfo(_username!, _email!);
       });
     }
   }

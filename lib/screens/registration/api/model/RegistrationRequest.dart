@@ -5,7 +5,7 @@ import 'dart:typed_data';
 class RegistrationRequest {
   String sessionId;
   String sessionToken;
-  String fullName;
+  String username;
   String phoneNumber;
   String email;
   String password;
@@ -18,7 +18,7 @@ class RegistrationRequest {
   RegistrationRequest({
     required this.sessionId,
     required this.sessionToken,
-    required this.fullName,
+    required this.username,
     required this.phoneNumber,
     required this.email,
     required this.password,
@@ -34,7 +34,7 @@ class RegistrationRequest {
 
     jsonMap['sessionId'] = this.sessionId;
     jsonMap['sessionToken'] = this.sessionToken;
-    jsonMap['fullName'] = this.fullName;
+    jsonMap['username'] = this.username;
     jsonMap['phoneNumber'] = this.phoneNumber;
     jsonMap['email'] = this.email;
     jsonMap['password'] = this.password;

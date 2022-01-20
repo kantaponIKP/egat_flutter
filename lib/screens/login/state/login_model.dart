@@ -1,15 +1,40 @@
+import 'dart:async';
+
 import 'package:egat_flutter/screens/login/api/login_api.dart';
 import 'package:egat_flutter/screens/login/api/login_api_mock.dart';
 import 'package:egat_flutter/screens/login/api/model/LoginRequest.dart';
 import 'package:egat_flutter/screens/login/api/model/LogoutRequest.dart';
+import 'package:egat_flutter/screens/login/api/model/RefreshTokenRequest.dart';
 import 'package:egat_flutter/screens/session.dart';
 import 'package:flutter/cupertino.dart';
 
 class LoginModel extends ChangeNotifier {
   LoginSession loginSession;
   bool isError = false;
+  late Timer _timer;
 
-  LoginModel({required this.loginSession});
+  LoginModel({required this.loginSession}) {
+    _timer = Timer.periodic(Duration(seconds: 60), (timer) {
+      if (loginSession.info != null) {
+        updateRefreshToken();
+      }
+    });
+  }
+
+  Future<void> updateRefreshToken() async {
+    print("refreshToken: ");
+    print(loginSession.info!.refreshToken);
+    var response = await api.requestRefreshToken(
+      RefreshTokenRequest(
+        refreshToken: loginSession.info!.refreshToken,
+      ),
+    );
+
+    loginSession.setAccessToken(LoginSessionInfo(
+        accessToken: response.accessToken!,
+        userId: response.userId!,
+        refreshToken: response.refreshToken!));
+  }
 
   setIsError(isError) {
     this.isError = isError;
@@ -55,4 +80,10 @@ class LoginModel extends ChangeNotifier {
     );
   }
 
+  @override
+  void dispose() {
+    _timer.cancel();
+
+    super.dispose();
+  }
 }

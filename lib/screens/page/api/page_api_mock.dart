@@ -41,9 +41,6 @@ class PageApiMock {
 
   Future<PersonalInfoResponse> changePersonalInfo(
       ChangePersonalInfoRequest request, AccessRequest accessToken) async {
-    print(request.fullName);
-    print(request.email);
-    print(request.phoneNumber);
     return PersonalInfoResponse.fromJSON(await rootBundle
         .loadString('assets/mockdata/page/change_personal_info.json'));
   }

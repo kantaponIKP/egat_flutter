@@ -17,6 +17,7 @@
   "create": "สร้าง",
   "account": "บัญชีใหม่",
   "full-name": "ชื่อจริง",
+  "username": "ชื่อผู้ใช้",
   "phone-number": "เบอร์โทรศัพท์",
   "I-agree-to": "ฉันยอมรับข้อตกลง เงื่อนไข ",
   "next": "ถัดไป",
@@ -85,10 +86,6 @@
   "title-changePin-first": "เปลี่ยนรหัส",
   "title-changePin-second": "PIN",
 
-  "payment-cardPayment": "ชำระโดยบัตร",
-  "payment-promptPay": "ชำระโดยพร้อมเพย์",
-  "payment-add": "เพิ่ม",
-
   "pin-register": "ยังไม่ได้ลงทะเบียน",
 
   "message-changePasswordSuccessfully": "เปลี่ยนรหัสผ่านสำเร็จแล้ว",
@@ -110,6 +107,26 @@
   "bottomNavigation-settlement": "การชำระบัญชี",
   "bottomNavigation-billing": "การเรียกเก็บเงิน",
   "bottomNavigation-notification": "การแจ้งเตือน",
+
+  "setting-changeLanguage": "เปลี่ยนภาษา",
+  "setting-notification": "การแจ้งเตือน",
+  "setting-notification-message": "ข้อความ",
+  "setting-notification-email": "อีเมล",
+  "setting-pin": "PIN",
+  "setting-notRegistered": "ยังไม่ได้ลงทะเบียน",
+  "setting-paymentMethods": "วิธีการชำระเงิน",
+  "setting-addPin": "เพิ่ม PIN",
+  "setting-editPin": "เปลี่ยน PIN",
+  "setting-addPayment": "เพิ่มวิธีการชำระเงิน",
+  
+  "payment-addPayment": "เพิ่มวิธีชำระเงิน",
+  "payment-cardPayment": "ชำระโดยบัตร",
+  "payment-promptPay": "ชำระโดยพร้อมเพย์",
+  "payment-add": "เพิ่ม",
+  "payment-cardNumber": "หมายเลขบัตร",
+  "payment-Expire Date": "วันหมดอายุของบัตร",
+  "payment-CVVCode": "รหัส CVV",
+  "message-addSuccessful": "เพิ่มข้อมูลสำเร็จ",
 
   "trade-menu-forecast": "ค่าพยากรณ์",
   "trade-menu-bilateral-top": "ตลาดทวิภาคีซื้อขายไฟฟ้า",
