@@ -54,6 +54,12 @@ flutter_icons:
     adaptive_icon_background: "#000000"
     adaptive_icon_foreground: "assets/images/launcher_icon/EgatP2P_Icon.png"
 
+flutter_native_splash:
+  color: "#000000"
+  image: 'assets/images/splash_screen/splashscreen_logo.png'
+  android: true
+  ios: true
+
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
@@ -72,6 +78,7 @@ flutter:
     - assets/images/icons/bottom_navigation_bar/
     - assets/images/icons/sidebar/
     - assets/images/icons/tabbar/
+    - assets/images/splash_screen/
     - assets/mockdata/login/
     - assets/mockdata/registration/
     - assets/mockdata/forgot_password/

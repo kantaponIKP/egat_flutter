@@ -1,21 +1,18 @@
-import 'package:egat_flutter/errors/IntlException.dart';
 import 'package:egat_flutter/i18n/app_language.dart';
 import 'package:egat_flutter/i18n/app_localizations.dart';
 import 'package:egat_flutter/screens/forgot_password/forgot_password.dart';
 import 'package:egat_flutter/screens/login/state/login_model.dart';
-import 'package:egat_flutter/screens/page/page.dart';
 import 'package:egat_flutter/screens/pages/main/main_page.dart';
 import 'package:egat_flutter/screens/pages/main/states/personal_info_state.dart';
 import 'package:egat_flutter/screens/registration/registration.dart';
 import 'package:egat_flutter/screens/widgets/show_exception.dart';
-import 'package:egat_flutter/screens/widgets/side_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:egat_flutter/screens/widgets/loading_dialog.dart';
+import 'package:egat_flutter/screens/widgets/loading_clear_dialog.dart' as loading_clear_dialog;
 import 'package:provider/provider.dart';
 import 'package:egat_flutter/screens/widgets/language_button.dart';
-import 'package:get_it/get_it.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -33,6 +30,7 @@ class _LoginScreenState extends State<LoginScreen> {
   bool _isPasswordObscure = true;
   // bool _isLoginError = false;
   bool _isFirst = true;
+  bool _isLogin = true;
 
   @override
   void initState() {
@@ -47,32 +45,147 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    if(_isFirst){
+    if (_isFirst) {
       setState(() {
         _isFirst = false;
       });
-      _autoLogin();
+      voidSetIsLogin();
     }
-    
   }
+
+  Future<void> voidSetIsLogin() async {
+    bool isLogin = await _autoLogin();
+    setState(() {
+      _isLogin = isLogin;
+    });
+  }
+
+  Widget buildSplashScreen(BuildContext context) {
+    return Scaffold(
+      body: Stack(
+        // fit: StackFit.expand,
+        children: <Widget>[
+          Container(
+            decoration: BoxDecoration(
+              color: Colors.black,
+              // gradient: RadialGradient(
+              //   // radius: 0.5,
+              //   colors: [
+              //     Colors.black,
+              //     Color(0xFF303030),
+              //   ],
+              // ),
+            ),
+          ),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              _topScreen(),
+              _centerScreen(),
+              _bottomScreen(),
+            ],
+          )
+        ],
+      ),
+    );
+  }
+
+  _topScreen() {
+    return Container(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(24.0),
+            child: Container(
+              child: Image.asset(
+                'assets/images/splash_screen/EGAT_logo.png',
+                width: 130,
+                height: 70,
+              ),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  _centerScreen() {
+    return Container(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Container(
+            child: Image.asset(
+              'assets/images/splash_screen/splashscreen_logo.png',
+              width: 84,
+              height: 51,
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(top: 10.0),
+          ),
+          Container(
+            child: Image.asset(
+              'assets/images/splash_screen/EGAT_mascot.png',
+              width: 216,
+              height: 319,
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  _bottomScreen() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        Padding(
+          padding: EdgeInsets.only(top: 20.0),
+        ),
+        Text(
+          'Version 1.0.0',
+          softWrap: true,
+          textAlign: TextAlign.center,
+          style: TextStyle(
+              fontWeight: FontWeight.bold, fontSize: 16.0, color: Colors.white),
+        )
+      ],
+    );
+  }
+
+  // _navigatetoHome() {
+  //   Navigator.of(context).pushReplacement(
+  //     MaterialPageRoute(
+  //       builder: (BuildContext context) {
+  //         return buildLogin();
+  //       },
+  //     ),
+  //   );
+  // }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-        decoration: BoxDecoration(
-            gradient: RadialGradient(colors: [
-          Color(0xFF303030),
-          Colors.black,
-        ])),
-        child: Scaffold(
-          // appBar: AppBar(),
-          // drawer: NavigationMenuWidget(),
-          backgroundColor: Colors.transparent,
-          resizeToAvoidBottomInset: false,
-          body: SafeArea(
-            child: _buildAction(context),
-          ),
-        ));
+    if (_isLogin) {
+      return buildSplashScreen(context);
+    } else {
+      return Container(
+          decoration: BoxDecoration(
+              gradient: RadialGradient(colors: [
+            Color(0xFF303030),
+            Colors.black,
+          ])),
+          child: Scaffold(
+            // appBar: AppBar(),
+            // drawer: NavigationMenuWidget(),
+            backgroundColor: Colors.transparent,
+            resizeToAvoidBottomInset: false,
+            body: SafeArea(
+              child: _buildAction(context),
+            ),
+          ));
+    }
   }
 
   Padding _buildAction(BuildContext context) {
@@ -303,11 +416,11 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Future<void> _autoLogin() async {
+  Future<bool> _autoLogin() async {
     LoginModel login = Provider.of<LoginModel>(context, listen: true);
-    
+
     try {
-      await showLoading();
+      await loading_clear_dialog.showLoading();
       bool isRememberMe = await login.getRememberMe();
 
       if (isRememberMe) {
@@ -318,12 +431,14 @@ class _LoginScreenState extends State<LoginScreen> {
         await getPersonalInformation();
 
         goToLoginPage();
+        return false;
       }
     } catch (e) {
       showIntlException(context, e);
     } finally {
-      await hideLoading();
+      await loading_clear_dialog.hideLoading();
     }
+    return false;
   }
 
   void _onRememberMeChanged(bool newValue) => setState(() {
