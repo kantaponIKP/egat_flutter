@@ -20,8 +20,6 @@ class NotificationState extends ChangeNotifier {
   LoginSession? _loginSession;
 
   NotificationState() {
-    _initAsync();
-
     _timer = Timer.periodic(Duration(seconds: 30), (timer) {
       fetchNotifications();
     });
@@ -31,6 +29,8 @@ class NotificationState extends ChangeNotifier {
     if (_loginSession == loginSession) {
       return;
     }
+
+    _initAsync();
 
     _loginSession = loginSession;
     fetchNotifications();
@@ -50,6 +50,9 @@ class NotificationState extends ChangeNotifier {
     }
 
     String? savedNotificationInfo = _prefs?.getString('notifications');
+    // TODO: remove these 2 lines
+    savedNotificationInfo = null;
+    _currentFetchDate = DateTime(1970);
 
     if (savedNotificationInfo != null) {
       _SavedNotificationInfo info;
@@ -62,14 +65,14 @@ class NotificationState extends ChangeNotifier {
         _currentFetchDate = info.currentFetchDate;
       } catch (e) {
         print(e);
-        _currentFetchDate = DateTime.now();
+        _currentFetchDate = DateTime(1970);
       }
     }
 
     notifyListeners();
   }
 
-  DateTime _currentFetchDate = DateTime.now();
+  DateTime _currentFetchDate = DateTime(1970);
   DateTime get currentFetchDate => _currentFetchDate;
 
   void _addNotifications(List<EgatNotification> notification) {

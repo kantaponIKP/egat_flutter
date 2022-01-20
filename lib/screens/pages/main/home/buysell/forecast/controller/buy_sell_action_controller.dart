@@ -7,6 +7,7 @@ class BuySellActionController extends ChangeNotifier {
   get buySellInfoMaps => UnmodifiableMapView(_buySellInfoMaps);
 
   BuySellAction? _currentAction;
+  get currentAction => _currentAction;
 
   List<BuySellInfo> get buySellInfos => _buySellInfoMaps.values.toList();
   bool get isAllSelected {
@@ -144,7 +145,7 @@ class BuySellActionController extends ChangeNotifier {
       return;
     }
 
-    _currentAction = action ?? _buySellInfoMaps.values.first.action;
+    _currentAction = BuySellAction.SELL;
 
     var keys = _buySellInfoMaps.keys.toList();
     for (var key in keys) {

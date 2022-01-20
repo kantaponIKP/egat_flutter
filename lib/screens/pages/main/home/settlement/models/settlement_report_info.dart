@@ -39,7 +39,7 @@ class SettlementReportInfo {
     assert(json['market'] is String);
     assert(json['date'] is String);
 
-    var roleString = json['roleString'] as String;
+    var roleString = json['role'] as String;
     var resultTypeString = json['resultType'] as String;
     var marketString = json['market'] as String;
 

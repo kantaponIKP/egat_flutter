@@ -5,6 +5,7 @@ import 'package:egat_flutter/screens/forgot_password/widgets/forgot_password_can
 import 'package:egat_flutter/screens/page/widgets/page_appbar.dart';
 import 'package:egat_flutter/screens/pages/main/home/buysell/bilateral/sell/long_term/bilateral_long_term_sell_page.dart';
 import 'package:egat_flutter/screens/session.dart';
+import 'package:egat_flutter/screens/widgets/pin_input_blocker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
@@ -245,6 +246,12 @@ class _BilateralShortTermSellScreenBodyState
   }
 
   void _onSubmit() async {
+    bool? isPassed = await PinInputBlocker.pushTo(context);
+    if (isPassed != true) {
+      showException(context, 'PIN is required!');
+      return;
+    }
+
     showLoading();
     try {
       final loginSession = Provider.of<LoginSession>(context, listen: false);

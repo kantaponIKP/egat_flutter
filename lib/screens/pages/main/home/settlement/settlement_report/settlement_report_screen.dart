@@ -691,18 +691,17 @@ class _DateSelectionDropdown extends StatelessWidget {
     final selectedDate = selectedDateState.selectedDate;
 
     final now = DateTime.now();
+    final daysInMonth =
+        DateTime(selectedDate.year, selectedDate.month + 1, 0).day;
 
     final selectableDates = <DateTime>[];
     if (now.month == selectedDate.month && now.year == selectedDate.year) {
-      for (var i = 0; i < now.day; i++) {
+      for (var i = 0; i < daysInMonth; i++) {
         selectableDates.add(
           DateTime(selectedDate.year, selectedDate.month, i + 1),
         );
       }
     } else {
-      final daysInMonth =
-          DateTime(selectedDate.year, selectedDate.month + 1, 0).day;
-
       for (var i = 0; i < daysInMonth; i++) {
         selectableDates.add(
           DateTime(selectedDate.year, selectedDate.month, i + 1),
@@ -934,7 +933,7 @@ class _MonthSelectionDropdown extends StatelessWidget {
     final now = DateTime.now();
 
     final selectableMonthes = <DateTime>[];
-    for (var i = 0; i < 24; i++) {
+    for (var i = -1; i < 24; i++) {
       selectableMonthes.add(DateTime(now.year, now.month - i, 1));
     }
 

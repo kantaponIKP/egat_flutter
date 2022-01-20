@@ -100,6 +100,7 @@ class _GraphScreenState extends State<GraphScreen> {
       unitName: widget.unitName,
       valueName: widget.valueName,
       values: widget.values,
+      keyGetter: widget.keyGetter,
     );
   }
 
@@ -165,16 +166,135 @@ class _GraphScreenState extends State<GraphScreen> {
   }
 }
 
+class _GraphTimeline extends StatelessWidget {
+  final String Function(int index) keyGetter;
+  final int length;
+
+  const _GraphTimeline({
+    Key? key,
+    required this.keyGetter,
+    required this.length,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        for (var i = 0; i < length; i++)
+          SizedBox(
+            width: 50,
+            child: Center(
+              child: Text(
+                keyGetter(i),
+                style: TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w300,
+                ),
+              ),
+            ),
+          )
+      ],
+    );
+  }
+}
+
+class _GraphValues extends StatelessWidget {
+  final List<double> values;
+
+  const _GraphValues({
+    Key? key,
+    required this.values,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    List<Widget> children = [];
+
+    if (values.length == 0) {
+      return Container();
+    }
+
+    double previousValue = 0;
+
+    for (var entry in values.asMap().entries) {
+      final value = entry.value;
+      double nextValue =
+          values.length > entry.key + 1 ? values[entry.key] : value;
+
+      if (value > previousValue) {
+        children.add(
+          SizedBox(
+            width: 50,
+            child: Center(
+              child: Text(
+                value.toStringAsFixed(2),
+                style: TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
+            ),
+          ),
+        );
+      } else {
+        if (value >= nextValue) {
+          children.add(
+            SizedBox(
+              width: 50,
+              child: Center(
+                child: Text(
+                  value.toStringAsFixed(2),
+                  style: TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+              ),
+            ),
+          );
+        } else {
+          children.add(
+            SizedBox(
+              width: 50,
+              child: Center(
+                child: Text(
+                  value.toStringAsFixed(2),
+                  style: TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+              ),
+            ),
+          );
+        }
+      }
+
+      previousValue = value;
+    }
+
+    return SizedBox(
+      height: 250,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: children,
+      ),
+    );
+  }
+}
+
 class _GraphViewer extends StatelessWidget {
   final String valueName;
   final String unitName;
   final List<double> values;
+  final String Function(int index) keyGetter;
 
   _GraphViewer({
     Key? key,
     required this.valueName,
     required this.unitName,
     required this.values,
+    required this.keyGetter,
   }) : super(key: key);
 
   @override
@@ -225,21 +345,50 @@ class _GraphViewer extends StatelessWidget {
       width: 420,
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
-        child: SizedBox(
-          width: values.length * 50 + 100,
-          height: 500,
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Stack(
-              children: [
-                CustomPaint(
-                  painter: _WideGraphPainter(values: values),
+        child: Stack(
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(left: 5),
+              child: SizedBox(
+                width: values.length * 50 + 100,
+                height: 500,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Stack(
+                    children: [
+                      CustomPaint(
+                        painter: _WideGraphPainter(values: values),
+                      ),
+                    ],
+                  ),
                 ),
-              ],
+              ),
             ),
-          ),
+            Positioned(
+              top: 280,
+              child: _buildTimeline(context),
+            ),
+            Positioned(
+              top: 0,
+              left: 0,
+              child: _buildGraphValues(context),
+            )
+          ],
         ),
       ),
+    );
+  }
+
+  Widget _buildTimeline(BuildContext context) {
+    return _GraphTimeline(
+      keyGetter: keyGetter,
+      length: values.length,
+    );
+  }
+
+  _buildGraphValues(BuildContext context) {
+    return _GraphValues(
+      values: values,
     );
   }
 }
@@ -278,10 +427,10 @@ class _WideGraphPainter extends CustomPainter {
 
     for (var value in values) {
       double nowY = maxValue - minValue != 0
-          ? (value - minValue) / (maxValue - minValue) * 100 + 100
+          ? ((value - minValue) / (maxValue - minValue)) * 200
           : 100;
 
-      nowY = 225 - nowY;
+      nowY = 200 - nowY;
 
       final path = Path();
 
