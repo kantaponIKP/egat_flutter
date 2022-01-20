@@ -82,7 +82,7 @@ class LoginModel extends ChangeNotifier {
       }
       loginSession.setAccessToken(LoginSessionInfo(
           accessToken: "", userId: "", refreshToken: refreshToken));
-      updateRefreshToken();
+      // updateRefreshToken();
     }
     return rememberMe;
   }

@@ -1,5 +1,6 @@
 import 'package:egat_flutter/screens/login/login_screen.dart';
 import 'package:egat_flutter/screens/login/state/login_model.dart';
+import 'package:egat_flutter/screens/pages/main/states/personal_info_state.dart';
 import 'package:egat_flutter/screens/session.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
@@ -46,6 +47,16 @@ class _LoginState extends State<Login> {
             }
           },
         ),
+        // ChangeNotifierProxyProvider<LoginSession, PersonalInfoState>(
+        //   create: (_) => PersonalInfoState(),
+        //   update: (_, loginSession, personalInfoState) {
+        //     if (personalInfoState == null) {
+        //       personalInfoState = PersonalInfoState();
+        //     }
+
+        //     return personalInfoState..setLoginSession(loginSession);
+        //   },
+        // ),
       ],
       child: LoginScreen(),
     );

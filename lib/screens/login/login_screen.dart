@@ -5,6 +5,7 @@ import 'package:egat_flutter/screens/forgot_password/forgot_password.dart';
 import 'package:egat_flutter/screens/login/state/login_model.dart';
 import 'package:egat_flutter/screens/page/page.dart';
 import 'package:egat_flutter/screens/pages/main/main_page.dart';
+import 'package:egat_flutter/screens/pages/main/states/personal_info_state.dart';
 import 'package:egat_flutter/screens/registration/registration.dart';
 import 'package:egat_flutter/screens/widgets/show_exception.dart';
 import 'package:egat_flutter/screens/widgets/side_menu.dart';
@@ -31,6 +32,7 @@ class _LoginScreenState extends State<LoginScreen> {
   List<bool> isSelected = [true, false];
   bool _isPasswordObscure = true;
   // bool _isLoginError = false;
+  bool _isFirst = true;
 
   @override
   void initState() {
@@ -39,12 +41,19 @@ class _LoginScreenState extends State<LoginScreen> {
     _passwordController = TextEditingController();
     _emailController!.text = "prosumer04@email.com";
     _passwordController!.text = "Str123";
+    // _autoLogin();
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _autoLogin();
+    if(_isFirst){
+      setState(() {
+        _isFirst = false;
+      });
+      _autoLogin();
+    }
+    
   }
 
   @override
@@ -296,14 +305,19 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Future<void> _autoLogin() async {
     LoginModel login = Provider.of<LoginModel>(context, listen: true);
-    await showLoading();
+    
     try {
+      await showLoading();
       bool isRememberMe = await login.getRememberMe();
+
       if (isRememberMe) {
-        goToLoginPage();
         setState(() {
           _rememberMe = isRememberMe;
         });
+        await login.updateRefreshToken();
+        await getPersonalInformation();
+
+        goToLoginPage();
       }
     } catch (e) {
       showIntlException(context, e);
@@ -332,12 +346,19 @@ class _LoginScreenState extends State<LoginScreen> {
           email: _emailController!.text,
           password: _passwordController!.text,
           rememberMe: _rememberMe);
+      await getPersonalInformation();
       goToLoginPage();
     } catch (e) {
       showIntlException(context, e);
     } finally {
       await hideLoading();
     }
+  }
+
+  Future<void> getPersonalInformation() async {
+    PersonalInfoState personalInfo =
+        Provider.of<PersonalInfoState>(context, listen: false);
+    await personalInfo.getPersonalInformation();
   }
 
   void goToLoginPage() {
