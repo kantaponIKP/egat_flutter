@@ -307,27 +307,30 @@ class _NavigationMenuWidgetState extends State<NavigationMenuWidget> {
     return InkWell(
       child: Container(
         color: contentBgColor,
-        height: 80,
+        height: 120,
         padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-        child: Row(
-          children: [
-            _buildAvatar(),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
-              child: SizedBox(
-                child: Center(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(userInfo.username, style: TextStyle(fontSize: 20)),
-                      Text(userInfo.email),
-                    ],
+        child: Padding(
+          padding: const EdgeInsets.only(top:30),
+          child: Row(
+            children: [
+              _buildAvatar(),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
+                child: SizedBox(
+                  child: Center(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(userInfo.username, style: TextStyle(fontSize: 20)),
+                        Text(userInfo.email),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            )
-          ],
+              )
+            ],
+          ),
         ),
       ),
       onTap: () {},

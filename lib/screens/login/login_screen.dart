@@ -5,6 +5,7 @@ import 'package:egat_flutter/screens/forgot_password/forgot_password.dart';
 import 'package:egat_flutter/screens/login/state/login_model.dart';
 import 'package:egat_flutter/screens/page/page.dart';
 import 'package:egat_flutter/screens/pages/main/main_page.dart';
+import 'package:egat_flutter/screens/pages/main/states/personal_info_state.dart';
 import 'package:egat_flutter/screens/registration/registration.dart';
 import 'package:egat_flutter/screens/widgets/show_exception.dart';
 import 'package:egat_flutter/screens/widgets/side_menu.dart';
@@ -27,10 +28,11 @@ class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   TextEditingController? _emailController;
   TextEditingController? _passwordController;
-  bool rememberMe = false;
+  bool _rememberMe = false;
   List<bool> isSelected = [true, false];
   bool _isPasswordObscure = true;
   // bool _isLoginError = false;
+  bool _isFirst = true;
 
   @override
   void initState() {
@@ -39,6 +41,19 @@ class _LoginScreenState extends State<LoginScreen> {
     _passwordController = TextEditingController();
     _emailController!.text = "prosumer04@email.com";
     _passwordController!.text = "Str123";
+    // _autoLogin();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if(_isFirst){
+      setState(() {
+        _isFirst = false;
+      });
+      _autoLogin();
+    }
+    
   }
 
   @override
@@ -200,7 +215,7 @@ class _LoginScreenState extends State<LoginScreen> {
               height: 20.0,
               width: 20.0,
               child: Checkbox(
-                value: rememberMe,
+                value: _rememberMe,
                 onChanged: (newValue) {
                   if (newValue != null) {
                     _onRememberMeChanged(newValue);
@@ -288,18 +303,35 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  void _onRememberMeChanged(bool newValue) => setState(() {
-        rememberMe = newValue;
+  Future<void> _autoLogin() async {
+    LoginModel login = Provider.of<LoginModel>(context, listen: true);
+    
+    try {
+      await showLoading();
+      bool isRememberMe = await login.getRememberMe();
 
-        if (rememberMe) {
-          // TODO: Here goes your functionality that remembers the user.
-        } else {
-          // TODO: Forget the user
-        }
+      if (isRememberMe) {
+        setState(() {
+          _rememberMe = isRememberMe;
+        });
+        await login.updateRefreshToken();
+        await getPersonalInformation();
+
+        goToLoginPage();
+      }
+    } catch (e) {
+      showIntlException(context, e);
+    } finally {
+      await hideLoading();
+    }
+  }
+
+  void _onRememberMeChanged(bool newValue) => setState(() {
+        _rememberMe = newValue;
       });
 
   bool _isError() {
-    var login = Provider.of<LoginModel>(context, listen: true);
+    LoginModel login = Provider.of<LoginModel>(context, listen: true);
     // logger.d(login.isError);
     return login.isError;
   }
@@ -313,20 +345,30 @@ class _LoginScreenState extends State<LoginScreen> {
       await login.processLogin(
           email: _emailController!.text,
           password: _passwordController!.text,
-          rememberMe: rememberMe);
-      await hideLoading();
-      Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (BuildContext context) {
-            return MainPage();
-          },
-        ),
-      );
+          rememberMe: _rememberMe);
+      await getPersonalInformation();
+      goToLoginPage();
     } catch (e) {
       showIntlException(context, e);
     } finally {
       await hideLoading();
     }
+  }
+
+  Future<void> getPersonalInformation() async {
+    PersonalInfoState personalInfo =
+        Provider.of<PersonalInfoState>(context, listen: false);
+    await personalInfo.getPersonalInformation();
+  }
+
+  void goToLoginPage() {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (BuildContext context) {
+          return MainPage();
+        },
+      ),
+    );
   }
 
   void _onRegister(BuildContext context) {

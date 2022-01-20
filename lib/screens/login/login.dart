@@ -46,6 +46,16 @@ class _LoginState extends State<Login> {
             }
           },
         ),
+        // ChangeNotifierProxyProvider<LoginSession, PersonalInfoState>(
+        //   create: (_) => PersonalInfoState(),
+        //   update: (_, loginSession, personalInfoState) {
+        //     if (personalInfoState == null) {
+        //       personalInfoState = PersonalInfoState();
+        //     }
+
+        //     return personalInfoState..setLoginSession(loginSession);
+        //   },
+        // ),
       ],
       child: LoginScreen(),
     );

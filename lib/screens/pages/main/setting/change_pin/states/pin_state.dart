@@ -35,6 +35,7 @@ class PinState extends ChangeNotifier {
   void getPinFromStorage() async {
     final userId = _getUserId();
     final storage = new FlutterSecureStorage();
+    // await storage.write(key: 'pin_$userId', value: "");
     String pin = await storage.read(key: 'pin_$userId') ?? "";
     setPin(pin: pin);
   }
@@ -43,6 +44,8 @@ class PinState extends ChangeNotifier {
     final userId = _getUserId();
     final storage = new FlutterSecureStorage();
     await storage.write(key: 'pin_$userId', value: pin);
+    setPin(pin: pin);
+    notifyListeners();
   }
 
   bool hasPin() {

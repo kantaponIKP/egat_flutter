@@ -21,16 +21,16 @@ class MainPage extends StatelessWidget {
         ChangeNotifierProvider<MainScreenTitleState>(
           create: (_) => MainScreenTitleState(),
         ),
-        ChangeNotifierProxyProvider<LoginSession, PersonalInfoState>(
-          create: (_) => PersonalInfoState(),
-          update: (_, loginSession, personalInfoState) {
-            if (personalInfoState == null) {
-              personalInfoState = PersonalInfoState();
-            }
+        // ChangeNotifierProxyProvider<LoginSession, PersonalInfoState>(
+        //   create: (_) => PersonalInfoState(),
+        //   update: (_, loginSession, personalInfoState) {
+        //     if (personalInfoState == null) {
+        //       personalInfoState = PersonalInfoState();
+        //     }
 
-            return personalInfoState..setLoginSession(loginSession);
-          },
-        ),
+        //     return personalInfoState..setLoginSession(loginSession);
+        //   },
+        // ),
         ChangeNotifierProxyProvider<LoginSession, LoginModel>(
           create: (context) {
             LoginSession session =

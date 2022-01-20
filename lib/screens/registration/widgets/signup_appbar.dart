@@ -39,12 +39,11 @@ class SignupAppbar extends StatelessWidget with PreferredSizeWidget{
                 alignment: Alignment.centerLeft,
                 child: RichText(
                   text: TextSpan(
-                    // style: DefaultTextStyle.of(context).style,
                     style: TextStyle(fontSize: 30),
                     children: <TextSpan>[
                       TextSpan(text: firstTitle),
                       TextSpan(
-                          text: ' $secondTitle',
+                          text: secondTitle,
                           style:
                               TextStyle(color: Theme.of(context).primaryColor)),
                     ],

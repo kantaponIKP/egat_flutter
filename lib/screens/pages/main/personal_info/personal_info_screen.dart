@@ -358,7 +358,10 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
                 }
                 return null;
               },
-              keyboardType: TextInputType.phone,
+              keyboardType: TextInputType.numberWithOptions(
+                signed: false,
+                decimal: false,
+              ),
               maxLength: 10,
             ),
           ),

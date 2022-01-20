@@ -37,10 +37,19 @@ class _AddPaymentScreenState extends State<AddPaymentScreen> {
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    setScreenNavigation();
+  }
+
+  void setScreenNavigation() {
+    // SettingScreenNavigationState settingScreenNavigationState =
+    //     Provider.of<SettingScreenNavigationState>(context, listen: false);
+    // settingScreenNavigationState.setPageToAddPayment();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    SettingScreenNavigationState settingScreenNavigationState =
-        Provider.of<SettingScreenNavigationState>(context, listen: false);
-    settingScreenNavigationState.setPageToAddPayment();
     return Scaffold(
       appBar: PageAppbar(
           firstTitle: "",
@@ -167,7 +176,7 @@ class _AddPaymentScreenState extends State<AddPaymentScreen> {
         ),
         SizedBox(
           height: 30.0,
-          child: AddPaymentStepIndicator(),
+          child: AddPaymentStepIndicator(index: 0),
         ),
       ],
     );
