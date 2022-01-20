@@ -7,6 +7,7 @@ import 'package:egat_flutter/screens/login/api/model/LogoutRequest.dart';
 import 'package:egat_flutter/screens/login/api/model/RefreshTokenRequest.dart';
 import 'package:egat_flutter/screens/session.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class LoginModel extends ChangeNotifier {
   LoginSession loginSession;
@@ -22,8 +23,6 @@ class LoginModel extends ChangeNotifier {
   }
 
   Future<void> updateRefreshToken() async {
-    print("refreshToken: ");
-    print(loginSession.info!.refreshToken);
     var response = await api.requestRefreshToken(
       RefreshTokenRequest(
         refreshToken: loginSession.info!.refreshToken,
@@ -65,8 +64,27 @@ class LoginModel extends ChangeNotifier {
         userId: response.userId!,
         refreshToken: response.refreshToken!));
 
-    // LoginSession session = new LoginSession();
-    // session.setAccessToken(LoginSessionInfo(accessToken: response.accessToken!));
+    final storage = new FlutterSecureStorage();
+    await storage.write(key: 'rememberMe', value: rememberMe.toString());
+    await storage.write(key: 'refreshToken', value: response.refreshToken!);
+  }
+
+  Future<bool> getRememberMe() async {
+    final storage = new FlutterSecureStorage();
+    String rememberMeFromStorage =
+        await storage.read(key: 'rememberMe') ?? "false";
+    bool rememberMe = rememberMeFromStorage.toLowerCase() == 'true';
+
+    if (rememberMe == true) {
+      String? refreshToken = await storage.read(key: 'refreshToken');
+      if (refreshToken == null) {
+        throw Exception('No refresh token');
+      }
+      loginSession.setAccessToken(LoginSessionInfo(
+          accessToken: "", userId: "", refreshToken: refreshToken));
+      updateRefreshToken();
+    }
+    return rememberMe;
   }
 
   Future<void> processLogout() async {
@@ -78,8 +96,10 @@ class LoginModel extends ChangeNotifier {
     loginSession.setAccessToken(
       LoginSessionInfo(accessToken: "", userId: "", refreshToken: ""),
     );
-    print("cancel");
     _timer.cancel(); //TODO
+
+    final storage = new FlutterSecureStorage();
+    await storage.write(key: 'rememberMe', value: "false");
   }
 
   @override
