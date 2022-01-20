@@ -15,8 +15,8 @@ class AppLocale extends ChangeNotifier {
   }
 
   setLocale(Locale type) {
-    logger.d(
-        'call changeLanguage method old languade code : $_appLocale new language code $type');
+    // logger.d(
+    //     'call changeLanguage method old languade code : $_appLocale new language code $type');
     if (_appLocale == type) {
       return;
     }
@@ -26,14 +26,14 @@ class AppLocale extends ChangeNotifier {
     } else {
       _appLocale = type;
     }
-    logger.d('after change Language app language : $_appLocale');
+    // logger.d('after change Language app language : $_appLocale');
     notifyListeners();
   }
 
   void changeLanguage(Locale type) async {
     var prefs = await SharedPreferences.getInstance();
-    logger.d(
-        'call changeLanguage method old languade code : $locale new language code $type');
+    // logger.d(
+    //     'call changeLanguage method old languade code : $locale new language code $type');
     if (locale == type) {
       return;
     }
@@ -47,7 +47,7 @@ class AppLocale extends ChangeNotifier {
       await prefs.setString('language_code', 'th');
       await prefs.setString('countryCode', '');
     }
-    logger.d('after change Language app language : $locale');
+    // logger.d('after change Language app language : $locale');
   }
 
   void fromPreferredAppLanguage(PreferredAppLanguage preferedAppLanguage) {
@@ -66,7 +66,7 @@ class PreferredAppLanguage {
     var instance = new PreferredAppLanguage._();
     var prefs = await SharedPreferences.getInstance();
     var lngCode = prefs.getString('language_code');
-    logger.d('call fetchLocale language Code on load: $lngCode');
+    // logger.d('call fetchLocale language Code on load: $lngCode');
     if (prefs.getString('language_code') == null) {
       instance._appLocale = Locale('en');
       return instance;

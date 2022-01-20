@@ -114,10 +114,13 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   Widget _buildContent(BuildContext context) {
-    return Scaffold(
-      appBar: _AppBar(),
-      drawer: NavigationMenuWidget(),
-      body: SafeArea(child: _AppBody()),
+    return WillPopScope(
+      onWillPop: () async => false,
+      child: Scaffold(
+        appBar: _AppBar(),
+        drawer: NavigationMenuWidget(),
+        body: SafeArea(child: _AppBody()),
+      ),
     );
   }
 
