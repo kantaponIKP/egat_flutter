@@ -2,6 +2,7 @@ import 'package:egat_flutter/constant.dart';
 import 'package:egat_flutter/i18n/app_language.dart';
 import 'package:egat_flutter/i18n/app_localizations.dart';
 import 'package:egat_flutter/screens/login/login.dart';
+import 'package:egat_flutter/screens/pages/main/setting/state/notification_state.dart';
 import 'package:egat_flutter/screens/pages/main/setting/change_pin/states/pin_state.dart';
 import 'package:egat_flutter/screens/session.dart';
 import 'package:flutter/material.dart';
@@ -50,6 +51,21 @@ class EgatApp extends StatelessWidget {
           update: (context, LoginSession value, PinState? previous) {
             if (previous == null) {
               return PinState(loginSession: value);
+            } else {
+              previous.setLoginSession(value);
+              return previous;
+            }
+          },
+        ),
+        ChangeNotifierProxyProvider<LoginSession, NotificationState>(
+          create: (context) {
+            var loginSession =
+                Provider.of<LoginSession>(context, listen: false);
+            return NotificationState(loginSession: loginSession);
+          },
+          update: (context, LoginSession value, NotificationState? previous) {
+            if (previous == null) {
+              return NotificationState(loginSession: value);
             } else {
               previous.setLoginSession(value);
               return previous;

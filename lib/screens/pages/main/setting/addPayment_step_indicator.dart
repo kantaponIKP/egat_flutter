@@ -11,8 +11,6 @@ class AddPaymentStepIndicator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var status = Provider.of<SettingScreenNavigationState>(context);
-    print("current page: ");
-    print(status.currentPage);
     var stepIndex = 0;
     var theme = HorizontalStepIndicatorTheme.White;
     var isHighlightedDone = false;

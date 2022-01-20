@@ -4,6 +4,7 @@ import 'package:egat_flutter/i18n/app_localizations.dart';
 import 'package:egat_flutter/screens/pages/main/setting/add_payment/add_payment_page.dart';
 import 'package:egat_flutter/screens/pages/main/setting/change_pin/change_pin_page.dart';
 import 'package:egat_flutter/screens/pages/main/setting/change_pin/states/pin_state.dart';
+import 'package:egat_flutter/screens/pages/main/setting/state/notification_state.dart';
 import 'package:egat_flutter/screens/pages/main/widgets/navigation_menu_widget.dart';
 import 'package:egat_flutter/screens/session.dart';
 import 'package:flutter/material.dart';
@@ -23,51 +24,59 @@ class _SettingMainScreenState extends State<SettingMainScreen> {
 
   String _languageValue = 'English';
   List<String> _languages = ['English', 'ไทย'];
-  bool _isNotiMessage = false;
+  bool? _receiveMessage;
   bool _isNotiEmail = true;
   List<String> _cards = [];
-  bool _hasPin = false;
-  String _pin = "";
 
   @override
   void initState() {
     super.initState();
     _getCards();
     _getPin();
-    _setLanguage();
+    _getReceiveNotification();
   }
 
+  @override
+  void didChangeDependencies(){
+    super.didChangeDependencies();
+    _getReceiveNotificationFromState();
+    
+  }
+
+      void _getReceiveNotificationFromState() {
+    NotificationState notificationState = Provider.of<NotificationState>(context);
+    setState(() {
+      _receiveMessage = notificationState.currentReceiveMessage;
+    });
+  }
 
   Future<void> _getCards() async {
-    LoginSession login = Provider.of<LoginSession>(context, listen: false);
-    final userId = login.info!.userId;
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
       _cards = prefs.getStringList('cards') ?? [];
     });
   }
 
-  void _setLanguage() {
-    // Locale _nowLocale = Localizations.localeOf(context);
-    // if (_nowLocale.toString() == 'th') {
-    //   setState(() {
-    //     _languageValue = 'Thai';
-    //   });
-    // } else {
-    //   setState(() {
-    //     _languageValue = 'English';
-    //   });
-    // }
-  }
-
   void _getPin() {
     PinState pinState = Provider.of<PinState>(context, listen: false);
     pinState.getPinFromStorage();
+  }
+
+    void _getReceiveNotification() {
+    NotificationState notificationState = Provider.of<NotificationState>(context, listen: false);
+    notificationState.getReceiveMessageFromStorage();
     setState(() {
-      _hasPin = pinState.hasPin();
-      _pin = pinState.currentPin;
+      _receiveMessage = notificationState.currentReceiveMessage;
     });
   }
+
+    void _setReceiveNotification(bool receiveMessage) {
+      NotificationState notificationState = Provider.of<NotificationState>(context, listen: false);
+      notificationState.setReceiveMessageToStorage(receiveMessage: receiveMessage);
+          setState(() {
+      _receiveMessage = receiveMessage;
+    });
+    }
 
   @override
   Widget build(BuildContext context) {
@@ -82,9 +91,6 @@ class _SettingMainScreenState extends State<SettingMainScreen> {
       });
     }
     return Scaffold(
-        // appBar: PageAppbar(
-        //     firstTitle: AppLocalizations.of(context).translate('title-setting'),secondTitle: ""
-        //   ),
         drawer: NavigationMenuWidget(),
         body: SafeArea(
           child: Container(
@@ -152,12 +158,6 @@ class _SettingMainScreenState extends State<SettingMainScreen> {
           ).toList(),
           onChanged: (val) {
             _changeLanguage(val);
-
-            // setState(
-            //   () {
-            //     _languageValue = val.toString();
-            //   },
-            // );
           },
         ),
       ],
@@ -166,7 +166,6 @@ class _SettingMainScreenState extends State<SettingMainScreen> {
 
   void _changeLanguage(val) {
     AppLocale locale = Provider.of<AppLocale>(context, listen: false);
-    print(val.toString());
     if (val.toString() == "English") {
       locale.changeLanguage(Locale("en"));
     } else {
@@ -188,11 +187,11 @@ class _SettingMainScreenState extends State<SettingMainScreen> {
         Spacer(),
         Switch(
           activeColor: switchActiveColor,
-          value: _isNotiMessage,
+          value: _receiveMessage!,
           onChanged: (val) {
             setState(
               () {
-                _isNotiMessage = !_isNotiMessage;
+                _setReceiveNotification(val);
               },
             );
           },
@@ -300,13 +299,6 @@ class _SettingMainScreenState extends State<SettingMainScreen> {
     if (result != null && result) {
       _getCards();
     }
-    // var model =
-    //     Provider.of<SettingScreenNavigationState>(context, listen: false);
-    // model.setPageToAddPayment();
-    // MainScreenTitleState mainScreenTitle =
-    //     Provider.of<MainScreenTitleState>(context, listen: false);
-    // mainScreenTitle.setTitleOneTitle(
-    //     title: AppLocalizations.of(context).translate('title-addPayment'));
   }
 
   Widget _buildPaymentMethodsSection(constraints) {

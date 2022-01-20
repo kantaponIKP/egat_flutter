@@ -180,7 +180,7 @@ class _ChangePinScreenState extends State<ChangePinScreen> {
       case PinStatus.VerifyNewPIN:
         if (_newPin == _pinController!.text) {
           print("_pinController:" + _pinController!.text);
-          changePinState.pinState!.setPinStorage(pin: _pinController!.text);
+          changePinState.pinState!.setPinToStorage(pin: _pinController!.text);
           pinState.setPin(pin: _pinController!.text);
           print("_pin change pin:" + pinState.currentPin);
           _pinController!.clear();

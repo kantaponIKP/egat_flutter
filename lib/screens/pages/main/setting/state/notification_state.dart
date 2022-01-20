@@ -2,12 +2,12 @@ import 'package:egat_flutter/screens/session.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-class PinState extends ChangeNotifier {
+class NotificationState extends ChangeNotifier {
   LoginSession loginSession;
-  String _pin = "";
-  String get currentPin => _pin;
+  bool _receiveMessage = false;
+  bool get currentReceiveMessage => _receiveMessage;
 
-  PinState({
+  NotificationState({
     required this.loginSession,
   });
 
@@ -24,41 +24,26 @@ class PinState extends ChangeNotifier {
     return loginInfo.userId;
   }
 
-  setPin({
-    pin = "",
+  setReceiveMessage({
+    receiveMessage = "",
   }) {
-    this._pin = pin;
+    this._receiveMessage = receiveMessage;
     notifyListeners();
   }
 
 
-  void getPinFromStorage() async {
+  void getReceiveMessageFromStorage() async {
     final userId = _getUserId();
     final storage = new FlutterSecureStorage();
-    String pin = await storage.read(key: 'pin_$userId') ?? "";
-    setPin(pin: pin);
+    String receiveMessageFromStorage = await storage.read(key: 'receiveMessage_$userId') ?? "";
+    bool receiveMessage = receiveMessageFromStorage.toLowerCase() == 'true';
+    setReceiveMessage(receiveMessage: receiveMessage);
   }
 
-  void setPinToStorage({required String pin}) async {
+  void setReceiveMessageToStorage({required bool receiveMessage}) async {
     final userId = _getUserId();
     final storage = new FlutterSecureStorage();
-    await storage.write(key: 'pin_$userId', value: pin);
-  }
-
-  bool hasPin() {
-    if(this._pin == ""){
-      return false;
-    }else{
-      return true;
-    }
-  }
-
-  bool verifyPin(String pin){
-    if(this._pin == pin){
-      return true;
-    }else{
-      return false;
-    }
+    await storage.write(key: 'receiveMessage_$userId', value: receiveMessage.toString());
   }
 
 }
