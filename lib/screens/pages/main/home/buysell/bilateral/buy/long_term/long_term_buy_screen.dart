@@ -9,6 +9,7 @@ import 'package:egat_flutter/screens/page/trade/tabbar.dart';
 import 'package:egat_flutter/screens/pages/main/home/buysell/bilateral/buy/long_term/states/long_term_buy_state.dart';
 import 'package:egat_flutter/screens/session.dart';
 import 'package:egat_flutter/screens/widgets/loading_dialog.dart';
+import 'package:egat_flutter/screens/widgets/pin_input_blocker.dart';
 import 'package:egat_flutter/screens/widgets/show_exception.dart';
 import 'package:egat_flutter/screens/widgets/show_success_snackbar.dart';
 import 'package:flutter/material.dart';
@@ -667,6 +668,12 @@ class _BilateralLongTermBuyScreenState
   }
 
   void _onSubmitPressed() async {
+    bool? isPassed = await PinInputBlocker.pushTo(context);
+    if (isPassed != true) {
+      showException(context, 'PIN is required!');
+      return;
+    }
+
     // print(_groupValue);
 
     //Navigate

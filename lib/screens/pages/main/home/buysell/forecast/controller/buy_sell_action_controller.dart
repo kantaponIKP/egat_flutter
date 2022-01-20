@@ -145,7 +145,7 @@ class BuySellActionController extends ChangeNotifier {
       return;
     }
 
-    _currentAction = action ?? _buySellInfoMaps.values.first.action;
+    _currentAction = BuySellAction.SELL;
 
     var keys = _buySellInfoMaps.keys.toList();
     for (var key in keys) {

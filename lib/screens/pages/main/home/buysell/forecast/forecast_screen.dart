@@ -266,9 +266,12 @@ class _BuySellActionTileState extends State<_BuySellActionTile> {
 
     var buySellInfo = widget.controller.getBuySellInfoAtDateTime(useDateTime);
 
+    if (!widget.enabled) {
+      return Container();
+    }
+
     if (!widget.controller.isNoneSelected &&
-        widget.controller.currentAction != widget.action &&
-        !widget.enabled) {
+        (widget.controller.currentAction != widget.action)) {
       return Container();
     }
 
@@ -1029,9 +1032,17 @@ class __SubmitAllButtonState extends State<_SubmitAllButton> {
   void initState() {
     super.initState();
 
-    widget.controller.addListener(() {
-      setState(() {});
-    });
+    widget.controller.addListener(onUpdate);
+  }
+
+  onUpdate() {
+    setState(() {});
+  }
+
+  @override
+  void dispose() {
+    widget.controller.removeListener(onUpdate);
+    super.dispose();
   }
 
   @override
