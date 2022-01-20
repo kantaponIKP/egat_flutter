@@ -27,7 +27,7 @@ class PoolMarketTradeScreen extends StatefulWidget {
 class _PoolMarketTradeScreenState extends State<PoolMarketTradeScreen> {
   var dateItem = <String>[];
 
-  var timeItem = ["6:00-18:00", "18:00-6:00"];
+  var timeItem = ["06:00-18:00", "18:00-06:00"];
   var offerItem = ["Bid to Buy", "Offer to Sell"];
   String _time = "";
   String _date = "";
@@ -378,7 +378,7 @@ class _PoolMarketTradeScreenState extends State<PoolMarketTradeScreen> {
       padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
       decoration: BoxDecoration(borderRadius: BorderRadius.circular(5)),
       child: GestureDetector(
-        onTap: price == null && offerAmount == null
+        onTap: price == null && offerAmount == null && status != 'CLOSE'
             ? () {
                 (_offerInit == "Bid to Buy")
                     ? _onListTileBuyPressed(isoDate!)
@@ -709,6 +709,7 @@ class _PoolMarketTradeScreenState extends State<PoolMarketTradeScreen> {
   void _getData(String date, String time) async {
     DateTime newDate = DateTime.parse(date)
         .add(new Duration(hours: int.parse(time.substring(0, 2))));
+
     await showLoading();
     PoolMarketTrade model =
         Provider.of<PoolMarketTrade>(context, listen: false);

@@ -116,8 +116,8 @@ class _DataDisplaySection extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: Column(
           children: [
-            AspectRatio(
-              aspectRatio: 2,
+            SizedBox(
+              height: 230,
               child: EnergyTransferGraph(
                 energyData: infos,
                 startHour: selectedDate,
