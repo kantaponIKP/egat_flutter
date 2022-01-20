@@ -32,7 +32,7 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
 
     final personalInfo = Provider.of<PersonalInfoState>(context, listen: false);
     bool needPersonalInfoLoading = false;
-    if (personalInfo.info.fullName == null) {
+    if (personalInfo.info.username == null) {
       needPersonalInfoLoading = true;
     }
 
