@@ -248,6 +248,8 @@ class _BuySellActionTileState extends State<_BuySellActionTile> {
 
   @override
   Widget build(BuildContext context) {
+    final selectedDateState = Provider.of<ForecastSelectedDateState>(context);
+
     var useDateTime = DateTime(
       widget.startDateTime.year,
       widget.startDateTime.month,
@@ -266,19 +268,17 @@ class _BuySellActionTileState extends State<_BuySellActionTile> {
 
     var buySellInfo = widget.controller.getBuySellInfoAtDateTime(useDateTime);
 
-    if (!widget.enabled) {
-      return Container();
-    }
-
+    double? height = null;
+    final today = DateTime.now().toUtc();
+    final selectedDate = selectedDateState.selectedDate;
     if (!widget.controller.isNoneSelected &&
-        (widget.controller.currentAction != widget.action)) {
-      return Container();
+        (widget.controller.currentAction != widget.action || !widget.enabled)) {
+      height = 0;
     }
 
     return AnimatedContainer(
       duration: Duration(milliseconds: 150),
-      // height: _isSelectable ? 60 : 0,
-      height: _isSelectable ? 60 : 60,
+      height: height ?? (_isSelectable ? 60 : 60),
       child: ClipRect(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
