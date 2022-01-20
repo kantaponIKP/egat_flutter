@@ -295,8 +295,17 @@ class _NavigationMenuWidgetState extends State<NavigationMenuWidget> {
         );
       } else {
         return CircleAvatar(
-            radius: 30,
-            child: ClipOval(child: Image.memory(base64Decode(_imageBase64!))));
+          radius: 30,
+          child: ClipOval(
+            child: Image.memory(
+              base64Decode(_imageBase64!),
+               width: 60,
+              height: 60,
+              fit: BoxFit.cover,
+            ),
+            
+          ),
+        );
       }
     } catch (e) {
       return CircleAvatar();
@@ -310,7 +319,7 @@ class _NavigationMenuWidgetState extends State<NavigationMenuWidget> {
         height: 120,
         padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
         child: Padding(
-          padding: const EdgeInsets.only(top:30),
+          padding: const EdgeInsets.only(top: 30),
           child: Row(
             children: [
               _buildAvatar(),
@@ -339,7 +348,6 @@ class _NavigationMenuWidgetState extends State<NavigationMenuWidget> {
 
   void _getPersonalInformation() async {
     var model = Provider.of<PersonalInfoState>(context, listen: false);
-    print(model.info.username);
     if (model.info.username == null) {
       try {
         await showLoading();
@@ -452,7 +460,6 @@ class _NavigationMenuWidgetState extends State<NavigationMenuWidget> {
         Provider.of<MainScreenNavigationState>(context, listen: false);
     LoginModel loginModel = Provider.of<LoginModel>(context, listen: false);
     try {
-      print(loginModel.loginSession.info!.accessToken);
       await showLoading();
       await loginModel.processLogout();
       mainScreenNavigation.setPageToSignOut();

@@ -109,8 +109,6 @@ class PersonalInfoApi {
 
   Future<Response> changePhoto(
       ChangePhotoRequest request, AccessRequest access) async {
-    print("request");
-    print(request.photo);
     var url = Uri.parse(
       "$apiBaseUrlProfileManage/users/${access.userId}/photo",
     );

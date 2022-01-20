@@ -90,9 +90,9 @@ class _MeterScreenState extends State<MeterScreen> {
           extendBodyBehindAppBar: true,
           // appBar: _buildAppBar(context),
           appBar: SignupAppbar(
-              firstTitle: '${AppLocalizations.of(context).translate('create')}',
+              firstTitle: '${AppLocalizations.of(context).translate('createAccount-first')}',
               secondTitle:
-                  '${AppLocalizations.of(context).translate('account')}',
+                  '${AppLocalizations.of(context).translate('createAccount-second')}',
               onAction: _onBackPressed),
           body: SafeArea(
             child: _buildAction(context),

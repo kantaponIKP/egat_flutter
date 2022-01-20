@@ -87,9 +87,9 @@ class _OtpScreenState extends State<OtpScreen> {
           resizeToAvoidBottomInset: false,
           extendBodyBehindAppBar: true,
           appBar: SignupAppbar(
-              firstTitle: '${AppLocalizations.of(context).translate('forgot')}',
+              firstTitle: '${AppLocalizations.of(context).translate('forgotPassword-first')}',
               secondTitle:
-                  '${AppLocalizations.of(context).translate('password')}',
+                  '${AppLocalizations.of(context).translate('forgotPassword-second')}',
               onAction: _onBackPressed),
           body: SafeArea(
             child: _buildAction(context),

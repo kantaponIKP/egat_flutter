@@ -206,20 +206,20 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
   }
 
   Widget _buildAvatar() {
-    print("_imageBase64");
-    print(_imageBase64);
     try {
       if (_imageBase64 == null || _imageBase64 == "") {
-        print("if");
         return CircleAvatar();
       } else {
-        print("else");
-        // return CircleAvatar(child: ClipOval(child: _image)
         return CircleAvatar(
-            child: ClipOval(child: Image.memory(base64Decode(_imageBase64!)))
-            // child: ClipOval(child: Image.memory(base64Decode("")))
-            // backgroundImage: AssetImage("assets/images/Profile Image.png"),
-            );
+          child: ClipOval(
+            child: Image.memory(
+              base64Decode(_imageBase64!),
+              width: 115,
+              height: 115,
+              fit: BoxFit.cover,
+            ),
+          ),
+        );
       }
     } catch (e) {
       return CircleAvatar();
@@ -243,9 +243,7 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
         borderRadius: BorderRadius.circular(8.0),
       ),
       child: InkWell(
-        onTap: () {
-          print('Card tapped.');
-        },
+        onTap: () {},
         child: SizedBox(
           child: Center(
               child: Padding(

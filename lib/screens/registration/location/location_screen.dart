@@ -69,8 +69,8 @@ class _LocationScreenState extends State<LocationScreen> {
         extendBodyBehindAppBar: true,
         // appBar: _buildAppbar(context),
         appBar: SignupAppbar(
-            firstTitle: '${AppLocalizations.of(context).translate('create')}',
-            secondTitle: '${AppLocalizations.of(context).translate('account')}',
+            firstTitle: '${AppLocalizations.of(context).translate('createAccount-first')}',
+            secondTitle: '${AppLocalizations.of(context).translate('createAccount-second')}',
             onAction: _onBackPressed),
         body: SafeArea(
           child: _buildAction(context),

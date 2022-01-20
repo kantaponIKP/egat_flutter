@@ -79,14 +79,14 @@ class _PasswordScreenState extends State<PasswordScreen> {
                   children: <TextSpan>[
                     TextSpan(
                       text:
-                          '${AppLocalizations.of(context).translate('forgot')}',
+                          '${AppLocalizations.of(context).translate('forgotPassword-first')}',
                       style: TextStyle(
                           // fontWeight: FontWeight.w300,
                           ),
                     ),
                     TextSpan(
                       text:
-                          '${AppLocalizations.of(context).translate('password')}',
+                          '${AppLocalizations.of(context).translate('forgotPassword-second')}',
                       style: TextStyle(
                         color: Theme.of(context).primaryColor,
                         // fontWeight: FontWeight.w300,
