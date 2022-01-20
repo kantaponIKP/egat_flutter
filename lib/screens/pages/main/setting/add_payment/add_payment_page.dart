@@ -10,9 +10,9 @@ class AddPaymentPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(providers: [
-      ChangeNotifierProvider<SettingScreenNavigationState>(
-        create: (_) => SettingScreenNavigationState(),
-      ),
+      // ChangeNotifierProvider<SettingScreenNavigationState>(
+      //   create: (_) => SettingScreenNavigationState(),
+      // ),
       // ChangeNotifierProxyProvider<SettingScreenNavigationState,
       //     AddPaymentState>(create: (_) {
       //   SettingScreenNavigationState settingState =

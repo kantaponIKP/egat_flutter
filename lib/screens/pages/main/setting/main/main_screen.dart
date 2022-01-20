@@ -2,6 +2,7 @@ import 'package:egat_flutter/constant.dart';
 import 'package:egat_flutter/i18n/app_language.dart';
 import 'package:egat_flutter/i18n/app_localizations.dart';
 import 'package:egat_flutter/screens/pages/main/setting/add_payment/add_payment_page.dart';
+import 'package:egat_flutter/screens/pages/main/setting/add_payment/add_payment_screen.dart';
 import 'package:egat_flutter/screens/pages/main/setting/change_pin/change_pin_page.dart';
 import 'package:egat_flutter/screens/pages/main/setting/change_pin/states/pin_state.dart';
 import 'package:egat_flutter/screens/pages/main/setting/state/notification_state.dart';
@@ -51,9 +52,10 @@ class _SettingMainScreenState extends State<SettingMainScreen> {
   }
 
   Future<void> _getCards() async {
+    LoginSession login = Provider.of<LoginSession>(context, listen: false);
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
-      _cards = prefs.getStringList('cards') ?? [];
+      _cards = prefs.getStringList('cards-${login.info!.userId}') ?? [];
     });
   }
 
@@ -280,7 +282,7 @@ class _SettingMainScreenState extends State<SettingMainScreen> {
   Route _createAddPaymentPageRoute() {
     return PageRouteBuilder(
       pageBuilder: (context, animation, secondaryAnimation) =>
-          const AddPaymentPage(),
+          const AddPaymentScreen(),
       transitionsBuilder: (context, animation, secondaryAnimation, child) {
         const begin = Offset(1.0, 0.0);
         const end = Offset.zero;
@@ -382,9 +384,10 @@ class _SettingMainScreenState extends State<SettingMainScreen> {
   }
 
   Future<void> _onRemovePressed(int index) async {
+    LoginSession login = Provider.of<LoginSession>(context, listen: false);
     SharedPreferences prefs = await SharedPreferences.getInstance();
     _cards.removeAt(index);
-    prefs.setStringList('cards', _cards);
+    prefs.setStringList('cards-${login.info!.userId}', _cards);
     prefs.reload();
     _getCards();
   }

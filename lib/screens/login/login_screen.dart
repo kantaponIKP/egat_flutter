@@ -27,7 +27,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   TextEditingController? _emailController;
   TextEditingController? _passwordController;
-  bool rememberMe = false;
+  bool _rememberMe = false;
   List<bool> isSelected = [true, false];
   bool _isPasswordObscure = true;
   // bool _isLoginError = false;
@@ -39,6 +39,12 @@ class _LoginScreenState extends State<LoginScreen> {
     _passwordController = TextEditingController();
     _emailController!.text = "prosumer04@email.com";
     _passwordController!.text = "Str123";
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _autoLogin();
   }
 
   @override
@@ -200,7 +206,7 @@ class _LoginScreenState extends State<LoginScreen> {
               height: 20.0,
               width: 20.0,
               child: Checkbox(
-                value: rememberMe,
+                value: _rememberMe,
                 onChanged: (newValue) {
                   if (newValue != null) {
                     _onRememberMeChanged(newValue);
@@ -288,18 +294,30 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  void _onRememberMeChanged(bool newValue) => setState(() {
-        rememberMe = newValue;
+  Future<void> _autoLogin() async {
+    LoginModel login = Provider.of<LoginModel>(context, listen: true);
+    await showLoading();
+    try {
+      bool isRememberMe = await login.getRememberMe();
+      if (isRememberMe) {
+        goToLoginPage();
+        setState(() {
+          _rememberMe = isRememberMe;
+        });
+      }
+    } catch (e) {
+      showIntlException(context, e);
+    } finally {
+      await hideLoading();
+    }
+  }
 
-        if (rememberMe) {
-          // TODO: Here goes your functionality that remembers the user.
-        } else {
-          // TODO: Forget the user
-        }
+  void _onRememberMeChanged(bool newValue) => setState(() {
+        _rememberMe = newValue;
       });
 
   bool _isError() {
-    var login = Provider.of<LoginModel>(context, listen: true);
+    LoginModel login = Provider.of<LoginModel>(context, listen: true);
     // logger.d(login.isError);
     return login.isError;
   }
@@ -313,20 +331,23 @@ class _LoginScreenState extends State<LoginScreen> {
       await login.processLogin(
           email: _emailController!.text,
           password: _passwordController!.text,
-          rememberMe: rememberMe);
-      await hideLoading();
-      Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (BuildContext context) {
-            return MainPage();
-          },
-        ),
-      );
+          rememberMe: _rememberMe);
+      goToLoginPage();
     } catch (e) {
       showIntlException(context, e);
     } finally {
       await hideLoading();
     }
+  }
+
+  void goToLoginPage() {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (BuildContext context) {
+          return MainPage();
+        },
+      ),
+    );
   }
 
   void _onRegister(BuildContext context) {

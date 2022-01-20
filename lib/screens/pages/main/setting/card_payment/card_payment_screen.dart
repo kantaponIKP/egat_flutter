@@ -5,6 +5,7 @@ import 'package:egat_flutter/i18n/app_localizations.dart';
 import 'package:egat_flutter/screens/page/widgets/page_appbar.dart';
 import 'package:egat_flutter/screens/pages/main/setting/addPayment_step_indicator.dart';
 import 'package:egat_flutter/screens/pages/main/setting/state/setting_screen_navigation_state.dart';
+import 'package:egat_flutter/screens/session.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -36,9 +37,6 @@ class _CardPaymentScreenState extends State<CardPaymentScreen> {
 
   @override
   Widget build(BuildContext context) {
-    SettingScreenNavigationState settingScreenNavigationState =
-        Provider.of<SettingScreenNavigationState>(context, listen: false);
-    settingScreenNavigationState.setPageToCardPayment();
     return Scaffold(
       appBar: PageAppbar(
           firstTitle: "",
@@ -247,23 +245,21 @@ class _CardPaymentScreenState extends State<CardPaymentScreen> {
         ),
         SizedBox(
           height: 30.0,
-          child: AddPaymentStepIndicator(),
+          child: AddPaymentStepIndicator(index: 1),
         ),
       ],
     );
   }
 
   Future<void> _onAddPressed() async {
+    LoginSession login = Provider.of<LoginSession>(context, listen: false);
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String cardNumber = _cardNumberController!.text;
     String expireDate = _expireDateController!.text;
     String cvvCode = _cvvCodeController!.text;
-
-    List<String> cards = prefs.getStringList('cards') ?? [];
+    List<String> cards = prefs.getStringList('cards-${login.info!.userId}') ?? [];
     cards.add(cardNumber + ";" + expireDate + ";" + cvvCode);
-    print('cards: $cards');
-    await prefs.setStringList('cards', cards);
-    int count = 0;
+    await prefs.setStringList('cards-${login.info!.userId}', cards);
     // Navigator.of(context).popUntil((_) => count++ >= 2);
     Navigator.pop(context);
     Navigator.pop(context, true);
