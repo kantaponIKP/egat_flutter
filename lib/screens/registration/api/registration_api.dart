@@ -138,7 +138,7 @@ class RegistrationApi {
         intlMessage: "error-timeoutError",
       );
     }
-
+    print(response.statusCode);
     if (response.statusCode >= 500) {
       throw IntlException(
         message: "ปฎิเสธ server ตอบกลับด้วยสถานะ ${response.statusCode}",
