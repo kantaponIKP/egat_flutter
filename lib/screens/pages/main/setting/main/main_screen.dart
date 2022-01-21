@@ -93,7 +93,6 @@ class _SettingMainScreenState extends State<SettingMainScreen> {
       });
     }
     return Scaffold(
-        drawer: NavigationMenuWidget(),
         body: SafeArea(
           child: Container(
             decoration: BoxDecoration(

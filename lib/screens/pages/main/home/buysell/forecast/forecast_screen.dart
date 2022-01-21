@@ -11,6 +11,7 @@ import 'package:egat_flutter/screens/pages/main/states/main_screen_title_state.d
 import 'package:egat_flutter/screens/widgets/loading_dialog.dart';
 import 'package:egat_flutter/screens/widgets/show_exception.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
@@ -581,12 +582,12 @@ class _BuySellActionTileBottomSheet extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _BuySellBottomSheetTile(
-                  icon: Icons.handyman,
+                  svgIcon: 'assets/images/icons/tabbar/bilateral.svg',
                   title: "Bilateral Market",
                   onTap: () => _onBilateralSelected(context),
                 ),
                 _BuySellBottomSheetTile(
-                  icon: Icons.refresh,
+                  svgIcon: 'assets/images/icons/tabbar/poolMarket.svg',
                   title: "Pool Market",
                   onTap: () => _onPoolSelected(context),
                 ),
@@ -669,13 +670,13 @@ class _BuySellActionTileBottomSheet extends StatelessWidget {
 
 class _BuySellBottomSheetTile extends StatelessWidget {
   final void Function()? onTap;
-  final IconData icon;
+  final String svgIcon;
   final String title;
 
   const _BuySellBottomSheetTile({
     Key? key,
     this.onTap,
-    required this.icon,
+    required this.svgIcon,
     required this.title,
   }) : super(key: key);
 
@@ -691,10 +692,12 @@ class _BuySellBottomSheetTile extends StatelessWidget {
             SizedBox(
               width: 16,
             ),
-            Icon(
-              icon,
-              color: Colors.black,
-            ),
+            SvgPicture.asset(svgIcon,
+                fit: BoxFit.contain, height: 18, color: Colors.black),
+            // Icon(
+            //   icon,
+            //   color: Colors.black,
+            // ),
             SizedBox(
               width: 24,
             ),

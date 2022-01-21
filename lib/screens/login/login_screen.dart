@@ -37,8 +37,8 @@ class _LoginScreenState extends State<LoginScreen> {
     super.initState();
     _emailController = TextEditingController();
     _passwordController = TextEditingController();
-    _emailController!.text = "prosumer04@email.com";
-    _passwordController!.text = "Str123";
+    // _emailController!.text = "prosumer04@email.com";
+    // _passwordController!.text = "Str123";
     // _autoLogin();
   }
 

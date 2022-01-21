@@ -109,8 +109,6 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: PageAppbar(firstTitle: "Personal", secondTitle: "Information"),
-      drawer: NavigationMenuWidget(),
       body: SafeArea(
         child: Container(
           decoration: BoxDecoration(
@@ -239,6 +237,7 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
 
   Widget _buildInformationSection() {
     return Card(
+      color: surfaceColor,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8.0),
       ),

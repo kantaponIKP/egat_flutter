@@ -16,7 +16,6 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: NavigationMenuWidget(),
       body: SafeArea(
         child: Container(
           decoration: BoxDecoration(
@@ -59,12 +58,12 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
 
   Widget _buildInformationSection() {
     return Card(
+      color: surfaceColor,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8.0),
       ),
       child: InkWell(
         onTap: () {
-          print('Card tapped.');
         },
         child: SizedBox(
           child: Center(

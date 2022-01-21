@@ -7,6 +7,7 @@ import 'package:egat_flutter/screens/widgets/loading_dialog.dart';
 import 'package:egat_flutter/screens/widgets/show_exception.dart';
 import 'package:egat_flutter/screens/widgets/show_success_snackbar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 
 class ChangePasswordScreen extends StatefulWidget {
@@ -40,7 +41,6 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: NavigationMenuWidget(),
       body: SafeArea(
         child: Container(
           decoration: BoxDecoration(
@@ -89,14 +89,28 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   }
 
   Widget _buildAvatarSection() {
-    return SizedBox(
+    return Container(
+      decoration:
+          BoxDecoration(borderRadius: BorderRadius.circular(50), boxShadow: [
+        BoxShadow(
+          color: primaryColor,
+          blurRadius: 28.0,
+          spreadRadius: 0.0,
+          offset: Offset(
+            0.0,
+            0.0,
+          ),
+        ),
+      ]),
       height: 115,
       width: 115,
       child: CircleAvatar(
-          backgroundColor: primaryColor, //TODO: glow
-          child: Icon(Icons.lock_open, size: 60, color: whiteColor)
-          // backgroundImage: AssetImage("assets/images/Profile Image.png"),
-          ),
+        backgroundColor: primaryColor,
+        child: SvgPicture.asset(
+          'assets/images/icons/change_password/change_password_icon.svg',
+          fit: BoxFit.cover,
+        ),
+      ),
     );
   }
 
@@ -126,13 +140,12 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
 
   Widget _buildInformationSection() {
     return Card(
+      color: surfaceColor,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8.0),
       ),
       child: InkWell(
-        onTap: () {
-          print('Card tapped.');
-        },
+        onTap: () {},
         child: SizedBox(
           child: Center(
               child: Padding(

@@ -85,7 +85,6 @@ class _ChangePinScreenState extends State<ChangePinScreen> {
               AppLocalizations.of(context).translate('title-changePin-first'),
           secondTitle: " " +
               AppLocalizations.of(context).translate('title-changePin-second')),
-      // drawer: NavigationMenuWidget(),
       body: SafeArea(
         child: Container(
           decoration: BoxDecoration(

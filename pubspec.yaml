@@ -78,6 +78,7 @@ flutter:
     - assets/images/icons/bottom_navigation_bar/
     - assets/images/icons/sidebar/
     - assets/images/icons/tabbar/
+    - assets/images/icons/change_password/
     - assets/images/splash_screen/
     - assets/mockdata/login/
     - assets/mockdata/registration/

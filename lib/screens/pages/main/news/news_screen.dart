@@ -42,7 +42,6 @@ class _NewsScreenState extends State<NewsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: NavigationMenuWidget(),
       body: SafeArea(
         child: Container(
           decoration: BoxDecoration(
@@ -151,6 +150,7 @@ class _NewsCardSection extends StatelessWidget {
           _onNewPressed(context: context, fullContent: fullContent);
         },
         child: Card(
+          color: surfaceColor,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(4.0),
           ),
@@ -265,10 +265,16 @@ class _NewsPaginationSection extends StatelessWidget {
       ),
       for (var item in items)
         item == newsState.currentPage + 1
-            ? TextButton(
-                child: Text(
-                  item.toString(),
-                  style: TextStyle(color: primaryColor),
+            ? ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                    shape: CircleBorder(), primary: primaryColor),
+                child: Container(
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(shape: BoxShape.circle),
+                  child: Text(
+                    item.toString(),
+                    style: TextStyle(color: textColor),
+                  ),
                 ),
                 onPressed: () => tryFetchPage(context, newsState, item - 1),
               )
