@@ -237,7 +237,14 @@ class EgatApp extends StatelessWidget {
               ),
             ),
             home: EgatHomePage(title: appTitle),
-            builder: EasyLoading.init(),
+            builder: (context, child) {
+              return MediaQuery(
+                data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
+                child: Builder(
+                  builder: (context) => EasyLoading.init()(context, child),
+                ),
+              );
+            },
             locale: provider.locale,
             localizationsDelegates: [
               AppLocalizations.delegate,
