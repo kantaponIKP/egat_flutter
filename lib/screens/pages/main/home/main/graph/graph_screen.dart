@@ -126,7 +126,7 @@ class _GraphScreenState extends State<GraphScreen> {
           children: [
             FittedBox(
               child: const Text(
-                'ตั้งแต่ในระยะเวลา',
+                'การใช้งานในเวลาที่เลือก',
                 style: TextStyle(
                   fontSize: 25,
                   fontWeight: FontWeight.w300,
@@ -216,16 +216,30 @@ class _GraphValues extends StatelessWidget {
 
     double previousValue = 0;
 
+    final minValue = values.reduce((a, b) => min(a, b));
+    final maxValue = values.reduce((a, b) => max(a, b));
+
     for (var entry in values.asMap().entries) {
       final value = entry.value;
       double nextValue =
           values.length > entry.key + 1 ? values[entry.key] : value;
 
+      double nowY = ((0 - minValue) / (maxValue - minValue)) * 280 - 20;
+
+      if (nowY > 280) {
+        nowY = 280;
+      } else if (nowY < 20) {
+        nowY = 20;
+      }
+
+      nowY = 300 - nowY;
+
       if (value > previousValue) {
         children.add(
-          SizedBox(
-            width: 50,
-            child: Center(
+          Padding(
+            padding: EdgeInsets.only(top: nowY),
+            child: SizedBox(
+              width: 50,
               child: Text(
                 value.toStringAsFixed(2),
                 style: TextStyle(
@@ -239,9 +253,10 @@ class _GraphValues extends StatelessWidget {
       } else {
         if (value >= nextValue) {
           children.add(
-            SizedBox(
-              width: 50,
-              child: Center(
+            Padding(
+              padding: EdgeInsets.only(top: nowY),
+              child: SizedBox(
+                width: 50,
                 child: Text(
                   value.toStringAsFixed(2),
                   style: TextStyle(
@@ -254,9 +269,10 @@ class _GraphValues extends StatelessWidget {
           );
         } else {
           children.add(
-            SizedBox(
-              width: 50,
-              child: Center(
+            Padding(
+              padding: EdgeInsets.only(top: nowY),
+              child: SizedBox(
+                width: 50,
                 child: Text(
                   value.toStringAsFixed(2),
                   style: TextStyle(
@@ -273,11 +289,14 @@ class _GraphValues extends StatelessWidget {
       previousValue = value;
     }
 
-    return SizedBox(
-      height: 250,
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: children,
+    return Padding(
+      padding: const EdgeInsets.only(left: 10),
+      child: SizedBox(
+        height: 300,
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: children,
+        ),
       ),
     );
   }
@@ -301,28 +320,30 @@ class _GraphViewer extends StatelessWidget {
   Widget build(BuildContext context) {
     return AspectRatio(
       aspectRatio: 1.4,
-      child: SizedBox(
-        width: 600,
-        height: 428,
-        child: Stack(
-          children: [
-            Positioned(
-              top: 0,
-              left: 0,
-              child: Text(valueName),
-            ),
-            Positioned(
-              bottom: 45,
-              right: 10,
-              child: Text(unitName),
-            ),
-            _buildLines(context),
-            Positioned(
-              top: 40,
-              left: 20,
-              child: _buildGraphScrollable(context),
-            ),
-          ],
+      child: FittedBox(
+        child: SizedBox(
+          width: 600,
+          height: 428,
+          child: Stack(
+            children: [
+              Positioned(
+                top: 0,
+                left: 0,
+                child: Text(valueName),
+              ),
+              Positioned(
+                bottom: 45,
+                right: 10,
+                child: Text(unitName),
+              ),
+              _buildLines(context),
+              Positioned(
+                top: 40,
+                left: 20,
+                child: _buildGraphScrollable(context),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -342,7 +363,7 @@ class _GraphViewer extends StatelessWidget {
 
   Widget _buildGraphScrollable(BuildContext context) {
     return SizedBox(
-      width: 420,
+      width: 540,
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: Stack(
@@ -350,7 +371,7 @@ class _GraphViewer extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.only(left: 5),
               child: SizedBox(
-                width: values.length * 50 + 100,
+                width: values.length * 50 + 5,
                 height: 500,
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
@@ -365,7 +386,7 @@ class _GraphViewer extends StatelessWidget {
               ),
             ),
             Positioned(
-              top: 280,
+              bottom: 130,
               child: _buildTimeline(context),
             ),
             Positioned(
@@ -425,12 +446,53 @@ class _WideGraphPainter extends CustomPainter {
     double oldY = 0;
     bool notDrawn = true;
 
+    double nowLineValue = maxValue.floorToDouble();
+    double endLineValue = minValue.ceilToDouble();
+
+    final lineValuePaint = Paint()
+      ..color = Colors.white.withOpacity(0.15)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 2;
+
+    final lineValueZeroPaint = Paint()
+      ..color = Colors.white.withOpacity(0.5)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 2;
+
+    while (nowLineValue >= endLineValue) {
+      double nowY = maxValue - minValue != 0
+          ? ((nowLineValue - minValue) / (maxValue - minValue)) * 300
+          : 150;
+
+      nowY = 300 - nowY;
+
+      final path = Path();
+      path.moveTo(0, nowY);
+      path.lineTo(size.width, nowY);
+
+      if (nowLineValue == 0) {
+        canvas.drawLine(
+          Offset(0, nowY),
+          Offset(values.length * 50, nowY),
+          lineValueZeroPaint,
+        );
+      } else {
+        canvas.drawLine(
+          Offset(0, nowY),
+          Offset(values.length * 50, nowY),
+          lineValuePaint,
+        );
+      }
+
+      nowLineValue -= 1;
+    }
+
     for (var value in values) {
       double nowY = maxValue - minValue != 0
-          ? ((value - minValue) / (maxValue - minValue)) * 200
-          : 100;
+          ? ((value - minValue) / (maxValue - minValue)) * 300
+          : 150;
 
-      nowY = 200 - nowY;
+      nowY = 300 - nowY;
 
       final path = Path();
 

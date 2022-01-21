@@ -10,7 +10,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:egat_flutter/screens/widgets/loading_dialog.dart';
-import 'package:egat_flutter/screens/widgets/loading_clear_dialog.dart' as loading_clear_dialog;
+import 'package:egat_flutter/screens/widgets/loading_clear_dialog.dart'
+    as loading_clear_dialog;
 import 'package:provider/provider.dart';
 import 'package:egat_flutter/screens/widgets/language_button.dart';
 

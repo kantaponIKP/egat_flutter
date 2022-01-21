@@ -1129,28 +1129,25 @@ class _ForecastScreenState extends State<ForecastScreen>
 
   Widget _buildLayout(BuildContext context) {
     return LayoutBuilder(builder: (context, constraints) {
-      return SizedBox(
-        height: constraints.maxHeight,
-        child: Stack(
-          children: [
-            SingleChildScrollView(
-              child: Column(
-                children: [
-                  SizedBox(height: 12),
-                  _buildBody(context),
-                ],
-              ),
+      return Stack(
+        children: [
+          SingleChildScrollView(
+            child: Column(
+              children: [
+                SizedBox(height: 12),
+                _buildBody(context),
+              ],
             ),
-            Positioned(
-              bottom: 0,
-              left: 0,
-              right: 0,
-              child: _SubmitAllButton(
-                controller: _buySellActionController,
-              ),
+          ),
+          Positioned(
+            bottom: 0,
+            left: 0,
+            right: 0,
+            child: _SubmitAllButton(
+              controller: _buySellActionController,
             ),
-          ],
-        ),
+          ),
+        ],
       );
     });
   }

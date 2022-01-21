@@ -84,7 +84,12 @@ class _LineGraphPainter extends CustomPainter {
   get powerMaxValue => powerData.reduce((a, b) => max(a ?? 0, b ?? 0));
   get forecastMaxValue => forecastData.reduce((a, b) => max(a ?? 0, b ?? 0));
 
+  get powerForecastMinValue => powerData.reduce((a, b) => min(a ?? 0, b ?? 0));
+  get forecastForecastMinValue =>
+      forecastData.reduce((a, b) => min(a ?? 0, b ?? 0));
+
   get maxValue => max<double>(forecastMaxValue, powerMaxValue);
+  get minValue => min<double>(forecastForecastMinValue, powerForecastMinValue);
 
   _LineGraphPainter({
     required this.forecastData,
@@ -146,6 +151,10 @@ class _LineGraphPainter extends CustomPainter {
     Path currentPath = Path();
     bool hasPainted = false;
 
+    final maxValue = this.maxValue;
+    final minValue = this.minValue;
+    final range = maxValue - minValue;
+
     double dataX = 50;
     for (var entry in powerData.asMap().entries) {
       final data = entry.value;
@@ -159,8 +168,8 @@ class _LineGraphPainter extends CustomPainter {
       }
 
       if (data != null) {
-        final dataHeight = data / maxValue! * 50;
-        final dataY = 110 - dataHeight;
+        final dataHeight = (data - minValue).abs() / range * 200;
+        final dataY = 220 - dataHeight - 10;
 
         if (!hasPainted) {
           hasPainted = true;
@@ -186,6 +195,10 @@ class _LineGraphPainter extends CustomPainter {
     Path currentPath = Path();
     bool hasPainted = false;
 
+    final maxValue = this.maxValue;
+    final minValue = this.minValue;
+    final range = maxValue - minValue;
+
     double dataX = 50;
     for (var data in forecastData) {
       if (data == null) {
@@ -197,8 +210,8 @@ class _LineGraphPainter extends CustomPainter {
       }
 
       if (data != null) {
-        final dataHeight = data / maxValue! * 50;
-        final dataY = 110 - dataHeight;
+        final dataHeight = (data - minValue).abs() / range * 200;
+        final dataY = 220 - dataHeight - 10;
 
         if (!hasPainted) {
           hasPainted = true;
