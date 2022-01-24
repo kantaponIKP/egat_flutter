@@ -37,7 +37,7 @@ final appTitle = 'EGAT P2P';
 //Local "https://egat-p2p-api.di.iknowplus.co.th"
 //Production "https://ercapip2p.egat.co.th"
 
-final bool isDev = false;
+final bool isDev = true;
 
 var _apiBaseUrlRegister = isDev
     // ? "https://egat-p2p-register.di.iknowplus.co.th"

@@ -3,149 +3,221 @@ import 'dart:math';
 import 'package:egat_flutter/constant.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:intl/intl.dart';
+import 'package:intl/intl.dart' as intl;
 
 class ForecastGraph extends StatelessWidget {
   final List<double?> forecastData;
-  final List<double?> powerData;
+  final List<double?> pvData;
+  final List<double?> loadData;
 
   final DateTime startHour;
 
   const ForecastGraph({
     Key? key,
     required this.forecastData,
-    required this.powerData,
+    required this.pvData,
+    required this.loadData,
     required this.startHour,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final powerData = [...this.powerData];
+    final loadData = [...this.loadData];
     final nowLimit = DateTime.now().add(Duration(hours: -1));
-    for (final entry in powerData.asMap().entries) {
+
+    for (final entry in loadData.asMap().entries) {
       final entryTime = startHour.add(Duration(hours: entry.key));
       if (entryTime.isAfter(nowLimit)) {
-        powerData[entry.key] = null;
+        loadData[entry.key] = null;
       }
     }
 
-    return SizedBox(
-      child: Scrollbar(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              _LineGraph(
-                forecastData: forecastData,
-                powerData: powerData,
+    for (final entry in pvData.asMap().entries) {
+      final entryTime = startHour.add(Duration(hours: entry.key));
+      if (entryTime.isAfter(nowLimit)) {
+        pvData[entry.key] = null;
+      }
+    }
+
+    return Column(
+      children: [
+        SizedBox(
+          width: 45 * 25,
+          child: Scrollbar(
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _BarGraph(data: forecastData),
+                  _ForecastTimeLine(
+                    hourCount: 24,
+                    startHour: startHour,
+                  ),
+                  _LineGraph(
+                    pvData: pvData,
+                    loadData: loadData,
+                  ),
+                ],
               ),
-              _ForecastTimeLine(
-                hourCount: forecastData.length,
-                startHour: startHour,
-              ),
-              _BarGraph(data: forecastData),
-            ],
+              scrollDirection: Axis.horizontal,
+            ),
           ),
-          scrollDirection: Axis.horizontal,
         ),
-      ),
+        _Topology(),
+      ],
+    );
+  }
+}
+
+class _Topology extends StatelessWidget {
+  const _Topology({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        SizedBox(
+          width: 10,
+          height: 10,
+          child: Container(
+            decoration: BoxDecoration(
+              color: const Color(0xFFA1FC7F),
+            ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text('PV'),
+        ),
+        SizedBox(
+          width: 10,
+          height: 10,
+          child: Container(
+            decoration: BoxDecoration(
+              color: const Color(0xFFE75E57),
+            ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text('Load'),
+        )
+      ],
     );
   }
 }
 
 class _LineGraph extends StatelessWidget {
-  final List<double?> forecastData;
-  final List<double?> powerData;
+  final List<double?> pvData;
+  final List<double?> loadData;
 
   const _LineGraph({
     Key? key,
-    required this.forecastData,
-    required this.powerData,
+    required this.pvData,
+    required this.loadData,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 220,
-      width: (forecastData.length + 1) * 45,
-      child: CustomPaint(
-        painter: _LineGraphPainter(
-          forecastData: forecastData,
-          powerData: powerData,
-        ),
+    return CustomPaint(
+      size: Size(24 * 45, 220),
+      painter: _LineGraphPainter(
+        pvData: pvData,
+        loadData: loadData,
       ),
     );
   }
 }
 
 class _LineGraphPainter extends CustomPainter {
-  final List<double?> forecastData;
-  final List<double?> powerData;
+  final List<double?> pvData;
+  final List<double?> loadData;
 
-  get powerMaxValue => powerData.reduce((a, b) => max(a ?? 0, b ?? 0));
-  get forecastMaxValue => forecastData.reduce((a, b) => max(a ?? 0, b ?? 0));
+  get powerMaxValue => loadData.reduce((a, b) => max(a ?? 0, b ?? 0));
+  get forecastMaxValue => pvData.reduce((a, b) => max(a ?? 0, b ?? 0));
 
-  get powerForecastMinValue => powerData.reduce((a, b) => min(a ?? 0, b ?? 0));
-  get forecastForecastMinValue =>
-      forecastData.reduce((a, b) => min(a ?? 0, b ?? 0));
+  get powerForecastMinValue => loadData
+      .where((element) => element != null)
+      .reduce((a, b) => min(a ?? 0, b ?? 0));
+  get forecastForecastMinValue => pvData
+      .where((element) => element != null)
+      .reduce((a, b) => min(a ?? 0, b ?? 0));
 
   get maxValue => max<double>(forecastMaxValue, powerMaxValue);
   get minValue => min<double>(forecastForecastMinValue, powerForecastMinValue);
 
   _LineGraphPainter({
-    required this.forecastData,
-    required this.powerData,
+    required this.pvData,
+    required this.loadData,
   });
 
   @override
   void paint(Canvas canvas, Size size) {
-    final forecastPaths = getForecastPaths();
-    Paint forecastPaint = Paint()
-      ..color = forecastColor
-      ..strokeWidth = 2.0
-      ..style = PaintingStyle.stroke;
+    _drawPvPaths(canvas);
+    _drawLoadPaths(canvas);
 
-    for (var path in forecastPaths) {
-      canvas.drawPath(path, forecastPaint);
-    }
-
-    final powerPaths = getPowerPaths();
-    Paint powerPaint = Paint()
-      ..color = powerColor
-      ..strokeWidth = 2.0
-      ..style = PaintingStyle.stroke;
-
-    for (var path in powerPaths) {
-      canvas.drawPath(path, powerPaint);
-    }
-
-    _drawZero(canvas, size);
+    // _drawFloor(canvas, size);
   }
 
   @override
   bool shouldRepaint(_LineGraphPainter oldDelegate) {
-    return forecastData != oldDelegate.forecastData;
+    return pvData != oldDelegate.pvData;
   }
 
   @override
   bool shouldRebuildSemantics(_LineGraphPainter oldDelegate) => false;
 
-  final Color powerColor = const Color(0xFFE75E57);
-  final Color forecastColor = const Color(0xFFA1FC7F);
+  final Color loadColor = const Color(0xFFE75E57);
+  final Color pvColor = const Color(0xFFA1FC7F);
 
-  void _drawZero(Canvas canvas, Size size) {
+  void _drawFloor(Canvas canvas, Size size) {
     Paint paint = Paint()
       ..color = Colors.grey.withOpacity(0.3)
       ..strokeWidth = 2.0
       ..style = PaintingStyle.stroke;
 
     final path = Path()
-      ..moveTo(0, 110)
-      ..lineTo(size.width, 110);
+      ..moveTo(0, 210)
+      ..lineTo(size.width, 210);
+
+    canvas.drawPath(path, paint);
+
+    final maxValue = this.maxValue;
+    final minValue = this.minValue;
+    final range = maxValue - minValue;
+
+    double dataX = 50;
+
+    for (var entry in loadData.asMap().entries) {
+      final data = entry.value;
+
+      if (data == null) {
+        continue;
+      }
+
+      final dataHeight = (data - minValue).abs() / range * 200;
+      final dataY = 220 - dataHeight - 10;
+
+      TextSpan span = TextSpan(
+        text: '${data.toStringAsFixed(2)}',
+        style: TextStyle(
+          color: Colors.grey,
+          fontSize: 12,
+        ),
+      );
+
+      final textPainter = TextPainter(text: span, textAlign: TextAlign.left);
+
+      textPainter.paint(canvas, Offset(dataX, dataY));
+
+      dataX += 45;
+    }
 
     canvas.drawPath(path, paint);
   }
 
-  List<Path> getPowerPaths() {
+  List<Path> _drawLoadPaths(Canvas canvas) {
     List<Path> paths = [];
 
     Path currentPath = Path();
@@ -155,8 +227,12 @@ class _LineGraphPainter extends CustomPainter {
     final minValue = this.minValue;
     final range = maxValue - minValue;
 
-    double dataX = 50;
-    for (var entry in powerData.asMap().entries) {
+    List<TextPainter> textPainters = [];
+    List<double> textPainterOffsetYs = [];
+    List<double> textPainterOffsetXs = [];
+
+    double dataX = 65;
+    for (var entry in loadData.asMap().entries) {
       final data = entry.value;
 
       if (data == null) {
@@ -171,6 +247,28 @@ class _LineGraphPainter extends CustomPainter {
         final dataHeight = (data - minValue).abs() / range * 200;
         final dataY = 220 - dataHeight - 10;
 
+        try {
+          TextSpan span = TextSpan(
+            text: '${data.toStringAsFixed(2)}',
+            style: TextStyle(
+              color: Colors.white.withOpacity(0.8),
+              fontSize: 10,
+            ),
+          );
+          TextPainter textPainter = TextPainter(
+            text: span,
+            textAlign: TextAlign.left,
+            textDirection: TextDirection.ltr,
+          );
+          textPainter.layout(minWidth: 50, maxWidth: 50);
+
+          textPainters.add(textPainter);
+          textPainterOffsetYs.add(dataY);
+          textPainterOffsetXs.add(dataX);
+        } catch (e) {
+          print(e);
+        }
+
         if (!hasPainted) {
           hasPainted = true;
           currentPath.moveTo(dataX, dataY);
@@ -186,10 +284,43 @@ class _LineGraphPainter extends CustomPainter {
       paths.add(currentPath);
     }
 
+    Paint powerPaint = Paint()
+      ..color = loadColor
+      ..strokeWidth = 2.0
+      ..style = PaintingStyle.stroke;
+
+    for (var path in paths) {
+      canvas.drawPath(path, powerPaint);
+    }
+
+    for (var textPainterEntry in textPainters.asMap().entries) {
+      final textPainter = textPainterEntry.value;
+      double textPainterOffsetY = textPainterOffsetYs[textPainterEntry.key];
+      final textPainterOffsetX = textPainterOffsetXs[textPainterEntry.key];
+
+      final nextValueY = textPainterEntry.key == textPainterOffsetXs.length - 1
+          ? textPainterOffsetY
+          : textPainterOffsetXs[textPainterEntry.key + 1];
+
+      if (nextValueY >= textPainterOffsetY) {
+        textPainterOffsetY -= 10;
+      } else {
+        textPainterOffsetY += 10;
+      }
+
+      textPainter.paint(
+        canvas,
+        Offset(
+          textPainterOffsetX,
+          max(0, textPainterOffsetY),
+        ),
+      );
+    }
+
     return paths;
   }
 
-  List<Path> getForecastPaths() {
+  List<Path> _drawPvPaths(Canvas canvas) {
     List<Path> paths = [];
 
     Path currentPath = Path();
@@ -199,8 +330,8 @@ class _LineGraphPainter extends CustomPainter {
     final minValue = this.minValue;
     final range = maxValue - minValue;
 
-    double dataX = 50;
-    for (var data in forecastData) {
+    double dataX = 65;
+    for (var data in pvData) {
       if (data == null) {
         if (hasPainted) {
           paths.add(currentPath);
@@ -213,6 +344,25 @@ class _LineGraphPainter extends CustomPainter {
         final dataHeight = (data - minValue).abs() / range * 200;
         final dataY = 220 - dataHeight - 10;
 
+        try {
+          TextSpan span = TextSpan(
+            text: '${data.toStringAsFixed(2)}',
+            style: TextStyle(
+              color: Colors.white.withOpacity(0.8),
+              fontSize: 10,
+            ),
+          );
+          TextPainter textPainter = TextPainter(
+              text: span,
+              textAlign: TextAlign.left,
+              textDirection: TextDirection.ltr);
+          textPainter.layout(minWidth: 50, maxWidth: 50);
+
+          textPainter.paint(canvas, Offset(dataX, max(0, dataY - 10)));
+        } catch (e) {
+          print(e);
+        }
+
         if (!hasPainted) {
           hasPainted = true;
           currentPath.moveTo(dataX, dataY);
@@ -226,6 +376,15 @@ class _LineGraphPainter extends CustomPainter {
 
     if (hasPainted) {
       paths.add(currentPath);
+    }
+
+    Paint pvPaint = Paint()
+      ..color = pvColor
+      ..strokeWidth = 2.0
+      ..style = PaintingStyle.stroke;
+
+    for (var path in paths) {
+      canvas.drawPath(path, pvPaint);
     }
 
     return paths;
@@ -254,24 +413,27 @@ class _BarGraphState extends State<_BarGraph> {
       }
     }
 
-    return SizedBox(
-      height: 220,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          for (var value in widget.data.asMap().entries)
-            value.value != null
-                ? _Bar(
-                    value: value.value!,
-                    maxValue: maxValue <= 0 ? 1 : maxValue,
-                    key: Key('bar-${value.key}'))
-                : _Bar(
-                    value: 0,
-                    maxValue: maxValue <= 0 ? 1 : maxValue,
-                    key: Key('bar-${value.key}'),
-                  ),
-        ],
+    return Padding(
+      padding: EdgeInsets.only(left: 35),
+      child: SizedBox(
+        height: 220,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            for (var value in widget.data.asMap().entries)
+              value.value != null
+                  ? _Bar(
+                      value: value.value!,
+                      maxValue: maxValue <= 0 ? 1 : maxValue,
+                      key: Key('bar-${value.key}'))
+                  : _Bar(
+                      value: 0,
+                      maxValue: maxValue <= 0 ? 1 : maxValue,
+                      key: Key('bar-${value.key}'),
+                    ),
+          ],
+        ),
       ),
     );
   }
@@ -303,9 +465,25 @@ class _Bar extends StatelessWidget {
         child: SizedBox(
           width: 30,
           height: size,
-          child: Container(
-            key: this.key,
-            color: value > 0 ? Color(0xFFFEC908) : Color(0xFFED8235),
+          child: Expanded(
+            child: Container(
+              key: this.key,
+              color: value > 0 ? Color(0xFFFEC908) : Color(0xFFED8235),
+              child: Align(
+                alignment:
+                    value >= 0 ? Alignment.topCenter : Alignment.bottomCenter,
+                child: Padding(
+                  padding: const EdgeInsets.all(2),
+                  child: Text(
+                    value.abs().toStringAsFixed(2),
+                    style: TextStyle(
+                      fontSize: 10,
+                      color: Colors.black,
+                    ),
+                  ),
+                ),
+              ),
+            ),
           ),
         ),
       ),
@@ -348,7 +526,7 @@ class _ForecastTimeItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var hourFormat = DateFormat('HH:mm');
+    var hourFormat = intl.DateFormat('HH:mm');
     var hourString = hourFormat.format(hour);
 
     return SizedBox(

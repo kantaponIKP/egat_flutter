@@ -839,7 +839,7 @@ class _ForecastEnergyBalanceTotal extends StatelessWidget {
         continue;
       }
 
-      final forecastDayTotalEnergy = forecastDay.powerInGrids.reduce(
+      final forecastDayTotalEnergy = forecastDay.loadInGrids.reduce(
         (value, element) => (value ?? 0.0) + (element ?? 0.0),
       )!;
 
@@ -1214,9 +1214,14 @@ class _ForecastScreenState extends State<ForecastScreen>
                       .map((e) => e != null ? -e : null)
                       .toList()
                   : [],
-              powerData: selectedDateState.forecastData != null
-                  ? selectedDateState.forecastData!.powerInGrids
-                      .map((e) => e != null ? -e : null)
+              pvData: selectedDateState.forecastData != null
+                  ? selectedDateState.forecastData!.pvInGrids
+                      .map((e) => e != null ? e : null)
+                      .toList()
+                  : [],
+              loadData: selectedDateState.forecastData != null
+                  ? selectedDateState.forecastData!.loadInGrids
+                      .map((e) => e != null ? e : null)
                       .toList()
                   : [],
               startHour: startHour,
@@ -1272,83 +1277,5 @@ class _ForecastScreenState extends State<ForecastScreen>
         ),
       ]),
     );
-  }
-
-  void _buttomSheet() {
-    showModalBottomSheet(
-        backgroundColor: whiteColor,
-        context: context,
-        builder: (context) {
-          return Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              //TODO
-              ListTile(
-                leading: new Icon(Icons.handyman, color: blackColor),
-                title: Text(
-                  'Bilateral Trade (Buy)',
-                  style: TextStyle(color: blackColor),
-                ),
-                onTap: () {
-                  _onBilateralTradeBuyPressed();
-                },
-              ),
-              ListTile(
-                leading: new Icon(Icons.refresh, color: blackColor),
-                title: Text(
-                  'Pool Market Trade (Buy)',
-                  style: TextStyle(color: blackColor),
-                ),
-                onTap: () {
-                  _onPoolMarketTradeBuyPressed();
-                },
-              ),
-              ListTile(
-                leading: new Icon(Icons.handyman, color: blackColor),
-                title: Text(
-                  'Bilateral Trade (Sell)',
-                  style: TextStyle(color: blackColor),
-                ),
-                onTap: () {
-                  _onBilateralTradeSellPressed();
-                },
-              ),
-              ListTile(
-                leading: new Icon(Icons.refresh, color: blackColor),
-                title: Text(
-                  'Pool Market Trade (Sell)',
-                  style: TextStyle(color: blackColor),
-                ),
-                onTap: () {
-                  _onPoolMarketTradeSellPressed();
-                },
-              ),
-            ],
-          );
-        });
-  }
-
-  void _onBilateralTradeBuyPressed() {
-    Navigator.pop(context);
-    Forecast model = Provider.of<Forecast>(context, listen: false);
-    model.setPageBilateralBuy();
-  }
-
-  void _onBilateralTradeSellPressed() {
-    Navigator.pop(context);
-    Forecast model = Provider.of<Forecast>(context, listen: false);
-    model.setPageBilateralShortTermSell();
-  }
-
-  void _onPoolMarketTradeBuyPressed() {
-    Navigator.pop(context);
-    Forecast model = Provider.of<Forecast>(context, listen: false);
-    model.setPagePoolMarketShortTermBuy();
-  }
-
-  void _onPoolMarketTradeSellPressed() {
-    Navigator.pop(context);
-    Forecast model = Provider.of<Forecast>(context, listen: false);
-    model.setPagePoolMarketShortTermSell();
   }
 }

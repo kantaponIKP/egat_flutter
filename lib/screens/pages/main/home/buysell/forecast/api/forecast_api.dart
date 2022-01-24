@@ -40,7 +40,6 @@ class ForecastApi {
     required String accessToken,
     required DateTime startDate,
   }) async {
-    // TODO: real data
     await Future.delayed(Duration(seconds: 1));
 
     var random = Random();
@@ -51,9 +50,19 @@ class ForecastApi {
         randomForecastValues.add(random.nextDouble() * 10 - 5);
       }
 
-      var randomPowerValues = <double>[];
+      var randomLoadValues = <double>[];
       for (var j = 0; j < 24; j++) {
-        randomPowerValues.add(
+        randomLoadValues.add(
+          max(
+            0,
+            randomForecastValues[j] + (random.nextDouble() * 5) - 2.5,
+          ),
+        );
+      }
+
+      var randomPvValues = <double>[];
+      for (var j = 0; j < 24; j++) {
+        randomPvValues.add(
           max(
             0,
             randomForecastValues[j] + (random.nextDouble() * 5) - 2.5,
@@ -64,7 +73,8 @@ class ForecastApi {
       final randomForecastData = ForecastData(
         date: startDate.add(Duration(days: -i)),
         forecastInGrids: randomForecastValues,
-        powerInGrids: randomPowerValues,
+        loadInGrids: randomLoadValues,
+        pvInGrids: randomPvValues,
       );
       randomForecastDatas.add(randomForecastData);
     }
@@ -122,24 +132,33 @@ class ForecastDataResponse {
 class ForecastData {
   final DateTime date;
   final List<double?> forecastInGrids;
-  final List<double?> powerInGrids;
+  final List<double?> loadInGrids;
+  final List<double?> pvInGrids;
 
   const ForecastData({
     required this.date,
     required this.forecastInGrids,
-    required this.powerInGrids,
+    required this.loadInGrids,
+    required this.pvInGrids,
   });
 
   asUnmodifiable() => ForecastData(
         date: date,
         forecastInGrids: UnmodifiableListView(forecastInGrids),
-        powerInGrids: UnmodifiableListView(powerInGrids),
+        loadInGrids: UnmodifiableListView(loadInGrids),
+        pvInGrids: UnmodifiableListView(pvInGrids),
       );
 
   factory ForecastData.fromJson(Map<String, dynamic> jsonMap) {
+    assert(jsonMap['date'] is String);
+    assert(jsonMap['forecastInGrids'] is List);
+    assert(jsonMap['loadInGrids'] is List);
+    assert(jsonMap['pvInGrids'] is List);
+
     final date = DateTime.parse(jsonMap['date']);
     final forecastInGrids = jsonMap['forecastInGrids'] as List<dynamic>;
-    final powerInGrids = jsonMap['powerInGrids'] as List<dynamic>;
+    final loadInGrids = jsonMap['loadInGrids'] as List<dynamic>;
+    final pvInGrids = jsonMap['pvInGrids'] as List<dynamic>;
 
     return ForecastData(
       date: date,
@@ -150,7 +169,14 @@ class ForecastData {
           return null;
         }
       }).toList(),
-      powerInGrids: powerInGrids.map((e) {
+      loadInGrids: loadInGrids.map((e) {
+        if (e != null) {
+          return (e as num).toDouble();
+        } else {
+          return null;
+        }
+      }).toList(),
+      pvInGrids: pvInGrids.map((e) {
         if (e != null) {
           return (e as num).toDouble();
         } else {
