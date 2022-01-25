@@ -532,10 +532,10 @@ class _BuySellActionTileBottomSheet extends StatelessWidget {
     String title;
     switch (action) {
       case BuySellAction.BUY:
-        title = "Choose to Buy";
+        title = AppLocalizations.of(context).translate('trade-forecast-chooseToBuy');
         break;
       case BuySellAction.SELL:
-        title = "Offer to Sell";
+        title = AppLocalizations.of(context).translate('trade-forecast-offerToSell');
         break;
     }
 
@@ -583,12 +583,12 @@ class _BuySellActionTileBottomSheet extends StatelessWidget {
               children: [
                 _BuySellBottomSheetTile(
                   svgIcon: 'assets/images/icons/tabbar/bilateral.svg',
-                  title: "Bilateral Market",
+                  title: AppLocalizations.of(context).translate('trade-forecast-bilateralTrade'),
                   onTap: () => _onBilateralSelected(context),
                 ),
                 _BuySellBottomSheetTile(
                   svgIcon: 'assets/images/icons/tabbar/poolMarket.svg',
-                  title: "Pool Market",
+                  title: AppLocalizations.of(context).translate('trade-forecast-poolMarketTrade'),
                   onTap: () => _onPoolSelected(context),
                 ),
               ],
@@ -897,11 +897,11 @@ class _ForecastEnergyWidget extends StatelessWidget {
     final todayMidnight = DateTime(today.year, today.month, today.day);
     final dateMidnight = DateTime(date.year, date.month, date.day);
 
-    var dateName = "Today";
+    var dateName = AppLocalizations.of(context).translate('trade-forecast-today');
     if (todayMidnight.difference(dateMidnight).inDays == 0) {
-      dateName = "Today";
+      dateName = AppLocalizations.of(context).translate('trade-forecast-today');
     } else {
-      final dateFormat = DateFormat('dd MMM yyyy');
+      final dateFormat = DateFormat('dd MMM yyyy',AppLocalizations.of(context).getLocale().toString());
       dateName = dateFormat.format(this.date);
     }
 
@@ -1253,7 +1253,7 @@ class _ForecastScreenState extends State<ForecastScreen>
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Saleable Energy (24 hr. Ahead)'),
+                  Text(AppLocalizations.of(context).translate('trade-forecast-saleableEnergy')),
                 ],
               ),
             ),
@@ -1269,7 +1269,7 @@ class _ForecastScreenState extends State<ForecastScreen>
             new RichText(
               text: new TextSpan(
                 children: <TextSpan>[
-                  new TextSpan(text: "Past 7-day Forecast"),
+                  new TextSpan(text: AppLocalizations.of(context).translate('trade-forecast-past7dayForecast')),
                 ],
               ),
             )

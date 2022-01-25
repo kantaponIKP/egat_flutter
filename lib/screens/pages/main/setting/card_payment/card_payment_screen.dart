@@ -121,7 +121,7 @@ class _CardPaymentScreenState extends State<CardPaymentScreen> {
         Align(
           alignment: Alignment.centerLeft,
           child: Text(
-            'Card number',
+            AppLocalizations.of(context).translate('payment-cardNumber'),
             style: TextStyle(color: primaryColor),
           ),
         ),
@@ -170,7 +170,7 @@ class _CardPaymentScreenState extends State<CardPaymentScreen> {
       children: [
         Align(
             alignment: Alignment.centerLeft,
-            child: Text('Expire Date', style: TextStyle(color: primaryColor))),
+            child: Text(AppLocalizations.of(context).translate('payment-expireDate'), style: TextStyle(color: primaryColor))),
         TextFormField(
           keyboardType: TextInputType.numberWithOptions(
             signed: false,
@@ -206,7 +206,7 @@ class _CardPaymentScreenState extends State<CardPaymentScreen> {
       children: [
         Align(
             alignment: Alignment.centerLeft,
-            child: Text('CVV Code', style: TextStyle(color: primaryColor))),
+            child: Text(AppLocalizations.of(context).translate('payment-cvvCode'), style: TextStyle(color: primaryColor))),
         Padding(
           padding: const EdgeInsets.only(top: 0.0),
           child: TextFormField(

@@ -5,6 +5,7 @@ import 'package:egat_flutter/screens/pages/main/setting/add_payment/add_payment_
 import 'package:egat_flutter/screens/pages/main/setting/change_pin/change_pin_page.dart';
 import 'package:egat_flutter/screens/pages/main/setting/change_pin/states/pin_state.dart';
 import 'package:egat_flutter/screens/pages/main/setting/state/notification_state.dart';
+import 'package:egat_flutter/screens/pages/main/states/main_screen_title_state.dart';
 import 'package:egat_flutter/screens/pages/main/widgets/navigation_menu_widget.dart';
 import 'package:egat_flutter/screens/session.dart';
 import 'package:flutter/material.dart';
@@ -37,14 +38,23 @@ class _SettingMainScreenState extends State<SettingMainScreen> {
   }
 
   @override
-  void didChangeDependencies(){
+  void didChangeDependencies() {
     super.didChangeDependencies();
     _getReceiveNotificationFromState();
+    _setTitle();
     // _getPin();
   }
 
-      void _getReceiveNotificationFromState() {
-    NotificationState notificationState = Provider.of<NotificationState>(context);
+  void _setTitle(){
+    MainScreenTitleState mainScreenTitle =
+        Provider.of<MainScreenTitleState>(context, listen: false);
+    mainScreenTitle.setTitleOneTitle(
+        title: AppLocalizations.of(context).translate('title-setting'));
+  }
+
+  void _getReceiveNotificationFromState() {
+    NotificationState notificationState =
+        Provider.of<NotificationState>(context);
     setState(() {
       _receiveMessage = notificationState.currentReceiveMessage;
     });
@@ -64,21 +74,24 @@ class _SettingMainScreenState extends State<SettingMainScreen> {
     pinState.getPinFromStorage();
   }
 
-    void _getReceiveNotification() {
-    NotificationState notificationState = Provider.of<NotificationState>(context, listen: false);
+  void _getReceiveNotification() {
+    NotificationState notificationState =
+        Provider.of<NotificationState>(context, listen: false);
     notificationState.getReceiveMessageFromStorage();
     setState(() {
       _receiveMessage = notificationState.currentReceiveMessage;
     });
   }
 
-    void _setReceiveNotification(bool receiveMessage) {
-      NotificationState notificationState = Provider.of<NotificationState>(context, listen: false);
-      notificationState.setReceiveMessageToStorage(receiveMessage: receiveMessage);
-          setState(() {
+  void _setReceiveNotification(bool receiveMessage) {
+    NotificationState notificationState =
+        Provider.of<NotificationState>(context, listen: false);
+    notificationState.setReceiveMessageToStorage(
+        receiveMessage: receiveMessage);
+    setState(() {
       _receiveMessage = receiveMessage;
     });
-    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -94,18 +107,18 @@ class _SettingMainScreenState extends State<SettingMainScreen> {
     }
     return Scaffold(
         body: SafeArea(
-          child: Container(
-            decoration: BoxDecoration(
-              gradient: RadialGradient(
-                colors: [
-                  Color(0xFF303030),
-                  Colors.black,
-                ],
-              ),
-            ),
-            child: _buildAction(context),
+      child: Container(
+        decoration: BoxDecoration(
+          gradient: RadialGradient(
+            colors: [
+              Color(0xFF303030),
+              Colors.black,
+            ],
           ),
-        ));
+        ),
+        child: _buildAction(context),
+      ),
+    ));
   }
 
   Padding _buildAction(BuildContext context) {
@@ -322,7 +335,7 @@ class _SettingMainScreenState extends State<SettingMainScreen> {
               final cardDetail = card.split(";");
               String title =
                   cardDetail[0].replaceRange(0, 12, "**** **** **** ");
-              String expireDate = 'Expire ' + cardDetail[1];
+              String expireDate = AppLocalizations.of(context).translate('setting-expire')+ ' ' + cardDetail[1];
               return ListTile(
                 leading: SvgPicture.asset(
                     'assets/images/icons/payment/cardPayment.svg'),
@@ -347,11 +360,13 @@ class _SettingMainScreenState extends State<SettingMainScreen> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text(
-            "Do you want to remove this payment method?",
-            style: TextStyle(color: blackColor, fontWeight: FontWeight.bold),
+            AppLocalizations.of(context)
+                .translate('message-removePayment-title'),
+            style: TextStyle(color: blackColor, fontSize: 18),
           ),
           content: Text(
-            "You cannot undo this action.",
+            AppLocalizations.of(context)
+                .translate('message-removePayment-content'),
             style: TextStyle(color: blackColor),
           ),
           backgroundColor: whiteColor,
@@ -362,7 +377,8 @@ class _SettingMainScreenState extends State<SettingMainScreen> {
                   Navigator.pop(context);
                 },
                 child: Text(
-                  "Cancel",
+                  AppLocalizations.of(context)
+                      .translate('message-removePayment-cancel'),
                   style: TextStyle(color: blackColor),
                 )),
             TextButton(
@@ -371,7 +387,8 @@ class _SettingMainScreenState extends State<SettingMainScreen> {
                   Navigator.pop(context);
                 },
                 child: Text(
-                  "Remove",
+                  AppLocalizations.of(context)
+                      .translate('message-removePayment-remove'),
                   style: TextStyle(color: redColor),
                 )),
           ],

@@ -448,10 +448,10 @@ class _NavigationMenuWidgetState extends State<NavigationMenuWidget> {
     MainScreenNavigationState mainScreenNavigation =
         Provider.of<MainScreenNavigationState>(context, listen: false);
     mainScreenNavigation.setPageToSetting();
-    MainScreenTitleState mainScreenTitle =
-        Provider.of<MainScreenTitleState>(context, listen: false);
-    mainScreenTitle.setTitleOneTitle(
-        title: AppLocalizations.of(context).translate('title-setting'));
+    // MainScreenTitleState mainScreenTitle =
+    //     Provider.of<MainScreenTitleState>(context, listen: false);
+    // mainScreenTitle.setTitleOneTitle(
+    //     title: AppLocalizations.of(context).translate('title-setting'));
     Navigator.pop(context);
   }
 
