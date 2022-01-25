@@ -1,4 +1,5 @@
 import 'package:egat_flutter/constant.dart';
+import 'package:egat_flutter/i18n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
@@ -29,7 +30,10 @@ class _ListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final hourFormat = DateFormat("HH:mm");
+    final hourFormat = DateFormat(
+      "HH:mm",
+      AppLocalizations.of(context).getLocale().toString(),
+    );
 
     final forDate = item.date;
     final startHour =
@@ -46,7 +50,7 @@ class _ListItem extends StatelessWidget {
       children: [
         FittedBox(
           child: Text(
-            '$timeString price ${item.price} THB/kWh, for ${item.duration} kWh',
+            '$timeString ${AppLocalizations.of(context).translate('price-lowercase')} ${item.price} THB/kWh, ${AppLocalizations.of(context).translate('for')} ${item.duration} ${AppLocalizations.of(context).translate('days-lowercase')}',
             style: TextStyle(fontSize: 12, color: Colors.black),
           ),
         ),
@@ -95,7 +99,8 @@ class _SellLongTermConfirmationDialogState
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          "Long term Bilateral",
+          AppLocalizations.of(context)
+              .translate('trade-bilateral-longtermBilateral'),
           style: TextStyle(
             fontSize: 20,
             color: Color(0xFFFEC908),
@@ -103,7 +108,8 @@ class _SellLongTermConfirmationDialogState
         ),
         SizedBox(height: 3),
         Text(
-          "Offer to sell everyday",
+          AppLocalizations.of(context)
+              .translate('trade-bilateral-offerToSellEveryday'),
           style: TextStyle(
             fontSize: 15,
           ),
@@ -178,7 +184,7 @@ class _SubmitButton extends StatelessWidget {
           ),
           onPressed: onSubmit,
           child: Text(
-            'Agree',
+            AppLocalizations.of(context).translate('agree'),
             style: TextStyle(
               color: Colors.black,
               fontWeight: FontWeight.w300,
@@ -195,7 +201,7 @@ class _SubmitButton extends StatelessWidget {
           ),
           onPressed: onCancel,
           child: Text(
-            'Cancel',
+            AppLocalizations.of(context).translate('cancel'),
             style: TextStyle(
               color: Colors.black,
               fontWeight: FontWeight.w300,

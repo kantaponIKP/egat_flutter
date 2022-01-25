@@ -18,7 +18,8 @@ class BuySellNavigationWidget extends StatelessWidget {
     final _tabBarItems = <TabBarNavigationItem<BuySellNavigationPage>>[
      TabBarNavigationItem(
       svgIcon: 'assets/images/icons/tabbar/forecast.svg',
-      title: AppLocalizations.of(context).translate('trade-menu-forecast'),
+      title: AppLocalizations.of(context).translate('trade-menu-forecast-top'),
+      secondaryTitle: AppLocalizations.of(context).translate('trade-menu-forecast-bottom'),
       value: BuySellNavigationPage.FORECAST,
     ),
      TabBarNavigationItem(

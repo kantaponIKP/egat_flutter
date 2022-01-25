@@ -1,4 +1,5 @@
 import 'package:egat_flutter/constant.dart';
+import 'package:egat_flutter/i18n/app_localizations.dart';
 import 'package:egat_flutter/screens/page/trade/bottom_button.dart';
 import 'package:egat_flutter/screens/page/widgets/logo_appbar.dart';
 import 'package:egat_flutter/screens/page/widgets/navigation_back.dart';
@@ -121,7 +122,9 @@ class _BilateralLongTermBuyScreenState
                   ),
                 ),
                 BottomButton(
-                    onAction: _onSubmitPressed, actionLabel: Text("Submit"))
+                    onAction: _onSubmitPressed,
+                    actionLabel:
+                        Text(AppLocalizations.of(context).translate('submit')))
               ]);
         },
       ),
@@ -135,7 +138,7 @@ class _BilateralLongTermBuyScreenState
     var startHour = DateFormat('HH').format(startDate);
     var endHour = DateFormat('HH').format(endDate);
     String displayDate =
-        startHour.toString() + ":00-" + endHour.toString() + ":00 everydays";
+        startHour.toString() + ":00-" + endHour.toString() + ":00 ${AppLocalizations.of(context).translate('everyday')}";
     return SizedBox(
       height: 60,
       child: Row(
@@ -427,7 +430,7 @@ class _BilateralLongTermBuyScreenState
                               Container(
                                 alignment: Alignment.centerLeft,
                                 child: Text(
-                                  "Net estimated energy price",
+                                  AppLocalizations.of(context).translate('trade-netEnergyPrice'),
                                   style: TextStyle(
                                     color: primaryColor,
                                     fontSize: 10,
@@ -438,7 +441,7 @@ class _BilateralLongTermBuyScreenState
                               Container(
                                 alignment: Alignment.centerLeft,
                                 child: Text(
-                                  "(Not include VAT 7%)",
+                                  AppLocalizations.of(context).translate('trade-notIncludeVat'),
                                   style: TextStyle(
                                     color: textColor,
                                     fontSize: 8,
@@ -488,7 +491,7 @@ class _BilateralLongTermBuyScreenState
               ),
             ),
             Text(
-              '7 Days',
+              '7 ${AppLocalizations.of(context).translate('days')}',
               style: TextStyle(fontSize: 14.0),
             ),
             SizedBox(width: 4)
@@ -505,7 +508,7 @@ class _BilateralLongTermBuyScreenState
               ),
             ),
             Text(
-              '30 Days',
+              '30 ${AppLocalizations.of(context).translate('days')}',
               style: TextStyle(fontSize: 14.0),
             ),
             SizedBox(width: 4)
@@ -522,7 +525,7 @@ class _BilateralLongTermBuyScreenState
               ),
             ),
             Text(
-              '90 Days',
+              '90 ${AppLocalizations.of(context).translate('days')}',
               style: TextStyle(fontSize: 14.0),
             ),
             SizedBox(width: 4)
@@ -539,7 +542,7 @@ class _BilateralLongTermBuyScreenState
               ),
             ),
             Text(
-              '1 Years',
+              '1 ${AppLocalizations.of(context).translate('year')}',
               style: TextStyle(fontSize: 14.0),
             ),
           ]),
@@ -569,8 +572,10 @@ class _BilateralLongTermBuyScreenState
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("Period"),
-            Text("Everyday"),
+            Text(
+              AppLocalizations.of(context).translate('trade-bilateral-period'),
+            ),
+            Text(AppLocalizations.of(context).translate('everyday'),),
           ],
         ),
         SizedBox(
@@ -621,7 +626,7 @@ class _BilateralLongTermBuyScreenState
         Flexible(
           child: TextField(
             decoration: InputDecoration(
-              hintText: "Search",
+              hintText: AppLocalizations.of(context).translate('search'),
               hintStyle: TextStyle(
                 color: whiteColor,
               ),

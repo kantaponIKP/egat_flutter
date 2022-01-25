@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:egat_flutter/constant.dart';
+import 'package:egat_flutter/i18n/app_localizations.dart';
 import 'package:egat_flutter/screens/forgot_password/widgets/forgot_password_cancellation_dialog.dart';
 import 'package:egat_flutter/screens/page/trade/bottom_button.dart';
 import 'package:egat_flutter/screens/page/widgets/page_appbar.dart';
@@ -216,7 +217,8 @@ class _BilateralSellScreenState extends State<BilateralSellScreen> {
                 actionLabel: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 8),
                   child: Text(
-                    "Place Order",
+                    AppLocalizations.of(context)
+                        .translate('trade-bilateral-placeOrder'),
                     style: TextStyle(
                       fontWeight: FontWeight.w300,
                       fontSize: 20,
@@ -392,7 +394,7 @@ class _SelectionSection extends StatelessWidget {
               Expanded(
                 child: TextField(
                   decoration: InputDecoration(
-                    hintText: "Search",
+                    hintText: AppLocalizations.of(context).translate('search'),
                     hintStyle: TextStyle(
                       color: blackColor,
                       fontWeight: FontWeight.w300,
@@ -415,7 +417,7 @@ class _SelectionSection extends StatelessWidget {
         ),
         Row(
           children: [
-            Text("Sort by : "),
+            Text("${AppLocalizations.of(context).translate('sortBy')} : "),
             Container(
               height: 35,
               padding: EdgeInsets.symmetric(horizontal: 3),
@@ -443,27 +445,34 @@ class _SelectionSection extends StatelessWidget {
                   final direactionName;
                   switch (item.direction) {
                     case _OfferOrderDirection.ASC:
-                      direactionName = "Lowest";
+                      direactionName =
+                          AppLocalizations.of(context).translate('lowest');
                       break;
                     case _OfferOrderDirection.DESC:
-                      direactionName = "Highest";
+                      direactionName =
+                          AppLocalizations.of(context).translate('highest');
                       break;
                   }
 
                   final propertyName;
                   switch (item.type) {
                     case _OfferOrderType.ENERGY:
-                      propertyName = "Energy";
+                      propertyName =
+                          AppLocalizations.of(context).translate('energy');
                       break;
                     case _OfferOrderType.PRICE:
-                      propertyName = "Price";
+                      propertyName =
+                          AppLocalizations.of(context).translate('price');
                       break;
                   }
 
                   return DropdownMenuItem<_OfferOrder>(
                     value: item,
                     child: Text(
-                      "$direactionName $propertyName",
+                      AppLocalizations.of(context).getLocale().toString() ==
+                              "en"
+                          ? "$direactionName $propertyName"
+                          : "$propertyName$direactionName",
                       style: TextStyle(
                         fontWeight: FontWeight.w300,
                         color: Colors.black,
@@ -509,10 +518,13 @@ class _HeaderSection extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Offer to sell',
+                AppLocalizations.of(context)
+                    .translate('trade-bilateral-offerToSell-bilateral'),
                 style: TextStyle(fontSize: 24, color: greenColor),
               ),
-              Text("Short term Bilateral",
+              Text(
+                  AppLocalizations.of(context)
+                      .translate('trade-bilateral-shortTermBilateral'),
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.w200)),
             ],
           ),
@@ -530,7 +542,8 @@ class _HeaderSection extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                     textAlign: TextAlign.center,
                     text: TextSpan(
-                      text: "Long term Bilateral",
+                      text: AppLocalizations.of(context)
+                          .translate('trade-bilateral-longtermBilateral'),
                       style: TextStyle(
                         color: blackColor,
                         fontWeight: FontWeight.w300,
@@ -558,7 +571,8 @@ class _DateSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var dateFormat = DateFormat('dd MMMM yyyy');
+    var dateFormat = DateFormat(
+        'dd MMMM yyyy', AppLocalizations.of(context).getLocale().toString());
     var hourFormat = DateFormat('HH:mm');
 
     var startDate = date;
@@ -617,7 +631,8 @@ class _SellItemCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var dateFormat = DateFormat('HH:mm, dd MMM');
+    var dateFormat = DateFormat(
+        'HH:mm, dd MMM', AppLocalizations.of(context).getLocale().toString());
 
     return Container(
       padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),

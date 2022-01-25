@@ -146,7 +146,7 @@ class _LoginScreenState extends State<LoginScreen> {
           padding: EdgeInsets.only(top: 20.0),
         ),
         Text(
-          'Version 1.0.0',
+          'Version 0.1.0',
           softWrap: true,
           textAlign: TextAlign.center,
           style: TextStyle(

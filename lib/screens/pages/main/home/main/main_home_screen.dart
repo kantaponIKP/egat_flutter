@@ -323,7 +323,8 @@ class _MainSection extends StatelessWidget {
                         height: 45,
                         width: 45,
                       ),
-                      label: AppLocalizations.of(context).translate('home-energyStorage'),
+                      label: AppLocalizations.of(context)
+                          .translate('home-energyStorage'),
                       unit: 'kWh',
                       value1: state.value.batteryInTotal,
                       value1Color: Color(0xFF008DC1),
@@ -436,7 +437,8 @@ class _MainSection extends StatelessWidget {
                         height: 45,
                         width: 45,
                       ),
-                      label: AppLocalizations.of(context).translate('home-grid'),
+                      label:
+                          AppLocalizations.of(context).translate('home-grid'),
                       unit: 'kWh',
                       value1: state.value.gridOutTotal,
                       value1Color: Color(0xFFF6645A),
@@ -935,7 +937,8 @@ class _SummarySection extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    AppLocalizations.of(context).translate('home-energyCanBeSold'),
+                    AppLocalizations.of(context)
+                        .translate('home-energyCanBeSold'),
                     style: TextStyle(
                       fontSize: 11,
                     ),
@@ -1026,7 +1029,8 @@ class _SummarySection extends StatelessWidget {
                 child: Padding(
                   padding: EdgeInsets.all(10),
                   child: _SummaryBox(
-                    label: AppLocalizations.of(context).translate('home-tradeSell'),
+                    label: AppLocalizations.of(context)
+                        .translate('home-tradeSell'),
                     value: state.value.totalSales,
                     unit: 'Baht',
                     valueColor: Color(0xFF99FF75),
@@ -1069,7 +1073,8 @@ class _SummarySection extends StatelessWidget {
                 child: Padding(
                   padding: EdgeInsets.all(10),
                   child: _SummaryBox(
-                    label: AppLocalizations.of(context).translate('home-tradeBuy'),
+                    label:
+                        AppLocalizations.of(context).translate('home-tradeBuy'),
                     value: state.value.totalSales,
                     unit: 'Baht',
                     valueColor: Color(0xFFF6645A),
@@ -1112,7 +1117,8 @@ class _SummarySection extends StatelessWidget {
                 child: Padding(
                   padding: EdgeInsets.all(10),
                   child: _SummaryBox(
-                    label: AppLocalizations.of(context).translate('home-gridUsed'),
+                    label:
+                        AppLocalizations.of(context).translate('home-gridUsed'),
                     value: state.value.totalSales,
                     unit: 'Baht',
                     valueColor: Color(0xFFF6645A),
@@ -1229,7 +1235,10 @@ class _CurrentTimeDisplayState extends State<_CurrentTimeDisplay> {
 
   @override
   Widget build(BuildContext context) {
-    final dateFormat = DateFormat('dd MMMM yyyy',AppLocalizations.of(context).getLocale().toString());
+    final dateFormat = DateFormat(
+      'dd MMMM yyyy',
+      AppLocalizations.of(context).getLocale().toString(),
+    );
     final timeFormat = DateFormat('HH:mm');
 
     final dateString = dateFormat.format(_currentTime);
@@ -1468,7 +1477,9 @@ class _MonthSelectionDropdown extends StatelessWidget {
           return DropdownMenuItem(
             value: item,
             child: Text(
-              DateFormat('MMMM',AppLocalizations.of(context).getLocale().toString()).format(item.toLocal()),
+              DateFormat('MMMM',
+                      AppLocalizations.of(context).getLocale().toString())
+                  .format(item.toLocal()),
             ),
           );
         }).toList(),

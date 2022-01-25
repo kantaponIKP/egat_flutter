@@ -585,7 +585,10 @@ class _DateSelectionDropdown extends StatelessWidget {
           return DropdownMenuItem(
             value: item,
             child: Text(
-              DateFormat('dd MMMM yyyy').format(item.toLocal()),
+              DateFormat(
+                'dd MMMM yyyy',
+                AppLocalizations.of(context).getLocale().toString(),
+              ).format(item.toLocal()),
             ),
           );
         }).toList(),

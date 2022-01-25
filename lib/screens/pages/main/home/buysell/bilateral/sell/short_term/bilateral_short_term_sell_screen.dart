@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:egat_flutter/constant.dart';
+import 'package:egat_flutter/i18n/app_localizations.dart';
 import 'package:egat_flutter/screens/forgot_password/widgets/forgot_password_cancellation_dialog.dart';
 import 'package:egat_flutter/screens/page/widgets/page_appbar.dart';
 import 'package:egat_flutter/screens/pages/main/home/buysell/bilateral/sell/long_term/bilateral_long_term_sell_page.dart';
@@ -117,13 +118,13 @@ class _SummarySectionState extends State<_SummarySection> {
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
         _SummaryValue(
-          title: 'Trading Fee',
+          title: AppLocalizations.of(context).translate('trade-tradingFee'),
           value: _tradingFee,
           unit: 'THB',
           titleFontSize: 15,
         ),
         _SummaryValue(
-          title: 'Estimated Sales',
+          title: AppLocalizations.of(context).translate('trade-estimatedSales'),
           value: _estimatedSales,
           unit: 'THB',
           titleFontSize: 20,
@@ -300,11 +301,11 @@ class _HeaderSection extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Offer to Sell',
+              AppLocalizations.of(context).translate('trade-bilateral-offerToSell-bilateral'),
               style: TextStyle(fontSize: 20, color: Color(0xFF99FF75)),
             ),
             Text(
-              'Short term Bilateral',
+              AppLocalizations.of(context).translate('trade-bilateral-shortTermBilateral'),
               style: TextStyle(fontSize: 12),
             ),
           ],
@@ -337,7 +338,7 @@ class _HeaderSection extends StatelessWidget {
                     color: Colors.black,
                   ),
                   Text(
-                    'Register to long term Bilateral',
+                    AppLocalizations.of(context).translate('trade-bilateral-registerToLongTerm'),
                     style: TextStyle(color: Colors.black),
                   ),
                 ],
@@ -370,7 +371,7 @@ class _SubmitButton extends StatelessWidget {
           ),
           onPressed: onPressed,
           child: Text(
-            'Submit',
+            AppLocalizations.of(context).translate('submit'),
             style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.w300,
@@ -706,7 +707,7 @@ class _TransactionItemState extends State<_TransactionItem> {
       mainAxisSize: MainAxisSize.min,
       children: [
         _TransactionInput(
-          title: 'Energy to Sale',
+          title: AppLocalizations.of(context).translate('trade-bilateral-energyToSale'),
           unit: 'kWh',
           controller: energyToSaleTextController,
         ),
@@ -717,8 +718,8 @@ class _TransactionItemState extends State<_TransactionItem> {
           onChange: _onEnergyToSalesSliderChange,
         ),
         _TransactionInput(
-          title: 'Offer to Sell Price',
-          secondaryTitle: 'Market price = THB 3.00',
+          title: AppLocalizations.of(context).translate('trade-offerToSellPrice'),
+          secondaryTitle: '${AppLocalizations.of(context).translate('trade-marketPrice')} = THB 3.00',
           unit: 'THB/kWh',
           controller: offerToSalePriceTextController,
         ),
@@ -730,7 +731,7 @@ class _TransactionItemState extends State<_TransactionItem> {
   Widget _buildHeader() {
     final isSelected = widget.controller.isItemSelected(widget.key ?? this);
 
-    final dateFormat = DateFormat('dd MMM yyyy');
+    final dateFormat = DateFormat('dd MMM yyyy', AppLocalizations.of(context).getLocale().toString());
     final timeFormat = DateFormat('HH:mm');
 
     final widgetTime = widget.date.toLocal();
@@ -743,7 +744,7 @@ class _TransactionItemState extends State<_TransactionItem> {
     );
     final endTime = startTime.add(const Duration(hours: 1));
 
-    final dateString = dateFormat.format(widget.date);
+    final dateString = dateFormat.format(widget.date,);
     final startTimeString = timeFormat.format(startTime);
     final endTimeString = timeFormat.format(endTime);
 
@@ -762,7 +763,7 @@ class _TransactionItemState extends State<_TransactionItem> {
                 onChanged: (_) => switchSelectedState(),
               ),
               Text(
-                'Date: $dateString, Period: $startTimeString-$endTimeString',
+                '${AppLocalizations.of(context).translate('date')}: $dateString, ${AppLocalizations.of(context).translate('trade-bilateral-period')}: $startTimeString-$endTimeString',
                 style: TextStyle(
                   fontSize: 15,
                   color: Colors.white,

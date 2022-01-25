@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:egat_flutter/constant.dart';
+import 'package:egat_flutter/i18n/app_localizations.dart';
 import 'package:egat_flutter/screens/forgot_password/widgets/forgot_password_cancellation_dialog.dart';
 import 'package:egat_flutter/screens/page/api/model/PoolMarketReferencesResponse.dart';
 import 'package:egat_flutter/screens/page/api/model/PoolMarketTradingFeeRequest.dart';
@@ -135,7 +136,7 @@ class _SummarySectionState extends State<_SummarySection> {
               child: Column(
                 children: [
                   _SummaryValue(
-                    title: 'Energy to buy',
+                    title: AppLocalizations.of(context).translate('trade-energyToBuy'),
                     value: _energyToBuy,
                     unit: 'kWh',
                     titleFontSize: 15,
@@ -143,7 +144,8 @@ class _SummarySectionState extends State<_SummarySection> {
                     valueColor: Colors.white,
                   ),
                   _SummaryValue(
-                    title: 'Energy tariff ',
+                    title: AppLocalizations.of(context)
+                    .translate('trade-energyTariff'),
                     value: _energyTariff,
                     unit: 'THB/kWh',
                     titleFontSize: 12,
@@ -151,7 +153,7 @@ class _SummarySectionState extends State<_SummarySection> {
                     valueColor: Colors.white,
                   ),
                   _SummaryValue(
-                    title: 'Energy price',
+                    title: AppLocalizations.of(context).translate('trade-energyPrice'),
                     value: _energyPrice,
                     unit: 'THB',
                     titleFontSize: 15,
@@ -159,7 +161,8 @@ class _SummarySectionState extends State<_SummarySection> {
                     valueColor: Colors.white,
                   ),
                   _SummaryValue(
-                    title: 'Wheeling charge Tariff',
+                    title: AppLocalizations.of(context)
+                    .translate('trade-wheelingChargeTariff'),
                     value: _wheelingChargeTariff,
                     unit: 'THB/kWh',
                     titleFontSize: 12,
@@ -167,7 +170,8 @@ class _SummarySectionState extends State<_SummarySection> {
                     valueColor: Colors.white,
                   ),
                   _SummaryValue(
-                    title: 'Wheeling charge',
+                    title: AppLocalizations.of(context)
+                    .translate('trade-wheelingCharge'),
                     value: _wheelingCharge,
                     unit: 'THB',
                     titleFontSize: 15,
@@ -175,7 +179,7 @@ class _SummarySectionState extends State<_SummarySection> {
                     valueColor: Colors.white,
                   ),
                   _SummaryValue(
-                    title: 'Trading fee',
+                    title: AppLocalizations.of(context).translate('trade-tradingFee'),
                     value: _tradingFee,
                     unit: 'THB',
                     titleFontSize: 12,
@@ -183,7 +187,7 @@ class _SummarySectionState extends State<_SummarySection> {
                     valueColor: Colors.white,
                   ),
                   _SummaryValue(
-                    title: 'Vat (7%)',
+                    title: AppLocalizations.of(context).translate('trade-vat'),
                     value: _vat,
                     unit: 'THB',
                     titleFontSize: 12,
@@ -201,7 +205,7 @@ class _SummarySectionState extends State<_SummarySection> {
           children: [
             Expanded(
               child: _SummaryValue(
-                title: 'Estimated Buy',
+                title: AppLocalizations.of(context).translate('trade-estimatedBuy'),
                 value: _estimatedBuy,
                 unit: 'THB',
                 titleFontSize: 15,
@@ -226,7 +230,7 @@ class _SummarySectionState extends State<_SummarySection> {
           ],
         ),
         _SummaryValue(
-          title: 'Estimate Net Price',
+          title: AppLocalizations.of(context).translate('trade-estimateNetPrice'),
           value: _estimateNetPrice,
           unit: 'THB/kWh',
           titleFontSize: 20,
@@ -402,7 +406,8 @@ class _HeaderSection extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Bid to Buy',
+              AppLocalizations.of(context)
+                  .translate('trade-poolmarket-bidToBuy'),
               style: TextStyle(fontSize: 20, color: Color(0xFFF6645A)),
             ),
           ],
@@ -434,7 +439,7 @@ class _SubmitButton extends StatelessWidget {
           ),
           onPressed: isSubmitable ? onPressed : null,
           child: Text(
-            'Submit',
+            AppLocalizations.of(context).translate('submit'),
             style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.w300,
@@ -759,7 +764,7 @@ class _TransactionItemState extends State<_TransactionItem> {
       mainAxisSize: MainAxisSize.min,
       children: [
         _TransactionInput(
-          title: 'Energy to Buy',
+          title: AppLocalizations.of(context).translate('trade-energyToBuy'),
           unit: 'kWh',
           controller: energyToSaleTextController,
         ),
@@ -770,8 +775,10 @@ class _TransactionItemState extends State<_TransactionItem> {
           onChange: _onEnergyToSalesSliderChange,
         ),
         _TransactionInput(
-          title: 'Offer to Sell Price',
-          secondaryTitle: 'Market price = THB 3.00',
+          title:
+              AppLocalizations.of(context).translate('trade-offerToSellPrice'),
+          secondaryTitle:
+              '${AppLocalizations.of(context).translate('trade-marketPrice')} = THB 3.00',
           unit: 'THB/kWh',
           controller: offerToSalePriceTextController,
         ),
@@ -781,8 +788,14 @@ class _TransactionItemState extends State<_TransactionItem> {
   }
 
   Widget _buildHeader() {
-    final dateFormat = DateFormat('dd MMM yyyy');
-    final timeFormat = DateFormat('HH:mm');
+    final dateFormat = DateFormat(
+      'dd MMM yyyy',
+      AppLocalizations.of(context).getLocale().toString(),
+    );
+    final timeFormat = DateFormat(
+      'HH:mm',
+      AppLocalizations.of(context).getLocale().toString(),
+    );
 
     final widgetTime = widget.date.toLocal();
 
@@ -810,7 +823,7 @@ class _TransactionItemState extends State<_TransactionItem> {
             children: [
               SizedBox(height: 50, width: 15),
               Text(
-                'Date: $dateString, Period: $startTimeString-$endTimeString',
+                '${AppLocalizations.of(context).translate('date')}: $dateString, ${AppLocalizations.of(context).translate('period')}: $startTimeString-$endTimeString',
                 style: TextStyle(
                   fontSize: 15,
                   color: Colors.white,

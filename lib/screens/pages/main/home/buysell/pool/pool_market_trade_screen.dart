@@ -1,3 +1,4 @@
+import 'package:egat_flutter/i18n/app_localizations.dart';
 import 'package:egat_flutter/screens/pages/main/home/buysell/pool/buy/pool_market_buy_page.dart';
 import 'package:egat_flutter/screens/session.dart';
 import 'package:egat_flutter/screens/widgets/loading_dialog.dart';
@@ -187,9 +188,13 @@ class _PoolMarketTradeScreenState extends State<PoolMarketTradeScreen> {
                                       items: dateItem.map((String items) {
                                         return DropdownMenuItem(
                                           value: items,
-                                          child: Text(DateFormat('dd MMMM yyyy')
-                                              .format(DateTime.parse(items)
-                                                  .toLocal())),
+                                          child: Text(DateFormat(
+                                            'dd MMMM yyyy',
+                                            AppLocalizations.of(context)
+                                                .getLocale()
+                                                .toString(),
+                                          ).format(
+                                              DateTime.parse(items).toLocal())),
                                         );
                                       }).toList(),
                                       underline: DropdownButtonHideUnderline(
@@ -604,11 +609,11 @@ class _PoolMarketTradeScreenState extends State<PoolMarketTradeScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              "Market clearing price",
+                              AppLocalizations.of(context).translate('trade-poolmarket-marketClearingPrice'),
                               style: TextStyle(fontSize: 17),
                             ),
                             Text(
-                              "Market clearing volume",
+                              AppLocalizations.of(context).translate('trade-poolmarket-marketClearingVolumn'),
                               style: TextStyle(fontSize: 17),
                             ),
                           ],

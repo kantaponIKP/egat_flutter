@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:egat_flutter/constant.dart';
+import 'package:egat_flutter/i18n/app_localizations.dart';
 import 'package:egat_flutter/screens/page/widgets/page_appbar.dart';
 import 'package:egat_flutter/screens/pages/main/home/buysell/bilateral/apis/bilateral_api.dart';
 import 'package:egat_flutter/screens/pages/main/home/buysell/bilateral/apis/models/BilateralLongTermSellInfoResponse.dart';
@@ -138,8 +139,8 @@ class __BodyState extends State<_Body> {
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Text('Period', style: TextStyle(fontSize: 15)),
-                Text('Everyday', style: TextStyle(fontSize: 13)),
+                Text(AppLocalizations.of(context).translate('trade-bilateral-period'), style: TextStyle(fontSize: 15)),
+                Text(AppLocalizations.of(context).translate('everyday'), style: TextStyle(fontSize: 13)),
                 SizedBox(height: 16),
                 Expanded(
                   child: _TransactionList(
@@ -662,11 +663,11 @@ class _TransactionItemState extends State<_TransactionItem> {
       mainAxisSize: MainAxisSize.min,
       children: [
         _TransactionDropDownInput(
-          title: 'Days',
+          title: AppLocalizations.of(context).translate('trade-longterm-days'),
           options: widget.selectedDuration == null
               ? widget.dayOptions
               : [widget.selectedDuration!],
-          unit: 'Days',
+          unit: AppLocalizations.of(context).translate('days'),
           value: widget.selectedDuration == null
               ? _duration
               : widget.selectedDuration!,
@@ -674,7 +675,7 @@ class _TransactionItemState extends State<_TransactionItem> {
           disabled: widget.disabled,
         ),
         _TransactionInput(
-          title: 'Energy to Sale',
+          title: AppLocalizations.of(context).translate('trade-bilateral-energyToSale'),
           unit: 'kWh',
           controller: energyToSaleTextController,
           disabled: widget.disabled,
@@ -687,8 +688,8 @@ class _TransactionItemState extends State<_TransactionItem> {
           disabled: widget.disabled,
         ),
         _TransactionInput(
-          title: 'Offer to Sell Price',
-          secondaryTitle: 'Market price = THB 3.00',
+          title: AppLocalizations.of(context).translate('trade-offerToSellPrice'),
+          secondaryTitle: '${AppLocalizations.of(context).translate('trade-marketPrice')} = THB 3.00',
           unit: 'THB/kWh',
           controller: offerToSalePriceTextController,
           disabled: widget.disabled,

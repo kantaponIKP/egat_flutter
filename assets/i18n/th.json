@@ -81,13 +81,21 @@
   "highestPrice": "ราคาสูงสุด",
   "lowestEnergy": "ปริมาณพลังงานต่ำสุด",
   "highestEnergy": "ปริมาณพลังงานสูงสุด",
+  "lowest": "ต่ำสุด",
+  "highest": "สูงสุด",
+  "energy": "พลังงาน",
   "searchOrders": "ค้นหารายการ",
   "amount": "จำนวน",
   "price": "ราคา",
+  "price-lowercase": "ราคา",
   "agree": "ยืนยัน",
   "cancel": "ยกเลิก",
   "days": "วัน",
+  "days-lowercase": "วัน",
+  "year": "ปี",
   "everyday": "ทุกวัน",
+  "date": "วันที่",
+  "period": "ช่วงเวลา",
 
   "pleaseWait": "กรุณารอสักครู่...",
 
@@ -165,6 +173,8 @@
   "home-daily": "รายวัน",
 
   "trade-menu-forecast": "ค่าพยากรณ์",
+  "trade-menu-forecast-top": "ค่าพยากรณ์",
+  "trade-menu-forecast-bottom": "พลังงานไฟฟ้า",
   "trade-menu-bilateral-top": "ตลาดทวิภาคีซื้อขายไฟฟ้า",
   "trade-menu-bilateral-bottom": "(Bilatertal Trade)",
   "trade-menu-poolMarket-top": "ตลาดกลางซื้อขายไฟฟ้า",
@@ -236,6 +246,8 @@
   "trade-bilateral-placeOrder": "ทำรายการ",
   "trade-bilateral-energy": "พลังงาน",
 
+  "trade-estimateNetPrice": "ค่าพลังงานไฟฟ้าสุทธิ",
+
   "trade-estimatedBuy": "ประมาณการค่าซื้อพลังงานไฟฟ้า",
   "trade-netEnergyPrice": "ค่าพลังงานไฟฟ้าสุทธิ",
   "trade-energyToBuy": "พลังงานไฟฟ้าที่จะซื้อ",
@@ -246,23 +258,29 @@
   "trade-tradingFee": "ค่าธรรมเนียมการซื้อขายพลังงานไฟฟ้า",
   "trade-vat": "ภาษีมูลค่าเพิ่ม (7%)",
   "trade-netEstimatedEnergyPrice": "ประมาณการค่าพลังงานไฟฟ้าสุทธิ",
+  "trade-estimatedSales": "ประมาณการค่าขายพลังงานไฟฟ้า",
+  "trade-notIncludeVat": "(ไม่รวมภาษีมูลค่าเพิ่ม 7%)",
 
-  "trade-bilateral-offerToSell-Bilateral": "พลังงานไฟฟ้าที่จะเสนอขาย",
+  "trade-bilateral-offerToSell-bilateral": "พลังงานไฟฟ้าที่จะเสนอขาย",
   "trade-bilateral-shortTermBilateral": "สัญญา Bilateral แบบระยะสั้น",
   "trade-bilateral-registerToLongTerm": "สมัครทำสัญญา Bilateral แบบระยะยาว",
   "trade-bilateral-date": "วันที่",
   "trade-bilateral-period": "ช่วงเวลา",
   "trade-bilateral-energyToSale": "พลังงานไฟฟ้าที่จะขาย",
-  "trade-bilateral-offerToSellPrice": "ราคาพลังงานที่จะเสนอขาย",
-  "trade-bilateral-marketPrice": "ราคาตลาด",
+  "trade-offerToSellPrice": "ราคาพลังงานที่จะเสนอขาย",
+  "trade-marketPrice": "ราคาตลาด",
   "trade-bilateral-tradeingFee": "ค่าธรรมเนียมการซื้อขายพลังงานไฟฟ้า",
   "trade-bilateral-estimatedSales": "ประมาณการค่าขายพลังงานไฟฟ้า",
   "trade-bilateral-offerToSellEveryday": "พลังงานไฟฟ้าที่จะเสนอขาย",
   "trade-bilateral-for": "ระยะเวลา",
 
+  "trade-longterm-days": "ระยะเวลา",
+
   "trade-poolmarket-marketClearingPrice": "ราคาตลาด",
   "trade-poolmarket-marketClearingVolumn": "จำนวนพลังงานตลาด",
   "trade-poolmarket-bidToBuy": "ประมูลซื้อพลังงาน",
+  "trade-poolmarket-offerToSell": "พลังงานไฟฟ้าที่จะเสนอขาย",
+  "trade-poolmarket-energyToSale": "พลังงานไฟฟ้าที่จะขาย",
 
 
   "settlement-bilateralTrade": "ตลาดทวิภาคีซื้อขายไฟฟ้า (Bilateral Trade)",

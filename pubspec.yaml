@@ -74,6 +74,7 @@ flutter:
   assets:
     - assets/images/
     - assets/images/icons/home/
+    - assets/images/icons/home/trade
     - assets/images/icons/payment/
     - assets/images/icons/bottom_navigation_bar/
     - assets/images/icons/sidebar/
