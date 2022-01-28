@@ -1,20 +1,35 @@
+import 'dart:io';
+import 'package:egat_flutter/constant.dart';
+import 'package:egat_flutter/i18n/app_localizations.dart';
 import 'package:egat_flutter/screens/registration/registration_model.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
 
 void askForRegistrationCancelConfirmation(BuildContext context) {
   var model = Provider.of<PageModel>(context, listen: false);
-
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return Provider(
-        create: (context) => model,
-        child: RegistrationCancellationConfirmDialog(),
-      );
-    },
-  );
+  if (Platform.isIOS) {
+    showCupertinoDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Provider(
+          create: (context) => model,
+          child: RegistrationCancellationConfirmIOSDialog(),
+        );
+      },
+    );
+  } else {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Provider(
+          create: (context) => model,
+          child: RegistrationCancellationConfirmAndroidDialog(),
+        );
+      },
+    );
+  }
 }
 
 Future<void> showLoading() async {
@@ -23,7 +38,6 @@ Future<void> showLoading() async {
   }
 
   await EasyLoading.show(
-    status: "กรุณารอสักครู่...",
     maskType: EasyLoadingMaskType.black,
   );
 }
@@ -39,19 +53,27 @@ void showException(BuildContext context, String message) {
   ));
 }
 
-class RegistrationCancellationConfirmDialog extends StatelessWidget {
-  RegistrationCancellationConfirmDialog({
+class RegistrationCancellationConfirmAndroidDialog extends StatelessWidget {
+  RegistrationCancellationConfirmAndroidDialog({
     Key? key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    PageModel model = Provider.of<PageModel>(context);
+    return buildAndroidAlerDialog(context);
+  }
 
+  Widget buildAndroidAlerDialog(BuildContext context) {
+    PageModel model = Provider.of<PageModel>(context);
     return AlertDialog(
-      title: const Text("ยกเลิกการลงทะเบียน"),
-      content: const Text(
-        "ต้องการที่จะยกเลิกการลงทะเบียนหรือไม่?",
+      backgroundColor: whiteColor,
+      title: Text(
+        AppLocalizations.of(context).translate('message-registration-title'),
+        style: TextStyle(color: blackColor, fontWeight: FontWeight.bold),
+      ),
+      content: Text(
+        AppLocalizations.of(context).translate('message-registration-content'),
+        style: TextStyle(color: blackColor),
       ),
       actions: [
         TextButton(
@@ -59,9 +81,9 @@ class RegistrationCancellationConfirmDialog extends StatelessWidget {
             Navigator.pop(context);
           },
           child: Text(
-            "ไม่ต้องการ",
+            AppLocalizations.of(context).translate('message-registration-no'),
             style: TextStyle(
-              color: Theme.of(context).textTheme.bodyText2!.color,
+              color: blackColor,
             ),
           ),
         ),
@@ -71,13 +93,60 @@ class RegistrationCancellationConfirmDialog extends StatelessWidget {
             Navigator.pop(context);
           },
           child: Text(
-            "ต้องการ",
+            AppLocalizations.of(context).translate('message-registration-yes'),
             style: TextStyle(
               color: Theme.of(context).errorColor,
               fontWeight: FontWeight.bold,
             ),
           ),
         ),
+      ],
+    );
+  }
+}
+
+class RegistrationCancellationConfirmIOSDialog extends StatelessWidget {
+  RegistrationCancellationConfirmIOSDialog({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return buildIOSAlerDialog(context);
+  }
+
+  Widget buildIOSAlerDialog(BuildContext context) {
+    PageModel model = Provider.of<PageModel>(context);
+    return CupertinoAlertDialog(
+      title: new Text(
+        AppLocalizations.of(context).translate('message-registration-title'),
+      ),
+      content: Padding(
+        padding: const EdgeInsets.only(bottom: 6),
+        child: new Text(
+          AppLocalizations.of(context)
+              .translate('message-registration-content'),
+        ),
+      ),
+      actions: <Widget>[
+        CupertinoDialogAction(
+          child: Text(
+            AppLocalizations.of(context).translate('message-registration-no'),
+          ),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+        CupertinoDialogAction(
+          child: Text(
+            AppLocalizations.of(context).translate('message-registration-yes'),
+          ),
+          isDestructiveAction: true,
+          onPressed: () async {
+            await model.cancelRegistration();
+            Navigator.pop(context);
+          },
+        )
       ],
     );
   }

@@ -142,7 +142,10 @@ class _DailyDataDisplaySection extends StatelessWidget {
                 ],
               ),
               CollapsableReportRow(
-                title: Text('Scheduled Contracts'),
+                title: Text(
+                  AppLocalizations.of(context).translate(
+                      'settlement-settlementReport-scheduledContracts'),
+                ),
                 value: Text(report.scheduledContracts.toStringAsFixed(0)),
                 textStyle: defaulTextStyle,
                 collapseTextStyle: defaultCollapseTextStyle,
@@ -229,7 +232,8 @@ class _DailyDataDisplaySection extends StatelessWidget {
               ),
               CollapsableReportRow(
                 title: Text(
-                  "Buyer Imbalance",
+                  AppLocalizations.of(context)
+                      .translate('settlement-settlementReport-buyerImbalance'),
                 ),
                 value: Text('${report.buyerImbalance.toStringAsFixed(2)} THB'),
                 textStyle: defaultImbalanceTextStyle,
@@ -975,7 +979,10 @@ class _MonthSelectionDropdown extends StatelessWidget {
           return DropdownMenuItem(
             value: item,
             child: Text(
-              DateFormat('MMMM yyyy').format(item.toLocal()),
+              DateFormat(
+                'MMMM yyyy',
+                AppLocalizations.of(context).getLocale().toString(),
+              ).format(item.toLocal()),
             ),
           );
         }).toList(),

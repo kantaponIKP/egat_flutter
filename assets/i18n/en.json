@@ -96,6 +96,15 @@
   "everyday": "Everyday",
   "date": "Date",
   "period": "Period",
+  "required": "Required",
+
+  "validation-required": "Required",
+  "validation-invalidEmailAddress": "Invalid email address",
+  "validation-mustBeContain-6digits": "Must be contain at least 6 digits",
+  "validation-mustBeContain-8or10digits": "Must be contain 8 or 10 digits",
+  "validation-mustBeContain-10digits": "Must be number 10 digits",
+  "validation-password-MustBe": "Password must be including UPPER/lowercase and \nthe number",
+  "validation-password-NotMatch": "Password doesn't match",
 
   "pleaseWait": "Please wait...",
 
@@ -164,6 +173,17 @@
   "message-removePayment-cancel": "Cancel",
   "message-removePayment-remove": "Remove",
 
+  "message-signout-title": "Are you sure you want to sign out?",
+  "message-signout-signout": "Sign Out",
+
+  "message-photo-selectPhoto": "Select Photo",
+  "message-photo-removePhoto": "Remove Photo",
+
+  "message-registration-title": "Do you want to cancel the registration?",
+  "message-registration-content": "You cannot undo this action.",
+  "message-registration-yes": "Yes",
+  "message-registration-no": "No",
+
   "home-energyStorage": "Energy Storage",
   "home-grid": "Grid",
   "home-energyCanBeSold": "Energy can be sold in 1 day advance",
@@ -229,11 +249,15 @@
   "trade-forecast-bilateralTrade": "Bilateral Trade",
   "trade-forecast-poolMarketTrade": "Pool Market Trade",
 
+  "trade-matched": "Matched",
   "trade-offers": "Offers",
   "trade-toSell": "to sell",
   "trade-toBuy": "to buy",
   "trade-offersToSell": "Offers to sell",
   "trade-offersToBuy": "Offers to buy",
+  "trade-offerToSell": "Offer to Sell",
+  "trade-ChooseToBuy": "Choose to Buy",
+  "trade-BidToBuy": "Bid to Buy",
   "trade-status-open": "OPEN",
   "trade-status-close": "CLOSE",
   "trade-status-matched": "MATCHED",
@@ -321,8 +345,10 @@
 
   "settlement-menu-order": "Order",
   "settlement-menu-energyTransfer": "Energy Transfer",
-  "settlement-menu-SettlementReport": "Settlement Report",
+  "settlement-menu-SettlementReport-first": "Settlement",
+  "settlement-menu-SettlementReport-second": "Report",
   
+  "settlement-energyTransfer-bidToBuy": "Bid to Buy",
   "settlement-energyTransfer-deliveryTime": "Delivery Time",
   "settlement-energyTransfer-offerToSell": "Offer to Sell",
   "settlement-energyTransfer-commitedAmount": "Commited amount",
@@ -385,6 +411,13 @@
   "settlement-settlementReport-netEnergyBuyPrice": "NET Energy Buy price",
 
   "settlement-settlementReport-longTermBilateralTrade": "Long term Bilateral trade",
-  "settlement-settlementReport-poolMarketTrade": "Pool Market trade"
+  "settlement-settlementReport-poolMarketTrade": "Pool Market trade",
 
+  "billing-netEnergyTradingPayment": "Net Energy Trading Payment",
+  "billing-gridPrice": "Grid Price",
+  "billing-wheelingCharge": "Wheeling Charge",
+  "billing-EstimatedNetPayment": "Estimated Net Payment",
+  "billing-asOf": "as of",
+  "billing-viewPreliminaryInvoice": "View Preliminary Invoice",
+  "billing-viewPreviousInvoice": "View Previous Invoice"
 }

@@ -15,8 +15,8 @@
   "reset-password": "ตั้งค่ารหัสผ่านใหม่",
   "already-have-an-account": "มีบัญชีอยู่แล้ว? ",
   "please-check-your-email-to-reset-your-password": "โปรดตรวจสอบอีเมลของคุณ เพื่อตั้งค่ารหัสผ่านใหม่",
-  "create": "สร้าง",
-  "account": "บัญชีใหม่",
+  "createAccount-first": "สร้าง",
+  "createAccount-second": "บัญชีใหม่",
   "full-name": "ชื่อจริง",
   "username": "ชื่อผู้ใช้",
   "phone-number": "เบอร์โทรศัพท์",
@@ -59,7 +59,7 @@
   "change-password": "เปลี่ยนรหัสผ่าน",
   "submit": "ยอมรับ",
   "create-new-password": "สร้างรหัสผ่านใหม่",
-  "change-password-description": "รหัสผ่านใหม่จะต้องแตกต่างกับรหัสผ่านเดิม และต้องมีไม่ต่ำกว่า 6 หลัก โดยต้องมีตัวอักษรภาษาอังกฤษ ตัวเลข และตัวอักษรพิเศษอย่างน้อย อย่างละ 1 ตัว",
+  "change-password-description": "รหัสผ่านใหม่จะต้องแตกต่างกับรหัสผ่านเดิม และต้องมีไม่ต่ำกว่า 6 หลัก โดยต้องมีตัวอักษรภาษาอังกฤษตัวใหญ่, ตัวเล็ก และ ตัวเลข อย่างละ 1 ตัว",
   "old-password": "รหัสผ่านเก่า",
   "new-password": "รหัสผ่านใหม่",
   "confirm-new-password": "ยืนยันรหัสผ่านใหม่",
@@ -96,6 +96,15 @@
   "everyday": "ทุกวัน",
   "date": "วันที่",
   "period": "ช่วงเวลา",
+  "required": "จำเป็น",
+
+  "validation-required": "จำเป็น",
+  "validation-invalidEmailAddress": "อีเมลไม่ถูกต้อง",
+  "validation-mustBeContain-6digits": "ต้องเป็นตัวเลขอย่างน้อย 6 หลัก",
+  "validation-mustBeContain-8or10digits": "ต้องเป็นตัวเลข 8 หรือ 10 หลัก",
+  "validation-mustBeContain-10digits": "ต้องเป็นตัวเลข 6 หลัก",
+  "validation-password-MustBe": "รหัสผ่านต้องประกอบด้วย ตัวอักษรภาษาอังกฤษตัวใหญ่,\nตัวเล็ก และตัวเลข อย่างละ 1 ตัว",
+  "validation-password-NotMatch": "รหัสผ่านไม่ตรงกัน",
 
   "pleaseWait": "กรุณารอสักครู่...",
 
@@ -164,6 +173,17 @@
   "message-removePayment-cancel": "ยกเลิก",
   "message-removePayment-remove": "ลบ",
 
+  "message-signout-title": "คุณแน่ใจว่าต้องการออกจากระบบใช่หรือไม่?",
+  "message-signout-signout": "ออกจากระบบ",
+
+  "message-photo-selectPhoto": "เลือกรูปภาพ",
+  "message-photo-removePhoto": "ลบรูปภาพ",
+
+  "message-registration-title": "ต้องการที่จะยกเลิกการลงทะเบียนหรือไม่?",
+  "message-registration-content": "คุณไม่สามารถย้อนกลับกระบวนการนี้ได้",
+  "message-registration-yes": "ต้องการ",
+  "message-registration-no": "ไม่ต้องการ",
+
   "home-energyStorage": "แบตเตอรี่",
   "home-grid": "กริด",
   "home-energyCanBeSold": "ไฟที่จะขายได้ 1 วันล่วงหน้า",
@@ -229,11 +249,15 @@
   "trade-forecast-bilateralTrade": "ตลาดวิภาคีซื้อขายไฟฟ้า (Bilateral Trade)",
   "trade-forecast-poolMarketTrade": "ตลาดกลางซื้อขายไฟฟ้า (Pool Market Trade)",
 
+  "trade-matched": "ผูกมัดแล้ว",
   "trade-offers": "เสนอ",
   "trade-toSell": "ขายพลังงาน",
   "trade-toBuy": "ซื้อพลังงาน",
   "trade-offersToSell": "เสนอขายพลังงาน",
   "trade-offersToBuy": "เสนอซื้อพลังงาน",
+  "trade-offerToSell": "เสนอขายพลังงาน",
+  "trade-chooseToBuy": "เสนอซื้อพลังงาน",
+  "trade-bidToBuy": "ประมูลซื้อพลังงาน",
   "trade-status-open": "เปิด",
   "trade-status-close": "ปิด",
   "trade-status-matched": "ผูกมัดแล้ว",
@@ -282,7 +306,6 @@
   "trade-poolmarket-offerToSell": "พลังงานไฟฟ้าที่จะเสนอขาย",
   "trade-poolmarket-energyToSale": "พลังงานไฟฟ้าที่จะขาย",
 
-
   "settlement-bilateralTrade": "ตลาดทวิภาคีซื้อขายไฟฟ้า (Bilateral Trade)",
   "settlement-poolMarketTrade": "ตลาดกลางซื้อขายไฟฟ้า (Pool Market Trade)",
 
@@ -322,8 +345,10 @@
 
   "settlement-menu-order": "คำสั่งซื้อ/ขาย",
   "settlement-menu-energyTransfer": "การถ่ายโอนพลังงาน",
-  "settlement-menu-SettlementReport": "รายงานการทำบัญชี",
+  "settlement-menu-SettlementReport-first": "รายงานการทำบัญชี",
+  "settlement-menu-SettlementReport-second": "",
 
+  "settlement-energyTransfer-bidToBuy": "พลังงานไฟฟ้าที่ประมูลซื้อ",
   "settlement-energyTransfer-deliveryTime": "เวลาส่งพลังงานไฟฟ้า",
   "settlement-energyTransfer-offerToSell": "พลังงานไฟฟ้าที่จะเสนอขาย",
   "settlement-energyTransfer-commitedAmount": "ปริมาณพลังงานไฟฟ้าที่ตกลงจะซื้อขายแล้ว",
@@ -386,5 +411,13 @@
   "settlement-settlementReport-netEnergyBuyPrice": "ค่าพลังงานไฟฟ้าสุทธิของผู้ซื้อ",
 
   "settlement-settlementReport-longTermBilateralTrade": "สัญญา Bilateral แบบระยะยาว",
-  "settlement-settlementReport-poolMarketTrade": "ตลาดกลางซื้อขายไฟฟ้า (Pool Market trade)"
+  "settlement-settlementReport-poolMarketTrade": "ตลาดกลางซื้อขายไฟฟ้า (Pool Market trade)",
+
+  "billing-netEnergyTradingPayment": "ค่าซื้อขายพลังงานไฟฟ้าสุทธิ",
+  "billing-gridPrice": "ราคากริด",
+  "billing-wheelingCharge": "ค่าใช้บริการหรือการเชื่อมต่อระบบโครงข่ายไฟฟ้า",
+  "billing-EstimatedNetPayment": "ประมาณการค่าไฟฟ้าสุทธิ",
+  "billing-asOf": "ณ วันที่",
+  "billing-viewPreliminaryInvoice": "ดูใบแจ้งยอดของรอบบิลปัจจุบัน",
+  "billing-viewPreviousInvoice": "ดูใบแจ้งยอดของรอบบิลย้อนหลัง"
 }

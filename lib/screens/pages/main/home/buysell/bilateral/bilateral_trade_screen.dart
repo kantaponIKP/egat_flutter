@@ -206,6 +206,7 @@ class _TradeItemCard extends StatelessWidget {
       child: GestureDetector(
         onTap: item.status != BilateralTradeItemStatus.CLOSE ? onTap : null,
         child: Card(
+          color: surfaceGreyColor,
           child: IntrinsicHeight(
             child: Column(
               children: [
@@ -483,11 +484,11 @@ class _ViewModeSelectionDropdown extends StatelessWidget {
     final _viewModeDropdownItems = <_ViewDropdownItem>[
       _ViewDropdownItem(
         type: _ViewModeType.OFFER_TO_SELL,
-        title: AppLocalizations.of(context).translate('trade-offersToSell'),
+        title: AppLocalizations.of(context).translate('trade-offerToSell'),
       ),
       _ViewDropdownItem(
         type: _ViewModeType.CHOOSE_TO_BUY,
-        title: AppLocalizations.of(context).translate('trade-offersToBuy'),
+        title: AppLocalizations.of(context).translate('trade-chooseToBuy'),
       ),
     ];
     return Container(

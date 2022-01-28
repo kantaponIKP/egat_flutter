@@ -148,12 +148,14 @@ class _CardPaymentScreenState extends State<CardPaymentScreen> {
             ),
             counter: Offstage(),
           ),
-          maxLength: 20,
+          maxLength: 16,
           validator: (value) {
             if (value == null || value.isEmpty) {
-              return "Required";
+              return AppLocalizations.of(context)
+                      .translate('validation-required');
             } else if (value.length < 16) {
-              return "Required";
+              return AppLocalizations.of(context)
+                      .translate('validation-required');
             }
             return null;
           },
@@ -187,9 +189,11 @@ class _CardPaymentScreenState extends State<CardPaymentScreen> {
           maxLength: 7,
           validator: (value) {
             if (value == null || value.isEmpty) {
-              return "Required";
+              return AppLocalizations.of(context)
+                      .translate('validation-required');
             } else if (value.length != 7) {
-              return "Required";
+              return AppLocalizations.of(context)
+                      .translate('validation-required');
             }
             return null;
           },
@@ -227,9 +231,11 @@ class _CardPaymentScreenState extends State<CardPaymentScreen> {
             maxLength: 3,
             validator: (value) {
               if (value == null || value.isEmpty) {
-                return "Required";
+                return AppLocalizations.of(context)
+                      .translate('validation-required');
               } else if (value.length != 3) {
-                return "Required";
+                return AppLocalizations.of(context)
+                      .translate('validation-required');
               }
               return null;
             },

@@ -261,6 +261,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget _buildForm(BuildContext context) {
     return Form(
       key: _formKey,
+      autovalidateMode: AutovalidateMode.onUserInteraction,
       child: Column(
         children: [
           Container(
@@ -274,7 +275,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               validator: (value) {
                 if (value == null || value.trim().length == 0) {
-                  return "Require email";
+                  return null;
                 }
                 return null;
               },
@@ -305,7 +306,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               validator: (value) {
                 if (value == null || value.trim().length == 0) {
-                  return "Require password";
+                  return null;
                 }
                 return null;
               },
@@ -455,19 +456,21 @@ class _LoginScreenState extends State<LoginScreen> {
   void _onLogin() async {
     FocusScope.of(context).unfocus();
 
-    await showLoading();
-    try {
-      var login = Provider.of<LoginModel>(context, listen: false);
-      await login.processLogin(
-          email: _emailController!.text,
-          password: _passwordController!.text,
-          rememberMe: _rememberMe);
-      await getPersonalInformation();
-      goToLoginPage();
-    } catch (e) {
-      showIntlException(context, e);
-    } finally {
-      await hideLoading();
+    if (_formKey.currentState!.validate()) {
+      await showLoading();
+      try {
+        var login = Provider.of<LoginModel>(context, listen: false);
+        await login.processLogin(
+            email: _emailController!.text,
+            password: _passwordController!.text,
+            rememberMe: _rememberMe);
+        await getPersonalInformation();
+        goToLoginPage();
+      } catch (e) {
+        showIntlException(context, e);
+      } finally {
+        await hideLoading();
+      }
     }
   }
 

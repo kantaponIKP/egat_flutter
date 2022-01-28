@@ -172,7 +172,8 @@ class _MeterScreenState extends State<MeterScreen> {
               },
               validator: (value) {
                 if (value == null || value.isEmpty) {
-                  return "Required";
+                  return AppLocalizations.of(context)
+                      .translate('validation-required');
                 }
                 return null;
               },
@@ -193,9 +194,10 @@ class _MeterScreenState extends State<MeterScreen> {
                   maxLength: 10,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return "Required";
+                      return AppLocalizations.of(context)
+                      .translate('validation-required');
                     } else if (value.length != 8 && value.length != 10) {
-                      return "Must be contain 8 or 10 digits";
+                      return AppLocalizations.of(context).translate('validation-mustBeContain-8or10digits');
                     }
                     return null;
                   },

@@ -103,11 +103,17 @@ class EgatApp extends StatelessWidget {
             debugShowCheckedModeBanner: false,
             title: appTitle,
             theme: ThemeData(
-              brightness: Brightness.dark,
+              // brightness: Brightness.dark,
               // primarySwatch: primaryColor,
               backgroundColor: backgroundColor,
               primaryColor: primaryColor,
-              fontFamily: 'Montserrat',
+              // fontFamily:
+                  // AppLocalizations.of(context).getLocale().toString() == 'th'
+                  //     ? 'Kanit'
+                  //     : 'Montserrat',
+                  fontFamily: 'Kanit',
+                      // fontFamily: 'Montserrat',
+              canvasColor: surfaceColor, //dropdown color
               unselectedWidgetColor: Colors.white,
               radioTheme: RadioThemeData(
                   fillColor: MaterialStateProperty.all(primaryColor)),
@@ -172,38 +178,10 @@ class EgatApp extends StatelessWidget {
                 subtitle1: TextStyle(
                   color: textColor,
                 ),
-                // subtitle2: TextStyle(
-                //   fontWeight: FontWeight.w300,
-                //   color: textColor,
-                // ),
                 bodyText1: TextStyle(
                   fontWeight: FontWeight.w300,
                   color: textColor,
                 ),
-                // headline1: TextStyle(
-                //   fontWeight: FontWeight.w300,
-                //   color: textColor,
-                // ),
-                // headline2: TextStyle(
-                //   fontWeight: FontWeight.w300,
-                //   color: textColor,
-                // ),
-                // headline3: TextStyle(
-                //   fontWeight: FontWeight.w300,
-                //   color: textColor,
-                // ),
-                // headline4: TextStyle(
-                //   fontWeight: FontWeight.w300,
-                //   color: textColor,
-                // ),
-                // headline5: TextStyle(
-                //   fontWeight: FontWeight.w300,
-                //   color: textColor,
-                // ),
-                // headline6: TextStyle(
-                //   fontWeight: FontWeight.w300,
-                //   color: textColor,
-                // ),
               ),
               textButtonTheme: TextButtonThemeData(
                 style: ButtonStyle(
@@ -250,6 +228,7 @@ class EgatApp extends StatelessWidget {
               AppLocalizations.delegate,
               GlobalMaterialLocalizations.delegate,
               GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
             ],
           );
         },

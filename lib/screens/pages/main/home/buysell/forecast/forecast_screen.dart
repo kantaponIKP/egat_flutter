@@ -922,7 +922,7 @@ class _ForecastEnergyWidget extends StatelessWidget {
       child: Opacity(
         opacity: opacity,
         child: Card(
-          // color: onBgColor,
+          color: surfaceGreyColor,
           child: Container(
             constraints: BoxConstraints(minHeight: 72),
             width: 132,

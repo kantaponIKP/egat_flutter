@@ -452,7 +452,10 @@ class _MonthSelectionDropdown extends StatelessWidget {
           return DropdownMenuItem(
             value: item,
             child: Text(
-              DateFormat('MMMM yyyy').format(item.toLocal()),
+              DateFormat(
+                'MMMM yyyy',
+                AppLocalizations.of(context).getLocale().toString(),
+              ).format(item.toLocal()),
             ),
           );
         }).toList(),
