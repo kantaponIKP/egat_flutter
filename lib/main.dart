@@ -111,8 +111,8 @@ class EgatApp extends StatelessWidget {
                   // AppLocalizations.of(context).getLocale().toString() == 'th'
                   //     ? 'Kanit'
                   //     : 'Montserrat',
-                  fontFamily: 'Kanit',
-                      // fontFamily: 'Montserrat',
+                  // fontFamily: 'Kanit',
+                      fontFamily: 'Montserrat',
               canvasColor: surfaceColor, //dropdown color
               unselectedWidgetColor: Colors.white,
               radioTheme: RadioThemeData(
