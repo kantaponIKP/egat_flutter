@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:egat_flutter/constant.dart';
 import 'package:egat_flutter/i18n/app_language.dart';
 import 'package:egat_flutter/i18n/app_localizations.dart';
@@ -5,8 +7,10 @@ import 'package:egat_flutter/screens/pages/main/setting/add_payment/add_payment_
 import 'package:egat_flutter/screens/pages/main/setting/change_pin/change_pin_page.dart';
 import 'package:egat_flutter/screens/pages/main/setting/change_pin/states/pin_state.dart';
 import 'package:egat_flutter/screens/pages/main/setting/state/notification_state.dart';
+import 'package:egat_flutter/screens/pages/main/states/main_screen_title_state.dart';
 import 'package:egat_flutter/screens/pages/main/widgets/navigation_menu_widget.dart';
 import 'package:egat_flutter/screens/session.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
@@ -37,14 +41,23 @@ class _SettingMainScreenState extends State<SettingMainScreen> {
   }
 
   @override
-  void didChangeDependencies(){
+  void didChangeDependencies() {
     super.didChangeDependencies();
     _getReceiveNotificationFromState();
+    _setTitle();
     // _getPin();
   }
 
-      void _getReceiveNotificationFromState() {
-    NotificationState notificationState = Provider.of<NotificationState>(context);
+  void _setTitle() {
+    MainScreenTitleState mainScreenTitle =
+        Provider.of<MainScreenTitleState>(context, listen: false);
+    mainScreenTitle.setTitleOneTitle(
+        title: AppLocalizations.of(context).translate('title-setting'));
+  }
+
+  void _getReceiveNotificationFromState() {
+    NotificationState notificationState =
+        Provider.of<NotificationState>(context);
     setState(() {
       _receiveMessage = notificationState.currentReceiveMessage;
     });
@@ -64,21 +77,24 @@ class _SettingMainScreenState extends State<SettingMainScreen> {
     pinState.getPinFromStorage();
   }
 
-    void _getReceiveNotification() {
-    NotificationState notificationState = Provider.of<NotificationState>(context, listen: false);
+  void _getReceiveNotification() {
+    NotificationState notificationState =
+        Provider.of<NotificationState>(context, listen: false);
     notificationState.getReceiveMessageFromStorage();
     setState(() {
       _receiveMessage = notificationState.currentReceiveMessage;
     });
   }
 
-    void _setReceiveNotification(bool receiveMessage) {
-      NotificationState notificationState = Provider.of<NotificationState>(context, listen: false);
-      notificationState.setReceiveMessageToStorage(receiveMessage: receiveMessage);
-          setState(() {
+  void _setReceiveNotification(bool receiveMessage) {
+    NotificationState notificationState =
+        Provider.of<NotificationState>(context, listen: false);
+    notificationState.setReceiveMessageToStorage(
+        receiveMessage: receiveMessage);
+    setState(() {
       _receiveMessage = receiveMessage;
     });
-    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -94,18 +110,18 @@ class _SettingMainScreenState extends State<SettingMainScreen> {
     }
     return Scaffold(
         body: SafeArea(
-          child: Container(
-            decoration: BoxDecoration(
-              gradient: RadialGradient(
-                colors: [
-                  Color(0xFF303030),
-                  Colors.black,
-                ],
-              ),
-            ),
-            child: _buildAction(context),
+      child: Container(
+        decoration: BoxDecoration(
+          gradient: RadialGradient(
+            colors: [
+              Color(0xFF303030),
+              Colors.black,
+            ],
           ),
-        ));
+        ),
+        child: _buildAction(context),
+      ),
+    ));
   }
 
   Padding _buildAction(BuildContext context) {
@@ -186,35 +202,75 @@ class _SettingMainScreenState extends State<SettingMainScreen> {
         Text(AppLocalizations.of(context)
             .translate('setting-notification-message')),
         Spacer(),
-        Switch(
-          activeColor: switchActiveColor,
-          value: _receiveMessage!,
-          onChanged: (val) {
-            setState(
-              () {
-                _setReceiveNotification(val);
-              },
-            );
-          },
-        )
+        _buildReceiveNotificationSwitch(context),
       ]),
       Row(children: [
         Text(AppLocalizations.of(context)
             .translate('setting-notification-email')),
         Spacer(),
-        Switch(
-          activeColor: switchActiveColor,
-          value: _isNotiEmail,
-          onChanged: (val) {
-            setState(
-              () {
-                _isNotiEmail = !_isNotiEmail;
-              },
-            );
-          },
-        )
+        _buildReceiveEmailSwitch(context),
       ])
     ]);
+  }
+
+  Widget _buildReceiveNotificationSwitch(BuildContext context) {
+    if (Platform.isIOS) {
+      return CupertinoSwitch(
+        trackColor: disabledColor,
+        value: _receiveMessage!,
+        onChanged: (val) {
+          setState(
+            () {
+              _setReceiveNotification(val);
+            },
+          );
+        },
+      );
+    } else {
+      return Switch(
+        activeColor: switchActiveColor,
+        inactiveTrackColor: disabledColor,
+        activeTrackColor: Colors.green[100],
+        value: _receiveMessage!,
+        onChanged: (val) {
+          setState(
+            () {
+              _setReceiveNotification(val);
+            },
+          );
+        },
+      );
+    }
+  }
+
+  Widget _buildReceiveEmailSwitch(BuildContext context) {
+    if (Platform.isIOS) {
+      return CupertinoSwitch(
+        trackColor: disabledColor,
+        value: _isNotiEmail,
+        onChanged: (val) {
+          setState(
+            () {
+              _isNotiEmail = !_isNotiEmail;
+            },
+          );
+        },
+      );
+    } else {
+      return Switch(
+        activeColor: switchActiveColor,
+        activeTrackColor: Colors.green[100],
+        inactiveTrackColor: disabledColor,
+        value: _isNotiEmail,
+        onChanged: (val) {
+          setState(
+            () {
+              _isNotiEmail = !_isNotiEmail;
+            },
+          );
+        },
+      );
+    }
   }
 
   Widget _buildPinSection() {
@@ -322,22 +378,134 @@ class _SettingMainScreenState extends State<SettingMainScreen> {
               final cardDetail = card.split(";");
               String title =
                   cardDetail[0].replaceRange(0, 12, "**** **** **** ");
-              String expireDate = 'Expire ' + cardDetail[1];
+              String expireDate =
+                  AppLocalizations.of(context).translate('setting-expire') +
+                      ' ' +
+                      cardDetail[1];
               return ListTile(
-                leading: SvgPicture.asset(
-                    'assets/images/icons/payment/cardPayment.svg'),
-                title: Text(title),
-                subtitle: Text(expireDate),
-                trailing: GestureDetector(
-                    onTap: () {
-                      showAlertDialog(context, index);
+                  leading: SvgPicture.asset(
+                      'assets/images/icons/payment/cardPayment.svg'),
+                  title: Text(title),
+                  subtitle: Text(
+                    expireDate,
+                    style: TextStyle(color: whiteColor.withAlpha(160)),
+                  ),
+                  trailing:
+                      // GestureDetector(
+                      //     onTap: () {
+                      //       onRemovePressed(context, index);
+                      //     },
+                      //     child:
+                      IconButton(
+                    icon: Icon(Icons.delete_outline),
+                    color: redColor,
+                    onPressed: () {
+                      onRemovePressed(context, index);
                     },
-                    child: Icon(Icons.delete_outline, color: redColor)),
-              );
+                  ));
+              // );
             },
           ),
         ),
       ],
+    );
+  }
+
+  void onRemovePressed(BuildContext context, int index) {
+    if (Platform.isIOS) {
+      showIOSAlertDialog(context, index);
+    } else {
+      showAndriodAlertDialog(context, index);
+    }
+  }
+
+  showAndriodAlertDialog(BuildContext context, int index) {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) => buildAndroidAlerDialog(context, index),
+    );
+  }
+
+  showIOSAlertDialog(BuildContext context, int index) {
+    return showCupertinoDialog(
+      context: context,
+      builder: (BuildContext context) => buildIOSAlerDialog(context, index),
+    );
+  }
+
+  Widget buildIOSAlerDialog(BuildContext context, int index) {
+    return CupertinoAlertDialog(
+      title: new Text(
+        AppLocalizations.of(context).translate('message-removePayment-title'),
+      ),
+      content: Padding(
+        padding: const EdgeInsets.only(bottom: 6),
+        child: new Text(
+          AppLocalizations.of(context)
+              .translate('message-removePayment-content'),
+        ),
+      ),
+      actions: <Widget>[
+        CupertinoDialogAction(
+          isDefaultAction: true,
+          child: Text(
+            AppLocalizations.of(context)
+                .translate('message-removePayment-cancel'),
+          ),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+        CupertinoDialogAction(
+          child: Text(
+            AppLocalizations.of(context)
+                .translate('message-removePayment-remove'),
+          ),
+          isDestructiveAction: true,
+          onPressed: () {
+            _onRemovePressed(index);
+            Navigator.pop(context);
+          },
+        )
+      ],
+    );
+  }
+
+  Widget buildAndroidAlerDialog(BuildContext context, int index) {
+    return AlertDialog(
+      title: Text(
+        AppLocalizations.of(context).translate('message-removePayment-title'),
+        style: TextStyle(
+            color: blackColor, fontSize: 18, fontWeight: FontWeight.bold),
+      ),
+      content: Text(
+        AppLocalizations.of(context).translate('message-removePayment-content'),
+        style: TextStyle(color: blackColor),
+      ),
+      backgroundColor: whiteColor,
+      actionsAlignment: MainAxisAlignment.end,
+      actions: [
+        TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: Text(
+              AppLocalizations.of(context)
+                  .translate('message-removePayment-cancel'),
+              style: TextStyle(color: blackColor),
+            )),
+        TextButton(
+            onPressed: () {
+              _onRemovePressed(index);
+              Navigator.pop(context);
+            },
+            child: Text(
+              AppLocalizations.of(context)
+                  .translate('message-removePayment-remove'),
+              style: TextStyle(color: redColor),
+            )),
+      ],
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
     );
   }
 
@@ -347,22 +515,26 @@ class _SettingMainScreenState extends State<SettingMainScreen> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text(
-            "Do you want to remove this payment method?",
-            style: TextStyle(color: blackColor, fontWeight: FontWeight.bold),
+            AppLocalizations.of(context)
+                .translate('message-removePayment-title'),
+            style: TextStyle(
+                color: blackColor, fontSize: 18, fontWeight: FontWeight.bold),
           ),
           content: Text(
-            "You cannot undo this action.",
+            AppLocalizations.of(context)
+                .translate('message-removePayment-content'),
             style: TextStyle(color: blackColor),
           ),
           backgroundColor: whiteColor,
-          actionsAlignment: MainAxisAlignment.spaceEvenly,
+          actionsAlignment: MainAxisAlignment.end,
           actions: [
             TextButton(
                 onPressed: () {
                   Navigator.pop(context);
                 },
                 child: Text(
-                  "Cancel",
+                  AppLocalizations.of(context)
+                      .translate('message-removePayment-cancel'),
                   style: TextStyle(color: blackColor),
                 )),
             TextButton(
@@ -371,7 +543,8 @@ class _SettingMainScreenState extends State<SettingMainScreen> {
                   Navigator.pop(context);
                 },
                 child: Text(
-                  "Remove",
+                  AppLocalizations.of(context)
+                      .translate('message-removePayment-remove'),
                   style: TextStyle(color: redColor),
                 )),
           ],

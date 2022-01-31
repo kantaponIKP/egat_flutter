@@ -95,44 +95,6 @@ class _OtpScreenState extends State<OtpScreen> {
         ));
   }
 
-  // AppBar _buildAppBar(BuildContext context) {
-  //   return AppBar(
-  //     title: Text('${AppLocalizations.of(context).translate('back')}',
-  //         style: TextStyle(
-  //           color: Theme.of(context).textTheme.bodyText2!.color,
-  //           fontSize: 16,
-  //         ),
-  //         textAlign: TextAlign.left),
-  //     leading: IconButton(
-  //         icon: Icon(Icons.arrow_back_ios,
-  //             color: Theme.of(context).textTheme.bodyText2!.color),
-  //         onPressed: () => _onBackPressed()),
-  //     centerTitle: false,
-  //     titleSpacing: 0.0,
-  //     leadingWidth: 32,
-  //     elevation: 0,
-  //     backgroundColor: Colors.transparent,
-  //     bottom: PreferredSize(
-  //         child: Container(
-  //             padding: const EdgeInsets.only(left: 32, right: 32, bottom: 16),
-  //             alignment: Alignment.centerLeft,
-  //             child: RichText(
-  //               text: TextSpan(
-  //                 // style: DefaultTextStyle.of(context).style,
-  //                 style: TextStyle(fontSize: 30),
-  //                 children: <TextSpan>[
-  //                   TextSpan(text: 'Create'),
-  //                   TextSpan(
-  //                       text: ' Account',
-  //                       style:
-  //                           TextStyle(color: Theme.of(context).primaryColor)),
-  //                 ],
-  //               ),
-  //             )),
-  //         preferredSize: Size.fromHeight(50)),
-  //   );
-  // }
-
   Padding _buildAction(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(left: 32, right: 32, bottom: 16),
@@ -188,92 +150,7 @@ class _OtpScreenState extends State<OtpScreen> {
         },
       ),
     );
-    // return Padding(
-    //   padding: const EdgeInsets.only(left: 32, right: 32, bottom: 16),
-    //   child: Column(
-    //     children: [
-    //       _buildForm(),
-    //       Spacer(),
-    //       _buildTimer(),
-    //       SizedBox(height: 16),
-    //       _buildOTPPin(),
-    //       _buildResendOTP(),
-    //       Spacer(),
-    //       RegistrationAction(
-    //         actionLabel: const Text("Sign up"),
-    //         onAction: _onSubmit,
-    //       ),
-    //       LoginTextButton()
-    //     ],
-    //   ),
-    // );
   }
-
-  // Widget _buildOTPPin() {
-  //   double deviceWidth = MediaQuery.of(context).size.width;
-  //   double _containerRatio = 0;
-  //   double containerWidth;
-  //   double otpFieldWidth = 50; //default width from Widget
-  //   if (deviceWidth > 468) { //tablet device
-  //     _containerRatio = 0.6;
-  //     containerWidth = deviceWidth * 0.6;
-  //     otpFieldWidth = otpFieldWidth + (deviceWidth * 0.01);
-  //   } else { //mobile device
-  //     _containerRatio = 0.9;
-  //     containerWidth = deviceWidth * 0.9;
-  //     otpFieldWidth = 50 - (50 * 0.3);
-  //     logger.d('otpFied Width ${'otpFieldWidth'}' );
-  //   }
-  //   logger.d('width size ${MediaQuery.of(context).size.width}');
-  //   return Container(
-  //     width: containerWidth,
-  //     child: Padding(
-  //       padding: const EdgeInsets.symmetric(vertical: 8),
-  //       child: PinCodeTextField(
-  //         // scrollPadding: const EdgeInsets.symmetric(vertical: 2),
-  //         textStyle: TextStyle(color: Colors.black),
-  //         pinTheme: PinTheme(
-  //           shape: PinCodeFieldShape.box,
-  //           activeColor: Theme.of(context).textTheme.bodyText2!.color,
-  //           selectedColor: Theme.of(context).primaryColor,
-  //           inactiveColor: Theme.of(context).textTheme.bodyText2!.color,
-  //           // fieldHeight: otpBoxWidth,
-  //           fieldWidth:  otpFieldWidth,
-  //           // fieldOuterPadding: EdgeInsets.fromLTRB(0, 5,0,50),
-  //         ),
-  //         boxShadows: [
-  //           BoxShadow(
-  //             color: Colors.white,
-  //           )
-  //         ],
-  //         inputFormatters: [],
-  //         keyboardType: TextInputType.numberWithOptions(
-  //           signed: false,
-  //           decimal: false,
-  //         ),
-  //         length: 6,
-  //         validator: (value) {
-  //           if (value == null) {
-  //             return "Must be number 6 digits";
-  //           }
-
-  //           if (value.trim().length != 6) {
-  //             return "Must be number 6 digits";
-  //           }
-
-  //           if (!_isNumeric(value)) {
-  //             return "Must be number 6 digits";
-  //           }
-
-  //           return null;
-  //         },
-  //         controller: _pinController,
-  //         onChanged: (String value) {},
-  //         appContext: context,
-  //       ),
-  //     ),
-  //   );
-  // }
 
   Widget _buildOTPPin(BoxConstraints constraints) {
     double containerWidth = 0;
@@ -285,9 +162,7 @@ class _OtpScreenState extends State<OtpScreen> {
     } else {
       containerWidth = constraints.maxWidth;
     }
-    // logger.d(
-    //     'constraints max width: ${constraints.maxWidth} | containerWidth: ${containerWidth}, constraints minx width: ${constraints.minWidth} , otpFieldWidth : ${otpFieldWidth}');
-    // logger.d('width size ${MediaQuery.of(context).size.width} constraints : ${constraints.maxWidth}');
+  
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: Form(
@@ -305,9 +180,6 @@ class _OtpScreenState extends State<OtpScreen> {
               activeColor: Theme.of(context).textTheme.bodyText2!.color,
               selectedColor: Theme.of(context).primaryColor,
               inactiveColor: Theme.of(context).textTheme.bodyText2!.color,
-              // fieldHeight: otpBoxWidth,
-              // fieldWidth: otpFieldWidth,
-              // fieldOuterPadding: EdgeInsets.fromLTRB(0, 5,0,50),
             ),
             boxShadows: [
               BoxShadow(
@@ -332,15 +204,15 @@ class _OtpScreenState extends State<OtpScreen> {
             },
             validator: (value) {
               if (value == null) {
-                return "Must be number 6 digits";
+                return AppLocalizations.of(context).translate('validation-mustBeContain-6digits');
               }
 
               if (value.trim().length != 6) {
-                return "Must be number 6 digits";
+                return AppLocalizations.of(context).translate('validation-mustBeContain-6digits');
               }
 
               if (!_isNumeric(value)) {
-                return "Must be number 6 digits";
+                return AppLocalizations.of(context).translate('validation-mustBeContain-6digits');
               }
               return null;
             },

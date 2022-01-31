@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'dart:ui';
 
 import 'package:egat_flutter/constant.dart';
+import 'package:egat_flutter/i18n/app_localizations.dart';
 import 'package:egat_flutter/screens/forgot_password/widgets/forgot_password_cancellation_dialog.dart';
 import 'package:egat_flutter/screens/page/trade/bottom_button.dart';
 import 'package:egat_flutter/screens/page/widgets/page_appbar.dart';
@@ -243,7 +244,7 @@ class _BilateralBuyScreenState extends State<BilateralBuyScreen> {
                 actionLabel: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 8),
                   child: Text(
-                    "Submit",
+                    AppLocalizations.of(context).translate('submit'),
                     style: TextStyle(
                       fontWeight: FontWeight.w300,
                       fontSize: 20,
@@ -504,7 +505,7 @@ class _SelectionSection extends StatelessWidget {
               Expanded(
                 child: TextField(
                   decoration: InputDecoration(
-                    hintText: "Search",
+                    hintText: AppLocalizations.of(context).translate('search'),
                     hintStyle: TextStyle(
                       color: blackColor,
                       fontWeight: FontWeight.w300,
@@ -555,27 +556,34 @@ class _SelectionSection extends StatelessWidget {
                   final direactionName;
                   switch (item.direction) {
                     case _OfferOrderDirection.ASC:
-                      direactionName = "Lowest";
+                      direactionName =
+                          AppLocalizations.of(context).translate('lowest');
                       break;
                     case _OfferOrderDirection.DESC:
-                      direactionName = "Highest";
+                      direactionName =
+                          AppLocalizations.of(context).translate('highest');
                       break;
                   }
 
                   final propertyName;
                   switch (item.type) {
                     case _OfferOrderType.ENERGY:
-                      propertyName = "Energy";
+                      propertyName =
+                          AppLocalizations.of(context).translate('energy');
                       break;
                     case _OfferOrderType.PRICE:
-                      propertyName = "Price";
+                      propertyName =
+                          AppLocalizations.of(context).translate('price');
                       break;
                   }
 
                   return DropdownMenuItem<_OfferOrder>(
                     value: item,
                     child: Text(
-                      "$direactionName $propertyName",
+                      AppLocalizations.of(context).getLocale().toString() ==
+                              "en"
+                          ? "$direactionName $propertyName"
+                          : "$propertyName$direactionName",
                       style: TextStyle(
                         fontWeight: FontWeight.w300,
                         color: Colors.black,
@@ -621,11 +629,13 @@ class _HeaderSection extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Choose to buy',
+                AppLocalizations.of(context)
+                    .translate('trade-bilateral-chooseToBuy-buy'),
                 style: TextStyle(fontSize: 24, color: redColor),
               ),
               Text(
-                "Short term Bilateral",
+                AppLocalizations.of(context)
+                    .translate('trade-bilateral-shortTermBilateral'),
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.w200),
               ),
             ],
@@ -644,7 +654,8 @@ class _HeaderSection extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                     textAlign: TextAlign.center,
                     text: TextSpan(
-                      text: "Long term Bilateral",
+                      text: AppLocalizations.of(context)
+                          .translate('trade-bilateral-longtermBilateral'),
                       style: TextStyle(
                         color: blackColor,
                         fontWeight: FontWeight.w300,
@@ -672,8 +683,11 @@ class _DateSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var dateFormat = intl.DateFormat('dd MMMM yyyy');
-    var hourFormat = intl.DateFormat('HH:mm');
+    var dateFormat = DateFormat(
+      'dd MMMM yyyy',
+      AppLocalizations.of(context).getLocale().toString(),
+    );
+    var hourFormat = DateFormat('HH:mm');
 
     var startDate = date;
     var endDate = startDate.add(new Duration(hours: 1));
@@ -836,7 +850,10 @@ class _BuyItemHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final dateFormat = intl.DateFormat('HH:mm, dd MMM');
+    final dateFormat = DateFormat(
+      'HH:mm, dd MMM',
+      AppLocalizations.of(context).getLocale().toString(),
+    );
     final createDateString = dateFormat.format(item.date);
 
     return GestureDetector(
@@ -949,7 +966,7 @@ class _BuyItemHeader extends StatelessWidget {
                               children: [
                                 FittedBox(
                                   child: Text(
-                                    "Estimated buy ${item.estimatedBuy.toStringAsFixed(2)} THB",
+                                    "${AppLocalizations.of(context).translate('trade-estimatedBuy')} ${item.estimatedBuy.toStringAsFixed(2)} THB",
                                     style: TextStyle(
                                       color: Colors.white,
                                       fontSize: 10,
@@ -958,7 +975,7 @@ class _BuyItemHeader extends StatelessWidget {
                                 ),
                                 FittedBox(
                                   child: Text(
-                                    "NET energy price ${item.netEnergyPrice.toStringAsFixed(2)} THB/kWh",
+                                    "${AppLocalizations.of(context).translate('trade-netEnergyPrice')} ${item.netEnergyPrice.toStringAsFixed(2)} THB/kWh",
                                     style: TextStyle(
                                       color: Colors.white,
                                       fontSize: 8,
@@ -1013,55 +1030,63 @@ class _BuyItemBody extends StatelessWidget {
           child: Column(
             children: [
               _BuyItemDetail(
-                title: 'Energy to buy',
+                title:
+                    AppLocalizations.of(context).translate('trade-energyToBuy'),
                 value: item.energyToBuy,
                 unit: 'kWh',
                 fontSize: 15,
               ),
               _BuyItemDetail(
-                title: 'Energy tariff ',
+                title: AppLocalizations.of(context)
+                    .translate('trade-energyTariff'),
                 value: item.energyTariff,
                 unit: 'THB/kWh',
                 fontSize: 12,
               ),
               _BuyItemDetail(
-                title: 'Energy price',
+                title:
+                    AppLocalizations.of(context).translate('trade-energyPrice'),
                 value: item.energyPrice,
                 unit: 'THB',
                 fontSize: 15,
               ),
               _BuyItemDetail(
-                title: 'Wheeling charge Tariff',
+                title: AppLocalizations.of(context)
+                    .translate('trade-wheelingChargeTariff'),
                 value: item.wheelingChargeTariff,
                 unit: 'THB/kWh',
                 fontSize: 12,
               ),
               _BuyItemDetail(
-                title: 'Wheeling charge',
+                title: AppLocalizations.of(context)
+                    .translate('trade-wheelingCharge'),
                 value: item.wheelingCharge,
                 unit: 'THB',
                 fontSize: 15,
               ),
               _BuyItemDetail(
-                title: 'Trading fee',
+                title:
+                    AppLocalizations.of(context).translate('trade-tradingFee'),
                 value: item.energyToBuy,
                 unit: 'THB',
                 fontSize: 12,
               ),
               _BuyItemDetail(
-                title: 'Vat (7%)',
+                title: AppLocalizations.of(context).translate('trade-vat'),
                 value: item.vat,
                 unit: 'THB',
                 fontSize: 12,
               ),
               _BuyItemDetail(
-                title: 'Estimated buy',
+                title: AppLocalizations.of(context)
+                    .translate('trade-estimatedBuy'),
                 value: item.estimatedBuy,
                 unit: 'THB',
                 fontSize: 15,
               ),
               _BuyItemDetail(
-                title: 'NET estimated energy price',
+                title: AppLocalizations.of(context)
+                    .translate('trade-netEstimatedEnergyPrice'),
                 value: item.netEnergyPrice,
                 unit: 'THB',
                 fontSize: 12,

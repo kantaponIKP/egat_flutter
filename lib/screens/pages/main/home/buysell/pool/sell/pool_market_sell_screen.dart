@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:egat_flutter/constant.dart';
+import 'package:egat_flutter/i18n/app_localizations.dart';
 import 'package:egat_flutter/screens/forgot_password/widgets/forgot_password_cancellation_dialog.dart';
 import 'package:egat_flutter/screens/page/api/model/PoolMarketTradingFeeRequest.dart';
 import 'package:egat_flutter/screens/page/api/model/PoolMarketTradingFeeResponse.dart';
@@ -118,13 +119,13 @@ class _SummarySectionState extends State<_SummarySection> {
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
         _SummaryValue(
-          title: 'Trading Fee',
+          title: AppLocalizations.of(context).translate('trade-tradingFee'),
           value: _tradingFee,
           unit: 'THB',
           titleFontSize: 15,
         ),
         _SummaryValue(
-          title: 'Estimated Sales',
+          title: AppLocalizations.of(context).translate('trade-estimatedSales'),
           value: _estimatedSales,
           unit: 'THB',
           titleFontSize: 20,
@@ -315,7 +316,8 @@ class _HeaderSection extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Offer to Sell',
+              AppLocalizations.of(context)
+                  .translate('trade-poolmarket-offerToSell'),
               style: TextStyle(fontSize: 20, color: Color(0xFF99FF75)),
             ),
           ],
@@ -345,7 +347,7 @@ class _SubmitButton extends StatelessWidget {
           ),
           onPressed: onPressed,
           child: Text(
-            'Submit',
+            AppLocalizations.of(context).translate('submit'),
             style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.w300,
@@ -681,7 +683,8 @@ class _TransactionItemState extends State<_TransactionItem> {
       mainAxisSize: MainAxisSize.min,
       children: [
         _TransactionInput(
-          title: 'Energy to Sale',
+          title: AppLocalizations.of(context)
+              .translate('trade-poolmarket-energyToSale'),
           unit: 'kWh',
           controller: energyToSaleTextController,
         ),
@@ -692,8 +695,10 @@ class _TransactionItemState extends State<_TransactionItem> {
           onChange: _onEnergyToSalesSliderChange,
         ),
         _TransactionInput(
-          title: 'Offer to Sell Price',
-          secondaryTitle: 'Market price = THB 3.00',
+          title:
+              AppLocalizations.of(context).translate('trade-offerToSellPrice'),
+          secondaryTitle:
+              '${AppLocalizations.of(context).translate('trade-marketPrice')} = THB 3.00',
           unit: 'THB/kWh',
           controller: offerToSalePriceTextController,
         ),
@@ -705,8 +710,14 @@ class _TransactionItemState extends State<_TransactionItem> {
   Widget _buildHeader() {
     final isSelected = widget.controller.isItemSelected(widget.key ?? this);
 
-    final dateFormat = DateFormat('dd MMM yyyy');
-    final timeFormat = DateFormat('HH:mm');
+    final dateFormat = DateFormat(
+      'dd MMM yyyy',
+      AppLocalizations.of(context).getLocale().toString(),
+    );
+    final timeFormat = DateFormat(
+      'HH:mm',
+      AppLocalizations.of(context).getLocale().toString(),
+    );
 
     final widgetTime = widget.date.toLocal();
 
@@ -737,7 +748,7 @@ class _TransactionItemState extends State<_TransactionItem> {
                 onChanged: (_) => switchSelectedState(),
               ),
               Text(
-                'Date: $dateString, Period: $startTimeString-$endTimeString',
+                '${AppLocalizations.of(context).translate('date')}: $dateString, ${AppLocalizations.of(context).translate('period')}: $startTimeString-$endTimeString',
                 style: TextStyle(
                   fontSize: 15,
                   color: Colors.white,

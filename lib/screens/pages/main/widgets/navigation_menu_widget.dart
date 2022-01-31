@@ -1,5 +1,6 @@
 // import 'dart:io' show Platform;
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:egat_flutter/constant.dart';
 import 'package:egat_flutter/i18n/app_localizations.dart';
@@ -59,102 +60,107 @@ class _NavigationMenuWidgetState extends State<NavigationMenuWidget> {
     );
   }
 
-  void onLogout(BuildContext context) {
-    Color color = HexColor('#F6645A');
-    const hoverColor = Colors.white70;
-
-    // if (Platform.isIOS) {
-    //   logger.d(Platform.operatingSystem);
-    //   showIOSActionSheet(context);
-    // } else {
-    showAndriodActionSheet(context);
-    // }
+  void onSignout(BuildContext context) {
+    if (Platform.isIOS) {
+      logger.d(Platform.operatingSystem);
+      showIOSActionSheet(context);
+    } else {
+      showAndriodActionSheet(context);
+    }
   }
 
   showAndriodActionSheet(BuildContext context) {
-    Color color = HexColor('#F6645A');
-    const hoverColor = Colors.white70;
     return showModalBottomSheet(
-      backgroundColor: whiteColor,
-      context: context,
-      builder: (context) {
-        return Wrap(
-          children: <Widget>[
-            SizedBox(
-              height: 40,
-              child: ListTile(
-                title: Center(
-                  child: Text(
-                    'Are you sure you want to sign out ?',
-                    style: TextStyle(
-                      color: textButtonTheme,
-                    ),
-                  ),
+        backgroundColor: whiteColor,
+        context: context,
+        builder: buildAndroidActionSheet);
+  }
+
+  Widget buildAndroidActionSheet(BuildContext context) {
+    const hoverColor = Colors.white70;
+    return Wrap(
+      children: <Widget>[
+        SizedBox(
+          height: 40,
+          child: ListTile(
+            title: Center(
+              child: Text(
+                AppLocalizations.of(context).translate('message-signout-title'),
+                style: TextStyle(
+                  color: textButtonTheme,
                 ),
-                hoverColor: hoverColor,
               ),
             ),
-            Divider(
-              color: greyColor,
-              indent: 10,
-              endIndent: 10,
-              thickness: 1,
-            ),
-            ListTile(
-                title: Center(
-                  child: Text(
-                    'Sign Out',
-                    style: TextStyle(
-                      color: redColor,
-                    ),
-                  ),
+            hoverColor: hoverColor,
+          ),
+        ),
+        Divider(
+          color: greyColor,
+          indent: 10,
+          endIndent: 10,
+          thickness: 1,
+        ),
+        ListTile(
+            title: Center(
+              child: Text(
+                AppLocalizations.of(context)
+                    .translate('message-signout-signout'),
+                style: TextStyle(
+                  color: redColor,
                 ),
-                hoverColor: hoverColor,
-                onTap: () {
-                  _onSignOutPressed();
-                }),
-            Divider(
-              color: greyColor,
-              indent: 10,
-              endIndent: 10,
-              thickness: 1,
+              ),
             ),
-            ListTile(
-                title: Center(
-                  child: Text(
-                    'Cancel',
-                    style: TextStyle(
-                      color: textButtonTheme,
-                    ),
-                  ),
+            hoverColor: hoverColor,
+            onTap: () {
+              _onSignOutPressed();
+            }),
+        Divider(
+          color: greyColor,
+          indent: 10,
+          endIndent: 10,
+          thickness: 1,
+        ),
+        ListTile(
+            title: Center(
+              child: Text(
+                AppLocalizations.of(context).translate('cancel'),
+                style: TextStyle(
+                  color: textButtonTheme,
                 ),
-                hoverColor: hoverColor,
-                onTap: () {
-                  logger.d('cancel button clicled');
-                  Navigator.of(context).pop();
-                }),
-          ],
-        );
-      },
+              ),
+            ),
+            hoverColor: hoverColor,
+            onTap: () {
+              Navigator.of(context).pop();
+            }),
+      ],
     );
   }
 
   showIOSActionSheet(BuildContext context) {
+    return showCupertinoModalPopup(
+        context: context, builder: buildIOSActionSheet);
+  }
+
+  Widget buildIOSActionSheet(BuildContext context) {
     return CupertinoActionSheet(
+      message: Text(
+        AppLocalizations.of(context).translate('message-signout-title'),
+      ),
       actions: [
         CupertinoActionSheetAction(
-          onPressed: () {
-            logger.d('On CLick Logput');
-          },
+          onPressed: () {},
           child: Text(
-            'Logout',
+            AppLocalizations.of(context).translate('message-signout-signout'),
           ),
           isDestructiveAction: true,
         )
       ],
       cancelButton: CupertinoActionSheetAction(
-        onPressed: () {},
-        child: Text('Cancel'),
+        onPressed: () {
+          Navigator.of(context).pop();
+        },
+        child: Text(AppLocalizations.of(context).translate('cancel')),
       ),
     );
   }
@@ -185,7 +191,7 @@ class _NavigationMenuWidgetState extends State<NavigationMenuWidget> {
             ),
             hoverColor: hoverColor,
             onTap: () {
-              onLogout(context);
+              onSignout(context);
             }),
       ),
     ]);
@@ -299,11 +305,10 @@ class _NavigationMenuWidgetState extends State<NavigationMenuWidget> {
           child: ClipOval(
             child: Image.memory(
               base64Decode(_imageBase64!),
-               width: 60,
+              width: 60,
               height: 60,
               fit: BoxFit.cover,
             ),
-            
           ),
         );
       }
@@ -448,10 +453,10 @@ class _NavigationMenuWidgetState extends State<NavigationMenuWidget> {
     MainScreenNavigationState mainScreenNavigation =
         Provider.of<MainScreenNavigationState>(context, listen: false);
     mainScreenNavigation.setPageToSetting();
-    MainScreenTitleState mainScreenTitle =
-        Provider.of<MainScreenTitleState>(context, listen: false);
-    mainScreenTitle.setTitleOneTitle(
-        title: AppLocalizations.of(context).translate('title-setting'));
+    // MainScreenTitleState mainScreenTitle =
+    //     Provider.of<MainScreenTitleState>(context, listen: false);
+    // mainScreenTitle.setTitleOneTitle(
+    //     title: AppLocalizations.of(context).translate('title-setting'));
     Navigator.pop(context);
   }
 

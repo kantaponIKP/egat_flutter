@@ -1,4 +1,5 @@
 import 'package:egat_flutter/constant.dart';
+import 'package:egat_flutter/i18n/app_localizations.dart';
 import 'package:egat_flutter/screens/pages/main/home/buysell/bilateral/models/bilateral_model.dart';
 import 'package:egat_flutter/screens/pages/main/home/buysell/bilateral/sell/bilateral_sell_page.dart';
 import 'package:egat_flutter/screens/pages/main/home/buysell/bilateral/states/bilateral_selected_time_state.dart';
@@ -39,10 +40,7 @@ class _BilateralTradeScreenState extends State<BilateralTradeScreen> {
     final titleState =
         Provider.of<MainScreenTitleState>(context, listen: false);
 
-    titleState.setTitleTwoTitles(
-      title: 'Bilateral',
-      secondaryTitle: 'Trade',
-    );
+    titleState.setTitleLogo();
     return Container(
       decoration: BoxDecoration(
         gradient: RadialGradient(
@@ -212,6 +210,7 @@ class _TradeItemCard extends StatelessWidget {
       child: GestureDetector(
         onTap: onTap,
         child: Card(
+          color: surfaceGreyColor,
           child: IntrinsicHeight(
             child: Column(
               children: [
@@ -219,9 +218,9 @@ class _TradeItemCard extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   mainAxisSize: MainAxisSize.max,
                   children: [
-                    _buildStatus(),
-                    _buildAmount(),
-                    _buildOfferCount(),
+                    _buildStatus(context),
+                    _buildAmount(context),
+                    _buildOfferCount(context),
                   ],
                 ),
               ],
@@ -232,7 +231,7 @@ class _TradeItemCard extends StatelessWidget {
     );
   }
 
-  Container _buildStatus() {
+  Container _buildStatus(context) {
     final timeFormat = DateFormat('HH:mm');
     final startTime = item.time;
     final endTime = item.time.add(new Duration(hours: 1));
@@ -243,16 +242,20 @@ class _TradeItemCard extends StatelessWidget {
     String statusString;
     switch (item.status) {
       case BilateralTradeItemStatus.OPEN:
-        statusString = 'OPEN';
+        statusString =
+            AppLocalizations.of(context).translate('trade-status-open');
         break;
       case BilateralTradeItemStatus.CLOSE:
-        statusString = 'CLOSE';
+        statusString =
+            AppLocalizations.of(context).translate('trade-status-close');
         break;
       case BilateralTradeItemStatus.MATCHED:
-        statusString = 'MATCHED';
+        statusString =
+            AppLocalizations.of(context).translate('trade-status-matched');
         break;
       default:
-        statusString = 'CLOSE';
+        statusString =
+            AppLocalizations.of(context).translate('trade-status-close');
     }
 
     return Container(
@@ -275,7 +278,7 @@ class _TradeItemCard extends StatelessWidget {
     );
   }
 
-  Widget _buildOfferCount() {
+  Widget _buildOfferCount(context) {
     return Row(
       children: [
         Container(
@@ -299,7 +302,12 @@ class _TradeItemCard extends StatelessWidget {
               ),
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 5),
-                child: Text("Offers \nto sell"),
+                child: Text(
+                    AppLocalizations.of(context).translate('trade-offers') +
+                        "\n" +
+                        AppLocalizations.of(context).translate('trade-toSell'),
+                    textAlign: TextAlign.center),
+                // child: Text("Offers \nto sell"),
               ),
             ],
           ),
@@ -308,7 +316,7 @@ class _TradeItemCard extends StatelessWidget {
     );
   }
 
-  Widget _buildAmount() {
+  Widget _buildAmount(context) {
     return (item.amount != null)
         ? Row(
             children: [
@@ -333,7 +341,7 @@ class _TradeItemCard extends StatelessWidget {
                         Container(
                           padding: EdgeInsets.symmetric(horizontal: 5),
                           child: Text(
-                            "Amount",
+                            AppLocalizations.of(context).translate('amount'),
                             style: TextStyle(
                               fontSize: 12,
                               color: primaryColor,
@@ -361,7 +369,7 @@ class _TradeItemCard extends StatelessWidget {
                         Container(
                           padding: EdgeInsets.symmetric(horizontal: 5),
                           child: Text(
-                            "Price",
+                            AppLocalizations.of(context).translate('price'),
                             style: TextStyle(
                               fontSize: 12,
                               color: primaryColor,
@@ -465,22 +473,11 @@ class _TradeItemList extends StatelessWidget {
 typedef _ViewModeOnChangeCallback = Function(_ViewModeType newItem);
 
 class _ViewModeSelectionDropdown extends StatelessWidget {
-  final _viewModeDropdownItems = const <_ViewDropdownItem>[
-    const _ViewDropdownItem(
-      type: _ViewModeType.OFFER_TO_SELL,
-      title: 'Offer to sell',
-    ),
-    const _ViewDropdownItem(
-      type: _ViewModeType.CHOOSE_TO_BUY,
-      title: 'Choose to buy',
-    ),
-  ];
-
   final _ViewModeType viewModeSelected;
 
   final _ViewModeOnChangeCallback onChange;
 
-  const _ViewModeSelectionDropdown({
+  _ViewModeSelectionDropdown({
     Key? key,
     required this.viewModeSelected,
     required this.onChange,
@@ -488,6 +485,16 @@ class _ViewModeSelectionDropdown extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final _viewModeDropdownItems = <_ViewDropdownItem>[
+      _ViewDropdownItem(
+        type: _ViewModeType.OFFER_TO_SELL,
+        title: AppLocalizations.of(context).translate('trade-offerToSell'),
+      ),
+      _ViewDropdownItem(
+        type: _ViewModeType.CHOOSE_TO_BUY,
+        title: AppLocalizations.of(context).translate('trade-chooseToBuy'),
+      ),
+    ];
     return Container(
       height: 35,
       padding: EdgeInsets.symmetric(horizontal: 3),
@@ -583,7 +590,10 @@ class _DateSelectionDropdown extends StatelessWidget {
           return DropdownMenuItem(
             value: item,
             child: Text(
-              DateFormat('dd MMMM yyyy').format(item.toLocal()),
+              DateFormat(
+                'dd MMMM yyyy',
+                AppLocalizations.of(context).getLocale().toString(),
+              ).format(item.toLocal()),
             ),
           );
         }).toList(),

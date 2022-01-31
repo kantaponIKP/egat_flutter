@@ -121,7 +121,7 @@ class _CardPaymentScreenState extends State<CardPaymentScreen> {
         Align(
           alignment: Alignment.centerLeft,
           child: Text(
-            'Card number',
+            AppLocalizations.of(context).translate('payment-cardNumber'),
             style: TextStyle(color: primaryColor),
           ),
         ),
@@ -148,12 +148,14 @@ class _CardPaymentScreenState extends State<CardPaymentScreen> {
             ),
             counter: Offstage(),
           ),
-          maxLength: 20,
+          maxLength: 16,
           validator: (value) {
             if (value == null || value.isEmpty) {
-              return "Required";
+              return AppLocalizations.of(context)
+                      .translate('validation-required');
             } else if (value.length < 16) {
-              return "Required";
+              return AppLocalizations.of(context)
+                      .translate('validation-required');
             }
             return null;
           },
@@ -170,7 +172,7 @@ class _CardPaymentScreenState extends State<CardPaymentScreen> {
       children: [
         Align(
             alignment: Alignment.centerLeft,
-            child: Text('Expire Date', style: TextStyle(color: primaryColor))),
+            child: Text(AppLocalizations.of(context).translate('payment-expireDate'), style: TextStyle(color: primaryColor))),
         TextFormField(
           keyboardType: TextInputType.numberWithOptions(
             signed: false,
@@ -187,9 +189,11 @@ class _CardPaymentScreenState extends State<CardPaymentScreen> {
           maxLength: 7,
           validator: (value) {
             if (value == null || value.isEmpty) {
-              return "Required";
+              return AppLocalizations.of(context)
+                      .translate('validation-required');
             } else if (value.length != 7) {
-              return "Required";
+              return AppLocalizations.of(context)
+                      .translate('validation-required');
             }
             return null;
           },
@@ -206,7 +210,7 @@ class _CardPaymentScreenState extends State<CardPaymentScreen> {
       children: [
         Align(
             alignment: Alignment.centerLeft,
-            child: Text('CVV Code', style: TextStyle(color: primaryColor))),
+            child: Text(AppLocalizations.of(context).translate('payment-cvvCode'), style: TextStyle(color: primaryColor))),
         Padding(
           padding: const EdgeInsets.only(top: 0.0),
           child: TextFormField(
@@ -227,9 +231,11 @@ class _CardPaymentScreenState extends State<CardPaymentScreen> {
             maxLength: 3,
             validator: (value) {
               if (value == null || value.isEmpty) {
-                return "Required";
+                return AppLocalizations.of(context)
+                      .translate('validation-required');
               } else if (value.length != 3) {
-                return "Required";
+                return AppLocalizations.of(context)
+                      .translate('validation-required');
               }
               return null;
             },

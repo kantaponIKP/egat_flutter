@@ -103,22 +103,14 @@ flutter:
   fonts:
     - family: Montserrat
       fonts:
-        - asset: assets/fonts/Montserrat-Light.ttf
+        - asset: assets/fonts/en/Montserrat-Light.ttf
           weight: 400
-        - asset: assets/fonts/Montserrat-Light.ttf
+        - asset: assets/fonts/en/Montserrat-Light.ttf
+          weight: 300
+    - family: Kanit
+      fonts:
+        - asset: assets/fonts/th/Kanit-Regular.ttf
           weight: 300
 
-  # fonts:
-  #   - family: Schyler
-  #     fonts:
-  #       - asset: fonts/Schyler-Regular.ttf
-  #       - asset: fonts/Schyler-Italic.ttf
-  #         style: italic
-  #   - family: Trajan Pro
-  #     fonts:
-  #       - asset: fonts/TrajanPro.ttf
-  #       - asset: fonts/TrajanPro_Bold.ttf
-  #         weight: 700
-  #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages

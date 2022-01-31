@@ -165,9 +165,9 @@ class _EmailScreenState extends State<EmailScreen> {
               },
               validator: (value) {
                 if (value == null || value.trim().length == 0) {
-                  return "Require email";
+                  return AppLocalizations.of(context).translate('validation-required');
                 } else if (!_isEmailValid(value)) {
-                  return "Invalid email address";
+                  return AppLocalizations.of(context).translate('validation-invalidEmailAddress');
                 }
                 return null;
               },

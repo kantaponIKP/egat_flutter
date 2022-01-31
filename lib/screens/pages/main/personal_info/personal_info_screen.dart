@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:egat_flutter/constant.dart';
@@ -7,15 +6,14 @@ import 'package:egat_flutter/i18n/app_localizations.dart';
 import 'package:egat_flutter/screens/pages/main/states/main_screen_navigation_state.dart';
 import 'package:egat_flutter/screens/pages/main/states/main_screen_title_state.dart';
 import 'package:egat_flutter/screens/pages/main/states/personal_info_state.dart';
-import 'package:egat_flutter/screens/pages/main/widgets/navigation_menu_widget.dart';
 import 'package:egat_flutter/screens/widgets/loading_dialog.dart';
 import 'package:egat_flutter/screens/widgets/show_exception.dart';
 import 'package:egat_flutter/screens/widgets/show_success_snackbar.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
-import 'dart:io' as Io;
 
 class PersonalInfoScreen extends StatefulWidget {
   const PersonalInfoScreen({Key? key}) : super(key: key);
@@ -30,13 +28,11 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
   TextEditingController? _phoneNumberController;
   TextEditingController? _emailController;
   final ImagePicker _picker = ImagePicker();
-  XFile? _file;
   String? _username;
   String? _phoneNumber;
   String? _email;
   bool _isValidated = false;
   bool _isFormChanged = false;
-  Image? _image;
   String? _imageBase64;
 
   @override
@@ -166,29 +162,7 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
               right: -25,
               child: RawMaterialButton(
                 onPressed: () {
-                  showModalBottomSheet<void>(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: <Widget>[
-                            ListTile(
-                              leading: new Icon(Icons.photo),
-                              title: new Text('Select Photo'),
-                              onTap: () {
-                                _onSelectPhotoPressed();
-                              },
-                            ),
-                            ListTile(
-                              leading: new Icon(Icons.delete_outline),
-                              title: new Text('Remove Photo'),
-                              onTap: () {
-                                _onPressedRemovePhoto();
-                              },
-                            ),
-                          ],
-                        );
-                      });
+                  onCameraPressed(context);
                 },
                 elevation: 1.0,
                 fillColor: surfaceColor.withAlpha(0),
@@ -199,6 +173,86 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
                 shape: CircleBorder(),
               )),
         ],
+      ),
+    );
+  }
+
+  void onCameraPressed(BuildContext context) {
+    if (Platform.isIOS) {
+      showIOSActionSheet(context);
+    } else {
+      showAndriodActionSheet(context);
+    }
+  }
+
+  showAndriodActionSheet(BuildContext context) {
+    return showModalBottomSheet(
+        backgroundColor: whiteColor,
+        context: context,
+        builder: buildAndroidActionSheet);
+  }
+
+  showIOSActionSheet(BuildContext context) {
+    return showCupertinoModalPopup(
+        context: context, builder: buildIOSActionSheet);
+  }
+
+  Widget buildAndroidActionSheet(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: <Widget>[
+        ListTile(
+          tileColor: whiteColor,
+          leading: new Icon(Icons.photo, color: blackColor),
+          title: new Text(
+            AppLocalizations.of(context).translate('message-photo-selectPhoto'),
+            style: TextStyle(color: blackColor),
+          ),
+          onTap: () {
+            _onSelectPhotoPressed();
+          },
+        ),
+        ListTile(
+          tileColor: whiteColor,
+          leading: new Icon(Icons.delete_outline, color: redColor),
+          title: new Text(
+            AppLocalizations.of(context).translate('message-photo-removePhoto'),
+            style: TextStyle(color: redColor),
+          ),
+          onTap: () {
+            _onPressedRemovePhoto();
+          },
+        ),
+      ],
+    );
+  }
+
+  Widget buildIOSActionSheet(BuildContext context) {
+    return CupertinoActionSheet(
+      actions: [
+        CupertinoActionSheetAction(
+          onPressed: () {
+            _onSelectPhotoPressed();
+          },
+          child: Text(
+            AppLocalizations.of(context).translate('message-photo-selectPhoto'),
+          ),
+        ),
+        CupertinoActionSheetAction(
+          onPressed: () {
+            _onPressedRemovePhoto();
+          },
+          child: Text(
+            AppLocalizations.of(context).translate('message-photo-removePhoto'),
+          ),
+          isDestructiveAction: true,
+        )
+      ],
+      cancelButton: CupertinoActionSheetAction(
+        onPressed: () {
+          Navigator.of(context).pop();
+        },
+        child: Text(AppLocalizations.of(context).translate('cancel')),
       ),
     );
   }
@@ -324,7 +378,7 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
               },
               validator: (value) {
                 if (value == null || value.isEmpty) {
-                  return "Required";
+                  return AppLocalizations.of(context).translate('validation-required');
                 }
                 return null;
               },
@@ -347,11 +401,12 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
               },
               validator: (value) {
                 if (value == null || value.trim().length == 0) {
-                  return "Required";
+                  return AppLocalizations.of(context)
+                      .translate('validation-required');
                 } else if (!_isNumeric(value)) {
-                  return "Must be number 10 digits";
+                  return AppLocalizations.of(context).translate('validation-mustBeContain-10digits');
                 } else if (value.length != 10) {
-                  return "Must be number 10 digits";
+                  return AppLocalizations.of(context).translate('validation-mustBeContain-10digits');
                 }
                 return null;
               },
@@ -376,9 +431,9 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
               },
               validator: (value) {
                 if (value == null || value.trim().length == 0) {
-                  return "Required";
+                  return AppLocalizations.of(context).translate('validation-required');
                 } else if (!_isEmailValid(value)) {
-                  return "Invalid email address";
+                  return AppLocalizations.of(context).translate('validation-invalidEmailAddress');
                 }
                 return null;
               },
@@ -455,7 +510,6 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
     final file = File(xfile.path);
     final bytes = file.readAsBytesSync();
     String base64Image = base64Encode(bytes);
-    log(base64Image.toString());
     try {
       var model = Provider.of<PersonalInfoState>(context, listen: false);
       await model.changePhoto(base64Image);

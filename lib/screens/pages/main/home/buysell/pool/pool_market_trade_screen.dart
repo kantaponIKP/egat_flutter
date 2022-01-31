@@ -1,3 +1,4 @@
+import 'package:egat_flutter/i18n/app_localizations.dart';
 import 'package:egat_flutter/screens/pages/main/home/buysell/pool/buy/pool_market_buy_page.dart';
 import 'package:egat_flutter/screens/session.dart';
 import 'package:egat_flutter/screens/widgets/loading_dialog.dart';
@@ -20,6 +21,7 @@ class PoolMarketTradeScreen extends StatefulWidget {
 }
 
 class _PoolMarketTradeScreenState extends State<PoolMarketTradeScreen> {
+
   var dateItem = <String>[];
 
   var offerItem = ["Bid to Buy", "Offer to Sell"];
@@ -133,9 +135,13 @@ class _PoolMarketTradeScreenState extends State<PoolMarketTradeScreen> {
                                       items: dateItem.map((String items) {
                                         return DropdownMenuItem(
                                           value: items,
-                                          child: Text(DateFormat('dd MMMM yyyy')
-                                              .format(DateTime.parse(items)
-                                                  .toLocal())),
+                                          child: Text(DateFormat(
+                                            'dd MMMM yyyy',
+                                            AppLocalizations.of(context)
+                                                .getLocale()
+                                                .toString(),
+                                          ).format(
+                                              DateTime.parse(items).toLocal())),
                                         );
                                       }).toList(),
                                       underline: DropdownButtonHideUnderline(
@@ -152,7 +158,8 @@ class _PoolMarketTradeScreenState extends State<PoolMarketTradeScreen> {
                                   color: primaryColor,
                                   borderRadius: BorderRadius.circular(5),
                                 ),
-                                child: DropdownButton(
+                                child: 
+                                DropdownButton(
                                   value: _offerInit,
                                   icon: Icon(Icons.arrow_drop_down_rounded),
                                   iconSize: 20,
@@ -173,7 +180,7 @@ class _PoolMarketTradeScreenState extends State<PoolMarketTradeScreen> {
                                       return DropdownMenuItem(
                                         value: items,
                                         child: Text(
-                                          items,
+                                          (items == "Bid to Buy")? AppLocalizations.of(context).translate('trade-bidToBuy') : AppLocalizations.of(context).translate('trade-offerToSell'),
                                           style: TextStyle(fontSize: 14),
                                         ),
                                       );
@@ -332,6 +339,7 @@ class _PoolMarketTradeScreenState extends State<PoolMarketTradeScreen> {
               }
             : null,
         child: Card(
+          color: surfaceGreyColor,
           child: IntrinsicHeight(
               child: Column(children: [
             Row(
@@ -348,7 +356,7 @@ class _PoolMarketTradeScreenState extends State<PoolMarketTradeScreen> {
                         style: TextStyle(fontSize: 26),
                       ),
                       Text(
-                        status!,
+                        (status == "CLOSE")? AppLocalizations.of(context).translate('trade-status-close'): (status == "OPEN")? AppLocalizations.of(context).translate('trade-status-open') :AppLocalizations.of(context).translate('trade-status-matched'),
                         style: TextStyle(
                             fontSize: 23,
                             color: (status == "CLOSE") ? redColor : greenColor),
@@ -380,7 +388,9 @@ class _PoolMarketTradeScreenState extends State<PoolMarketTradeScreen> {
                                     Container(
                                         padding:
                                             EdgeInsets.symmetric(horizontal: 5),
-                                        child: Text("Amount",
+                                        child: Text(
+                                            AppLocalizations.of(context)
+                                                .translate('amount'),
                                             style: TextStyle(
                                                 fontSize: 12,
                                                 color: primaryColor))),
@@ -401,7 +411,9 @@ class _PoolMarketTradeScreenState extends State<PoolMarketTradeScreen> {
                                     Container(
                                         padding:
                                             EdgeInsets.symmetric(horizontal: 5),
-                                        child: Text("Price",
+                                        child: Text(
+                                            AppLocalizations.of(context)
+                                                .translate('price'),
                                             style: TextStyle(
                                                 fontSize: 12,
                                                 color: primaryColor))),
@@ -457,12 +469,13 @@ class _PoolMarketTradeScreenState extends State<PoolMarketTradeScreen> {
                                             EdgeInsets.symmetric(horizontal: 5),
                                         child: Text(
                                           (_offerInit == "Bid to Buy")
-                                              ? "Offers \nto buy"
-                                              : "Offers \nto sell",
+                                              ? "${AppLocalizations.of(context).translate('trade-offers')}\n${AppLocalizations.of(context).translate('trade-toBuy')}"
+                                              : "${AppLocalizations.of(context).translate('trade-offers')}\n${AppLocalizations.of(context).translate('trade-toSell')}",
                                           style: TextStyle(
                                               color: (isMatched)
                                                   ? primaryColor
                                                   : whiteColor),
+                                          textAlign: TextAlign.center,
                                         ),
                                       ),
                                     ])
@@ -483,13 +496,14 @@ class _PoolMarketTradeScreenState extends State<PoolMarketTradeScreen> {
                                             EdgeInsets.symmetric(horizontal: 5),
                                         child: Text(
                                           (_offerInit == "Bid to Buy")
-                                              ? "Offers \nto buy"
-                                              : "Offers \nto sell",
+                                              ? "${AppLocalizations.of(context).translate('trade-offers')}\n${AppLocalizations.of(context).translate('trade-toBuy')}"
+                                              : "${AppLocalizations.of(context).translate('trade-offers')}\n${AppLocalizations.of(context).translate('trade-toSell')}",
                                           style: TextStyle(
                                               color: (isMatched &&
                                                       status == "CLOSE")
                                                   ? primaryColor
                                                   : whiteColor),
+                                                  textAlign: TextAlign.center,
                                         ),
                                       ),
                                     ]),
@@ -522,7 +536,7 @@ class _PoolMarketTradeScreenState extends State<PoolMarketTradeScreen> {
                                       padding:
                                           EdgeInsets.symmetric(horizontal: 5),
                                       child: Text(
-                                        "Matched",
+                                        AppLocalizations.of(context).translate('trade-matched'),
                                         style: TextStyle(
                                             color: (isMatched)
                                                 ? primaryColor
@@ -550,11 +564,13 @@ class _PoolMarketTradeScreenState extends State<PoolMarketTradeScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              "Market clearing price",
+                              AppLocalizations.of(context).translate(
+                                  'trade-poolmarket-marketClearingPrice'),
                               style: TextStyle(fontSize: 17),
                             ),
                             Text(
-                              "Market clearing volume",
+                              AppLocalizations.of(context).translate(
+                                  'trade-poolmarket-marketClearingVolumn'),
                               style: TextStyle(fontSize: 17),
                             ),
                           ],

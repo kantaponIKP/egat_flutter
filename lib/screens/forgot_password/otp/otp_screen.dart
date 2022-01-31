@@ -204,15 +204,15 @@ class _OtpScreenState extends State<OtpScreen> {
             },
             validator: (value) {
               if (value == null) {
-                return "Must be number 6 digits";
+                return AppLocalizations.of(context).translate('validation-mustBeContain-6digits');
               }
 
               if (value.trim().length != 6) {
-                return "Must be number 6 digits";
+                return AppLocalizations.of(context).translate('validation-mustBeContain-6digits');
               }
 
               if (!_isNumeric(value)) {
-                return "Must be number 6 digits";
+                return AppLocalizations.of(context).translate('validation-mustBeContain-6digits');
               }
 
               return null;

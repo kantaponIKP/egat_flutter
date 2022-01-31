@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:egat_flutter/constant.dart';
+import 'package:egat_flutter/i18n/app_localizations.dart';
 import 'package:egat_flutter/screens/pages/main/home/main/graph/graph_page.dart';
 import 'package:egat_flutter/screens/pages/main/home/main/states/main_selected_date_state.dart';
 import 'package:egat_flutter/screens/pages/main/states/main_screen_title_state.dart';
@@ -322,7 +323,8 @@ class _MainSection extends StatelessWidget {
                         height: 45,
                         width: 45,
                       ),
-                      label: 'Energy Storage',
+                      label: AppLocalizations.of(context)
+                          .translate('home-energyStorage'),
                       unit: 'kWh',
                       value1: state.value.batteryInTotal,
                       value1Color: Color(0xFF008DC1),
@@ -435,7 +437,8 @@ class _MainSection extends StatelessWidget {
                         height: 45,
                         width: 45,
                       ),
-                      label: 'Grid',
+                      label:
+                          AppLocalizations.of(context).translate('home-grid'),
                       unit: 'kWh',
                       value1: state.value.gridOutTotal,
                       value1Color: Color(0xFFF6645A),
@@ -934,7 +937,8 @@ class _SummarySection extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    'Energy can be sold in 1 day advance',
+                    AppLocalizations.of(context)
+                        .translate('home-energyCanBeSold'),
                     style: TextStyle(
                       fontSize: 11,
                     ),
@@ -1025,7 +1029,8 @@ class _SummarySection extends StatelessWidget {
                 child: Padding(
                   padding: EdgeInsets.all(10),
                   child: _SummaryBox(
-                    label: 'Trade Sell',
+                    label: AppLocalizations.of(context)
+                        .translate('home-tradeSell'),
                     value: state.value.totalSales,
                     unit: 'Baht',
                     valueColor: Color(0xFF99FF75),
@@ -1068,7 +1073,8 @@ class _SummarySection extends StatelessWidget {
                 child: Padding(
                   padding: EdgeInsets.all(10),
                   child: _SummaryBox(
-                    label: 'Trade Buy',
+                    label:
+                        AppLocalizations.of(context).translate('home-tradeBuy'),
                     value: state.value.totalSales,
                     unit: 'Baht',
                     valueColor: Color(0xFFF6645A),
@@ -1111,7 +1117,8 @@ class _SummarySection extends StatelessWidget {
                 child: Padding(
                   padding: EdgeInsets.all(10),
                   child: _SummaryBox(
-                    label: 'Grid Used',
+                    label:
+                        AppLocalizations.of(context).translate('home-gridUsed'),
                     value: state.value.totalSales,
                     unit: 'Baht',
                     valueColor: Color(0xFFF6645A),
@@ -1228,7 +1235,10 @@ class _CurrentTimeDisplayState extends State<_CurrentTimeDisplay> {
 
   @override
   Widget build(BuildContext context) {
-    final dateFormat = DateFormat('dd MMMM yyyy');
+    final dateFormat = DateFormat(
+      'dd MMMM yyyy',
+      AppLocalizations.of(context).getLocale().toString(),
+    );
     final timeFormat = DateFormat('HH:mm');
 
     final dateString = dateFormat.format(_currentTime);
@@ -1295,7 +1305,7 @@ class _DateSelectModeSwitch extends StatelessWidget {
 
     return Row(
       children: [
-        Text('Daily'),
+        Text(AppLocalizations.of(context).translate('home-daily')),
         Switch(
           value: selectedDateState.isDaily,
           activeColor: primaryColor,
@@ -1467,7 +1477,9 @@ class _MonthSelectionDropdown extends StatelessWidget {
           return DropdownMenuItem(
             value: item,
             child: Text(
-              DateFormat('MMMM').format(item.toLocal()),
+              DateFormat('MMMM',
+                      AppLocalizations.of(context).getLocale().toString())
+                  .format(item.toLocal()),
             ),
           );
         }).toList(),

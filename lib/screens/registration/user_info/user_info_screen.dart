@@ -54,7 +54,8 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
           resizeToAvoidBottomInset: false,
           extendBodyBehindAppBar: true,
           appBar: SignupAppbar(
-              firstTitle: '${AppLocalizations.of(context).translate('createAccount-first')}',
+              firstTitle:
+                  '${AppLocalizations.of(context).translate('createAccount-first')}',
               secondTitle:
                   '${AppLocalizations.of(context).translate('createAccount-second')}',
               onAction: _onBackPressed),
@@ -132,7 +133,8 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
               },
               validator: (value) {
                 if (value == null || value.isEmpty) {
-                  return "Required";
+                  return AppLocalizations.of(context)
+                      .translate('validation-required');
                 }
                 return null;
               },
@@ -154,11 +156,11 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
               },
               validator: (value) {
                 if (value == null || value.trim().length == 0) {
-                  return "Required";
+                  return AppLocalizations.of(context).translate('validation-required');
                 } else if (!_isNumeric(value)) {
-                  return "Must be number 10 digits";
+                  return AppLocalizations.of(context).translate('validation-mustBeContain-10digits');
                 } else if (value.length != 10) {
-                  return "Must be number 10 digits";
+                  return AppLocalizations.of(context).translate('validation-mustBeContain-10digits');
                 }
                 return null;
               },
@@ -179,9 +181,10 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
               },
               validator: (value) {
                 if (value == null || value.trim().length == 0) {
-                  return "Required";
+                  return AppLocalizations.of(context)
+                      .translate('validation-required');
                 } else if (!_isEmailValid(value)) {
-                  return "Invalid email address";
+                  return AppLocalizations.of(context).translate('validation-invalidEmailAddress');
                 }
                 return null;
               },
@@ -216,11 +219,12 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
               },
               validator: (value) {
                 if (value == null || value.trim().length == 0) {
-                  return "Required";
+                  return AppLocalizations.of(context)
+                      .translate('validation-required');
                 } else if (value.length < 6) {
-                  return "Must be contain at least 6 digits";
+                  return AppLocalizations.of(context).translate('validation-mustBeContain-6digits');
                 } else if (!_isPasswordValid(value)) {
-                  return "Password must be including UPPER/lowercase and \nthe number";
+                  return AppLocalizations.of(context).translate('validation-password-MustBe');
                 }
                 return null;
               },
@@ -255,11 +259,12 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
               },
               validator: (value) {
                 if (value == null || value.trim().length == 0) {
-                  return "Required";
+                  return AppLocalizations.of(context)
+                      .translate('validation-required');
                 } else if (value.length < 6) {
-                  return "Must be contain at least 6 digits";
+                  return AppLocalizations.of(context).translate('validation-mustBeContain-6digits');
                 } else if (value != _passwordController!.text) {
-                  return "Password doesn't match";
+                  return AppLocalizations.of(context).translate('validation-password-NotMatch');
                 } else {
                   return null;
                 }
@@ -276,79 +281,48 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
   Widget _buildAdditionalSection(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 8),
-      child: Row(children: <Widget>[
-        Expanded(
-          child: RichText(
-            text: TextSpan(
-              children: [
-                WidgetSpan(
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(0, 0, 8.0, 0),
-                    child: SizedBox(
-                        height: 20.0,
-                        width: 20.0,
-                        child: Checkbox(
-                            value: privacyPolicy,
-                            onChanged: (newValue) {
-                              if (newValue != null) {
-                                _onPrivacyPolicyChanged(newValue);
-                              }
-                            })),
+      child: Row(
+        children: <Widget>[
+          Expanded(
+            child: RichText(
+              text: TextSpan(
+                children: [
+                  WidgetSpan(
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(0, 0, 8.0, 0),
+                      child: SizedBox(
+                          height: 20.0,
+                          width: 20.0,
+                          child: Checkbox(
+                              value: privacyPolicy,
+                              onChanged: (newValue) {
+                                if (newValue != null) {
+                                  _onPrivacyPolicyChanged(newValue);
+                                }
+                              })),
+                    ),
                   ),
-                ),
-                TextSpan(
+                  TextSpan(
+                      text:
+                          '${AppLocalizations.of(context).translate('I-agree-to')}'),
+                  TextSpan(
                     text:
-                        '${AppLocalizations.of(context).translate('I-agree-to')}'),
-                TextSpan(
-                  text:
-                      '${AppLocalizations.of(context).translate('privacy')}${AppLocalizations.of(context).translate('policy')}',
-                  style: TextStyle(
-                    decoration: TextDecoration.underline,
-                    color: textButton,
+                        '${AppLocalizations.of(context).translate('privacy')}${AppLocalizations.of(context).translate('policy')}',
+                    style: TextStyle(
+                      decoration: TextDecoration.underline,
+                      color: textButton,
+                    ),
+                    recognizer: TapGestureRecognizer()
+                      ..onTap = () {
+                        _onPrivacyPolicyPressed(context);
+                      },
                   ),
-                  recognizer: TapGestureRecognizer()
-                    ..onTap = () {
-                      _onPrivacyPolicyPressed(context);
-                    },
-                ),
-              ],
+                ],
+              ),
             ),
           ),
-        ),
-        // Container(
-        //   padding: const EdgeInsets.all(8.0),
-        //   child: Row(
-        //     children: <Widget>[
-        //       Text('I agree to the'),
-        //       TextButton(
-        //         onPressed: () {
-        //           _onPrivacyPolicyPressed(context);
-        //         },
-        //         child: const Text(
-        //           'Privacy Policy',
-        //           style: TextStyle(
-        //             decoration: TextDecoration.underline,
-        //       ),
-        //       //  children: []
-        //       // Text('${AppLocalizations.of(context).translate('I-agree-to')}'),
-        //       // TextButton(
-        //       //   onPressed: () {
-        //       //     _onPrivacyPolicyPressed(context);
-        //       //   },
-        //       //   child: Text(
-        //       //     '${AppLocalizations.of(context).translate('privacy-policy')}',
-        //       //     overflow: TextOverflow.clip,
-        //       //     style: TextStyle(
-        //       //       decoration: TextDecoration.underline,
-        //       //     ),
-        //       //   ),
-        //       // )
-        //     ],
-        //   ),
-        // ),
-      ]
-          // ),
-          ),
+        ],
+      ),
     );
   }
 
@@ -376,9 +350,8 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
     return numericRegex.hasMatch(string);
   }
 
-  bool _isPasswordValid(String password){
-    return RegExp(
-            r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{6,}$")
+  bool _isPasswordValid(String password) {
+    return RegExp(r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{6,}$")
         .hasMatch(password);
   }
 

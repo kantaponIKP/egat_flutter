@@ -1,3 +1,4 @@
+import 'package:egat_flutter/i18n/app_localizations.dart';
 import 'package:egat_flutter/screens/pages/main/home/billing/invoice/invoice_page.dart';
 import 'package:egat_flutter/screens/pages/main/home/billing/preliminary/preliminary_page.dart';
 import 'package:egat_flutter/screens/pages/main/states/main_screen_title_state.dart';
@@ -298,7 +299,10 @@ class _InformationSection extends StatelessWidget {
 
     final billingSummary = billingState.billingSummary!;
 
-    final toDateFormat = DateFormat('dd MMMM yyyy');
+    final toDateFormat = DateFormat(
+      'dd MMMM yyyy',
+      AppLocalizations.of(context).getLocale().toString(),
+    );
     final toDate = toDateFormat.format(DateTime.now());
 
     return Padding(
@@ -306,27 +310,33 @@ class _InformationSection extends StatelessWidget {
       child: Column(
         children: [
           _HilightedValueDisplay(
-            title: 'Net Energy Trading Payment',
+            title: AppLocalizations.of(context)
+                .translate('billing-netEnergyTradingPayment'),
             value:
                 '${billingSummary.netEnergyTradingPayment.toStringAsFixed(2)} Baht',
           ),
           _HilightedValueDisplay(
-            title: 'Grid Price',
+            title: AppLocalizations.of(context).translate('billing-gridPrice'),
             value: '${billingSummary.gridPrice.toStringAsFixed(2)} Baht',
           ),
           _HilightedValueDisplay(
-            title: 'Wheeling Charge',
+            title: AppLocalizations.of(context)
+                .translate('billing-wheelingCharge'),
             value: '${billingSummary.wheelingCharge.toStringAsFixed(2)} Baht',
           ),
           _SummaryValueDisplay(
-            title: 'Estimated Net Payment',
-            secondaryTitle: '(as of $toDate)',
+            title: AppLocalizations.of(context)
+                .translate('billing-EstimatedNetPayment'),
+            secondaryTitle:
+                '(${AppLocalizations.of(context).translate('billing-asOf')} $toDate)',
             value: '${billingSummary.estimatedNetPayment.toStringAsFixed(2)}',
             unit: 'Baht',
           ),
           _Button(
-            title: 'View Preliminary Invoice',
-            secondaryTitle: 'as of $toDate',
+            title: AppLocalizations.of(context)
+                .translate('billing-viewPreliminaryInvoice'),
+            secondaryTitle:
+                '${AppLocalizations.of(context).translate('billing-asOf')} $toDate',
             onTap: () => _showPreliminaryInvoice(context),
           ),
           Padding(
@@ -337,7 +347,8 @@ class _InformationSection extends StatelessWidget {
             ),
           ),
           _Button(
-            title: 'View Previous Invoice',
+            title: AppLocalizations.of(context)
+                .translate('billing-viewPreviousInvoice'),
             onTap: () => _showViewPreviousInvoiceDialog(context),
           ),
         ],
@@ -431,7 +442,10 @@ class _MonthSelectionDropdown extends StatelessWidget {
           return DropdownMenuItem(
             value: item,
             child: Text(
-              DateFormat('MMMM yyyy').format(item.toLocal()),
+              DateFormat(
+                'MMMM yyyy',
+                AppLocalizations.of(context).getLocale().toString(),
+              ).format(item.toLocal()),
             ),
           );
         }).toList(),

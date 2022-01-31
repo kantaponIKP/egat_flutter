@@ -146,7 +146,7 @@ class _LoginScreenState extends State<LoginScreen> {
           padding: EdgeInsets.only(top: 20.0),
         ),
         Text(
-          'Version 1.0.0',
+          'Version 0.1.0',
           softWrap: true,
           textAlign: TextAlign.center,
           style: TextStyle(
@@ -261,6 +261,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget _buildForm(BuildContext context) {
     return Form(
       key: _formKey,
+      autovalidateMode: AutovalidateMode.onUserInteraction,
       child: Column(
         children: [
           Container(
@@ -274,12 +275,16 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               validator: (value) {
                 if (value == null || value.trim().length == 0) {
-                  return "Require email";
+                  return null;
                 }
                 return null;
               },
               keyboardType: TextInputType.emailAddress,
+<<<<<<< HEAD
               maxLength: 255,
+=======
+              maxLength: 48,
+>>>>>>> cb63076108c43e65a2511ec42a95e4617ffc4a44
             ),
           ),
           Container(
@@ -305,7 +310,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               validator: (value) {
                 if (value == null || value.trim().length == 0) {
-                  return "Require password";
+                  return null;
                 }
                 return null;
               },
@@ -455,19 +460,21 @@ class _LoginScreenState extends State<LoginScreen> {
   void _onLogin() async {
     FocusScope.of(context).unfocus();
 
-    await showLoading();
-    try {
-      var login = Provider.of<LoginModel>(context, listen: false);
-      await login.processLogin(
-          email: _emailController!.text,
-          password: _passwordController!.text,
-          rememberMe: _rememberMe);
-      await getPersonalInformation();
-      goToLoginPage();
-    } catch (e) {
-      showIntlException(context, e);
-    } finally {
-      await hideLoading();
+    if (_formKey.currentState!.validate()) {
+      await showLoading();
+      try {
+        var login = Provider.of<LoginModel>(context, listen: false);
+        await login.processLogin(
+            email: _emailController!.text,
+            password: _passwordController!.text,
+            rememberMe: _rememberMe);
+        await getPersonalInformation();
+        goToLoginPage();
+      } catch (e) {
+        showIntlException(context, e);
+      } finally {
+        await hideLoading();
+      }
     }
   }
 

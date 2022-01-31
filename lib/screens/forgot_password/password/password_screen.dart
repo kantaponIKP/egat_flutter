@@ -184,11 +184,11 @@ class _PasswordScreenState extends State<PasswordScreen> {
               },
               validator: (value) {
                 if (value == null || value.trim().length == 0) {
-                  return "Required";
+                  return AppLocalizations.of(context).translate('validation-required');
                 } else if (value.length < 6) {
-                  return "Must be contain at least 6 digits";
+                  return AppLocalizations.of(context).translate('validation-mustBeContain-6digits');
                 } else if (!_isPasswordValid(value)) {
-                  return "Password must be including UPPER/lowercase and \nthe number";
+                  return AppLocalizations.of(context).translate('validation-password-MustBe');
                 }
                 return null;
               },
@@ -223,11 +223,11 @@ class _PasswordScreenState extends State<PasswordScreen> {
               },
               validator: (value) {
                 if (value == null || value.trim().length == 0) {
-                  return "Required";
+                  return AppLocalizations.of(context).translate('validation-required');
                 } else if (value.length < 6) {
-                  return "Must be contain at least 6 digits";
+                  return AppLocalizations.of(context).translate('validation-mustBeContain-6digits');
                 } else if (value != _passwordController!.text) {
-                  return "Password do not match";
+                  return AppLocalizations.of(context).translate('validation-password-NotMatch');
                 } else {
                   return null;
                 }
