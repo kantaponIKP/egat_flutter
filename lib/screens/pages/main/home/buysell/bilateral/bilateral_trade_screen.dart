@@ -492,7 +492,8 @@ class _ViewModeSelectionDropdown extends StatelessWidget {
       ),
       _ViewDropdownItem(
         type: _ViewModeType.CHOOSE_TO_BUY,
-        title: AppLocalizations.of(context).translate('trade-chooseToBuy'),
+        // title: AppLocalizations.of(context).translate('trade-chooseToBuy'),
+        title: 'Choose to Buy',
       ),
     ];
     return Container(
