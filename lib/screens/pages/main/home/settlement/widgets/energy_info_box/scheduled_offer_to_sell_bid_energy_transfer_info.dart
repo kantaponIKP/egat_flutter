@@ -45,31 +45,31 @@ class ScheduledOfferToSellBidEnergyTransferInfoBox extends StatelessWidget {
         DatedEnergyDetailBoxItem(
           name: AppLocalizations.of(context)
               .translate('settlement-offeredAmount-matched'),
-          value: '${tradeInfo.offeredAmount.toStringAsFixed(2)} kWh',
+          value: '${tradeInfo.offeredAmount.toStringAsFixed(3)} kWh',
           fontSize: 13,
           fontColor: Color(0xFF0329F2),
         ),
         DatedEnergyDetailBoxItem(
           name: AppLocalizations.of(context)
               .translate('settlement-marketClearingPrice'),
-          value: '${tradeInfo.marketClearingPrice.toStringAsFixed(2)} THB/kWh',
+          value: '${tradeInfo.marketClearingPrice.toStringAsFixed(3)} THB/kWh',
           fontSize: 13,
           fontColor: Color(0xFF0329F2),
         ),
         DatedEnergyDetailBoxItem(
+          name: AppLocalizations.of(context).translate('settlement-tradingFee'),
+          value: '${tradeInfo.tradingFee.toStringAsFixed(3)} THB/kWh',
+          fontSize: 10,
+        ),
+        DatedEnergyDetailBoxItem(
           name: AppLocalizations.of(context).translate('settlement-netSales'),
-          value: '${tradeInfo.netSales.toStringAsFixed(2)} THB',
+          value: '${tradeInfo.netSales.toStringAsFixed(3)} THB',
           fontSize: 13,
         ),
         DatedEnergyDetailBoxItem(
           name:
               '${AppLocalizations.of(context).translate('settlement-netEnergyPrice')}(${AppLocalizations.of(context).translate('settlement-netSales')}/${AppLocalizations.of(context).translate('settlement-energyDelivered')})',
-          value: '${tradeInfo.netEnergyPrice.toStringAsFixed(2)} THB/kWh',
-          fontSize: 10,
-        ),
-        DatedEnergyDetailBoxItem(
-          name: AppLocalizations.of(context).translate('settlement-tradingFee'),
-          value: '${tradeInfo.tradingFee.toStringAsFixed(2)} THB/kWh',
+          value: '${tradeInfo.netEnergyPrice.toStringAsFixed(3)} THB/kWh',
           fontSize: 10,
         ),
       ],

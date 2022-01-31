@@ -47,13 +47,13 @@ class BilateralSelectedTimeState extends ChangeNotifier {
   }) {
     final now = DateTime.now();
 
-    if (now.hour > 16) {
-      _selectedTime = DateTime(now.year, now.month, now.day, 18);
-    } else if (now.hour < 4) {
-      _selectedTime = DateTime(now.year, now.month, now.day - 1, 18);
-    } else {
-      _selectedTime = DateTime(now.year, now.month, now.day, 6);
-    }
+    _selectedTime = DateTime(
+      now.year,
+      now.month,
+      now.day,
+      0,
+      0,
+    );
 
     _isTimeSettedToCurrentPeriod = true;
 

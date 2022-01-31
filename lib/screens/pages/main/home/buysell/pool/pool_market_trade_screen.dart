@@ -9,12 +9,7 @@ import 'package:provider/provider.dart';
 import 'package:egat_flutter/constant.dart';
 
 import 'apis/models/TransactionSubmitItem.dart';
-import 'pool_market_short_term_buy_page.dart';
-import 'pool_market_short_term_sell_page.dart';
-import 'pool_market_short_term_sell_screen.dart';
 import 'sell/pool_market_sell_page.dart';
-import 'states/pool_market_short_term_buy.dart';
-import 'states/pool_market_short_term_sell.dart';
 import 'states/pool_market_trade.dart';
 
 class PoolMarketTradeScreen extends StatefulWidget {
@@ -27,12 +22,10 @@ class PoolMarketTradeScreen extends StatefulWidget {
 class _PoolMarketTradeScreenState extends State<PoolMarketTradeScreen> {
   var dateItem = <String>[];
 
-  var timeItem = ["06:00-18:00", "18:00-06:00"];
   var offerItem = ["Bid to Buy", "Offer to Sell"];
   String _time = "";
   String _date = "";
   String _offerInit = "";
-  var _poolMarketList = [];
   var _poolMarketBuyList = [];
   var _poolMarketSellList = [];
 
@@ -47,23 +40,9 @@ class _PoolMarketTradeScreenState extends State<PoolMarketTradeScreen> {
     dateItem = [
       date.toString(),
       date.add(new Duration(days: 1)).toString(),
-      date.add(new Duration(days: 2)).toString(),
-      date.add(new Duration(days: 3)).toString(),
-      date.add(new Duration(days: 4)).toString(),
-      date.add(new Duration(days: 5)).toString(),
-      date.add(new Duration(days: 6)).toString(),
-      date.add(new Duration(days: 7)).toString(),
     ];
 
-    _time = timeItem.first;
     _date = dateItem.first.toString();
-    int hour = DateTime.now().hour;
-    if (hour < 18 && hour >= 6) {
-      _time = timeItem.first;
-    }
-    {
-      _time = timeItem.last;
-    }
     _offerInit = offerItem.first;
 
     _getData(_date, _time);
@@ -131,39 +110,6 @@ class _PoolMarketTradeScreenState extends State<PoolMarketTradeScreen> {
                             children: [
                               Row(
                                 children: [
-                                  Container(
-                                    height: 35,
-                                    padding:
-                                        EdgeInsets.symmetric(horizontal: 3),
-                                    decoration: BoxDecoration(
-                                      color: Colors.grey[900],
-                                      borderRadius: BorderRadius.circular(5),
-                                    ),
-                                    child: DropdownButton(
-                                      value: _time,
-                                      icon: Icon(
-                                        Icons.arrow_drop_down_rounded,
-                                      ),
-                                      iconSize: 20,
-                                      alignment: Alignment.center,
-                                      borderRadius: BorderRadius.circular(20),
-                                      onChanged: (String? newValue) {
-                                        setState(() {
-                                          _time = newValue!;
-                                          _getData(_date, newValue);
-                                        });
-                                      },
-                                      items: timeItem.map((String items) {
-                                        return DropdownMenuItem(
-                                          value: items,
-                                          child: Text(items),
-                                        );
-                                      }).toList(),
-                                      underline: DropdownButtonHideUnderline(
-                                        child: Container(),
-                                      ),
-                                    ),
-                                  ),
                                   Container(
                                     height: 35,
                                     padding:
@@ -704,11 +650,12 @@ class _PoolMarketTradeScreenState extends State<PoolMarketTradeScreen> {
         ),
       ),
     );
+
+    _getData(_date, _time);
   }
 
   void _getData(String date, String time) async {
-    DateTime newDate = DateTime.parse(date)
-        .add(new Duration(hours: int.parse(time.substring(0, 2))));
+    DateTime newDate = DateTime.parse(date);
 
     await showLoading();
     PoolMarketTrade model =

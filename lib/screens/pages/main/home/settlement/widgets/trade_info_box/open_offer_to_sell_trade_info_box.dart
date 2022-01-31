@@ -33,7 +33,8 @@ class OpenOfferToSellTradeInfoBox extends StatelessWidget {
     final timeEndString =
         dateFormat.format(timeStartHour.add(Duration(hours: 1)));
 
-    final dateText = "${AppLocalizations.of(context).translate('settlement-deliveryTime')} $timeStartString-$timeEndString";
+    final dateText =
+        "${AppLocalizations.of(context).translate('settlement-deliveryTime')} $timeStartString-$timeEndString";
 
     return DatedTradeDetail(
       direction: TransferDirection.OFFER_TO_SELL,
@@ -44,23 +45,26 @@ class OpenOfferToSellTradeInfoBox extends StatelessWidget {
       defaultExpanded: defaultExpanded,
       items: [
         DatedTradeDetailBoxItem(
-          name: AppLocalizations.of(context).translate('settlement-order-amount'),
-          value: '${tradeInfo.amount.toStringAsFixed(2)} kWh',
+          name:
+              AppLocalizations.of(context).translate('settlement-order-amount'),
+          value: '${tradeInfo.amount.toStringAsFixed(3)} kWh',
           fontSize: 13,
         ),
         DatedTradeDetailBoxItem(
-          name: AppLocalizations.of(context).translate('settlement-offerToSell'),
-          value: '${tradeInfo.offerToSell.toStringAsFixed(2)} THB',
+          name:
+              AppLocalizations.of(context).translate('settlement-offerToSell'),
+          value: '${tradeInfo.offerToSell.toStringAsFixed(3)} THB',
           fontSize: 13,
         ),
+        // DatedTradeDetailBoxItem(
+        //   name: AppLocalizations.of(context).translate('settlement-tradingFee'),
+        //   value: '${tradeInfo.tradingFee.toStringAsFixed(3)} THB',
+        //   fontSize: 10,
+        // ),
         DatedTradeDetailBoxItem(
-          name: AppLocalizations.of(context).translate('settlement-tradingFee'),
-          value: '${tradeInfo.tradingFee.toStringAsFixed(2)} THB',
-          fontSize: 10,
-        ),
-        DatedTradeDetailBoxItem(
-          name: AppLocalizations.of(context).translate('settlement-order-estimatedSales'),
-          value: '${tradeInfo.estimatedSales.toStringAsFixed(2)} THB',
+          name: AppLocalizations.of(context)
+              .translate('settlement-order-estimatedSales'),
+          value: '${tradeInfo.estimatedSales.toStringAsFixed(3)} THB',
           fontSize: 10,
         ),
       ],

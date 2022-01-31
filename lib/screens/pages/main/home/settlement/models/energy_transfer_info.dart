@@ -446,12 +446,12 @@ class ScheduledBidToBuyEnergyTransferInfo extends EnergyTransferInfo {
     assert(json['date'] is String);
 
     assert(json['bidedAmount'] is num);
-    assert(json['energyUsed'] is num);
+    // assert(json['energyUsed'] is num);
     assert(json['marketClearingPrice'] is num);
     assert(json['netBuy'] is num);
     assert(json['netEnergyPrice'] is num);
-    assert(json['buyerImbalanceAmount'] is num);
-    assert(json['buyerImbalance'] is num);
+    // assert(json['buyerImbalanceAmount'] is num);
+    // assert(json['buyerImbalance'] is num);
     assert(json['energyToBuy'] is num);
     assert(json['energyTariff'] is num);
     assert(json['energyPrice'] is num);

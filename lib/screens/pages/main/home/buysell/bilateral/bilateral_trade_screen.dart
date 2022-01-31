@@ -89,7 +89,6 @@ class _BilateralTradeScreenState extends State<BilateralTradeScreen> {
                             children: [
                               Row(
                                 children: [
-                                  _TimeSelectionDropdown(),
                                   _DateSelectionDropdown(),
                                 ],
                               ),
@@ -132,7 +131,10 @@ class _BilateralTradeScreenState extends State<BilateralTradeScreen> {
 
     await Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (context) => BilateralBuyPage(date: isoDate),
+        builder: (context) => BilateralBuyPage(
+          date: isoDate,
+          enabled: item.status == BilateralTradeItemStatus.OPEN,
+        ),
       ),
     );
 
@@ -159,7 +161,9 @@ class _BilateralTradeScreenState extends State<BilateralTradeScreen> {
 
     await Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (context) => BilateralSellPage(date: isoDate),
+        builder: (context) => BilateralSellPage(
+            date: isoDate,
+            enabled: item.status == BilateralTradeItemStatus.OPEN),
       ),
     );
 
@@ -206,7 +210,7 @@ class _TradeItemCard extends StatelessWidget {
       padding: EdgeInsets.symmetric(vertical: 4, horizontal: 8),
       decoration: BoxDecoration(borderRadius: BorderRadius.circular(5)),
       child: GestureDetector(
-        onTap: item.status != BilateralTradeItemStatus.CLOSE ? onTap : null,
+        onTap: onTap,
         child: Card(
           child: IntrinsicHeight(
             child: Column(
@@ -537,12 +541,12 @@ class _DateSelectionDropdown extends StatelessWidget {
     final selectedDay =
         DateTime(selectedTime.year, selectedTime.month, selectedTime.day);
 
-    final nowRelative = DateTime.now().add(Duration(hours: -6));
+    final nowRelative = DateTime.now();
     final nowStartDay =
         DateTime(nowRelative.year, nowRelative.month, nowRelative.day, 0, 0, 0);
 
     final selectableDays = <DateTime>[];
-    for (var i = 0; i < 8; i++) {
+    for (var i = 0; i < 2; i++) {
       selectableDays.add(
         nowStartDay.add(Duration(days: i)),
       );
@@ -567,8 +571,8 @@ class _DateSelectionDropdown extends StatelessWidget {
               newValue.year,
               newValue.month,
               newValue.day,
-              selectedTime.hour,
-              selectedTime.minute,
+              0,
+              0,
             );
             _setSelectedTime(context, selectedTimeState, newDate);
           }
@@ -603,122 +607,5 @@ class _DateSelectionDropdown extends StatelessWidget {
     } finally {
       hideLoading();
     }
-  }
-}
-
-class _TimeSelectionDropdown extends StatelessWidget {
-  final _dropdownItems = const <_TimeSelectionDropdownItem>[
-    const _TimeSelectionDropdownItem(startHour: 6, durationHour: 12),
-    const _TimeSelectionDropdownItem(startHour: 18, durationHour: 12),
-  ];
-
-  const _TimeSelectionDropdown({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    final bilateralSelectedTimeState =
-        Provider.of<BilateralSelectedTimeState>(context);
-
-    final selectedTime = bilateralSelectedTimeState.selectedTime;
-    final selectedDay = DateTime(
-      selectedTime.year,
-      selectedTime.month,
-      selectedTime.day,
-    );
-
-    return Container(
-      height: 35,
-      padding: EdgeInsets.symmetric(horizontal: 3),
-      decoration: BoxDecoration(
-        color: Colors.grey[900],
-        borderRadius: BorderRadius.circular(5),
-      ),
-      child: DropdownButton<DateTime>(
-        value: selectedTime,
-        icon: Icon(
-          Icons.arrow_drop_down_rounded,
-        ),
-        iconSize: 20,
-        alignment: Alignment.center,
-        borderRadius: BorderRadius.circular(20),
-        onChanged: (DateTime? newValue) {
-          if (newValue != null) {
-            _setSelectedTime(context, bilateralSelectedTimeState, newValue);
-          }
-        },
-        items: _dropdownItems.map(
-          (
-            _TimeSelectionDropdownItem item,
-          ) {
-            final dateFormat = DateFormat('H:mm');
-            final startTime = DateTime(
-              selectedDay.year,
-              selectedDay.month,
-              selectedDay.day,
-              item.startHour,
-            );
-            final endTime = DateTime(
-              selectedDay.year,
-              selectedDay.month,
-              selectedDay.day,
-              item.startHour + item.durationHour,
-            );
-
-            final displayTime =
-                '${dateFormat.format(startTime)}-${dateFormat.format(endTime)}';
-
-            return DropdownMenuItem<DateTime>(
-              value: startTime,
-              child: Text(displayTime),
-            );
-          },
-        ).toList(),
-        underline: DropdownButtonHideUnderline(
-          child: Container(),
-        ),
-      ),
-    );
-  }
-
-  _setSelectedTime(
-    BuildContext context,
-    BilateralSelectedTimeState bilateralSelectedTimeState,
-    DateTime newValue,
-  ) async {
-    showLoading();
-    try {
-      await bilateralSelectedTimeState.setSelectedTime(newValue);
-    } catch (e) {
-      showException(context, e.toString());
-    } finally {
-      hideLoading();
-    }
-  }
-}
-
-class _TimeSelectionDropdownItem {
-  final int startHour;
-  final int durationHour;
-
-  const _TimeSelectionDropdownItem({
-    required this.startHour,
-    required this.durationHour,
-  });
-
-  String get title {
-    final now = DateTime.now();
-    final dateFormat = DateFormat('HH:mm');
-
-    final startHourString = dateFormat.format(
-      DateTime(now.year, now.month, now.day, this.startHour),
-    );
-    final durationHourString = dateFormat.format(
-      DateTime(
-          now.year, now.month, now.day, this.startHour + this.durationHour),
-    );
-
-    return '$startHourString - $durationHourString';
   }
 }

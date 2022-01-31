@@ -7,7 +7,9 @@ import 'package:intl/intl.dart' as intl;
 
 class ForecastGraph extends StatelessWidget {
   final List<double?> forecastData;
+  final List<double?> forecastPvData;
   final List<double?> pvData;
+  final List<double?> forecastLoadData;
   final List<double?> loadData;
 
   final DateTime startHour;
@@ -15,7 +17,9 @@ class ForecastGraph extends StatelessWidget {
   const ForecastGraph({
     Key? key,
     required this.forecastData,
+    required this.forecastPvData,
     required this.pvData,
+    required this.forecastLoadData,
     required this.loadData,
     required this.startHour,
   }) : super(key: key);
@@ -41,6 +45,15 @@ class ForecastGraph extends StatelessWidget {
 
     return Column(
       children: [
+        Align(
+          alignment: Alignment.centerRight,
+          child: Text(
+            'Forecast Excess PV / Grid Used',
+            style: TextStyle(
+              color: Colors.white.withOpacity(0.8),
+            ),
+          ),
+        ),
         SizedBox(
           width: 45 * 25,
           child: Scrollbar(
@@ -55,7 +68,9 @@ class ForecastGraph extends StatelessWidget {
                   ),
                   _LineGraph(
                     pvData: pvData,
+                    forecastPvData: forecastPvData,
                     loadData: loadData,
+                    forecastLoadData: forecastLoadData,
                   ),
                 ],
               ),
@@ -63,58 +78,95 @@ class ForecastGraph extends StatelessWidget {
             ),
           ),
         ),
-        _Topology(),
+        _TopologyBottom(),
       ],
     );
   }
 }
 
-class _Topology extends StatelessWidget {
-  const _Topology({Key? key}) : super(key: key);
+class _TopologyBottom extends StatelessWidget {
+  const _TopologyBottom({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.end,
-      children: [
-        SizedBox(
-          width: 10,
-          height: 10,
-          child: Container(
-            decoration: BoxDecoration(
-              color: const Color(0xFFA1FC7F),
+    return Padding(
+      padding: const EdgeInsets.only(top: 8),
+      child: FittedBox(
+        fit: BoxFit.scaleDown,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            SizedBox(
+              width: 10,
+              height: 10,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: const Color(0xFFA1FC7F),
+                ),
+              ),
             ),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Text('PV'),
-        ),
-        SizedBox(
-          width: 10,
-          height: 10,
-          child: Container(
-            decoration: BoxDecoration(
-              color: const Color(0xFFE75E57),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text('Actual PV'),
             ),
-          ),
+            SizedBox(
+              width: 10,
+              height: 10,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: const Color(0xFFA1FC7F).withOpacity(0.5),
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text('Forecast PV'),
+            ),
+            SizedBox(
+              width: 10,
+              height: 10,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: const Color(0xFFE75E57),
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text('Actual Load'),
+            ),
+            SizedBox(
+              width: 10,
+              height: 10,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: const Color(0xFFE75E57).withOpacity(0.5),
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text('Forecast Load'),
+            )
+          ],
         ),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Text('Load'),
-        )
-      ],
+      ),
     );
   }
 }
 
 class _LineGraph extends StatelessWidget {
+  final List<double?> forecastPvData;
   final List<double?> pvData;
+
+  final List<double?> forecastLoadData;
   final List<double?> loadData;
 
   const _LineGraph({
     Key? key,
+    required this.forecastPvData,
     required this.pvData,
+    required this.forecastLoadData,
     required this.loadData,
   }) : super(key: key);
 
@@ -123,37 +175,56 @@ class _LineGraph extends StatelessWidget {
     return CustomPaint(
       size: Size(24 * 45, 220),
       painter: _LineGraphPainter(
+        forecastPvData: forecastPvData,
         pvData: pvData,
+        forecastLoadData: forecastLoadData,
         loadData: loadData,
       ),
     );
   }
 }
 
+enum _LineGraphTextBaseline {
+  Top,
+  Bottom,
+}
+
 class _LineGraphPainter extends CustomPainter {
+  final List<double?> forecastPvData;
   final List<double?> pvData;
+
+  final List<double?> forecastLoadData;
   final List<double?> loadData;
 
-  get powerMaxValue => loadData.reduce((a, b) => max(a ?? 0, b ?? 0));
-  get forecastMaxValue => pvData.reduce((a, b) => max(a ?? 0, b ?? 0));
+  get forecastPvMaxValue =>
+      forecastPvData.reduce((a, b) => max(a ?? 0, b ?? 0));
+  get forecastPvMinValue =>
+      forecastPvData.reduce((a, b) => min(a ?? 0, b ?? 0));
+  get pvMaxValue => pvData.reduce((a, b) => max(a ?? 0, b ?? 0));
+  get loadMaxValue => loadData.reduce((a, b) => max(a ?? 0, b ?? 0));
 
-  get powerForecastMinValue => loadData
+  get loadMinValue => loadData
       .where((element) => element != null)
       .reduce((a, b) => min(a ?? 0, b ?? 0));
-  get forecastForecastMinValue => pvData
+  get pvMinValue => pvData
       .where((element) => element != null)
       .reduce((a, b) => min(a ?? 0, b ?? 0));
 
-  get maxValue => max<double>(forecastMaxValue, powerMaxValue);
-  get minValue => min<double>(forecastForecastMinValue, powerForecastMinValue);
+  get maxValue => max<double>(pvMaxValue, loadMaxValue);
+  get minValue => min<double>(pvMinValue, loadMinValue);
 
   _LineGraphPainter({
+    required this.forecastPvData,
     required this.pvData,
+    required this.forecastLoadData,
     required this.loadData,
   });
 
   @override
   void paint(Canvas canvas, Size size) {
+    _drawForecastPvPaths(canvas);
+    _drawForecastLoadPaths(canvas);
+
     _drawPvPaths(canvas);
     _drawLoadPaths(canvas);
 
@@ -171,70 +242,60 @@ class _LineGraphPainter extends CustomPainter {
   final Color loadColor = const Color(0xFFE75E57);
   final Color pvColor = const Color(0xFFA1FC7F);
 
-  void _drawFloor(Canvas canvas, Size size) {
-    Paint paint = Paint()
-      ..color = Colors.grey.withOpacity(0.3)
-      ..strokeWidth = 2.0
-      ..style = PaintingStyle.stroke;
-
-    final path = Path()
-      ..moveTo(0, 210)
-      ..lineTo(size.width, 210);
-
-    canvas.drawPath(path, paint);
-
-    final maxValue = this.maxValue;
-    final minValue = this.minValue;
-    final range = maxValue - minValue;
-
-    double dataX = 50;
-
-    for (var entry in loadData.asMap().entries) {
-      final data = entry.value;
-
-      if (data == null) {
-        continue;
-      }
-
-      final dataHeight = (data - minValue).abs() / range * 200;
-      final dataY = 220 - dataHeight - 10;
-
-      TextSpan span = TextSpan(
-        text: '${data.toStringAsFixed(2)}',
-        style: TextStyle(
-          color: Colors.grey,
-          fontSize: 12,
-        ),
-      );
-
-      final textPainter = TextPainter(text: span, textAlign: TextAlign.left);
-
-      textPainter.paint(canvas, Offset(dataX, dataY));
-
-      dataX += 45;
-    }
-
-    canvas.drawPath(path, paint);
+  List<Path> _drawLoadPaths(Canvas canvas) {
+    return _drawData(canvas, loadColor, loadData, offset: 1);
   }
 
-  List<Path> _drawLoadPaths(Canvas canvas) {
+  List<Path> _drawForecastPvPaths(Canvas canvas) {
+    return _drawData(
+      canvas,
+      pvColor.withOpacity(0.5),
+      forecastPvData,
+      isDashed: true,
+      fontColor: Colors.white.withOpacity(0.5),
+      textBaseline: _LineGraphTextBaseline.Bottom,
+    );
+  }
+
+  List<Path> _drawForecastLoadPaths(Canvas canvas) {
+    return _drawData(
+      canvas,
+      loadColor.withOpacity(0.5),
+      forecastLoadData,
+      isDashed: true,
+      offset: 1,
+      fontColor: Colors.white.withOpacity(0.5),
+      textBaseline: _LineGraphTextBaseline.Bottom,
+    );
+  }
+
+  List<Path> _drawData(
+    Canvas canvas,
+    Color color,
+    List<double?> datas, {
+    bool isDashed = false,
+    double dashSize = 4,
+    double dashSpaceSize = 3,
+    int offset = 0,
+    double fontSize = 8.5,
+    Color fontColor = const Color(0xFFFFFFFFF),
+    _LineGraphTextBaseline textBaseline = _LineGraphTextBaseline.Top,
+  }) {
     List<Path> paths = [];
 
     Path currentPath = Path();
     bool hasPainted = false;
 
-    final maxValue = this.maxValue;
-    final minValue = this.minValue;
-    final range = maxValue - minValue;
+    var maxValue = this.maxValue;
+    var minValue = this.minValue;
+    var range = maxValue - minValue;
 
-    List<TextPainter> textPainters = [];
-    List<double> textPainterOffsetYs = [];
-    List<double> textPainterOffsetXs = [];
+    minValue = range == 0 ? -1 : minValue;
+    maxValue = range == 0 ? 1 : maxValue;
+    range = range == 0 ? 2 : range;
 
     double dataX = 65;
-    for (var entry in loadData.asMap().entries) {
-      final data = entry.value;
-
+    for (var data in datas) {
       if (data == null) {
         if (hasPainted) {
           paths.add(currentPath);
@@ -245,14 +306,14 @@ class _LineGraphPainter extends CustomPainter {
 
       if (data != null) {
         final dataHeight = (data - minValue).abs() / range * 200;
-        final dataY = 220 - dataHeight - 10;
+        final dataY = 220 - dataHeight - 10 + offset;
 
         try {
           TextSpan span = TextSpan(
-            text: '${data.toStringAsFixed(2)}',
+            text: '${data.toStringAsFixed(3)}',
             style: TextStyle(
-              color: Colors.white.withOpacity(0.8),
-              fontSize: 10,
+              color: fontColor,
+              fontSize: fontSize,
             ),
           );
           TextPainter textPainter = TextPainter(
@@ -262,9 +323,12 @@ class _LineGraphPainter extends CustomPainter {
           );
           textPainter.layout(minWidth: 50, maxWidth: 50);
 
-          textPainters.add(textPainter);
-          textPainterOffsetYs.add(dataY);
-          textPainterOffsetXs.add(dataX);
+          double textOffset = -fontSize - 2;
+          if (textBaseline == _LineGraphTextBaseline.Bottom) {
+            textOffset = 2;
+          }
+
+          textPainter.paint(canvas, Offset(dataX, max(0, dataY + textOffset)));
         } catch (e) {
           print(e);
         }
@@ -284,110 +348,34 @@ class _LineGraphPainter extends CustomPainter {
       paths.add(currentPath);
     }
 
-    Paint powerPaint = Paint()
-      ..color = loadColor
+    Paint paint = Paint()
+      ..color = color
       ..strokeWidth = 2.0
       ..style = PaintingStyle.stroke;
 
-    for (var path in paths) {
-      canvas.drawPath(path, powerPaint);
-    }
+    if (isDashed) {
+      for (var path in paths) {
+        final metrics = path.computeMetrics().toList();
+        final dashStep = dashSize + dashSpaceSize;
 
-    for (var textPainterEntry in textPainters.asMap().entries) {
-      final textPainter = textPainterEntry.value;
-      double textPainterOffsetY = textPainterOffsetYs[textPainterEntry.key];
-      final textPainterOffsetX = textPainterOffsetXs[textPainterEntry.key];
-
-      final nextValueY = textPainterEntry.key == textPainterOffsetXs.length - 1
-          ? textPainterOffsetY
-          : textPainterOffsetXs[textPainterEntry.key + 1];
-
-      if (nextValueY >= textPainterOffsetY) {
-        textPainterOffsetY -= 10;
-      } else {
-        textPainterOffsetY += 10;
+        for (final metric in metrics) {
+          for (double i = 0; i < metric.length; i += dashStep) {
+            final pathDash = metric.extractPath(i, i + dashSize);
+            canvas.drawPath(pathDash, paint);
+          }
+        }
       }
-
-      textPainter.paint(
-        canvas,
-        Offset(
-          textPainterOffsetX,
-          max(0, textPainterOffsetY),
-        ),
-      );
+    } else {
+      for (var path in paths) {
+        canvas.drawPath(path, paint);
+      }
     }
 
     return paths;
   }
 
   List<Path> _drawPvPaths(Canvas canvas) {
-    List<Path> paths = [];
-
-    Path currentPath = Path();
-    bool hasPainted = false;
-
-    final maxValue = this.maxValue;
-    final minValue = this.minValue;
-    final range = maxValue - minValue;
-
-    double dataX = 65;
-    for (var data in pvData) {
-      if (data == null) {
-        if (hasPainted) {
-          paths.add(currentPath);
-          currentPath = Path();
-          hasPainted = false;
-        }
-      }
-
-      if (data != null) {
-        final dataHeight = (data - minValue).abs() / range * 200;
-        final dataY = 220 - dataHeight - 10;
-
-        try {
-          TextSpan span = TextSpan(
-            text: '${data.toStringAsFixed(2)}',
-            style: TextStyle(
-              color: Colors.white.withOpacity(0.8),
-              fontSize: 10,
-            ),
-          );
-          TextPainter textPainter = TextPainter(
-              text: span,
-              textAlign: TextAlign.left,
-              textDirection: TextDirection.ltr);
-          textPainter.layout(minWidth: 50, maxWidth: 50);
-
-          textPainter.paint(canvas, Offset(dataX, max(0, dataY - 10)));
-        } catch (e) {
-          print(e);
-        }
-
-        if (!hasPainted) {
-          hasPainted = true;
-          currentPath.moveTo(dataX, dataY);
-        }
-
-        currentPath.lineTo(dataX, dataY);
-      }
-
-      dataX += 45;
-    }
-
-    if (hasPainted) {
-      paths.add(currentPath);
-    }
-
-    Paint pvPaint = Paint()
-      ..color = pvColor
-      ..strokeWidth = 2.0
-      ..style = PaintingStyle.stroke;
-
-    for (var path in paths) {
-      canvas.drawPath(path, pvPaint);
-    }
-
-    return paths;
+    return _drawData(canvas, pvColor, pvData);
   }
 }
 
@@ -474,11 +462,14 @@ class _Bar extends StatelessWidget {
                     value >= 0 ? Alignment.topCenter : Alignment.bottomCenter,
                 child: Padding(
                   padding: const EdgeInsets.all(2),
-                  child: Text(
-                    value.abs().toStringAsFixed(2),
-                    style: TextStyle(
-                      fontSize: 10,
-                      color: Colors.black,
+                  child: FittedBox(
+                    child: Text(
+                      value.abs().toStringAsFixed(3),
+                      style: TextStyle(
+                        fontSize: 10,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                      ),
                     ),
                   ),
                 ),

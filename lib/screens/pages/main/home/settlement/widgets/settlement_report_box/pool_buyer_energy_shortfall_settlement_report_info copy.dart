@@ -45,40 +45,40 @@ class PoolBuyerEnergyShortfallSettlementReportInfoBox extends StatelessWidget {
         DatedSettlementReportDetailBoxItem(
           name: 'Energy commited/Used',
           value:
-              '${tradeInfo.energyCommitted.toStringAsFixed(2)}/${tradeInfo.energyUsed.toStringAsFixed(2)} kWh',
-          fontSize: 13,
-        ),
-        DatedSettlementReportDetailBoxItem(
-          name: 'NET buy',
-          value: '${tradeInfo.netBuy.toStringAsFixed(2)} THB',
+              '${tradeInfo.energyCommitted.toStringAsFixed(3)}/${tradeInfo.energyUsed.toStringAsFixed(3)} kWh',
           fontSize: 13,
         ),
         DatedSettlementReportDetailBoxItem(
           name: 'Buyer imbalance amount',
-          value: '${tradeInfo.buyerImbalanceAmount.toStringAsFixed(2)} kWh',
+          value: '${tradeInfo.buyerImbalanceAmount.toStringAsFixed(3)} kWh',
           fontSize: 13,
           fontColor: Color(0xFFA10C09),
         ),
         DatedSettlementReportDetailBoxItem(
           name: 'Buyer imbalance',
-          value: '${tradeInfo.buyerImbalance.toStringAsFixed(2)} THB',
+          value: '${tradeInfo.buyerImbalance.toStringAsFixed(3)} THB',
           fontSize: 13,
           fontColor: Color(0xFFA10C09),
         ),
         DatedSettlementReportDetailBoxItem(
           name: 'Wheeling charge Tariff',
-          value: '${tradeInfo.wheelingChargeTariff.toStringAsFixed(2)} THB/kWh',
+          value: '${tradeInfo.wheelingChargeTariff.toStringAsFixed(3)} THB/kWh',
           fontSize: 10,
         ),
         DatedSettlementReportDetailBoxItem(
           name: 'Wheeling charge',
-          value: '${tradeInfo.wheelingCharge.toStringAsFixed(2)} THB',
+          value: '${tradeInfo.wheelingCharge.toStringAsFixed(3)} THB',
           fontSize: 10,
         ),
         DatedSettlementReportDetailBoxItem(
           name: 'NET energy price(NET buy/Used)',
-          value: '${tradeInfo.netEnergyPrice.toStringAsFixed(2)} kWh',
+          value: '${tradeInfo.netEnergyPrice.toStringAsFixed(3)} kWh',
           fontSize: 10,
+        ),
+        DatedSettlementReportDetailBoxItem(
+          name: 'NET buy',
+          value: '${tradeInfo.netBuy.toStringAsFixed(3)} THB',
+          fontSize: 13,
         ),
       ],
     );

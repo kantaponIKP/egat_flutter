@@ -1,17 +1,20 @@
 import 'dart:async';
 import 'dart:math';
+import 'dart:typed_data';
+import 'dart:ui';
 
 import 'package:egat_flutter/constant.dart';
 import 'package:egat_flutter/screens/forgot_password/widgets/forgot_password_cancellation_dialog.dart';
 import 'package:egat_flutter/screens/page/trade/bottom_button.dart';
 import 'package:egat_flutter/screens/page/widgets/page_appbar.dart';
+import 'package:egat_flutter/screens/pages/main/home/buysell/bilateral/apis/models/GetBilateralShortTermSellInfoResponse.dart';
 import 'package:egat_flutter/screens/pages/main/home/buysell/bilateral/apis/models/TransactionSubmitItem.dart';
 import '../apis/models/BilateralSellItem.dart';
 import '../apis/bilateral_api.dart';
 import 'package:egat_flutter/screens/session.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:intl/intl.dart';
+import 'package:intl/intl.dart' as intl;
 import 'package:provider/provider.dart';
 
 import 'long_term/bilateral_long_term_sell_page.dart';
@@ -19,10 +22,12 @@ import 'short_term/bilateral_short_term_sell_page.dart';
 
 class BilateralSellScreen extends StatefulWidget {
   final DateTime date;
+  final bool enabled;
 
   const BilateralSellScreen({
     Key? key,
     required this.date,
+    required this.enabled,
   }) : super(key: key);
 
   @override
@@ -231,6 +236,44 @@ class _BilateralSellScreenState extends State<BilateralSellScreen> {
     );
   }
 
+  Future<BitmapDescriptor> createCustomMarkerWithAlphabets(
+      String alphabets) async {
+    TextSpan span = new TextSpan(
+        style: new TextStyle(
+          height: 1.2,
+          color: Colors.black,
+          fontSize: 15.0,
+          fontWeight: FontWeight.w300,
+        ),
+        text: alphabets);
+
+    TextPainter textPainter = new TextPainter(
+      text: span,
+      textAlign: TextAlign.center,
+      textDirection: TextDirection.ltr,
+    );
+
+    textPainter.layout(minWidth: 20, maxWidth: 20);
+
+    PictureRecorder recorder = new PictureRecorder();
+    Canvas canvas = new Canvas(recorder);
+
+    Paint pinPaint = new Paint()..color = Color(0xFFFEC908);
+
+    canvas.drawCircle(Offset(10, 10), 10, pinPaint);
+    textPainter.paint(canvas, Offset(0, 2));
+
+    Picture picture = recorder.endRecording();
+    ByteData? pngBytes = await (await picture.toImage(30, 30))
+        .toByteData(format: ImageByteFormat.png);
+
+    if (pngBytes == null) {
+      return BitmapDescriptor.defaultMarker;
+    }
+
+    return BitmapDescriptor.fromBytes(pngBytes.buffer.asUint8List());
+  }
+
   double getZoomLevel(double radius) {
     double zoomLevel = 13;
 
@@ -250,15 +293,19 @@ class _BilateralSellScreenState extends State<BilateralSellScreen> {
       final item = entry.value;
       final index = entry.key;
 
-      markers.add(Marker(
-        draggable: false,
-        markerId: MarkerId(index.toString()),
-        position: LatLng(item.lat, item.lng),
-        icon: BitmapDescriptor.defaultMarker,
-        infoWindow: InfoWindow(
-          title: _convertIndexToAlphabatical(index),
+      markers.add(
+        Marker(
+          draggable: false,
+          markerId: MarkerId(index.toString()),
+          position: LatLng(item.lat, item.lng),
+          icon: _markers.length > index
+              ? _markers[index]
+              : BitmapDescriptor.defaultMarker,
+          infoWindow: InfoWindow(
+            title: _convertIndexToAlphabatical(index),
+          ),
         ),
-      ));
+      );
     }
 
     LatLng position = LatLng(15.87, 100.99);
@@ -271,20 +318,20 @@ class _BilateralSellScreenState extends State<BilateralSellScreen> {
       double bottomRightY = items.first.lat;
 
       for (final item in items) {
-        if (item.lat > topLeftX) {
-          topLeftX = item.lng;
-        }
-
-        if (item.lng > topLeftY) {
+        if (item.lat > topLeftY) {
           topLeftY = item.lat;
         }
 
-        if (item.lat > bottomRightX) {
-          bottomRightX = item.lng;
+        if (item.lng > topLeftX) {
+          topLeftX = item.lng;
         }
 
-        if (item.lat < bottomRightY) {
+        if (item.lat > bottomRightY) {
           bottomRightY = item.lat;
+        }
+
+        if (item.lat < bottomRightX) {
+          bottomRightX = item.lng;
         }
       }
 
@@ -341,6 +388,8 @@ class _BilateralSellScreenState extends State<BilateralSellScreen> {
       accessToken: accessToken,
     );
 
+    await _prepareMarkers(data);
+
     return data.bilateralList;
   }
 
@@ -352,6 +401,19 @@ class _BilateralSellScreenState extends State<BilateralSellScreen> {
         _selectedItems.add(sellItem);
       }
     });
+  }
+
+  List<BitmapDescriptor> _markers = <BitmapDescriptor>[];
+
+  _prepareMarkers(BilateralShortTermSellInfoResponse data) async {
+    List<Future<BitmapDescriptor>> markerFutures = <Future<BitmapDescriptor>>[];
+
+    for (var i = 0; i < data.bilateralList.length; i++) {
+      final alphabets = _convertIndexToAlphabatical(i);
+      markerFutures.add(createCustomMarkerWithAlphabets(alphabets));
+    }
+
+    _markers = await Future.wait(markerFutures);
   }
 }
 
@@ -558,8 +620,8 @@ class _DateSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var dateFormat = DateFormat('dd MMMM yyyy');
-    var hourFormat = DateFormat('HH:mm');
+    var dateFormat = intl.DateFormat('dd MMMM yyyy');
+    var hourFormat = intl.DateFormat('HH:mm');
 
     var startDate = date;
     var endDate = startDate.add(new Duration(hours: 1));
@@ -617,7 +679,7 @@ class _SellItemCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var dateFormat = DateFormat('HH:mm, dd MMM');
+    var dateFormat = intl.DateFormat('HH:mm, dd MMM');
 
     return Container(
       padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
@@ -743,11 +805,16 @@ class _SellItemCard extends StatelessWidget {
   }
 }
 
-String _convertIndexToAlphabatical(int index) {
+String _convertIndexToAlphabatical(int index, {bool isFirst = true}) {
+  if (isFirst && index <= 0) {
+    return 'A';
+  }
+
   if (index <= 0) {
     return '';
   }
 
   String alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-  return _convertIndexToAlphabatical(index ~/ 24) + alphabet[index % 24];
+  return _convertIndexToAlphabatical(index ~/ 24, isFirst: false) +
+      alphabet[index % 24];
 }

@@ -216,7 +216,7 @@ class _DailyDataDisplaySection extends StatelessWidget {
                   AppLocalizations.of(context)
                       .translate('settlement-settlementReport-imbalanceAmount'),
                 ),
-                value: Text('${report.imbalanceAmount.toStringAsFixed(2)} kWh'),
+                value: Text('${report.imbalanceAmount.toStringAsFixed(2)} THB'),
                 textStyle: defaultImbalanceTextStyle,
               ),
               CollapsableReportRow(
@@ -224,14 +224,14 @@ class _DailyDataDisplaySection extends StatelessWidget {
                   AppLocalizations.of(context)
                       .translate('settlement-settlementReport-sellerImbalance'),
                 ),
-                value: Text('${report.sellerImbalance.toStringAsFixed(2)} THB'),
+                value: Text('${report.sellerImbalance.toStringAsFixed(2)} kWh'),
                 textStyle: defaultImbalanceTextStyle,
               ),
               CollapsableReportRow(
                 title: Text(
                   "Buyer Imbalance",
                 ),
-                value: Text('${report.buyerImbalance.toStringAsFixed(2)} THB'),
+                value: Text('${report.buyerImbalance.toStringAsFixed(2)} kWh'),
                 textStyle: defaultImbalanceTextStyle,
               ),
               CollapsableReportRow(
@@ -249,7 +249,8 @@ class _DailyDataDisplaySection extends StatelessWidget {
                     ],
                   ),
                 ),
-                value: Text('${report.netEnergyPrice.toStringAsFixed(2)} THB'),
+                value:
+                    Text('${report.netEnergyPrice.toStringAsFixed(2)} THB/kWh'),
                 textStyle: defaulTextStyle,
               ),
             ],

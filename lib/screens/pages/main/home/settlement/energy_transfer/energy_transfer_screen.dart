@@ -117,7 +117,7 @@ class _DataDisplaySection extends StatelessWidget {
         child: Column(
           children: [
             SizedBox(
-              height: 230,
+              height: 260,
               child: EnergyTransferGraph(
                 energyData: infos,
                 startHour: selectedDate,

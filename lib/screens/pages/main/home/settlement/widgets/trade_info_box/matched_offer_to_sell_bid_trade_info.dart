@@ -33,7 +33,8 @@ class MatchedOfferToSellBidTradeInfoBox extends StatelessWidget {
     final timeEndString =
         dateFormat.format(timeStartHour.add(Duration(hours: 1)));
 
-    final dateText = "${AppLocalizations.of(context).translate('settlement-deliveryTime')} $timeStartString-$timeEndString";
+    final dateText =
+        "${AppLocalizations.of(context).translate('settlement-deliveryTime')} $timeStartString-$timeEndString";
 
     return DatedTradeDetail(
       direction: TransferDirection.OFFER_TO_SELL_BID,
@@ -44,35 +45,40 @@ class MatchedOfferToSellBidTradeInfoBox extends StatelessWidget {
       defaultExpanded: defaultExpanded,
       items: [
         DatedTradeDetailBoxItem(
-          name: AppLocalizations.of(context).translate('settlement-offeredAmount'),
-          value: '${tradeInfo.offeredAmount.toStringAsFixed(2)} kWh',
+          name: AppLocalizations.of(context)
+              .translate('settlement-offeredAmount'),
+          value: '${tradeInfo.offeredAmount.toStringAsFixed(3)} kWh',
           fontSize: 13,
         ),
         DatedTradeDetailBoxItem(
-          name: AppLocalizations.of(context).translate('settlement-matchedAmount'),
-          value: '${tradeInfo.matchedAmount.toStringAsFixed(2)} kWh',
+          name: AppLocalizations.of(context)
+              .translate('settlement-matchedAmount'),
+          value: '${tradeInfo.matchedAmount.toStringAsFixed(3)} kWh',
           fontColor: Color(0xFF0329F2),
           fontSize: 13,
         ),
         DatedTradeDetailBoxItem(
-          name: AppLocalizations.of(context).translate('settlement-offerToSell'),
-          value: '${tradeInfo.offerToSell.toStringAsFixed(2)} THB',
+          name:
+              AppLocalizations.of(context).translate('settlement-offerToSell'),
+          value: '${tradeInfo.offerToSell.toStringAsFixed(3)} THB',
           fontSize: 13,
         ),
         DatedTradeDetailBoxItem(
-          name: AppLocalizations.of(context).translate('settlement-marketClearingPrice'),
-          value: '${tradeInfo.marketClearingPrice.toStringAsFixed(2)} THB',
+          name: AppLocalizations.of(context)
+              .translate('settlement-marketClearingPrice'),
+          value: '${tradeInfo.marketClearingPrice.toStringAsFixed(3)} THB',
           fontColor: Color(0xFF0329F2),
           fontSize: 13,
         ),
         DatedTradeDetailBoxItem(
           name: AppLocalizations.of(context).translate('settlement-tradingFee'),
-          value: '${tradeInfo.tradingFee.toStringAsFixed(2)} THB',
+          value: '${tradeInfo.tradingFee.toStringAsFixed(3)} THB',
           fontSize: 10,
         ),
         DatedTradeDetailBoxItem(
-          name: AppLocalizations.of(context).translate('settlement-order-estimatedSales'),
-          value: '${tradeInfo.estimatedSales.toStringAsFixed(2)} THB',
+          name: AppLocalizations.of(context)
+              .translate('settlement-order-estimatedSales'),
+          value: '${tradeInfo.estimatedSales.toStringAsFixed(3)} THB',
           fontColor: Color(0xFF0329F2),
           fontSize: 10,
         ),

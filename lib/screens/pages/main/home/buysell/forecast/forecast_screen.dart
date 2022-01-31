@@ -360,7 +360,7 @@ class _BuySellActionTileState extends State<_BuySellActionTile> {
                                     "${(widget.expectingAmount.abs()).toStringAsFixed(2)} kWh",
                                     style: TextStyle(
                                         color: widget.enabled
-                                            ? primaryColor
+                                            ? Color(0xFFFEC908)
                                             : greyColor),
                                   ),
                                 ),
@@ -388,7 +388,7 @@ class _BuySellActionTileState extends State<_BuySellActionTile> {
                                     "${widget.expectingAmount.toStringAsFixed(2)} kWh",
                                     style: TextStyle(
                                         color: widget.enabled
-                                            ? primaryColor
+                                            ? Color(0xFFED8235)
                                             : greyColor),
                                   ),
                                 ),
@@ -612,7 +612,10 @@ class _BuySellActionTileBottomSheet extends StatelessWidget {
       case BuySellAction.BUY:
         await Navigator.of(context).push(
           MaterialPageRoute(
-            builder: (context) => BilateralBuyPage(date: startDateTime),
+            builder: (context) => BilateralBuyPage(
+              date: startDateTime,
+              enabled: true,
+            ),
           ),
         );
         state.fetchForecastsFromDate(selectedDate.selectedDate);
@@ -954,17 +957,19 @@ class _ForecastEnergyWidget extends StatelessWidget {
                       children: [
                         Flexible(
                           //important for overflow text
-                          child: new RichText(
-                            text: new TextSpan(
-                              children: <TextSpan>[
-                                new TextSpan(
-                                    text: summaryEnergy.toStringAsFixed(2),
-                                    style: TextStyle(
-                                      fontSize: 24,
-                                      color: primaryColor,
-                                    )),
-                                new TextSpan(text: ' kWh'),
-                              ],
+                          child: FittedBox(
+                            child: new RichText(
+                              text: new TextSpan(
+                                children: <TextSpan>[
+                                  new TextSpan(
+                                      text: summaryEnergy.toStringAsFixed(2),
+                                      style: TextStyle(
+                                        fontSize: 24,
+                                        color: primaryColor,
+                                      )),
+                                  new TextSpan(text: ' kWh'),
+                                ],
+                              ),
                             ),
                           ),
                         )
@@ -981,10 +986,20 @@ class _ForecastEnergyWidget extends StatelessWidget {
   }
 }
 
-class _ForecastEnergyWidgetListTile extends StatelessWidget {
-  const _ForecastEnergyWidgetListTile({
-    Key? key,
-  }) : super(key: key);
+class _ForecastEnergyWidgetListTile extends StatefulWidget {
+  _ForecastEnergyWidgetListTile({Key? key}) : super(key: key);
+
+  @override
+  _ForecastEnergyWidgetListTileState createState() =>
+      _ForecastEnergyWidgetListTileState();
+}
+
+class _ForecastEnergyWidgetListTileState
+    extends State<_ForecastEnergyWidgetListTile> {
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -1008,6 +1023,7 @@ class _ForecastEnergyWidgetListTile extends StatelessWidget {
     return Container(
       height: 84,
       child: new ListView(
+        reverse: true,
         scrollDirection: Axis.horizontal,
         shrinkWrap: true,
         children: dateWidgets,
@@ -1214,8 +1230,18 @@ class _ForecastScreenState extends State<ForecastScreen>
                       .map((e) => e != null ? -e : null)
                       .toList()
                   : [],
+              forecastPvData: selectedDateState.forecastData != null
+                  ? selectedDateState.forecastData!.forecastPvInGrids
+                      .map((e) => e != null ? e : null)
+                      .toList()
+                  : [],
               pvData: selectedDateState.forecastData != null
                   ? selectedDateState.forecastData!.pvInGrids
+                      .map((e) => e != null ? e : null)
+                      .toList()
+                  : [],
+              forecastLoadData: selectedDateState.forecastData != null
+                  ? selectedDateState.forecastData!.forecastLoadInGrids
                       .map((e) => e != null ? e : null)
                       .toList()
                   : [],

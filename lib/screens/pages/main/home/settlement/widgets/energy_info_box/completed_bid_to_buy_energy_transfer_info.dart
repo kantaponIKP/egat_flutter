@@ -45,83 +45,86 @@ class CompletedBidToBuyEnergyTransferInfoBox extends StatelessWidget {
         DatedEnergyDetailBoxItem(
           name: AppLocalizations.of(context)
               .translate('settlement-bidedAmount-matched'),
-          value: '${tradeInfo.bidedAmount.toStringAsFixed(2)} kWh',
+          value: '${tradeInfo.bidedAmount.toStringAsFixed(3)} kWh',
           fontSize: 13,
           fontColor: Color(0xFF0329F2),
         ),
         DatedEnergyDetailBoxItem(
           name: AppLocalizations.of(context).translate('settlement-energyUsed'),
-          value: '${tradeInfo.energyUsed.toStringAsFixed(2)} kWh',
+          value: '${tradeInfo.energyUsed.toStringAsFixed(3)} kWh',
           fontSize: 13,
           fontColor: Color(0xFF12875D),
         ),
         DatedEnergyDetailBoxItem(
           name: AppLocalizations.of(context)
               .translate('settlement-marketClearingPrice'),
-          value: '${tradeInfo.marketClearingPrice.toStringAsFixed(2)} THB/kWh',
+          value: '${tradeInfo.marketClearingPrice.toStringAsFixed(3)} THB/kWh',
           fontSize: 13,
           fontColor: Color(0xFF0329F2),
         ),
         DatedEnergyDetailBoxItem(
-          name: AppLocalizations.of(context).translate('settlement-netBuy'),
-          value: '${tradeInfo.netBuy.toStringAsFixed(2)} THB',
-          fontSize: 13,
-        ),
-        DatedEnergyDetailBoxItem(
-          name: '${AppLocalizations.of(context).translate('settlement-netEnergyPrice')}(${AppLocalizations.of(context).translate('settlement-netBuy')}/${AppLocalizations.of(context).translate('settlement-energyUsed')})',
-          value: '${tradeInfo.netEnergyPrice.toStringAsFixed(2)} THB/kWh',
-          fontSize: 10,
-        ),
-        DatedEnergyDetailBoxItem(
-          name: AppLocalizations.of(context).translate('settlement-buyerImbalanceAmount'),
-          value: '${tradeInfo.buyerImbalanceAmount.toStringAsFixed(2)} kWh',
+          name: AppLocalizations.of(context)
+              .translate('settlement-buyerImbalanceAmount'),
+          value: '${tradeInfo.buyerImbalanceAmount.toStringAsFixed(3)} kWh',
           fontSize: 13,
           fontColor: Color(0xFFA10C09),
         ),
         DatedEnergyDetailBoxItem(
-          name: AppLocalizations.of(context).translate('settlement-buyerImbalance'),
-          value: '${tradeInfo.buyerImbalance.toStringAsFixed(2)} THB',
+          name: AppLocalizations.of(context)
+              .translate('settlement-buyerImbalance'),
+          value: '${tradeInfo.buyerImbalance.toStringAsFixed(3)} THB',
           fontSize: 13,
           fontColor: Color(0xFFA10C09),
         ),
         DatedEnergyDetailBoxItem(
           name:
               AppLocalizations.of(context).translate('settlement-energyToBuy'),
-          value: '${tradeInfo.energyToBuy.toStringAsFixed(2)} kWh',
+          value: '${tradeInfo.energyToBuy.toStringAsFixed(3)} kWh',
           fontSize: 10,
         ),
         DatedEnergyDetailBoxItem(
           name:
               AppLocalizations.of(context).translate('settlement-energyTariff'),
-          value: '${tradeInfo.energyTariff.toStringAsFixed(2)} THB/kWh',
+          value: '${tradeInfo.energyTariff.toStringAsFixed(3)} THB/kWh',
           fontSize: 10,
         ),
         DatedEnergyDetailBoxItem(
           name:
               AppLocalizations.of(context).translate('settlement-energyPrice'),
-          value: '${tradeInfo.energyPrice.toStringAsFixed(2)} THB',
+          value: '${tradeInfo.energyPrice.toStringAsFixed(3)} THB',
           fontSize: 10,
         ),
         DatedEnergyDetailBoxItem(
           name: AppLocalizations.of(context)
               .translate('settlement-wheelingChargeTariff'),
-          value: '${tradeInfo.wheelingChargeTariff.toStringAsFixed(2)} THB/kWh',
+          value: '${tradeInfo.wheelingChargeTariff.toStringAsFixed(3)} THB/kWh',
           fontSize: 10,
         ),
         DatedEnergyDetailBoxItem(
           name: AppLocalizations.of(context)
               .translate('settlement-wheelingCharge'),
-          value: '${tradeInfo.wheelingCharge.toStringAsFixed(2)} THB',
+          value: '${tradeInfo.wheelingCharge.toStringAsFixed(3)} THB',
           fontSize: 10,
         ),
         DatedEnergyDetailBoxItem(
           name: AppLocalizations.of(context).translate('settlement-tradingFee'),
-          value: '${tradeInfo.tradingFee.toStringAsFixed(2)} THB',
+          value: '${tradeInfo.tradingFee.toStringAsFixed(3)} THB',
           fontSize: 10,
         ),
         DatedEnergyDetailBoxItem(
           name: AppLocalizations.of(context).translate('settlement-vat'),
-          value: '${tradeInfo.vat.toStringAsFixed(2)} THB',
+          value: '${tradeInfo.vat.toStringAsFixed(3)} THB',
+          fontSize: 10,
+        ),
+        DatedEnergyDetailBoxItem(
+          name: AppLocalizations.of(context).translate('settlement-netBuy'),
+          value: '${tradeInfo.netBuy.toStringAsFixed(3)} THB',
+          fontSize: 13,
+        ),
+        DatedEnergyDetailBoxItem(
+          name:
+              '${AppLocalizations.of(context).translate('settlement-netEnergyPrice')}(${AppLocalizations.of(context).translate('settlement-netBuy')}/${AppLocalizations.of(context).translate('settlement-energyUsed')})',
+          value: '${tradeInfo.netEnergyPrice.toStringAsFixed(3)} THB/kWh',
           fontSize: 10,
         ),
       ],

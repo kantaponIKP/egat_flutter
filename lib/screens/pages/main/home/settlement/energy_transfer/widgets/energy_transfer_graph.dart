@@ -20,19 +20,54 @@ class EnergyTransferGraph extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      child: Scrollbar(
-        child: SingleChildScrollView(
-          child: Column(
+      child: Column(
+        children: [
+          Scrollbar(
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _BarGraph(data: energyData, startHour: startHour),
+                  _EnergyTransferTimeLine(
+                    hourCount: 24,
+                    startHour: startHour,
+                  ),
+                ],
+              ),
+              scrollDirection: Axis.horizontal,
+            ),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              _BarGraph(data: energyData, startHour: startHour),
-              _EnergyTransferTimeLine(
-                hourCount: 24,
-                startHour: startHour,
+              Container(
+                width: 10,
+                height: 10,
+                decoration: BoxDecoration(
+                  color: Color(0xFF99FF75),
+                  borderRadius: BorderRadius.circular(5),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: const Text('Completed'),
+              ),
+              Container(
+                width: 10,
+                height: 10,
+                decoration: BoxDecoration(
+                  color: Color(0xFFF8E295),
+                  borderRadius: BorderRadius.circular(5),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: const Text('Scheduled'),
               ),
             ],
           ),
-          scrollDirection: Axis.horizontal,
-        ),
+        ],
       ),
     );
   }
@@ -55,7 +90,10 @@ class _BarGraph extends StatefulWidget {
 class _BarGraphState extends State<_BarGraph> {
   @override
   Widget build(BuildContext context) {
-    List<double> energyData = [
+    List<double> committedData = [
+      for (var i = 0; i < 24; i++) 0,
+    ];
+    List<double> actualData = [
       for (var i = 0; i < 24; i++) 0,
     ];
 
@@ -69,90 +107,176 @@ class _BarGraphState extends State<_BarGraph> {
         continue;
       }
 
-      double value = 0;
+      double committedValue = 0;
+      double actualValue = 0;
       if (data is CompletedBidToBuyEnergyTransferInfo) {
-        value = data.netEnergyPrice;
+        committedValue = -data.bidedAmount;
+        actualValue = -data.energyUsed;
       } else if (data is CompletedChooseToBuyEnergyTransferInfo) {
-        value = data.netEnergyPrice;
+        committedValue = -data.commitedAmount;
+        actualValue = -data.energyUsed;
       } else if (data is CompletedOfferToSellBidEnergyTransferInfo) {
-        value = data.netEnergyPrice;
+        committedValue = data.offeredAmount;
+        actualValue = data.energyDelivered;
       } else if (data is CompletedOfferToSellEnergyTransferInfo) {
-        value = data.netEnergyPrice;
+        committedValue = data.commitedAmount;
+        actualValue = data.energyDelivered;
       } else if (data is ScheduledBidToBuyEnergyTransferInfo) {
-        value = data.netEnergyPrice;
+        committedValue = -data.bidedAmount;
+        actualValue = 0;
       } else if (data is ScheduledChooseToBuyEnergyTransferInfo) {
-        value = data.netEnergyPrice;
+        committedValue = -data.commitedAmount;
+        actualValue = 0;
       } else if (data is ScheduledOfferToSellBidEnergyTransferInfo) {
-        value = data.netEnergyPrice;
+        committedValue = data.offeredAmount;
+        actualValue = 0;
       } else if (data is ScheduledOfferToSellEnergyTransferInfo) {
-        value = data.netEnergyPrice;
+        committedValue = data.commitedAmount;
+        actualValue = 0;
       }
 
-      energyData[diffHours] = energyData[diffHours] + value;
+      committedData[diffHours] = committedData[diffHours] + committedValue;
+      actualData[diffHours] = actualData[diffHours] + actualValue;
       transferStatuses[diffHours] = data.status;
     }
 
     double maxValue = 0;
-    for (final value in energyData) {
+    for (final value in committedData) {
+      maxValue = max(maxValue, value.abs());
+    }
+    for (final value in actualData) {
       maxValue = max(maxValue, value.abs());
     }
     maxValue = max(1, maxValue);
 
-    return SizedBox(
-      height: 200,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          for (var value in energyData.asMap().entries)
-            _Bar(
-              value: value.value,
-              maxValue: maxValue <= 0 ? 1 : maxValue,
-              transferStatus: transferStatuses[value.key],
-              key: Key('bar-${value.key}'),
-            )
-        ],
+    return Padding(
+      padding: const EdgeInsets.only(left: 33),
+      child: SizedBox(
+        height: 200,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            for (var value in committedData.asMap().entries)
+              _Bar(
+                committedValue: value.value,
+                actualValue: actualData[value.key],
+                maxValue: maxValue <= 0 ? 1 : maxValue,
+                transferStatus: transferStatuses[value.key],
+                key: Key('bar-${value.key}'),
+              )
+          ],
+        ),
       ),
     );
   }
 }
 
 class _Bar extends StatelessWidget {
-  final double value;
+  final double committedValue;
   final double maxValue;
   final EnergyTransferStatus transferStatus;
+  final double actualValue;
 
   const _Bar({
     Key? key,
-    required this.value,
+    required this.committedValue,
     required this.maxValue,
     required this.transferStatus,
+    required this.actualValue,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    var size = value.abs() / maxValue * 100;
-    var paddingTop = (100.0 - size);
+    var committedSize = committedValue.abs() / maxValue * 100;
+    committedSize *= 0.9;
+    committedSize = max(1, committedSize);
+    var committedPaddingTop = (100.0 - committedSize);
 
-    if (value < 0) {
-      paddingTop = 100.0;
+    if (committedValue < 0) {
+      committedPaddingTop = 100.0;
     }
 
-    return Padding(
-      padding: EdgeInsets.only(left: 15, top: paddingTop),
-      child: AnimatedSize(
-        duration: Duration(milliseconds: 0),
-        child: SizedBox(
-          width: 30,
-          height: size,
-          child: Container(
-            key: this.key,
-            color: transferStatus == EnergyTransferStatus.COMPLETED
-                ? Color(0xFF99FF75)
-                : Color(0xFFF8E295),
+    var actualSize = actualValue.abs() / maxValue * 100;
+    actualSize *= 0.9;
+    actualSize = max(1, actualSize);
+
+    var actualPaddingTop = (100.0 - actualSize);
+
+    if (actualValue < 0) {
+      actualPaddingTop = 100.0;
+    }
+
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: EdgeInsets.only(left: 12, top: committedPaddingTop),
+          child: AnimatedSize(
+            duration: Duration(milliseconds: 0),
+            child: SizedBox(
+              width: 16.7,
+              height: committedSize,
+              child: Container(
+                key: this.key,
+                color:
+                    committedValue > 0 ? Color(0xFFFEC908) : Color(0xFFED8235),
+                child: Align(
+                  alignment: committedValue >= 0
+                      ? Alignment.topCenter
+                      : Alignment.bottomCenter,
+                  child: Padding(
+                    padding: const EdgeInsets.all(2),
+                    child: FittedBox(
+                      child: Text(
+                        committedValue.abs().toStringAsFixed(1),
+                        style: TextStyle(
+                          fontSize: 10,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
           ),
         ),
-      ),
+        Padding(
+          padding: EdgeInsets.only(top: actualPaddingTop),
+          child: AnimatedSize(
+            duration: Duration(milliseconds: 0),
+            child: SizedBox(
+              width: 16.7,
+              height: actualSize,
+              child: Container(
+                key: this.key,
+                color: actualValue > 0 ? Color(0xFFC79D04) : Color(0xFFA15823),
+                child: Align(
+                  alignment: actualValue >= 0
+                      ? Alignment.topCenter
+                      : Alignment.bottomCenter,
+                  child: Padding(
+                    padding: const EdgeInsets.all(2),
+                    child: FittedBox(
+                      child: Text(
+                        actualValue.abs().toStringAsFixed(1),
+                        style: TextStyle(
+                          fontSize: 10,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

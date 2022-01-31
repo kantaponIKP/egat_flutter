@@ -216,8 +216,13 @@ class _GraphValues extends StatelessWidget {
 
     double previousValue = 0;
 
-    final minValue = values.reduce((a, b) => min(a, b));
-    final maxValue = values.reduce((a, b) => max(a, b));
+    var minValue = values.reduce((a, b) => min(a, b));
+    var maxValue = values.reduce((a, b) => max(a, b));
+
+    if (minValue == maxValue) {
+      maxValue += 1;
+      minValue -= 1;
+    }
 
     for (var entry in values.asMap().entries) {
       final value = entry.value;
@@ -237,7 +242,7 @@ class _GraphValues extends StatelessWidget {
       if (value > previousValue) {
         children.add(
           Padding(
-            padding: EdgeInsets.only(top: nowY),
+            padding: EdgeInsets.only(top: max(0, nowY)),
             child: SizedBox(
               width: 50,
               child: Text(
@@ -254,7 +259,7 @@ class _GraphValues extends StatelessWidget {
         if (value >= nextValue) {
           children.add(
             Padding(
-              padding: EdgeInsets.only(top: nowY),
+              padding: EdgeInsets.only(top: max(0, nowY)),
               child: SizedBox(
                 width: 50,
                 child: Text(
@@ -270,7 +275,7 @@ class _GraphValues extends StatelessWidget {
         } else {
           children.add(
             Padding(
-              padding: EdgeInsets.only(top: nowY),
+              padding: EdgeInsets.only(top: max(0, nowY)),
               child: SizedBox(
                 width: 50,
                 child: Text(

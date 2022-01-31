@@ -179,7 +179,9 @@ class BilateralBuyerEnergyShortfallSettlementReportInfo
       buyerImbalance: (json['buyerImbalance'] as num).toDouble(),
       wheelingChargeTariff: (json['wheelingChargeTariff'] as num).toDouble(),
       wheelingCharge: (json['wheelingCharge'] as num).toDouble(),
+      // wheelingCharge: 0,
       netEnergyPrice: (json['netEnergyPrice'] as num).toDouble(),
+      // netEnergyPrice: 0,
       contractId: json['contractId'] as String,
       targetName: (json['targetName'] as List<dynamic>)
           .map((e) => e.toString())
@@ -403,6 +405,7 @@ class BilateralSellerEnergyShortfallSettlementReportInfo
       sellerImbalanceAmount: (json['sellerImbalanceAmount'] as num).toDouble(),
       sellerImbalance: (json['sellerImbalance'] as num).toDouble(),
       netEnergyPrice: (json['netEnergyPrice'] as num).toDouble(),
+      // netEnergyPrice: 0,
       contractId: json['contractId'] as String,
       targetName: (json['targetName'] as List<dynamic>)
           .map((e) => e.toString())

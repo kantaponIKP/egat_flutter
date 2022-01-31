@@ -73,7 +73,9 @@ class ForecastApi {
       final randomForecastData = ForecastData(
         date: startDate.add(Duration(days: -i)),
         forecastInGrids: randomForecastValues,
+        forecastLoadInGrids: randomLoadValues,
         loadInGrids: randomLoadValues,
+        forecastPvInGrids: randomPvValues,
         pvInGrids: randomPvValues,
       );
       randomForecastDatas.add(randomForecastData);
@@ -132,32 +134,42 @@ class ForecastDataResponse {
 class ForecastData {
   final DateTime date;
   final List<double?> forecastInGrids;
+  final List<double?> forecastLoadInGrids;
   final List<double?> loadInGrids;
+  final List<double?> forecastPvInGrids;
   final List<double?> pvInGrids;
 
   const ForecastData({
     required this.date,
     required this.forecastInGrids,
+    required this.forecastLoadInGrids,
     required this.loadInGrids,
+    required this.forecastPvInGrids,
     required this.pvInGrids,
   });
 
   asUnmodifiable() => ForecastData(
         date: date,
         forecastInGrids: UnmodifiableListView(forecastInGrids),
+        forecastLoadInGrids: UnmodifiableListView(forecastLoadInGrids),
         loadInGrids: UnmodifiableListView(loadInGrids),
+        forecastPvInGrids: UnmodifiableListView(forecastPvInGrids),
         pvInGrids: UnmodifiableListView(pvInGrids),
       );
 
   factory ForecastData.fromJson(Map<String, dynamic> jsonMap) {
     assert(jsonMap['date'] is String);
     assert(jsonMap['forecastInGrids'] is List);
+    assert(jsonMap['forecastLoadInGrids'] is List);
     assert(jsonMap['loadInGrids'] is List);
+    assert(jsonMap['forecastPvInGrids'] is List);
     assert(jsonMap['pvInGrids'] is List);
 
     final date = DateTime.parse(jsonMap['date']);
     final forecastInGrids = jsonMap['forecastInGrids'] as List<dynamic>;
+    final forecastLoadInGrids = jsonMap['forecastLoadInGrids'] as List<dynamic>;
     final loadInGrids = jsonMap['loadInGrids'] as List<dynamic>;
+    final forecastPvInGrids = jsonMap['forecastPvInGrids'] as List<dynamic>;
     final pvInGrids = jsonMap['pvInGrids'] as List<dynamic>;
 
     return ForecastData(
@@ -169,7 +181,21 @@ class ForecastData {
           return null;
         }
       }).toList(),
+      forecastLoadInGrids: forecastLoadInGrids.map((e) {
+        if (e != null) {
+          return (e as num).toDouble();
+        } else {
+          return null;
+        }
+      }).toList(),
       loadInGrids: loadInGrids.map((e) {
+        if (e != null) {
+          return (e as num).toDouble();
+        } else {
+          return null;
+        }
+      }).toList(),
+      forecastPvInGrids: forecastPvInGrids.map((e) {
         if (e != null) {
           return (e as num).toDouble();
         } else {

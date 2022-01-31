@@ -45,28 +45,29 @@ class ScheduledOfferToSellEnergyTransferInfoBox extends StatelessWidget {
         DatedEnergyDetailBoxItem(
           name: AppLocalizations.of(context)
               .translate('settlement-commitedAmount'),
-          value: '${tradeInfo.commitedAmount.toStringAsFixed(2)} kWh',
+          value: '${tradeInfo.commitedAmount.toStringAsFixed(3)} kWh',
           fontSize: 13,
         ),
         DatedEnergyDetailBoxItem(
           name:
               AppLocalizations.of(context).translate('settlement-sellingPrice'),
-          value: '${tradeInfo.sellingPrice.toStringAsFixed(2)} THB',
-          fontSize: 13,
-        ),
-        DatedEnergyDetailBoxItem(
-          name: AppLocalizations.of(context).translate('settlement-netSales'),
-          value: '${tradeInfo.netSales.toStringAsFixed(2)} THB',
+          value: '${tradeInfo.sellingPrice.toStringAsFixed(3)} THB',
           fontSize: 13,
         ),
         DatedEnergyDetailBoxItem(
           name: AppLocalizations.of(context).translate('settlement-tradingFee'),
-          value: '${tradeInfo.tradingFee.toStringAsFixed(2)} THB/kWh',
+          value: '${tradeInfo.tradingFee.toStringAsFixed(3)} THB/kWh',
           fontSize: 10,
         ),
         DatedEnergyDetailBoxItem(
-          name: '${AppLocalizations.of(context).translate('settlement-netEnergyPrice')}(${AppLocalizations.of(context).translate('settlement-netSales')}/${AppLocalizations.of(context).translate('settlement-commitedAmount')})',
-          value: '${tradeInfo.netEnergyPrice.toStringAsFixed(2)} THB/kWh',
+          name: AppLocalizations.of(context).translate('settlement-netSales'),
+          value: '${tradeInfo.netSales.toStringAsFixed(3)} THB',
+          fontSize: 13,
+        ),
+        DatedEnergyDetailBoxItem(
+          name:
+              '${AppLocalizations.of(context).translate('settlement-netEnergyPrice')}(${AppLocalizations.of(context).translate('settlement-netSales')}/${AppLocalizations.of(context).translate('settlement-commitedAmount')})',
+          value: '${tradeInfo.netEnergyPrice.toStringAsFixed(3)} THB/kWh',
           fontSize: 10,
         ),
       ],

@@ -45,18 +45,18 @@ class PoolBuyerEnergyExcessSettlementReportInfoBox extends StatelessWidget {
         DatedSettlementReportDetailBoxItem(
           name: 'Energy Commited/Delivered',
           value:
-              '${tradeInfo.energyCommitted.toStringAsFixed(2)}/${tradeInfo.energyUsed.toStringAsFixed(2)} kWh',
+              '${tradeInfo.energyCommitted.toStringAsFixed(3)}/${tradeInfo.energyUsed.toStringAsFixed(3)} kWh',
           fontSize: 13,
         ),
         DatedSettlementReportDetailBoxItem(
           name: 'Seller imbalance amount',
-          value: '${tradeInfo.sellerImbalanceAmount.toStringAsFixed(2)} kWh',
+          value: '${tradeInfo.sellerImbalanceAmount.toStringAsFixed(3)} kWh',
           fontSize: 13,
           fontColor: Color(0xFFA10C09),
         ),
         DatedSettlementReportDetailBoxItem(
           name: 'Seller imbalance',
-          value: '${tradeInfo.sellerImbalance.toStringAsFixed(2)} THB',
+          value: '${tradeInfo.sellerImbalance.toStringAsFixed(3)} THB',
           fontSize: 13,
           fontColor: Color(0xFFA10C09),
         ),

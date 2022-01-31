@@ -1,5 +1,7 @@
 import 'dart:async';
 import 'dart:math';
+import 'dart:typed_data';
+import 'dart:ui';
 
 import 'package:egat_flutter/constant.dart';
 import 'package:egat_flutter/screens/forgot_password/widgets/forgot_password_cancellation_dialog.dart';
@@ -13,7 +15,7 @@ import '../apis/bilateral_api.dart';
 import 'package:egat_flutter/screens/session.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:intl/intl.dart';
+import 'package:intl/intl.dart' as intl;
 import 'package:provider/provider.dart';
 
 import 'long_term/long_term_buy_page.dart';
@@ -21,10 +23,12 @@ import 'short_term/bilateral_short_term_sell_page.dart';
 
 class BilateralBuyScreen extends StatefulWidget {
   final DateTime date;
+  final bool enabled;
 
   const BilateralBuyScreen({
     Key? key,
     required this.date,
+    required this.enabled,
   }) : super(key: key);
 
   @override
@@ -232,9 +236,10 @@ class _BilateralBuyScreenState extends State<BilateralBuyScreen> {
                 ),
               ),
               BottomButton(
-                onAction: isSubmitable && _isAtLeastOneItemSelected
-                    ? _onPlaceOrderPressed
-                    : null,
+                onAction:
+                    isSubmitable && _isAtLeastOneItemSelected && widget.enabled
+                        ? _onPlaceOrderPressed
+                        : null,
                 actionLabel: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 8),
                   child: Text(
@@ -251,6 +256,57 @@ class _BilateralBuyScreenState extends State<BilateralBuyScreen> {
         },
       ),
     );
+  }
+
+  Future<BitmapDescriptor> createCustomMarkerWithAlphabets(
+      String alphabets) async {
+    TextSpan span = new TextSpan(
+        style: new TextStyle(
+          height: 1.2,
+          color: Colors.black,
+          fontSize: 15.0,
+          fontWeight: FontWeight.w300,
+        ),
+        text: alphabets);
+
+    TextPainter textPainter = new TextPainter(
+      text: span,
+      textAlign: TextAlign.center,
+      textDirection: TextDirection.ltr,
+    );
+
+    textPainter.layout(minWidth: 20, maxWidth: 20);
+
+    PictureRecorder recorder = new PictureRecorder();
+    Canvas canvas = new Canvas(recorder);
+
+    Paint pinPaint = new Paint()..color = Color(0xFFFEC908);
+
+    canvas.drawCircle(Offset(10, 10), 10, pinPaint);
+    textPainter.paint(canvas, Offset(0, 2));
+
+    Picture picture = recorder.endRecording();
+    ByteData? pngBytes = await (await picture.toImage(30, 30))
+        .toByteData(format: ImageByteFormat.png);
+
+    if (pngBytes == null) {
+      return BitmapDescriptor.defaultMarker;
+    }
+
+    return BitmapDescriptor.fromBytes(pngBytes.buffer.asUint8List());
+  }
+
+  List<BitmapDescriptor> _markers = <BitmapDescriptor>[];
+
+  _prepareMarkers(int length) async {
+    List<Future<BitmapDescriptor>> markerFutures = <Future<BitmapDescriptor>>[];
+
+    for (var i = 0; i < length; i++) {
+      final alphabets = _convertIndexToAlphabatical(i);
+      markerFutures.add(createCustomMarkerWithAlphabets(alphabets));
+    }
+
+    _markers = await Future.wait(markerFutures);
   }
 
   double getZoomLevel(double radius) {
@@ -272,15 +328,19 @@ class _BilateralBuyScreenState extends State<BilateralBuyScreen> {
       final item = entry.value;
       final index = entry.key;
 
-      markers.add(Marker(
-        draggable: false,
-        markerId: MarkerId(index.toString()),
-        position: LatLng(item.lat, item.lng),
-        icon: BitmapDescriptor.defaultMarker,
-        infoWindow: InfoWindow(
-          title: _convertIndexToAlphabatical(index),
+      markers.add(
+        Marker(
+          draggable: false,
+          markerId: MarkerId(index.toString()),
+          position: LatLng(item.lat, item.lng),
+          icon: _markers.length > index
+              ? _markers[index]
+              : BitmapDescriptor.defaultMarker,
+          infoWindow: InfoWindow(
+            title: _convertIndexToAlphabatical(index),
+          ),
         ),
-      ));
+      );
     }
 
     LatLng position = LatLng(15.87, 100.99);
@@ -293,20 +353,20 @@ class _BilateralBuyScreenState extends State<BilateralBuyScreen> {
       double bottomRightY = items.first.lat;
 
       for (final item in items) {
-        if (item.lat > topLeftX) {
-          topLeftX = item.lng;
-        }
-
-        if (item.lng > topLeftY) {
+        if (item.lat > topLeftY) {
           topLeftY = item.lat;
         }
 
-        if (item.lat > bottomRightX) {
-          bottomRightX = item.lng;
+        if (item.lng > topLeftX) {
+          topLeftX = item.lng;
         }
 
-        if (item.lat < bottomRightY) {
+        if (item.lat > bottomRightY) {
           bottomRightY = item.lat;
+        }
+
+        if (item.lat < bottomRightX) {
+          bottomRightX = item.lng;
         }
       }
 
@@ -366,6 +426,8 @@ class _BilateralBuyScreenState extends State<BilateralBuyScreen> {
       requestDate: widget.date,
       accessToken: accessToken,
     );
+
+    await _prepareMarkers(data.bilateralList.length);
 
     return data.bilateralList;
   }
@@ -610,8 +672,8 @@ class _DateSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var dateFormat = DateFormat('dd MMMM yyyy');
-    var hourFormat = DateFormat('HH:mm');
+    var dateFormat = intl.DateFormat('dd MMMM yyyy');
+    var hourFormat = intl.DateFormat('HH:mm');
 
     var startDate = date;
     var endDate = startDate.add(new Duration(hours: 1));
@@ -721,10 +783,10 @@ class __BuyItemState extends State<_BuyItem> {
           children: [
             _BuyItemHeader(
               item: widget.item,
-              selected: _selected,
+              selected: widget.item.buyerId != null || _selected,
               expanded: _expanded,
               index: widget.index,
-              onChanged: _onChange,
+              onChanged: widget.item.buyerId == null ? _onChange : null,
               onExpand: _onExpand,
             ),
             _BuyItemBody(
@@ -774,7 +836,7 @@ class _BuyItemHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final dateFormat = DateFormat('HH:mm, dd MMM');
+    final dateFormat = intl.DateFormat('HH:mm, dd MMM');
     final createDateString = dateFormat.format(item.date);
 
     return GestureDetector(
@@ -862,7 +924,7 @@ class _BuyItemHeader extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.spaceAround,
                               children: [
                                 Text(
-                                  "${item.energyTariff.toStringAsFixed(2)}",
+                                  "${item.energyToBuy.toStringAsFixed(2)}",
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontSize: 15,
@@ -1002,7 +1064,7 @@ class _BuyItemBody extends StatelessWidget {
                 title: 'NET estimated energy price',
                 value: item.netEnergyPrice,
                 unit: 'THB',
-                fontSize: 8,
+                fontSize: 12,
               ),
             ],
           ),
