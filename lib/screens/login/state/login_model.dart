@@ -16,15 +16,11 @@ class LoginModel extends ChangeNotifier {
   bool isLogin = false;
 
   LoginModel({required this.loginSession}) {
+
     _timer = Timer.periodic(Duration(seconds: 60), (timer) {
-      print("timer");
-      print(isLogin);
       if (isLogin && loginSession.info != null) {
-        print("update");
-        print(isLogin);
         updateRefreshToken();
       }
-
     });
   }
 
@@ -91,7 +87,6 @@ class LoginModel extends ChangeNotifier {
       }
       loginSession.setAccessToken(LoginSessionInfo(
           accessToken: "", userId: "", refreshToken: refreshToken));
-      // updateRefreshToken();
     }
     return rememberMe;
   }
@@ -107,13 +102,13 @@ class LoginModel extends ChangeNotifier {
     );
 
     isLogin = false;
-    // _timer.cancel();
     final storage = new FlutterSecureStorage();
     await storage.write(key: 'rememberMe', value: "false");
   }
 
   @override
   void dispose() {
+    isLogin = false;
     _timer.cancel();
     super.dispose();
   }

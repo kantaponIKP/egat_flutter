@@ -109,7 +109,9 @@ flutter:
           weight: 300
     - family: Kanit
       fonts:
-        - asset: assets/fonts/th/Kanit-Regular.ttf
+        - asset: assets/fonts/th/Kanit-Light.ttf
+          weight: 400
+        - asset: assets/fonts/th/Kanit-Light.ttf
           weight: 300
 
   # For details regarding fonts from package dependencies,

@@ -28,14 +28,32 @@ Future<void> main() async {
   runApp(EgatApp(preferredAppLanguage: preferredAppLanguage));
 }
 
-class EgatApp extends StatelessWidget {
+class EgatApp extends StatefulWidget {
   PreferredAppLanguage preferredAppLanguage;
+  
 
   EgatApp({
     required this.preferredAppLanguage,
     Key? key,
   }) : super(key: key);
 
+  @override
+  State<EgatApp> createState() => _EgatAppState();
+
+    static void setAppFontFamily(BuildContext context, String _selectedFontFamily) {
+      _EgatAppState? state = context.findAncestorStateOfType<_EgatAppState>();
+         state!.setState(() {
+            state._fontFamily = _selectedFontFamily;
+         });
+    }
+
+  
+}
+
+class _EgatAppState extends State<EgatApp> {
+
+  String _fontFamily = 'Montserrat';
+  
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -109,7 +127,7 @@ class EgatApp extends StatelessWidget {
         ChangeNotifierProvider<AppLocale>(
           create: (context) {
             var appLocale =
-                AppLocale.fromPreferredAppLanguage(preferredAppLanguage);
+                AppLocale.fromPreferredAppLanguage(widget.preferredAppLanguage);
 
             return appLocale;
           },
@@ -135,7 +153,7 @@ class EgatApp extends StatelessWidget {
               //     ? 'Kanit'
               //     : 'Montserrat',
               // fontFamily: 'Kanit',
-              fontFamily: 'Montserrat',
+              fontFamily: _fontFamily,
               canvasColor: surfaceColor, //dropdown color
               unselectedWidgetColor: Colors.white,
               radioTheme: RadioThemeData(

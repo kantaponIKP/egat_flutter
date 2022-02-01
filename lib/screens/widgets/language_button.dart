@@ -1,6 +1,8 @@
 import 'package:egat_flutter/constant.dart';
 import 'package:egat_flutter/i18n/app_language.dart';
 import 'package:egat_flutter/i18n/app_localizations.dart';
+import 'package:egat_flutter/screens/widgets/loading_dialog.dart';
+import 'package:egat_flutter/screens/widgets/show_exception.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -55,18 +57,26 @@ class _LanguageButtonState extends State<LanguageButton> {
     );
   }
 
-  void _changeLanguage(context) {
-    Locale _nowLocale = Localizations.localeOf(context);
-    AppLocale locale = Provider.of<AppLocale>(context, listen: false);
-    setState(() {
-      _isSelected[0] = !_isSelected[0];
-      _isSelected[1] = !_isSelected[1];
+  Future<void> _changeLanguage(context) async {
+    await showLoading();
+    try {
+      Locale _nowLocale = Localizations.localeOf(context);
+      AppLocale locale = Provider.of<AppLocale>(context, listen: false);
 
-      if (_nowLocale.toString() == 'th') {
-        locale.changeLanguage(Locale("en"));
-      } else {
-        locale.changeLanguage(Locale("th"));
-      }
-    });
+      setState(() {
+        _isSelected[0] = !_isSelected[0];
+        _isSelected[1] = !_isSelected[1];
+
+        if (_nowLocale.toString() == 'th') {
+          locale.changeLanguage(Locale("en"), context);
+        } else {
+          locale.changeLanguage(Locale("th"), context);
+        }
+      });
+    } catch (e) {
+      showException(context, e.toString());
+    } finally {
+      await hideLoading();
+    }
   }
 }
