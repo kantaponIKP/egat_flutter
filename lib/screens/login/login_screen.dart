@@ -280,11 +280,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 return null;
               },
               keyboardType: TextInputType.emailAddress,
-<<<<<<< HEAD
               maxLength: 255,
-=======
-              maxLength: 48,
->>>>>>> cb63076108c43e65a2511ec42a95e4617ffc4a44
             ),
           ),
           Container(

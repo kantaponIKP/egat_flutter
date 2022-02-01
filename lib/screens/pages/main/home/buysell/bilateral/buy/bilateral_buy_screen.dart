@@ -683,11 +683,11 @@ class _DateSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var dateFormat = DateFormat(
+    var dateFormat = intl.DateFormat(
       'dd MMMM yyyy',
       AppLocalizations.of(context).getLocale().toString(),
     );
-    var hourFormat = DateFormat('HH:mm');
+    var hourFormat = intl.DateFormat('HH:mm');
 
     var startDate = date;
     var endDate = startDate.add(new Duration(hours: 1));
@@ -850,7 +850,7 @@ class _BuyItemHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final dateFormat = DateFormat(
+    final dateFormat = intl.DateFormat(
       'HH:mm, dd MMM',
       AppLocalizations.of(context).getLocale().toString(),
     );
