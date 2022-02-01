@@ -1088,7 +1088,7 @@ class _BuyItemBody extends StatelessWidget {
                 title: AppLocalizations.of(context)
                     .translate('trade-netEstimatedEnergyPrice'),
                 value: item.netEnergyPrice,
-                unit: 'THB',
+                unit: 'THB/kWh',
                 fontSize: 12,
               ),
             ],

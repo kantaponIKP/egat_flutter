@@ -34,7 +34,7 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId "th.co.iknowplus.egat.p2p-trading"
+        applicationId "th.co.iknowplus.egat.p2ptrading"
         minSdkVersion 20
         targetSdkVersion 30
         versionCode flutterVersionCode.toInteger()

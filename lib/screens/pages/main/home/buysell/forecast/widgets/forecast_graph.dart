@@ -196,10 +196,16 @@ class _LineGraphPainter extends CustomPainter {
   final List<double?> forecastLoadData;
   final List<double?> loadData;
 
+  get forecastLoadMaxValue =>
+      forecastLoadData.reduce((a, b) => max(a ?? 0, b ?? 0) ?? 0);
+  get forecastLoadMinValue =>
+      forecastLoadData.reduce((a, b) => min(a ?? 0, b ?? 0) ?? 0);
+
   get forecastPvMaxValue =>
       forecastPvData.reduce((a, b) => max(a ?? 0, b ?? 0));
   get forecastPvMinValue =>
       forecastPvData.reduce((a, b) => min(a ?? 0, b ?? 0));
+
   get pvMaxValue => pvData.reduce((a, b) => max(a ?? 0, b ?? 0));
   get loadMaxValue => loadData.reduce((a, b) => max(a ?? 0, b ?? 0));
 
@@ -210,8 +216,12 @@ class _LineGraphPainter extends CustomPainter {
       .where((element) => element != null)
       .reduce((a, b) => min(a ?? 0, b ?? 0));
 
-  get maxValue => max<double>(pvMaxValue, loadMaxValue);
-  get minValue => min<double>(pvMinValue, loadMinValue);
+  get maxValue => max<double>(
+      max<double>(max<double>(pvMaxValue, loadMaxValue), forecastPvMaxValue),
+      forecastLoadMaxValue);
+  get minValue => min<double>(
+      min<double>(min<double>(pvMinValue, loadMinValue), forecastPvMinValue),
+      forecastLoadMinValue);
 
   _LineGraphPainter({
     required this.forecastPvData,
