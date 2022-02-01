@@ -132,7 +132,7 @@ class EgatNotification {
     assert(jsonMap['id'] is String);
 
     return EgatNotification(
-      targetUserId: jsonMap['targetUserId'] as String,
+      targetUserId: jsonMap['targetUserId'] as String?,
       targetType: jsonMap['targetType'] as String,
       titleTH: jsonMap['titleTH'] as String,
       messageTH: jsonMap['messageTH'] as String,

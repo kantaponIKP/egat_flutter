@@ -229,7 +229,7 @@ class _GraphValues extends StatelessWidget {
       double nextValue =
           values.length > entry.key + 1 ? values[entry.key] : value;
 
-      double nowY = ((0 - minValue) / (maxValue - minValue)) * 280 - 20;
+      double nowY = ((value - minValue) / (maxValue - minValue)) * 260 + 20;
 
       if (nowY > 280) {
         nowY = 280;
@@ -245,11 +245,14 @@ class _GraphValues extends StatelessWidget {
             padding: EdgeInsets.only(top: max(0, nowY)),
             child: SizedBox(
               width: 50,
-              child: Text(
-                value.toStringAsFixed(2),
-                style: TextStyle(
-                  fontSize: 13,
-                  fontWeight: FontWeight.w400,
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  value.toStringAsFixed(2),
+                  style: TextStyle(
+                    fontSize: 10,
+                    fontWeight: FontWeight.w400,
+                  ),
                 ),
               ),
             ),
@@ -262,11 +265,14 @@ class _GraphValues extends StatelessWidget {
               padding: EdgeInsets.only(top: max(0, nowY)),
               child: SizedBox(
                 width: 50,
-                child: Text(
-                  value.toStringAsFixed(2),
-                  style: TextStyle(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w400,
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(
+                    value.toStringAsFixed(2),
+                    style: TextStyle(
+                      fontSize: 10,
+                      fontWeight: FontWeight.w400,
+                    ),
                   ),
                 ),
               ),
@@ -278,11 +284,14 @@ class _GraphValues extends StatelessWidget {
               padding: EdgeInsets.only(top: max(0, nowY)),
               child: SizedBox(
                 width: 50,
-                child: Text(
-                  value.toStringAsFixed(2),
-                  style: TextStyle(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w400,
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(
+                    value.toStringAsFixed(2),
+                    style: TextStyle(
+                      fontSize: 10,
+                      fontWeight: FontWeight.w400,
+                    ),
                   ),
                 ),
               ),
@@ -476,17 +485,17 @@ class _WideGraphPainter extends CustomPainter {
       path.lineTo(size.width, nowY);
 
       if (nowLineValue == 0) {
-        canvas.drawLine(
-          Offset(0, nowY),
-          Offset(values.length * 50, nowY),
-          lineValueZeroPaint,
-        );
+        // canvas.drawLine(
+        //   Offset(0, nowY),
+        //   Offset(values.length * 50, nowY),
+        //   lineValueZeroPaint,
+        // );
       } else {
-        canvas.drawLine(
-          Offset(0, nowY),
-          Offset(values.length * 50, nowY),
-          lineValuePaint,
-        );
+        // canvas.drawLine(
+        //   Offset(0, nowY),
+        //   Offset(values.length * 50, nowY),
+        //   lineValuePaint,
+        // );
       }
 
       nowLineValue -= 1;
