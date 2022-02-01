@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:egat_flutter/constant.dart';
+import 'package:egat_flutter/i18n/app_localizations.dart';
 import 'package:egat_flutter/screens/pages/main/home/settlement/models/energy_transfer_info.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -51,7 +52,7 @@ class EnergyTransferGraph extends StatelessWidget {
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: const Text('Completed'),
+                child: Text(AppLocalizations.of(context).translate('settlement-energyTransfer-completed'),),
               ),
               Container(
                 width: 10,
@@ -63,7 +64,7 @@ class EnergyTransferGraph extends StatelessWidget {
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: const Text('Scheduled'),
+                child: Text(AppLocalizations.of(context).translate('settlement-energyTransfer-scheduled'),),
               ),
             ],
           ),

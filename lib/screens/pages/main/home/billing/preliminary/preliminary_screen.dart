@@ -1,4 +1,5 @@
 import 'package:egat_flutter/constant.dart';
+import 'package:egat_flutter/i18n/app_localizations.dart';
 import 'package:egat_flutter/screens/forgot_password/widgets/forgot_password_cancellation_dialog.dart';
 import 'package:egat_flutter/screens/page/widgets/logo_appbar.dart';
 import 'package:egat_flutter/screens/pages/main/home/billing/apis/billing_api.dart';
@@ -69,7 +70,7 @@ class PrelminiaryScreen extends StatelessWidget {
 
   _buildContent(BuildContext context, GetPreliminaryInvoiceResponse data) {
     final now = DateTime.now();
-    final toDateFormat = DateFormat('dd MMMM yyyy');
+    final toDateFormat = DateFormat('dd MMMM yyyy', AppLocalizations.of(context).getLocale().toString(),);
     final toDate = toDateFormat.format(now);
 
     return Align(
@@ -139,7 +140,7 @@ class _SummarySection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var toDateFormat = DateFormat('dd MMMM yyyy');
+    var toDateFormat = DateFormat('dd MMMM yyyy', AppLocalizations.of(context).getLocale().toString(),);
     var toDate = toDateFormat.format(DateTime.now());
 
     return _SummaryValue(

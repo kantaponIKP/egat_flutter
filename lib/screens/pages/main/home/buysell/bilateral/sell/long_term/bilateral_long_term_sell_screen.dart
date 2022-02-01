@@ -303,7 +303,7 @@ class _TransactionInput extends StatelessWidget {
           Text(
             title,
             style: TextStyle(
-              fontSize: 15,
+              fontSize: 13,
               color: Colors.white,
             ),
           ),
@@ -352,7 +352,7 @@ class _TransactionInput extends StatelessWidget {
                     style: TextStyle(
                       fontWeight: FontWeight.w300,
                       color: primaryColor,
-                      fontSize: 15,
+                      fontSize: 14,
                     ),
                     decoration: InputDecoration(
                       border: InputBorder.none,
@@ -428,7 +428,7 @@ class _TransactionDropDownInput<T> extends StatelessWidget {
           Text(
             title,
             style: TextStyle(
-              fontSize: 15,
+              fontSize: 14,
               color: Colors.white,
             ),
           ),
@@ -749,7 +749,7 @@ class _TransactionItemState extends State<_TransactionItem> {
               Text(
                 headerString,
                 style: TextStyle(
-                  fontSize: 15,
+                  fontSize: 14,
                   color: Colors.white,
                 ),
               ),

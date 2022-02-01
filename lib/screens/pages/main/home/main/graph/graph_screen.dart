@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:math';
 
+import 'package:egat_flutter/i18n/app_localizations.dart';
 import 'package:egat_flutter/screens/page/widgets/page_appbar.dart';
 import 'package:egat_flutter/screens/pages/main/states/personal_info_state.dart';
 import 'package:egat_flutter/screens/registration/api/model/LocationResponse.dart';
@@ -106,7 +107,7 @@ class _GraphScreenState extends State<GraphScreen> {
 
   _buildTotal(BuildContext context) {
     return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         widget.personalInfo.photo != null
@@ -125,10 +126,10 @@ class _GraphScreenState extends State<GraphScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             FittedBox(
-              child: const Text(
-                'การใช้งานในเวลาที่เลือก',
+              child: Text(
+                AppLocalizations.of(context).translate('graph-usesAtSelectedTime'),
                 style: TextStyle(
-                  fontSize: 25,
+                  fontSize: 20,
                   fontWeight: FontWeight.w300,
                 ),
               ),
@@ -138,7 +139,7 @@ class _GraphScreenState extends State<GraphScreen> {
                 TextSpan(
                   text: '${widget.total.toStringAsFixed(2)} ',
                   style: TextStyle(
-                    fontSize: 25,
+                    fontSize: 20,
                     fontWeight: FontWeight.w300,
                   ),
                 ),
@@ -154,7 +155,7 @@ class _GraphScreenState extends State<GraphScreen> {
             Text(
               '${widget.personalInfo.username ?? ''}',
               style: TextStyle(
-                fontSize: 25,
+                fontSize: 20,
                 fontWeight: FontWeight.w300,
                 color: Color(0xFFFEC908),
               ),

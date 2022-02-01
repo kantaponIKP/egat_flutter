@@ -160,7 +160,11 @@ class _FilterCheckbox extends StatelessWidget {
         ),
         GestureDetector(
           onTap: onTap,
-          child: Text(title),
+          child: Text(
+            title,
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 13),
+          ),
         ),
       ],
     );

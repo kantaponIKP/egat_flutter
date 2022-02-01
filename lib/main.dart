@@ -2,6 +2,8 @@ import 'package:egat_flutter/constant.dart';
 import 'package:egat_flutter/i18n/app_language.dart';
 import 'package:egat_flutter/i18n/app_localizations.dart';
 import 'package:egat_flutter/screens/login/login.dart';
+import 'package:egat_flutter/screens/login/login_screen.dart';
+import 'package:egat_flutter/screens/login/state/login_model.dart';
 import 'package:egat_flutter/screens/pages/main/setting/state/notification_state.dart';
 import 'package:egat_flutter/screens/pages/main/setting/change_pin/states/pin_state.dart';
 import 'package:egat_flutter/screens/pages/main/states/personal_info_state.dart';
@@ -83,6 +85,27 @@ class EgatApp extends StatelessWidget {
             }
           },
         ),
+        ChangeNotifierProxyProvider<LoginSession, LoginModel>(
+          create: (context) {
+            LoginSession session =
+                Provider.of<LoginSession>(context, listen: false);
+            return LoginModel(loginSession: session);
+          },
+          update: (
+            BuildContext context,
+            LoginSession model,
+            LoginModel? previous,
+          ) {
+            if (previous == null) {
+              // LoginSession session =
+              //     Provider.of<LoginSession>(context, listen: false);
+              return LoginModel(loginSession: model);
+            } else {
+              previous.setSession(model);
+              return previous;
+            }
+          },
+        ),
         ChangeNotifierProvider<AppLocale>(
           create: (context) {
             var appLocale =
@@ -108,11 +131,11 @@ class EgatApp extends StatelessWidget {
               backgroundColor: backgroundColor,
               primaryColor: primaryColor,
               // fontFamily:
-                  // AppLocalizations.of(context).getLocale().toString() == 'th'
-                  //     ? 'Kanit'
-                  //     : 'Montserrat',
-                  // fontFamily: 'Kanit',
-                      fontFamily: 'Montserrat',
+              // AppLocalizations.of(context).getLocale().toString() == 'th'
+              //     ? 'Kanit'
+              //     : 'Montserrat',
+              // fontFamily: 'Kanit',
+              fontFamily: 'Montserrat',
               canvasColor: surfaceColor, //dropdown color
               unselectedWidgetColor: Colors.white,
               radioTheme: RadioThemeData(
@@ -252,6 +275,6 @@ class EgatHomePage extends StatefulWidget {
 class _EgatHomePageState extends State<EgatHomePage> {
   @override
   Widget build(BuildContext context) {
-    return Login();
+    return LoginScreen();
   }
 }

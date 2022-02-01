@@ -59,7 +59,7 @@ class __BuySellSectionHeaderState extends State<_BuySellSectionHeader> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 0),
       child: Row(
         children: [
           Expanded(
@@ -82,8 +82,11 @@ class __BuySellSectionHeaderState extends State<_BuySellSectionHeader> {
                           }
                         },
                       ),
-                      Text(AppLocalizations.of(context)
-                          .translate('trade-forecast-all')),
+                      Text(
+                        AppLocalizations.of(context)
+                            .translate('trade-forecast-all'),
+                        style: TextStyle(fontSize: 12),
+                      ),
                     ]),
                   ),
                   Flexible(
@@ -92,8 +95,10 @@ class __BuySellSectionHeaderState extends State<_BuySellSectionHeader> {
                     child: RichText(
                       overflow: TextOverflow.ellipsis,
                       text: TextSpan(
-                          text: AppLocalizations.of(context)
-                              .translate('trade-forecast-period')),
+                        text: AppLocalizations.of(context)
+                            .translate('trade-forecast-period'),
+                        style: TextStyle(fontSize: 12),
+                      ),
                     ),
                   ),
                   Flexible(
@@ -108,8 +113,10 @@ class __BuySellSectionHeaderState extends State<_BuySellSectionHeader> {
                             child: RichText(
                               overflow: TextOverflow.ellipsis,
                               text: TextSpan(
-                                  text: AppLocalizations.of(context)
-                                      .translate('trade-forecast-canSell')),
+                                text: AppLocalizations.of(context)
+                                    .translate('trade-forecast-canSell'),
+                                style: TextStyle(fontSize: 12),
+                              ),
                             ),
                           ),
                         ],
@@ -128,8 +135,10 @@ class __BuySellSectionHeaderState extends State<_BuySellSectionHeader> {
                           child: RichText(
                             overflow: TextOverflow.ellipsis,
                             text: TextSpan(
-                                text: AppLocalizations.of(context)
-                                    .translate('trade-forecast-mustBuy')),
+                              text: AppLocalizations.of(context)
+                                  .translate('trade-forecast-mustBuy'),
+                              style: TextStyle(fontSize: 12),
+                            ),
                           ),
                         ),
                       ],
@@ -532,10 +541,12 @@ class _BuySellActionTileBottomSheet extends StatelessWidget {
     String title;
     switch (action) {
       case BuySellAction.BUY:
-        title = AppLocalizations.of(context).translate('trade-forecast-chooseToBuy');
+        title = AppLocalizations.of(context)
+            .translate('trade-forecast-chooseToBuy');
         break;
       case BuySellAction.SELL:
-        title = AppLocalizations.of(context).translate('trade-forecast-offerToSell');
+        title = AppLocalizations.of(context)
+            .translate('trade-forecast-offerToSell');
         break;
     }
 
@@ -583,12 +594,14 @@ class _BuySellActionTileBottomSheet extends StatelessWidget {
               children: [
                 _BuySellBottomSheetTile(
                   svgIcon: 'assets/images/icons/tabbar/bilateral.svg',
-                  title: AppLocalizations.of(context).translate('trade-forecast-bilateralTrade'),
+                  title: AppLocalizations.of(context)
+                      .translate('trade-forecast-bilateralTrade'),
                   onTap: () => _onBilateralSelected(context),
                 ),
                 _BuySellBottomSheetTile(
                   svgIcon: 'assets/images/icons/tabbar/poolMarket.svg',
-                  title: AppLocalizations.of(context).translate('trade-forecast-poolMarketTrade'),
+                  title: AppLocalizations.of(context)
+                      .translate('trade-forecast-poolMarketTrade'),
                   onTap: () => _onPoolSelected(context),
                 ),
               ],
@@ -900,11 +913,13 @@ class _ForecastEnergyWidget extends StatelessWidget {
     final todayMidnight = DateTime(today.year, today.month, today.day);
     final dateMidnight = DateTime(date.year, date.month, date.day);
 
-    var dateName = AppLocalizations.of(context).translate('trade-forecast-today');
+    var dateName =
+        AppLocalizations.of(context).translate('trade-forecast-today');
     if (todayMidnight.difference(dateMidnight).inDays == 0) {
       dateName = AppLocalizations.of(context).translate('trade-forecast-today');
     } else {
-      final dateFormat = DateFormat('dd MMM yyyy',AppLocalizations.of(context).getLocale().toString());
+      final dateFormat = DateFormat(
+          'dd MMM yyyy', AppLocalizations.of(context).getLocale().toString());
       dateName = dateFormat.format(this.date);
     }
 
@@ -930,7 +945,7 @@ class _ForecastEnergyWidget extends StatelessWidget {
             constraints: BoxConstraints(minHeight: 72),
             width: 132,
             child: Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.all(4.0),
               child: Column(
                 // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -1279,7 +1294,8 @@ class _ForecastScreenState extends State<ForecastScreen>
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(AppLocalizations.of(context).translate('trade-forecast-saleableEnergy')),
+                  Text(AppLocalizations.of(context)
+                      .translate('trade-forecast-saleableEnergy')),
                 ],
               ),
             ),
@@ -1295,7 +1311,9 @@ class _ForecastScreenState extends State<ForecastScreen>
             new RichText(
               text: new TextSpan(
                 children: <TextSpan>[
-                  new TextSpan(text: AppLocalizations.of(context).translate('trade-forecast-past7dayForecast')),
+                  new TextSpan(
+                      text: AppLocalizations.of(context)
+                          .translate('trade-forecast-past7dayForecast')),
                 ],
               ),
             )
