@@ -33,7 +33,7 @@ class BilateralShortTermSellScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const PageAppbar(firstTitle: 'Bilateral', secondTitle: 'Trade'),
+      appBar: const PageAppbar(firstTitle: 'Bilateral', secondTitle: ' Trade'),
       body: _buildBody(context),
     );
   }
@@ -121,13 +121,13 @@ class _SummarySectionState extends State<_SummarySection> {
           title: AppLocalizations.of(context).translate('trade-tradingFee'),
           value: _tradingFee,
           unit: 'THB',
-          titleFontSize: 15,
+          titleFontSize: 12,
         ),
         _SummaryValue(
           title: AppLocalizations.of(context).translate('trade-estimatedSales'),
           value: _estimatedSales,
           unit: 'THB',
-          titleFontSize: 20,
+          titleFontSize: 15,
         ),
       ],
     );
@@ -301,11 +301,13 @@ class _HeaderSection extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              AppLocalizations.of(context).translate('trade-bilateral-offerToSell-bilateral'),
-              style: TextStyle(fontSize: 20, color: Color(0xFF99FF75)),
+              AppLocalizations.of(context)
+                  .translate('trade-bilateral-offerToSell-bilateral'),
+              style: TextStyle(fontSize: 16, color: Color(0xFF99FF75)),
             ),
             Text(
-              AppLocalizations.of(context).translate('trade-bilateral-shortTermBilateral'),
+              AppLocalizations.of(context)
+                  .translate('trade-bilateral-shortTermBilateral'),
               style: TextStyle(fontSize: 12),
             ),
           ],
@@ -333,13 +335,21 @@ class _HeaderSection extends StatelessWidget {
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(
-                    Icons.more_time_rounded,
-                    color: Colors.black,
+                  SizedBox(
+                      height: 20,
+                      width: 20,
+                      child: Image.asset(
+                          "assets/images/icons/home/longterm_icon.png")),
+                  SizedBox(
+                    width: 4,
                   ),
                   Text(
-                    AppLocalizations.of(context).translate('trade-bilateral-registerToLongTerm'),
-                    style: TextStyle(color: Colors.black),
+                    AppLocalizations.of(context)
+                        .translate('trade-bilateral-registerToLongTerm'),
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 9,
+                    ),
                   ),
                 ],
               ),
@@ -419,7 +429,7 @@ class _SummaryValue extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: 12),
       child: DefaultTextStyle(
         style: TextStyle(
-          fontSize: 20,
+          fontSize: 15,
           fontWeight: FontWeight.w200,
         ),
         child: Row(
@@ -707,7 +717,8 @@ class _TransactionItemState extends State<_TransactionItem> {
       mainAxisSize: MainAxisSize.min,
       children: [
         _TransactionInput(
-          title: AppLocalizations.of(context).translate('trade-bilateral-energyToSale'),
+          title: AppLocalizations.of(context)
+              .translate('trade-bilateral-energyToSale'),
           unit: 'kWh',
           controller: energyToSaleTextController,
         ),
@@ -718,8 +729,10 @@ class _TransactionItemState extends State<_TransactionItem> {
           onChange: _onEnergyToSalesSliderChange,
         ),
         _TransactionInput(
-          title: AppLocalizations.of(context).translate('trade-offerToSellPrice'),
-          secondaryTitle: '${AppLocalizations.of(context).translate('trade-marketPrice')} = THB 3.00',
+          title:
+              AppLocalizations.of(context).translate('trade-offerToSellPrice'),
+          secondaryTitle:
+              '${AppLocalizations.of(context).translate('trade-marketPrice')} = THB 3.00',
           unit: 'THB/kWh',
           controller: offerToSalePriceTextController,
         ),
@@ -731,7 +744,8 @@ class _TransactionItemState extends State<_TransactionItem> {
   Widget _buildHeader() {
     final isSelected = widget.controller.isItemSelected(widget.key ?? this);
 
-    final dateFormat = DateFormat('dd MMM yyyy', AppLocalizations.of(context).getLocale().toString());
+    final dateFormat = DateFormat(
+        'dd MMM yyyy', AppLocalizations.of(context).getLocale().toString());
     final timeFormat = DateFormat('HH:mm');
 
     final widgetTime = widget.date.toLocal();
@@ -744,7 +758,9 @@ class _TransactionItemState extends State<_TransactionItem> {
     );
     final endTime = startTime.add(const Duration(hours: 1));
 
-    final dateString = dateFormat.format(widget.date,);
+    final dateString = dateFormat.format(
+      widget.date,
+    );
     final startTimeString = timeFormat.format(startTime);
     final endTimeString = timeFormat.format(endTime);
 

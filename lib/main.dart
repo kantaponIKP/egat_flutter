@@ -2,6 +2,8 @@ import 'package:egat_flutter/constant.dart';
 import 'package:egat_flutter/i18n/app_language.dart';
 import 'package:egat_flutter/i18n/app_localizations.dart';
 import 'package:egat_flutter/screens/login/login.dart';
+import 'package:egat_flutter/screens/login/login_screen.dart';
+import 'package:egat_flutter/screens/login/state/login_model.dart';
 import 'package:egat_flutter/screens/pages/main/setting/state/notification_state.dart';
 import 'package:egat_flutter/screens/pages/main/setting/change_pin/states/pin_state.dart';
 import 'package:egat_flutter/screens/pages/main/states/personal_info_state.dart';
@@ -26,14 +28,32 @@ Future<void> main() async {
   runApp(EgatApp(preferredAppLanguage: preferredAppLanguage));
 }
 
-class EgatApp extends StatelessWidget {
+class EgatApp extends StatefulWidget {
   PreferredAppLanguage preferredAppLanguage;
+  
 
   EgatApp({
     required this.preferredAppLanguage,
     Key? key,
   }) : super(key: key);
 
+  @override
+  State<EgatApp> createState() => _EgatAppState();
+
+    static void setAppFontFamily(BuildContext context, String _selectedFontFamily) {
+      _EgatAppState? state = context.findAncestorStateOfType<_EgatAppState>();
+         state!.setState(() {
+            state._fontFamily = _selectedFontFamily;
+         });
+    }
+
+  
+}
+
+class _EgatAppState extends State<EgatApp> {
+
+  String _fontFamily = 'Montserrat';
+  
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -83,10 +103,31 @@ class EgatApp extends StatelessWidget {
             }
           },
         ),
+        ChangeNotifierProxyProvider<LoginSession, LoginModel>(
+          create: (context) {
+            LoginSession session =
+                Provider.of<LoginSession>(context, listen: false);
+            return LoginModel(loginSession: session);
+          },
+          update: (
+            BuildContext context,
+            LoginSession model,
+            LoginModel? previous,
+          ) {
+            if (previous == null) {
+              // LoginSession session =
+              //     Provider.of<LoginSession>(context, listen: false);
+              return LoginModel(loginSession: model);
+            } else {
+              previous.setSession(model);
+              return previous;
+            }
+          },
+        ),
         ChangeNotifierProvider<AppLocale>(
           create: (context) {
             var appLocale =
-                AppLocale.fromPreferredAppLanguage(preferredAppLanguage);
+                AppLocale.fromPreferredAppLanguage(widget.preferredAppLanguage);
 
             return appLocale;
           },
@@ -108,11 +149,11 @@ class EgatApp extends StatelessWidget {
               backgroundColor: backgroundColor,
               primaryColor: primaryColor,
               // fontFamily:
-                  // AppLocalizations.of(context).getLocale().toString() == 'th'
-                  //     ? 'Kanit'
-                  //     : 'Montserrat',
-                  // fontFamily: 'Kanit',
-                      fontFamily: 'Montserrat',
+              // AppLocalizations.of(context).getLocale().toString() == 'th'
+              //     ? 'Kanit'
+              //     : 'Montserrat',
+              // fontFamily: 'Kanit',
+              fontFamily: _fontFamily,
               canvasColor: surfaceColor, //dropdown color
               unselectedWidgetColor: Colors.white,
               radioTheme: RadioThemeData(
@@ -252,6 +293,6 @@ class EgatHomePage extends StatefulWidget {
 class _EgatHomePageState extends State<EgatHomePage> {
   @override
   Widget build(BuildContext context) {
-    return Login();
+    return LoginScreen();
   }
 }

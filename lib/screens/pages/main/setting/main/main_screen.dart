@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:egat_flutter/constant.dart';
@@ -10,6 +11,8 @@ import 'package:egat_flutter/screens/pages/main/setting/state/notification_state
 import 'package:egat_flutter/screens/pages/main/states/main_screen_title_state.dart';
 import 'package:egat_flutter/screens/pages/main/widgets/navigation_menu_widget.dart';
 import 'package:egat_flutter/screens/session.dart';
+import 'package:egat_flutter/screens/widgets/loading_dialog.dart';
+import 'package:egat_flutter/screens/widgets/show_exception.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -181,13 +184,21 @@ class _SettingMainScreenState extends State<SettingMainScreen> {
     );
   }
 
-  void _changeLanguage(val) {
+  Future<void> _changeLanguage(val) async {
     AppLocale locale = Provider.of<AppLocale>(context, listen: false);
-    if (val.toString() == "English") {
-      locale.changeLanguage(Locale("en"));
-    } else {
-      locale.changeLanguage(Locale("th"));
+    await showLoading();
+    try {
+      if (val.toString() == "English") {
+        locale.changeLanguage(Locale("en"), context);
+      } else {
+        locale.changeLanguage(Locale("th"), context);
+      }
+    } catch (e) {
+      showException(context, e.toString());
+    } finally {
+      await hideLoading();
     }
+
     //   _setLanguage();
   }
 
