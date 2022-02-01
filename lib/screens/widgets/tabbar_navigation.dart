@@ -77,7 +77,7 @@ class TabBarNavigation<T> extends StatelessWidget {
       ),
     ];
 
-    if (item.secondaryTitle != null) {
+    if (item.secondaryTitle != null && item.secondaryTitle!.length > 0) {
       titles.add(
         TextSpan(
           text: "\n${item.secondaryTitle}",
