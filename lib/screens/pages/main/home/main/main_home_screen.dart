@@ -882,9 +882,11 @@ class _InfoWithIcon extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           icon,
-          Row(
-            children: rows,
-            mainAxisAlignment: MainAxisAlignment.center,
+          FittedBox(
+            child: Row(
+              children: rows,
+              mainAxisAlignment: MainAxisAlignment.center,
+            ),
           ),
           Text(
             label,
