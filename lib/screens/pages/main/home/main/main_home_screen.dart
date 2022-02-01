@@ -1168,7 +1168,7 @@ class _SummaryBox extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: SizedBox(
-            height: 80,
+            height: 85,
             child: Column(
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.center,
