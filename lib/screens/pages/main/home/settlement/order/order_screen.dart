@@ -103,31 +103,32 @@ class _OrderScreenState extends State<OrderScreen> {
       padding: const EdgeInsets.only(left: 8),
       child: Align(
         alignment: Alignment.centerLeft,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            _FilterCheckbox(
-              title: AppLocalizations.of(context)
-                  .translate('settlement-order-bilateralTrade'),
-              isSelected: isBilateralSelected,
-              onTap: () {
-                setState(() {
-                  _isBilateralSelected = !_isBilateralSelected;
-                });
-              },
-            ),
-            _FilterCheckbox(
-              title: AppLocalizations.of(context)
-                  .translate('settlement-order-poolMarketTrade'),
-              isSelected: isPoolMarketSelected,
-              onTap: () {
-                setState(() {
-                  _isPoolMarketSelected = !_isPoolMarketSelected;
-                });
-              },
-            ),
-          ],
+        child: SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            children: [
+              _FilterCheckbox(
+                title: AppLocalizations.of(context)
+                    .translate('settlement-order-bilateralTrade'),
+                isSelected: isBilateralSelected,
+                onTap: () {
+                  setState(() {
+                    _isBilateralSelected = !_isBilateralSelected;
+                  });
+                },
+              ),
+              _FilterCheckbox(
+                title: AppLocalizations.of(context)
+                    .translate('settlement-order-poolMarketTrade'),
+                isSelected: isPoolMarketSelected,
+                onTap: () {
+                  setState(() {
+                    _isPoolMarketSelected = !_isPoolMarketSelected;
+                  });
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -152,6 +153,7 @@ class _FilterCheckbox extends StatelessWidget {
       children: [
         Checkbox(
           value: isSelected,
+          visualDensity: VisualDensity.compact,
           onChanged: onTap != null
               ? (_) {
                   onTap?.call();

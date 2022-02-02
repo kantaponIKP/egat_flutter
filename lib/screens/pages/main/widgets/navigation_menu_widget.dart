@@ -149,7 +149,9 @@ class _NavigationMenuWidgetState extends State<NavigationMenuWidget> {
       ),
       actions: [
         CupertinoActionSheetAction(
-          onPressed: () {},
+          onPressed: () {
+            _onSignOutPressed();
+          },
           child: Text(
             AppLocalizations.of(context).translate('message-signout-signout'),
           ),

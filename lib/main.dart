@@ -106,6 +106,7 @@ class EgatApp extends StatelessWidget {
               // brightness: Brightness.dark,
               // primarySwatch: primaryColor,
               backgroundColor: backgroundColor,
+              scaffoldBackgroundColor: backgroundColor,
               primaryColor: primaryColor,
               // fontFamily:
                   // AppLocalizations.of(context).getLocale().toString() == 'th'

@@ -856,12 +856,14 @@ class _ForecastEnergyBalanceTotal extends StatelessWidget {
         Flexible(
           //important for overflow text
           child: new RichText(
+            textAlign: TextAlign.right,
             text: new TextSpan(
+              
               children: <TextSpan>[
                 new TextSpan(
                     text: totalForecastEnergy.toStringAsFixed(2),
                     style: TextStyle(fontSize: 24, color: primaryColor)),
-                new TextSpan(text: 'kWh'),
+                new TextSpan(text: '\nkWh'),
               ],
             ),
           ),
@@ -1021,7 +1023,7 @@ class _ForecastEnergyWidgetListTileState
     }
 
     return Container(
-      height: 84,
+      height: 90,
       child: new ListView(
         reverse: true,
         scrollDirection: Axis.horizontal,
@@ -1222,36 +1224,33 @@ class _ForecastScreenState extends State<ForecastScreen>
           _buildEnergyBalance(),
           _ForecastEnergyWidgetListTile(),
           SizedBox(height: 20),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 32),
-            child: ForecastGraph(
-              forecastData: selectedDateState.forecastData != null
-                  ? selectedDateState.forecastData!.forecastInGrids
-                      .map((e) => e != null ? -e : null)
-                      .toList()
-                  : [],
-              forecastPvData: selectedDateState.forecastData != null
-                  ? selectedDateState.forecastData!.forecastPvInGrids
-                      .map((e) => e != null ? e : null)
-                      .toList()
-                  : [],
-              pvData: selectedDateState.forecastData != null
-                  ? selectedDateState.forecastData!.pvInGrids
-                      .map((e) => e != null ? e : null)
-                      .toList()
-                  : [],
-              forecastLoadData: selectedDateState.forecastData != null
-                  ? selectedDateState.forecastData!.forecastLoadInGrids
-                      .map((e) => e != null ? e : null)
-                      .toList()
-                  : [],
-              loadData: selectedDateState.forecastData != null
-                  ? selectedDateState.forecastData!.loadInGrids
-                      .map((e) => e != null ? e : null)
-                      .toList()
-                  : [],
-              startHour: startHour,
-            ),
+          ForecastGraph(
+            forecastData: selectedDateState.forecastData != null
+                ? selectedDateState.forecastData!.forecastInGrids
+                    .map((e) => e != null ? -e : null)
+                    .toList()
+                : [],
+            forecastPvData: selectedDateState.forecastData != null
+                ? selectedDateState.forecastData!.forecastPvInGrids
+                    .map((e) => e != null ? e : null)
+                    .toList()
+                : [],
+            pvData: selectedDateState.forecastData != null
+                ? selectedDateState.forecastData!.pvInGrids
+                    .map((e) => e != null ? e : null)
+                    .toList()
+                : [],
+            forecastLoadData: selectedDateState.forecastData != null
+                ? selectedDateState.forecastData!.forecastLoadInGrids
+                    .map((e) => e != null ? e : null)
+                    .toList()
+                : [],
+            loadData: selectedDateState.forecastData != null
+                ? selectedDateState.forecastData!.loadInGrids
+                    .map((e) => e != null ? e : null)
+                    .toList()
+                : [],
+            startHour: startHour,
           ),
           _BuySellSection(
             controller: _buySellActionController,

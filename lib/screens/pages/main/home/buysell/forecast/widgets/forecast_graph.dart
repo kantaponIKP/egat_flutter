@@ -196,22 +196,36 @@ class _LineGraphPainter extends CustomPainter {
   final List<double?> forecastLoadData;
   final List<double?> loadData;
 
-  get forecastPvMaxValue =>
-      forecastPvData.reduce((a, b) => max(a ?? 0, b ?? 0));
-  get forecastPvMinValue =>
-      forecastPvData.reduce((a, b) => min(a ?? 0, b ?? 0));
-  get pvMaxValue => pvData.reduce((a, b) => max(a ?? 0, b ?? 0));
-  get loadMaxValue => loadData.reduce((a, b) => max(a ?? 0, b ?? 0));
+  double get forecastPvMaxValue =>
+      forecastPvData.reduce((a, b) => max(a ?? 0, b ?? 0)) ?? 0;
+  double get forecastPvMinValue =>
+      forecastPvData.reduce((a, b) => min(a ?? 0, b ?? 0)) ?? 0;
 
-  get loadMinValue => loadData
-      .where((element) => element != null)
-      .reduce((a, b) => min(a ?? 0, b ?? 0));
-  get pvMinValue => pvData
-      .where((element) => element != null)
-      .reduce((a, b) => min(a ?? 0, b ?? 0));
+  double get forecastLoadMaxValue =>
+      forecastLoadData.reduce((a, b) => max(a ?? 0, b ?? 0)) ?? 0;
+  double get forecastLoadMinValue =>
+      forecastLoadData.reduce((a, b) => min(a ?? 0, b ?? 0)) ?? 0;
 
-  get maxValue => max<double>(pvMaxValue, loadMaxValue);
-  get minValue => min<double>(pvMinValue, loadMinValue);
+  double get pvMaxValue => pvData.reduce((a, b) => max(a ?? 0, b ?? 0)) ?? 0;
+  double get pvMinValue => pvData.reduce((a, b) => min(a ?? 0, b ?? 0)) ?? 0;
+
+  double get loadMaxValue =>
+      loadData.reduce((a, b) => max(a ?? 0, b ?? 0)) ?? 0;
+  double get loadMinValue =>
+      loadData.reduce((a, b) => min(a ?? 0, b ?? 0)) ?? 0;
+
+  get maxValue => [
+        pvMaxValue,
+        loadMaxValue,
+        forecastPvMaxValue,
+        forecastLoadMaxValue
+      ].reduce(max);
+  get minValue => [
+        pvMinValue,
+        loadMinValue,
+        forecastPvMinValue,
+        forecastLoadMinValue
+      ].reduce(min);
 
   _LineGraphPainter({
     required this.forecastPvData,
@@ -448,29 +462,23 @@ class _Bar extends StatelessWidget {
 
     return Padding(
       padding: EdgeInsets.only(left: 15, top: paddingTop),
-      child: AnimatedSize(
-        duration: Duration(milliseconds: 0),
+      child: Container(
+        color: value > 0 ? Color(0xFFFEC908) : Color(0xFFED8235),
         child: SizedBox(
           width: 30,
           height: size,
-          child: Expanded(
-            child: Container(
-              key: this.key,
-              color: value > 0 ? Color(0xFFFEC908) : Color(0xFFED8235),
-              child: Align(
-                alignment:
-                    value >= 0 ? Alignment.topCenter : Alignment.bottomCenter,
-                child: Padding(
-                  padding: const EdgeInsets.all(2),
-                  child: FittedBox(
-                    child: Text(
-                      value.abs().toStringAsFixed(3),
-                      style: TextStyle(
-                        fontSize: 10,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                      ),
-                    ),
+          child: Align(
+            alignment:
+                value >= 0 ? Alignment.topCenter : Alignment.bottomCenter,
+            child: Padding(
+              padding: const EdgeInsets.all(2),
+              child: FittedBox(
+                child: Text(
+                  value.abs().toStringAsFixed(3),
+                  style: TextStyle(
+                    fontSize: 10,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
                   ),
                 ),
               ),

@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>EGAT P2P.ipa</key>
+	<array>
+		<dict>
+			<key>architectures</key>
+			<array>
+				<string>arm64</string>
+			</array>
+			<key>certificate</key>
+			<dict>
+				<key>SHA1</key>
+				<string>FB731D93E8AB0789A76D8E549AB4870CEF4E3DA4</string>
+				<key>dateExpires</key>
+				<string>1/2/2566 BE</string>
+				<key>type</key>
+				<string>Apple Distribution</string>
+			</dict>
+			<key>embeddedBinaries</key>
+			<array>
+				<dict>
+					<key>architectures</key>
+					<array>
+						<string>arm64</string>
+					</array>
+					<key>certificate</key>
+					<dict>
+						<key>SHA1</key>
+						<string>FB731D93E8AB0789A76D8E549AB4870CEF4E3DA4</string>
+						<key>dateExpires</key>
+						<string>1/2/2566 BE</string>
+						<key>type</key>
+						<string>Apple Distribution</string>
+					</dict>
+					<key>name</key>
+					<string>App.framework</string>
+					<key>team</key>
+					<dict>
+						<key>id</key>
+						<string>6P8SPNKPLH</string>
+						<key>name</key>
+						<string>IKNOWPLUS COMPANY LIMITED</string>
+					</dict>
+				</dict>
+				<dict>
+					<key>architectures</key>
+					<array>
+						<string>arm64</string>
+					</array>
+					<key>certificate</key>
+					<dict>
+						<key>SHA1</key>
+						<string>FB731D93E8AB0789A76D8E549AB4870CEF4E3DA4</string>
+						<key>dateExpires</key>
+						<string>1/2/2566 BE</string>
+						<key>type</key>
+						<string>Apple Distribution</string>
+					</dict>
+					<key>name</key>
+					<string>Flutter.framework</string>
+					<key>team</key>
+					<dict>
+						<key>id</key>
+						<string>6P8SPNKPLH</string>
+						<key>name</key>
+						<string>IKNOWPLUS COMPANY LIMITED</string>
+					</dict>
+				</dict>
+				<dict>
+					<key>architectures</key>
+					<array>
+						<string>arm64</string>
+					</array>
+					<key>certificate</key>
+					<dict>
+						<key>SHA1</key>
+						<string>FB731D93E8AB0789A76D8E549AB4870CEF4E3DA4</string>
+						<key>dateExpires</key>
+						<string>1/2/2566 BE</string>
+						<key>type</key>
+						<string>Apple Distribution</string>
+					</dict>
+					<key>name</key>
+					<string>flutter_secure_storage.framework</string>
+					<key>team</key>
+					<dict>
+						<key>id</key>
+						<string>6P8SPNKPLH</string>
+						<key>name</key>
+						<string>IKNOWPLUS COMPANY LIMITED</string>
+					</dict>
+				</dict>
+				<dict>
+					<key>architectures</key>
+					<array>
+						<string>arm64</string>
+					</array>
+					<key>certificate</key>
+					<dict>
+						<key>SHA1</key>
+						<string>FB731D93E8AB0789A76D8E549AB4870CEF4E3DA4</string>
+						<key>dateExpires</key>
+						<string>1/2/2566 BE</string>
+						<key>type</key>
+						<string>Apple Distribution</string>
+					</dict>
+					<key>name</key>
+					<string>hexcolor.framework</string>
+					<key>team</key>
+					<dict>
+						<key>id</key>
+						<string>6P8SPNKPLH</string>
+						<key>name</key>
+						<string>IKNOWPLUS COMPANY LIMITED</string>
+					</dict>
+				</dict>
+				<dict>
+					<key>architectures</key>
+					<array>
+						<string>arm64</string>
+					</array>
+					<key>certificate</key>
+					<dict>
+						<key>SHA1</key>
+						<string>FB731D93E8AB0789A76D8E549AB4870CEF4E3DA4</string>
+						<key>dateExpires</key>
+						<string>1/2/2566 BE</string>
+						<key>type</key>
+						<string>Apple Distribution</string>
+					</dict>
+					<key>name</key>
+					<string>image_picker.framework</string>
+					<key>team</key>
+					<dict>
+						<key>id</key>
+						<string>6P8SPNKPLH</string>
+						<key>name</key>
+						<string>IKNOWPLUS COMPANY LIMITED</string>
+					</dict>
+				</dict>
+				<dict>
+					<key>architectures</key>
+					<array>
+						<string>arm64</string>
+					</array>
+					<key>certificate</key>
+					<dict>
+						<key>SHA1</key>
+						<string>FB731D93E8AB0789A76D8E549AB4870CEF4E3DA4</string>
+						<key>dateExpires</key>
+						<string>1/2/2566 BE</string>
+						<key>type</key>
+						<string>Apple Distribution</string>
+					</dict>
+					<key>name</key>
+					<string>shared_preferences_ios.framework</string>
+					<key>team</key>
+					<dict>
+						<key>id</key>
+						<string>6P8SPNKPLH</string>
+						<key>name</key>
+						<string>IKNOWPLUS COMPANY LIMITED</string>
+					</dict>
+				</dict>
+			</array>
+			<key>entitlements</key>
+			<dict>
+				<key>application-identifier</key>
+				<string>6P8SPNKPLH.th.co.iknowplus.egat.p2p-trading</string>
+				<key>com.apple.developer.team-identifier</key>
+				<string>6P8SPNKPLH</string>
+				<key>get-task-allow</key>
+				<false/>
+				<key>keychain-access-groups</key>
+				<array>
+					<string>6P8SPNKPLH.th.co.iknowplus.egat.p2p-trading</string>
+				</array>
+			</dict>
+			<key>name</key>
+			<string>Runner.app</string>
+			<key>profile</key>
+			<dict>
+				<key>UUID</key>
+				<string>146d6149-f21e-4cc5-8511-3fcbb23db2f2</string>
+				<key>name</key>
+				<string>iOS Team Ad Hoc Provisioning Profile: th.co.iknowplus.egat.p2p-trading</string>
+			</dict>
+			<key>team</key>
+			<dict>
+				<key>id</key>
+				<string>6P8SPNKPLH</string>
+				<key>name</key>
+				<string>IKNOWPLUS COMPANY LIMITED</string>
+			</dict>
+		</dict>
+	</array>
+</dict>
+</plist>
