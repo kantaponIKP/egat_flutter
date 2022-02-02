@@ -715,6 +715,7 @@ class _SellItemCard extends StatelessWidget {
       child: GestureDetector(
         onTap: onTap,
         child: Card(
+          color: surfaceGreyColor,
           child: IntrinsicHeight(
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
