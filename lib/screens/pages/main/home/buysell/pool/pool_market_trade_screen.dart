@@ -21,7 +21,6 @@ class PoolMarketTradeScreen extends StatefulWidget {
 }
 
 class _PoolMarketTradeScreenState extends State<PoolMarketTradeScreen> {
-
   var dateItem = <String>[];
 
   var offerItem = ["Bid to Buy", "Offer to Sell"];
@@ -158,8 +157,7 @@ class _PoolMarketTradeScreenState extends State<PoolMarketTradeScreen> {
                                   color: primaryColor,
                                   borderRadius: BorderRadius.circular(5),
                                 ),
-                                child: 
-                                DropdownButton(
+                                child: DropdownButton(
                                   value: _offerInit,
                                   icon: Icon(Icons.arrow_drop_down_rounded),
                                   iconSize: 20,
@@ -180,7 +178,11 @@ class _PoolMarketTradeScreenState extends State<PoolMarketTradeScreen> {
                                       return DropdownMenuItem(
                                         value: items,
                                         child: Text(
-                                          (items == "Bid to Buy")? AppLocalizations.of(context).translate('trade-bidToBuy') : AppLocalizations.of(context).translate('trade-offerToSell'),
+                                          (items == "Bid to Buy")
+                                              ? "Bid to Buy"
+                                              : AppLocalizations.of(context)
+                                                  .translate(
+                                                      'trade-offerToSell'),
                                           style: TextStyle(fontSize: 14),
                                         ),
                                       );
@@ -356,7 +358,14 @@ class _PoolMarketTradeScreenState extends State<PoolMarketTradeScreen> {
                         style: TextStyle(fontSize: 26),
                       ),
                       Text(
-                        (status == "CLOSE")? AppLocalizations.of(context).translate('trade-status-close'): (status == "OPEN")? AppLocalizations.of(context).translate('trade-status-open') :AppLocalizations.of(context).translate('trade-status-matched'),
+                        (status == "CLOSE")
+                            ? AppLocalizations.of(context)
+                                .translate('trade-status-close')
+                            : (status == "OPEN")
+                                ? AppLocalizations.of(context)
+                                    .translate('trade-status-open')
+                                : AppLocalizations.of(context)
+                                    .translate('trade-status-matched'),
                         style: TextStyle(
                             fontSize: 23,
                             color: (status == "CLOSE") ? redColor : greenColor),
@@ -503,7 +512,7 @@ class _PoolMarketTradeScreenState extends State<PoolMarketTradeScreen> {
                                                       status == "CLOSE")
                                                   ? primaryColor
                                                   : whiteColor),
-                                                  textAlign: TextAlign.center,
+                                          textAlign: TextAlign.center,
                                         ),
                                       ),
                                     ]),
@@ -536,7 +545,8 @@ class _PoolMarketTradeScreenState extends State<PoolMarketTradeScreen> {
                                       padding:
                                           EdgeInsets.symmetric(horizontal: 5),
                                       child: Text(
-                                        AppLocalizations.of(context).translate('trade-matched'),
+                                        AppLocalizations.of(context)
+                                            .translate('trade-matched'),
                                         style: TextStyle(
                                             color: (isMatched)
                                                 ? primaryColor

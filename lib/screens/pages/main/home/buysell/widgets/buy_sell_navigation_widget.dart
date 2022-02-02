@@ -8,33 +8,35 @@ import 'package:provider/provider.dart';
 import '../states/buysell_navigation_state.dart';
 
 class BuySellNavigationWidget extends StatelessWidget {
-  
-
   BuySellNavigationWidget({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-
     final _tabBarItems = <TabBarNavigationItem<BuySellNavigationPage>>[
-     TabBarNavigationItem(
-      svgIcon: 'assets/images/icons/tabbar/forecast.svg',
-      title: AppLocalizations.of(context).translate('trade-menu-forecast-top'),
-      secondaryTitle: AppLocalizations.of(context).translate('trade-menu-forecast-bottom'),
-      value: BuySellNavigationPage.FORECAST,
-    ),
-     TabBarNavigationItem(
-      svgIcon: 'assets/images/icons/tabbar/bilateral.svg',
-      title: AppLocalizations.of(context).translate('trade-menu-bilateral-top'),
-      secondaryTitle: AppLocalizations.of(context).translate('trade-menu-bilateral-bottom'),
-      value: BuySellNavigationPage.BILATERAL,
-    ),
-     TabBarNavigationItem(
-      svgIcon: 'assets/images/icons/tabbar/poolMarket.svg',
-      title: AppLocalizations.of(context).translate('trade-menu-poolMarket-top'),
-      secondaryTitle: AppLocalizations.of(context).translate('trade-menu-poolMarket-bottom'),
-      value: BuySellNavigationPage.POOL,
-    ),
-  ];
+      TabBarNavigationItem(
+        svgIcon: 'assets/images/icons/tabbar/forecast.svg',
+        title:
+            AppLocalizations.of(context).translate('trade-menu-forecast-top'),
+        // secondaryTitle: AppLocalizations.of(context).translate('trade-menu-forecast-bottom'),
+        value: BuySellNavigationPage.FORECAST,
+      ),
+      TabBarNavigationItem(
+        svgIcon: 'assets/images/icons/tabbar/bilateral.svg',
+        title:
+            AppLocalizations.of(context).translate('trade-menu-bilateral-top'),
+        secondaryTitle: AppLocalizations.of(context)
+            .translate('trade-menu-bilateral-bottom'),
+        value: BuySellNavigationPage.BILATERAL,
+      ),
+      TabBarNavigationItem(
+        svgIcon: 'assets/images/icons/tabbar/poolMarket.svg',
+        title:
+            AppLocalizations.of(context).translate('trade-menu-poolMarket-top'),
+        secondaryTitle: AppLocalizations.of(context)
+            .translate('trade-menu-poolMarket-bottom'),
+        value: BuySellNavigationPage.POOL,
+      ),
+    ];
 
     final buySellNavigationState = Provider.of<BuySellNavigationState>(context);
 

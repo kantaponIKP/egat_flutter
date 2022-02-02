@@ -103,7 +103,7 @@ class _BilateralBuyScreenState extends State<BilateralBuyScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PageAppbar(firstTitle: "Bilateral", secondTitle: "Buy"),
+      appBar: PageAppbar(firstTitle: "", secondTitle: ""),
       body: SafeArea(
         child: FutureBuilder<List<BilateralBuyItem>>(
           future: _getData(),
@@ -196,6 +196,7 @@ class _BilateralBuyScreenState extends State<BilateralBuyScreen> {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         _HeaderSection(),
+                        SizedBox(height: 4),
                         _DateSection(date: widget.date),
                         SizedBox(height: 12),
                         SizedBox(
@@ -504,6 +505,7 @@ class _SelectionSection extends StatelessWidget {
             children: <Widget>[
               Expanded(
                 child: TextField(
+                  textAlign: TextAlign.center,
                   decoration: InputDecoration(
                     hintText: AppLocalizations.of(context).translate('search'),
                     hintStyle: TextStyle(
@@ -631,12 +633,12 @@ class _HeaderSection extends StatelessWidget {
               Text(
                 AppLocalizations.of(context)
                     .translate('trade-bilateral-chooseToBuy-buy'),
-                style: TextStyle(fontSize: 24, color: redColor),
+                style: TextStyle(fontSize: 18, color: redColor),
               ),
               Text(
                 AppLocalizations.of(context)
                     .translate('trade-bilateral-shortTermBilateral'),
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w200),
+                style: TextStyle(fontSize: 12),
               ),
             ],
           ),
@@ -649,7 +651,14 @@ class _HeaderSection extends StatelessWidget {
               onPressed: () => onLongTermPressed(context),
               child: Row(
                 children: [
-                  Icon(Icons.refresh),
+                   SizedBox(
+                      height: 20,
+                      width: 20,
+                      child: Image.asset(
+                          "assets/images/icons/home/longterm_icon.png")),
+                  SizedBox(
+                    width: 4,
+                  ),
                   RichText(
                     overflow: TextOverflow.ellipsis,
                     textAlign: TextAlign.center,
@@ -657,14 +666,17 @@ class _HeaderSection extends StatelessWidget {
                       text: AppLocalizations.of(context)
                           .translate('trade-bilateral-longtermBilateral'),
                       style: TextStyle(
+                        fontSize: 10,
                         color: blackColor,
-                        fontWeight: FontWeight.w300,
                       ),
                     ),
                   ),
                 ],
               ),
-              style: ElevatedButton.styleFrom(elevation: 0),
+              style: ElevatedButton.styleFrom(
+                  minimumSize: Size.zero,
+                  padding: EdgeInsets.all(6),
+                  elevation: 0),
             ),
           ],
         ),
@@ -1088,7 +1100,7 @@ class _BuyItemBody extends StatelessWidget {
                 title: AppLocalizations.of(context)
                     .translate('trade-netEstimatedEnergyPrice'),
                 value: item.netEnergyPrice,
-                unit: 'THB',
+                unit: 'THB/kWh',
                 fontSize: 12,
               ),
             ],

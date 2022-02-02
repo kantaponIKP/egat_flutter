@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:egat_flutter/main.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -30,7 +31,7 @@ class AppLocale extends ChangeNotifier {
     notifyListeners();
   }
 
-  void changeLanguage(Locale type) async {
+  void changeLanguage(Locale type, BuildContext context,) async {
     var prefs = await SharedPreferences.getInstance();
     // logger.d(
     //     'call changeLanguage method old languade code : $locale new language code $type');
@@ -39,10 +40,14 @@ class AppLocale extends ChangeNotifier {
     }
 
     if (type == Locale('en')) {
+      EgatApp.setAppFontFamily(context, 'Montserrat');
+
       setLocale(type);
       await prefs.setString('language_code', 'en');
       await prefs.setString('countryCode', 'US');
     } else {
+
+      EgatApp.setAppFontFamily(context, 'Kanit');
       setLocale(type);
       await prefs.setString('language_code', 'th');
       await prefs.setString('countryCode', '');

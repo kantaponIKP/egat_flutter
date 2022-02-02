@@ -2,7 +2,7 @@ import 'package:egat_flutter/i18n/app_localizations.dart';
 import 'package:egat_flutter/screens/forgot_password/forgot_password_model.dart';
 import 'package:egat_flutter/screens/forgot_password/forgot_password_step_indicator.dart';
 import 'package:egat_flutter/screens/forgot_password/state/password.dart';
-import 'package:egat_flutter/screens/registration/widgets/login_text_button.dart';
+import 'package:egat_flutter/screens/forgot_password/widgets/login_text_button.dart';
 import 'package:egat_flutter/screens/registration/widgets/registration_action.dart';
 import 'package:egat_flutter/screens/widgets/loading_dialog.dart';
 import 'package:egat_flutter/screens/widgets/show_exception.dart';

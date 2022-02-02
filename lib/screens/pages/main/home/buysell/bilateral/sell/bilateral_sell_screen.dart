@@ -10,6 +10,7 @@ import 'package:egat_flutter/screens/page/trade/bottom_button.dart';
 import 'package:egat_flutter/screens/page/widgets/page_appbar.dart';
 import 'package:egat_flutter/screens/pages/main/home/buysell/bilateral/apis/models/GetBilateralShortTermSellInfoResponse.dart';
 import 'package:egat_flutter/screens/pages/main/home/buysell/bilateral/apis/models/TransactionSubmitItem.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import '../apis/models/BilateralSellItem.dart';
 import '../apis/bilateral_api.dart';
 import 'package:egat_flutter/screens/session.dart';
@@ -80,7 +81,7 @@ class _BilateralSellScreenState extends State<BilateralSellScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PageAppbar(firstTitle: "Bilateral", secondTitle: "Sell"),
+      appBar: PageAppbar(firstTitle: "", secondTitle: ""),
       body: SafeArea(
         child: FutureBuilder<List<BilateralSellItem>>(
           future: _getData(),
@@ -173,6 +174,7 @@ class _BilateralSellScreenState extends State<BilateralSellScreen> {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         _HeaderSection(),
+                        SizedBox(height: 4),
                         _DateSection(date: widget.date),
                         SizedBox(height: 12),
                         SizedBox(
@@ -455,6 +457,7 @@ class _SelectionSection extends StatelessWidget {
             children: <Widget>[
               Expanded(
                 child: TextField(
+                  textAlign: TextAlign.center,
                   decoration: InputDecoration(
                     hintText: AppLocalizations.of(context).translate('search'),
                     hintStyle: TextStyle(
@@ -582,12 +585,12 @@ class _HeaderSection extends StatelessWidget {
               Text(
                 AppLocalizations.of(context)
                     .translate('trade-bilateral-offerToSell-bilateral'),
-                style: TextStyle(fontSize: 24, color: greenColor),
+                style: TextStyle(fontSize: 18, color: greenColor),
               ),
               Text(
                   AppLocalizations.of(context)
                       .translate('trade-bilateral-shortTermBilateral'),
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w200)),
+                  style: TextStyle(fontSize: 12)),
             ],
           ),
         ),
@@ -599,7 +602,14 @@ class _HeaderSection extends StatelessWidget {
               onPressed: () => onLongTermPressed(context),
               child: Row(
                 children: [
-                  Icon(Icons.refresh),
+                  SizedBox(
+                      height: 20,
+                      width: 20,
+                      child: Image.asset(
+                          "assets/images/icons/home/longterm_icon.png")),
+                  SizedBox(
+                    width: 4,
+                  ),
                   RichText(
                     overflow: TextOverflow.ellipsis,
                     textAlign: TextAlign.center,
@@ -607,14 +617,17 @@ class _HeaderSection extends StatelessWidget {
                       text: AppLocalizations.of(context)
                           .translate('trade-bilateral-longtermBilateral'),
                       style: TextStyle(
+                        fontSize: 10,
                         color: blackColor,
-                        fontWeight: FontWeight.w300,
                       ),
                     ),
                   ),
                 ],
               ),
-              style: ElevatedButton.styleFrom(elevation: 0),
+              style: ElevatedButton.styleFrom(
+                  minimumSize: Size.zero,
+                  padding: EdgeInsets.all(6),
+                  elevation: 0),
             ),
           ],
         ),

@@ -51,13 +51,13 @@ class BilateralBuyerEnergyExcessSettlementReportInfoBox
         ),
         DatedSettlementReportDetailBoxItem(
           name: 'Seller imbalance amount',
-          value: '${tradeInfo.sellerImbalanceAmount.toStringAsFixed(3)} THB',
+          value: '${tradeInfo.sellerImbalanceAmount.toStringAsFixed(3)} kWh',
           fontSize: 13,
           fontColor: Color(0xFFA10C09),
         ),
         DatedSettlementReportDetailBoxItem(
           name: 'Seller imbalance',
-          value: '${tradeInfo.sellerImbalance.toStringAsFixed(3)} kWh',
+          value: '${tradeInfo.sellerImbalance.toStringAsFixed(3)} THB',
           fontSize: 13,
           fontColor: Color(0xFFA10C09),
         ),

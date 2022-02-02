@@ -1,4 +1,5 @@
 import 'package:egat_flutter/constant.dart';
+import 'package:egat_flutter/i18n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
@@ -48,9 +49,9 @@ class _ViewPreviousInvoiceDialogState extends State<ViewPreviousInvoiceDialog> {
       mainAxisSize: MainAxisSize.min,
       children: [
         Text(
-          "View Previous Invoice",
+          AppLocalizations.of(context).translate('billing-viewPreviousInvoice'),
           style: TextStyle(
-            fontSize: 20,
+            fontSize: 16,
             color: Color(0xFFFEC908),
           ),
         ),
@@ -137,7 +138,7 @@ class _MonthSelectionSection extends StatelessWidget {
                       Navigator.of(context).pop(selectedMonth);
                     },
                     child: Text(
-                      'Confirm',
+                      AppLocalizations.of(context).translate('confirm'),
                       style: TextStyle(
                         color: Colors.black,
                         fontWeight: FontWeight.normal,
@@ -155,7 +156,7 @@ class _MonthSelectionSection extends StatelessWidget {
                       Navigator.of(context).pop();
                     },
                     child: Text(
-                      'Cancel',
+                      AppLocalizations.of(context).translate('cancel'),
                       style: TextStyle(
                         color: Colors.black,
                         fontWeight: FontWeight.normal,
@@ -218,7 +219,7 @@ class _MonthSelectionDropDown extends StatelessWidget {
             (month) {
               return DropdownMenuItem(
                 value: month,
-                child: Text(DateFormat.MMMM().format(month)),
+                child: Text(DateFormat.MMMM(AppLocalizations.of(context).getLocale().toString(),).format(month)),
               );
             },
           ).toList(),

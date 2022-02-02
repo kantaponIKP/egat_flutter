@@ -31,27 +31,28 @@ class MainPage extends StatelessWidget {
         //     return personalInfoState..setLoginSession(loginSession);
         //   },
         // ),
-        ChangeNotifierProxyProvider<LoginSession, LoginModel>(
-          create: (context) {
-            LoginSession session =
-                Provider.of<LoginSession>(context, listen: false);
-            return LoginModel(loginSession: session);
-          },
-          update: (
-            BuildContext context,
-            LoginSession model,
-            LoginModel? previous,
-          ) {
-            if (previous == null) {
-              LoginSession session =
-                  Provider.of<LoginSession>(context, listen: false);
-              return LoginModel(loginSession: session);
-            } else {
-              previous.setSession(model);
-              return previous;
-            }
-          },
-        ),
+        
+        // ChangeNotifierProxyProvider<LoginSession, LoginModel>(
+        //   create: (context) {
+        //     LoginSession session =
+        //         Provider.of<LoginSession>(context, listen: false);
+        //     return LoginModel(loginSession: session);
+        //   },
+        //   update: (
+        //     BuildContext context,
+        //     LoginSession model,
+        //     LoginModel? previous,
+        //   ) {
+        //     if (previous == null) {
+        //       LoginSession session =
+        //           Provider.of<LoginSession>(context, listen: false);
+        //       return LoginModel(loginSession: session);
+        //     } else {
+        //       previous.setSession(model);
+        //       return previous;
+        //     }
+        //   },
+        // ),
       ],
       child: MainScreen(),
     );

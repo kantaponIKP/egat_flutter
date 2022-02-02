@@ -13,10 +13,12 @@ class LoginModel extends ChangeNotifier {
   LoginSession loginSession;
   bool isError = false;
   late Timer _timer;
+  bool isLogin = false;
 
   LoginModel({required this.loginSession}) {
+
     _timer = Timer.periodic(Duration(seconds: 60), (timer) {
-      if (loginSession.info != null) {
+      if (isLogin && loginSession.info != null) {
         updateRefreshToken();
       }
     });
@@ -66,6 +68,7 @@ class LoginModel extends ChangeNotifier {
         userId: response.userId!,
         refreshToken: response.refreshToken!));
 
+    isLogin = true;
     final storage = new FlutterSecureStorage();
     await storage.write(key: 'rememberMe', value: rememberMe.toString());
     await storage.write(key: 'refreshToken', value: response.refreshToken!);
@@ -84,7 +87,6 @@ class LoginModel extends ChangeNotifier {
       }
       loginSession.setAccessToken(LoginSessionInfo(
           accessToken: "", userId: "", refreshToken: refreshToken));
-      // updateRefreshToken();
     }
     return rememberMe;
   }
@@ -98,16 +100,16 @@ class LoginModel extends ChangeNotifier {
     loginSession.setAccessToken(
       LoginSessionInfo(accessToken: "", userId: "", refreshToken: ""),
     );
-    _timer.cancel(); //TODO
 
+    isLogin = false;
     final storage = new FlutterSecureStorage();
     await storage.write(key: 'rememberMe', value: "false");
   }
 
   @override
   void dispose() {
+    isLogin = false;
     _timer.cancel();
-
     super.dispose();
   }
 }

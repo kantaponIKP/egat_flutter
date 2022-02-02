@@ -1168,7 +1168,7 @@ class _SummaryBox extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: SizedBox(
-            height: 70,
+            height: 85,
             child: Column(
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.center,
@@ -1186,7 +1186,7 @@ class _SummaryBox extends StatelessWidget {
                         ),
                       ),
                     ),
-                    Text(label, style: TextStyle(fontSize: 12)),
+                    Text(label, style: TextStyle(fontSize: 12),textAlign: TextAlign.center),
                   ],
                 ),
               ],

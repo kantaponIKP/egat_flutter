@@ -97,6 +97,7 @@
   "date": "วันที่",
   "period": "ช่วงเวลา",
   "required": "จำเป็น",
+  "confirm": "ยืนยัน",
 
   "validation-required": "จำเป็น",
   "validation-invalidEmailAddress": "อีเมลไม่ถูกต้อง",
@@ -125,6 +126,8 @@
 
   "message-changePasswordSuccessfully": "เปลี่ยนรหัสผ่านสำเร็จแล้ว",
   "message-changeSuccessfully": "เปลี่ยนแปลงข้อมูลสำเร็จแล้ว",
+
+  "graph-usesAtSelectedTime": "การใช้งานในเวลาที่เลือก",
 
   "error-connectionError": "ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์ได้",
   "error-incorrectInformationError": "ข้อมูลไม่ถูกต้อง",
@@ -306,15 +309,15 @@
   "trade-poolmarket-offerToSell": "พลังงานไฟฟ้าที่จะเสนอขาย",
   "trade-poolmarket-energyToSale": "พลังงานไฟฟ้าที่จะขาย",
 
-  "settlement-bilateralTrade": "ตลาดทวิภาคีซื้อขายไฟฟ้า (Bilateral Trade)",
-  "settlement-poolMarketTrade": "ตลาดกลางซื้อขายไฟฟ้า (Pool Market Trade)",
+  "settlement-bilateralTrade": "ตลาดทวิภาคีซื้อขายไฟฟ้า\n(Bilateral Trade)",
+  "settlement-poolMarketTrade": "ตลาดกลางซื้อขายไฟฟ้า\n(Pool Market Trade)",
 
   "settlement-completed": "สำเร็จแล้ว",
   "settlement-open": "รอทำการซื้อขาย",
   "settlement-matched": "ผูกมัดแล้ว",
 
-  "settlement-order-bilateralTrade": "ตลาดทวิภาคีซื้อขายไฟฟ้า (Bilateral Trade)",
-  "settlement-order-poolMarketTrade": "ตลาดกลางซื้อขายไฟฟ้า (Pool Market Trade)",
+  "settlement-order-bilateralTrade": "ตลาดทวิภาคีซื้อขายไฟฟ้า\n(Bilateral Trade)",
+  "settlement-order-poolMarketTrade": "ตลาดกลางซื้อขายไฟฟ้า\n(Pool Market Trade)",
   "settlement-order-deliveryTime": "เวลาส่งพลังงานไฟฟ้า",
   "settlement-order-offerToSell": "พลังงานไฟฟ้าที่จะเสนอขาย",
   "settlement-order-tradingFee": "ค่าธรรมเนียมการซื้อขายพลังงานไฟฟ้า",

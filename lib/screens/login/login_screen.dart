@@ -1,5 +1,6 @@
 import 'package:egat_flutter/i18n/app_language.dart';
 import 'package:egat_flutter/i18n/app_localizations.dart';
+import 'package:egat_flutter/main.dart';
 import 'package:egat_flutter/screens/forgot_password/forgot_password.dart';
 import 'package:egat_flutter/screens/login/state/login_model.dart';
 import 'package:egat_flutter/screens/pages/main/main_page.dart';
@@ -51,6 +52,20 @@ class _LoginScreenState extends State<LoginScreen> {
         _isFirst = false;
       });
       voidSetIsLogin();
+    }
+
+    WidgetsBinding.instance!.addPostFrameCallback((_) {
+      _setFontFamily();
+    });
+  }
+
+  void _setFontFamily() {
+    Locale _nowLocale = Localizations.localeOf(context);
+
+    if (_nowLocale.toString() == 'th') {
+      EgatApp.setAppFontFamily(context, 'Kanit');
+    } else {
+      EgatApp.setAppFontFamily(context, 'Montserrat');
     }
   }
 

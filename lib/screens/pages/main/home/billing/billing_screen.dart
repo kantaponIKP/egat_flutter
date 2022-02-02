@@ -260,7 +260,7 @@ class _HilightedValueDisplay extends StatelessWidget {
   Widget build(BuildContext context) {
     return DefaultTextStyle(
       style: TextStyle(
-        fontSize: 15,
+        fontSize: 13,
       ),
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 4),

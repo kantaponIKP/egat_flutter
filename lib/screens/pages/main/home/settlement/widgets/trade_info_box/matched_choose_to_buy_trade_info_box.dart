@@ -52,12 +52,6 @@ class MatchedChooseToBuyTradeInfoBox extends StatelessWidget {
         ),
         DatedTradeDetailBoxItem(
           name:
-              AppLocalizations.of(context).translate('settlement-energyToBuy'),
-          value: '1 THB/kWh',
-          fontSize: 10,
-        ),
-        DatedTradeDetailBoxItem(
-          name:
               AppLocalizations.of(context).translate('settlement-energyTariff'),
           value: '${tradeInfo.energyTariff.toStringAsFixed(3)} THB/kWh',
           fontColor: Color(0xFF0329F2),
