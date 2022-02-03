@@ -262,7 +262,8 @@ class __SubmitButtonState extends State<_SubmitButton> {
         child: ElevatedButton(
           onPressed: isDisabled ? null : widget.onPressed,
           child: Text(
-            'Submit',
+            AppLocalizations.of(context)
+                    .translate('submit'),
             style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.w300,

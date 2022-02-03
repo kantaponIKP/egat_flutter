@@ -977,14 +977,14 @@ class _SummarySection extends StatelessWidget {
                   Text(
                     'Total ${state.value.totalRec.toStringAsFixed(3)} REC',
                     style: TextStyle(
-                      fontSize: 10,
+                      fontSize: 12,
                       color: const Color(0xFFB9B9B9),
                     ),
                   ),
                   Text(
                     'Acc ${state.value.accumulatedRec.toStringAsFixed(3)} REC',
                     style: TextStyle(
-                      fontSize: 10,
+                      fontSize: 12,
                       color: const Color(0xFFB9B9B9),
                     ),
                   ),
