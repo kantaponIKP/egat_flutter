@@ -226,16 +226,19 @@ class _SettingMainScreenState extends State<SettingMainScreen> {
 
   Widget _buildReceiveNotificationSwitch(BuildContext context) {
     if (Platform.isIOS) {
-      return CupertinoSwitch(
-        trackColor: disabledColor,
-        value: _receiveMessage!,
-        onChanged: (val) {
-          setState(
-            () {
-              _setReceiveNotification(val);
-            },
-          );
-        },
+      return Transform.scale(
+        scale: 0.9,
+        child: CupertinoSwitch(
+          trackColor: disabledColor,
+          value: _receiveMessage!,
+          onChanged: (val) {
+            setState(
+              () {
+                _setReceiveNotification(val);
+              },
+            );
+          },
+        ),
       );
     } else {
       return Switch(
@@ -256,16 +259,19 @@ class _SettingMainScreenState extends State<SettingMainScreen> {
 
   Widget _buildReceiveEmailSwitch(BuildContext context) {
     if (Platform.isIOS) {
-      return CupertinoSwitch(
-        trackColor: disabledColor,
-        value: _isNotiEmail,
-        onChanged: (val) {
-          setState(
-            () {
-              _isNotiEmail = !_isNotiEmail;
-            },
-          );
-        },
+      return Transform.scale(
+        scale: 0.9,
+        child: CupertinoSwitch(
+          trackColor: disabledColor,
+          value: _isNotiEmail,
+          onChanged: (val) {
+            setState(
+              () {
+                _isNotiEmail = !_isNotiEmail;
+              },
+            );
+          },
+        ),
       );
     } else {
       return Switch(

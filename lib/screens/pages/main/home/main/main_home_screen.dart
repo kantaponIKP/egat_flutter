@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'dart:math';
 
 import 'package:egat_flutter/constant.dart';
@@ -9,6 +10,7 @@ import 'package:egat_flutter/screens/pages/main/states/main_screen_title_state.d
 import 'package:egat_flutter/screens/pages/main/states/personal_info_state.dart';
 import 'package:egat_flutter/screens/widgets/loading_dialog.dart';
 import 'package:egat_flutter/screens/widgets/show_exception.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -1186,7 +1188,9 @@ class _SummaryBox extends StatelessWidget {
                         ),
                       ),
                     ),
-                    Text(label, style: TextStyle(fontSize: 12),textAlign: TextAlign.center),
+                    Text(label,
+                        style: TextStyle(fontSize: 12),
+                        textAlign: TextAlign.center),
                   ],
                 ),
               ],
@@ -1304,23 +1308,47 @@ class _DateSelectModeSwitch extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final selectedDateState = Provider.of<MainHomeSelectedDateState>(context);
-
-    return Row(
-      children: [
-        Text(AppLocalizations.of(context).translate('home-daily')),
-        Switch(
-          value: selectedDateState.isDaily,
-          activeColor: primaryColor,
-          onChanged: (_) {
-            if (selectedDateState.isMonthly) {
-              selectedDateState.setDaily();
-            } else {
-              selectedDateState.setMonthly();
-            }
-          },
-        ),
-      ],
-    );
+    if (Platform.isIOS) {
+      return Row(
+        children: [
+          Text(AppLocalizations.of(context).translate('home-daily')),
+          Transform.scale(
+            scale: 0.7,
+            child: CupertinoSwitch(
+              trackColor: disabledColor,
+              value: selectedDateState.isDaily,
+              activeColor: greenColor,
+              onChanged: (_) {
+                if (selectedDateState.isMonthly) {
+                  selectedDateState.setDaily();
+                } else {
+                  selectedDateState.setMonthly();
+                }
+              },
+            ),
+          ),
+        ],
+      );
+    } else {
+      return Row(
+        children: [
+          Text(AppLocalizations.of(context).translate('home-daily')),
+          Switch(
+            value: selectedDateState.isDaily,
+            activeColor: switchActiveColor,
+            inactiveTrackColor: disabledColor,
+            activeTrackColor: Colors.green[100],
+            onChanged: (_) {
+              if (selectedDateState.isMonthly) {
+                selectedDateState.setDaily();
+              } else {
+                selectedDateState.setMonthly();
+              }
+            },
+          ),
+        ],
+      );
+    }
   }
 }
 
