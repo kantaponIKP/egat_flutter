@@ -179,7 +179,9 @@ class _PoolMarketTradeScreenState extends State<PoolMarketTradeScreen> {
                                         value: items,
                                         child: Text(
                                           (items == "Bid to Buy")
-                                              ? "Bid to Buy"
+                                              ? AppLocalizations.of(context)
+                                                  .translate(
+                                                      'trade-bidToBuy')
                                               : AppLocalizations.of(context)
                                                   .translate(
                                                       'trade-offerToSell'),
