@@ -123,6 +123,7 @@ class _SummarySectionState extends State<_SummarySection> {
 
   @override
   Widget build(BuildContext context) {
+    String language = AppLocalizations.of(context).getLocale().toString();
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.end,
@@ -132,7 +133,7 @@ class _SummarySectionState extends State<_SummarySection> {
           child: SizedBox(
             height: _isExpanded ? null : 0,
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 32),
+              padding: const EdgeInsets.symmetric(horizontal: 10),
               child: Column(
                 children: [
                   _SummaryValue(
@@ -162,28 +163,28 @@ class _SummarySectionState extends State<_SummarySection> {
                   ),
                   _SummaryValue(
                     title: AppLocalizations.of(context)
-                    .translate('trade-wheelingChargeTariff'),
+                    .translate('trade-wheelingChargeTariff-poolmarket'),
                     value: _wheelingChargeTariff,
                     unit: 'THB/kWh',
-                    titleFontSize: 12,
-                    valueFontSize: 12,
+                    titleFontSize: (language == "th")? 12 : 12,
+                    valueFontSize: (language == "th")? 12 : 12,
                     valueColor: Colors.white,
                   ),
                   _SummaryValue(
                     title: AppLocalizations.of(context)
-                    .translate('trade-wheelingCharge'),
+                    .translate('trade-wheelingCharge-poolmarket'),
                     value: _wheelingCharge,
                     unit: 'THB',
-                    titleFontSize: 15,
-                    valueFontSize: 15,
+                    titleFontSize: (language == "th")? 12 : 15,
+                    valueFontSize: (language == "th")? 12 : 15,
                     valueColor: Colors.white,
                   ),
                   _SummaryValue(
                     title: AppLocalizations.of(context).translate('trade-tradingFee'),
                     value: _tradingFee,
                     unit: 'THB',
-                    titleFontSize: 12,
-                    valueFontSize: 12,
+                    titleFontSize: (language == "th")? 11 : 12,
+                    valueFontSize: (language == "th")? 11 : 12,
                     valueColor: Colors.white,
                   ),
                   _SummaryValue(
@@ -208,7 +209,7 @@ class _SummarySectionState extends State<_SummarySection> {
                 title: AppLocalizations.of(context).translate('trade-estimatedBuy'),
                 value: _estimatedBuy,
                 unit: 'THB',
-                titleFontSize: 15,
+                titleFontSize: (language == "th")? 12 : 15,
               ),
             ),
             GestureDetector(
@@ -230,10 +231,10 @@ class _SummarySectionState extends State<_SummarySection> {
           ],
         ),
         _SummaryValue(
-          title: AppLocalizations.of(context).translate('trade-estimateNetPrice'),
+          title: AppLocalizations.of(context).translate('trade-estimateNetPrice-summary'),
           value: _estimateNetPrice,
           unit: 'THB/kWh',
-          titleFontSize: 20,
+          titleFontSize: (language == "th")? 14 : 20,
         ),
       ],
     );

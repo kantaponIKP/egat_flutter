@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'dart:ui';
 
 import 'package:egat_flutter/constant.dart';
+import 'package:egat_flutter/i18n/app_language.dart';
 import 'package:egat_flutter/i18n/app_localizations.dart';
 import 'package:egat_flutter/screens/forgot_password/widgets/forgot_password_cancellation_dialog.dart';
 import 'package:egat_flutter/screens/page/trade/bottom_button.dart';
@@ -1031,6 +1032,7 @@ class _BuyItemBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String language = AppLocalizations.of(context).getLocale().toString();
     return AnimatedSize(
       duration: Duration(milliseconds: 150),
       child: ConstrainedBox(
@@ -1038,7 +1040,7 @@ class _BuyItemBody extends StatelessWidget {
           maxHeight: expanded ? double.infinity : 0,
         ),
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 64, vertical: 8),
+          padding: const EdgeInsets.symmetric(horizontal: 36, vertical: 8),
           child: Column(
             children: [
               _BuyItemDetail(
@@ -1067,14 +1069,14 @@ class _BuyItemBody extends StatelessWidget {
                     .translate('trade-wheelingChargeTariff'),
                 value: item.wheelingChargeTariff,
                 unit: 'THB/kWh',
-                fontSize: 12,
+                fontSize: (language == "th")? 11 : 12,
               ),
               _BuyItemDetail(
                 title: AppLocalizations.of(context)
                     .translate('trade-wheelingCharge'),
                 value: item.wheelingCharge,
                 unit: 'THB',
-                fontSize: 15,
+                fontSize: (language == "th")? 11 : 15,
               ),
               _BuyItemDetail(
                 title:

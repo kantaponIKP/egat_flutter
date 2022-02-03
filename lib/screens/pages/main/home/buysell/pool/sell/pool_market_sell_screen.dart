@@ -114,6 +114,7 @@ class _SummarySectionState extends State<_SummarySection> {
 
   @override
   Widget build(BuildContext context) {
+    String language = AppLocalizations.of(context).getLocale().toString();
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.end,
@@ -122,13 +123,13 @@ class _SummarySectionState extends State<_SummarySection> {
           title: AppLocalizations.of(context).translate('trade-tradingFee'),
           value: _tradingFee,
           unit: 'THB',
-          titleFontSize: 15,
+          titleFontSize: (language == "th")? 12 : 15,
         ),
         _SummaryValue(
           title: AppLocalizations.of(context).translate('trade-estimatedSales'),
           value: _estimatedSales,
           unit: 'THB',
-          titleFontSize: 20,
+          titleFontSize: (language == "th")? 14 : 20,
         ),
       ],
     );
