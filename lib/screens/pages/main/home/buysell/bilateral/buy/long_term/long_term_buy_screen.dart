@@ -206,7 +206,7 @@ class _BilateralLongTermBuyScreenState
                     child: Column(
                       children: [
                         Text(
-                          price.toStringAsFixed(2),
+                          estimated.toStringAsFixed(2),
                           style: TextStyle(color: primaryColor, fontSize: 10),
                         ),
                         Text(
