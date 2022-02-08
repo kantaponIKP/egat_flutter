@@ -1079,7 +1079,7 @@ class _SummarySection extends StatelessWidget {
                   child: _SummaryBox(
                     label:
                         AppLocalizations.of(context).translate('home-tradeBuy'),
-                    value: state.value.totalSales,
+                    value: state.value.totalBuys,
                     unit: 'Baht',
                     valueColor: Color(0xFFF6645A),
                     icon: SvgPicture.asset(
@@ -1123,7 +1123,7 @@ class _SummarySection extends StatelessWidget {
                   child: _SummaryBox(
                     label:
                         AppLocalizations.of(context).translate('home-gridUsed'),
-                    value: state.value.totalSales,
+                    value: state.value.totalBuyFromGrid,
                     unit: 'Baht',
                     valueColor: Color(0xFFF6645A),
                     icon: Image.asset(

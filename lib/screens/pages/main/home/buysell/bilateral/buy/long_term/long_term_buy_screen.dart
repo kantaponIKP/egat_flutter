@@ -104,15 +104,17 @@ class _BilateralLongTermBuyScreenState
                               itemCount: _bilateralTileList.length,
                               itemBuilder: (context, index) {
                                 return _buildExpansionTile(
-                                    _bilateralTileList[index].name!,
-                                    _bilateralTileList[index].time!,
-                                    _bilateralTileList[index].energyToBuy!,
-                                    _bilateralTileList[index].netEnergyPrice!,
-                                    _bilateralTileList[index].energyTariff!,
-                                    _bilateralTileList[index]
-                                        .wheelingChargeTariff!,
-                                    _bilateralTileList[index].tradingFee!,
-                                    index);
+                                  _bilateralTileList[index].name!,
+                                  _bilateralTileList[index].time!,
+                                  _bilateralTileList[index].energyToBuy!,
+                                  _bilateralTileList[index].netEnergyPrice!,
+                                  _bilateralTileList[index].energyTariff!,
+                                  _bilateralTileList[index]
+                                      .wheelingChargeTariff!,
+                                  _bilateralTileList[index].tradingFee!,
+                                  index,
+                                  _bilateralTileList[index].energyTariff!,
+                                );
                               },
                             ),
                           )
@@ -137,8 +139,10 @@ class _BilateralLongTermBuyScreenState
     var endDate = DateTime.parse(date).toLocal().add(new Duration(hours: 1));
     var startHour = DateFormat('HH').format(startDate);
     var endHour = DateFormat('HH').format(endDate);
-    String displayDate =
-        startHour.toString() + ":00-" + endHour.toString() + ":00 ${AppLocalizations.of(context).translate('everyday')}";
+    String displayDate = startHour.toString() +
+        ":00-" +
+        endHour.toString() +
+        ":00 ${AppLocalizations.of(context).translate('everyday')}";
     return SizedBox(
       height: 60,
       child: Row(
@@ -261,14 +265,16 @@ class _BilateralLongTermBuyScreenState
   }
 
   Widget _buildExpansionTile(
-      String title,
-      String date,
-      double energyToBuy,
-      double netEstimatedPrice,
-      double energyTariff,
-      double wheelingChargeTariff,
-      double tradingFee,
-      int index) {
+    String title,
+    String date,
+    double energyToBuy,
+    double netEstimatedPrice,
+    double energyTariff,
+    double wheelingChargeTariff,
+    double tradingFee,
+    int index,
+    double energyPrice,
+  ) {
     return ClipRRect(
       borderRadius: BorderRadius.circular(15),
       child: Container(
@@ -331,7 +337,7 @@ class _BilateralLongTermBuyScreenState
                           Container(
                             alignment: Alignment.centerLeft,
                             child: Text(
-                              "Energy to tariff",
+                              "Energy tariff",
                               style: TextStyle(
                                 color: textColor,
                                 fontSize: 12,
@@ -430,7 +436,8 @@ class _BilateralLongTermBuyScreenState
                               Container(
                                 alignment: Alignment.centerLeft,
                                 child: Text(
-                                  AppLocalizations.of(context).translate('trade-netEnergyPrice'),
+                                  AppLocalizations.of(context)
+                                      .translate('trade-netEnergyPrice'),
                                   style: TextStyle(
                                     color: primaryColor,
                                     fontSize: 10,
@@ -441,7 +448,8 @@ class _BilateralLongTermBuyScreenState
                               Container(
                                 alignment: Alignment.centerLeft,
                                 child: Text(
-                                  AppLocalizations.of(context).translate('trade-notIncludeVat'),
+                                  AppLocalizations.of(context)
+                                      .translate('trade-notIncludeVat'),
                                   style: TextStyle(
                                     color: textColor,
                                     fontSize: 8,
@@ -575,7 +583,9 @@ class _BilateralLongTermBuyScreenState
             Text(
               AppLocalizations.of(context).translate('trade-bilateral-period'),
             ),
-            Text(AppLocalizations.of(context).translate('everyday'),),
+            Text(
+              AppLocalizations.of(context).translate('everyday'),
+            ),
           ],
         ),
         SizedBox(
