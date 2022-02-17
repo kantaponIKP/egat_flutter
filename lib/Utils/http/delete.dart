@@ -17,17 +17,19 @@ final httpDeleteJson = ({
         },
       ),
       retryMax: retryMax,
+      haveAuth: true,
     );
   } else {
     return await httpActionRetry(
       callFunction: () => delete(
         url,
         headers: {
-          'Authorization' : 'Basic $authorizationBase64',
+          'Authorization': 'Basic $authorizationBase64',
           'Content-Type': 'application/json',
         },
       ),
       retryMax: retryMax,
+      haveAuth: false,
     );
   }
 };

@@ -19,6 +19,7 @@ final httpGetJson = ({
       ),
       retryMax: retryMax,
       timeout: timeout,
+      haveAuth: true,
     );
   } else {
     return await httpActionRetry(
@@ -30,6 +31,7 @@ final httpGetJson = ({
         },
       ),
       retryMax: retryMax,
+      haveAuth: false,
     );
   }
 };

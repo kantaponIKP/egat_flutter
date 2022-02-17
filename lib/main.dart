@@ -25,12 +25,13 @@ Future<void> main() async {
   PreferredAppLanguage preferredAppLanguage =
       await PreferredAppLanguage.createInstance();
 
+  getIt.registerSingleton<GlobalLoginSession>(GlobalLoginSession());
+
   runApp(EgatApp(preferredAppLanguage: preferredAppLanguage));
 }
 
 class EgatApp extends StatefulWidget {
   PreferredAppLanguage preferredAppLanguage;
-  
 
   EgatApp({
     required this.preferredAppLanguage,
@@ -40,20 +41,18 @@ class EgatApp extends StatefulWidget {
   @override
   State<EgatApp> createState() => _EgatAppState();
 
-    static void setAppFontFamily(BuildContext context, String _selectedFontFamily) {
-      _EgatAppState? state = context.findAncestorStateOfType<_EgatAppState>();
-         state!.setState(() {
-            state._fontFamily = _selectedFontFamily;
-         });
-    }
-
-  
+  static void setAppFontFamily(
+      BuildContext context, String _selectedFontFamily) {
+    _EgatAppState? state = context.findAncestorStateOfType<_EgatAppState>();
+    state!.setState(() {
+      state._fontFamily = _selectedFontFamily;
+    });
+  }
 }
 
 class _EgatAppState extends State<EgatApp> {
-
   String _fontFamily = 'Montserrat';
-  
+
   @override
   Widget build(BuildContext context) {
     return MultiProvider(

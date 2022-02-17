@@ -21,6 +21,7 @@ final httpPostJson = ({
       ),
       retryMax: retryMax,
       timeout: timeout,
+      haveAuth: true,
     );
   } else {
     return await httpActionRetry(
@@ -33,6 +34,7 @@ final httpPostJson = ({
         body: body,
       ),
       retryMax: retryMax,
+      haveAuth: false,
     );
   }
 };

@@ -188,10 +188,16 @@ class _TitleSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var titleColor = const Color(0xFF473937);
+    if (direction == TransferDirection.OFFER_TO_SELL ||
+        direction == TransferDirection.CHOOSE_TO_BUY) {
+      titleColor = const Color(0xFF37453e);
+    }
+
     return GestureDetector(
       onTap: () => onExpansionChange?.call(!isExpanded),
       child: Container(
-        decoration: BoxDecoration(color: Color(0xFF3E3E3E)),
+        decoration: BoxDecoration(color: titleColor),
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 20),
           child: Column(
@@ -369,16 +375,14 @@ class _TitleFirstRow extends StatelessWidget {
         mainAxisSize: MainAxisSize.max,
         children: [
           Expanded(
-            child: LayoutBuilder(
-              builder: (context,constraints) {
-                return SizedBox(
-                  width: constraints.maxWidth,
-                  child: Row(
-                    children: members,
-                  ),
-                );
-              }
-            ),
+            child: LayoutBuilder(builder: (context, constraints) {
+              return SizedBox(
+                width: constraints.maxWidth,
+                child: Row(
+                  children: members,
+                ),
+              );
+            }),
           ),
           expendedIcon,
         ],

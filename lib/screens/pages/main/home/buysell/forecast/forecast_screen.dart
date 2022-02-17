@@ -847,19 +847,35 @@ class _ForecastEnergyBalanceTotal extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final forecastState = Provider.of<ForecastState>(context);
-    final forecastValues = forecastState.forecastDataOffsets.values;
 
     var totalForecastEnergy = 0.0;
-    for (final forecastDay in forecastValues) {
-      if (forecastDay == null) {
-        continue;
-      }
 
-      final forecastDayTotalEnergy = forecastDay.loadInGrids.reduce(
+    final forecastDay = [
+      ...(forecastState.forecastDataOffsets[0]?.forecastInGrids ?? []),
+      ...(forecastState.forecastDataOffsets[-1]?.forecastInGrids ?? []),
+    ];
+
+    final now = DateTime.now();
+
+    final filteredLoads = forecastDay
+        .skip(now.hour)
+        .take(24)
+        .where((element) => element != null)
+        .where((element) => (element ?? 0) < 0)
+        .toList();
+
+    if (filteredLoads.isNotEmpty) {
+      final forecastDayTotalEnergy = filteredLoads.reduce(
         (value, element) => (value ?? 0.0) + (element ?? 0.0),
       )!;
 
       totalForecastEnergy += forecastDayTotalEnergy;
+    }
+
+    totalForecastEnergy = -totalForecastEnergy;
+
+    if (totalForecastEnergy == 0) {
+      totalForecastEnergy = 0;
     }
 
     return Row(
@@ -871,7 +887,6 @@ class _ForecastEnergyBalanceTotal extends StatelessWidget {
           child: new RichText(
             textAlign: TextAlign.right,
             text: new TextSpan(
-              
               children: <TextSpan>[
                 new TextSpan(
                     text: totalForecastEnergy.toStringAsFixed(2),
@@ -928,11 +943,20 @@ class _ForecastEnergyWidget extends StatelessWidget {
     var summaryEnergy = 0.0;
     var forecastData = forecastState.getForecastData(date);
     if (forecastData != null) {
-      summaryEnergy = forecastData.forecastInGrids.reduce(
-        (value, element) {
-          return (value ?? 0.0) + (element ?? 0.0);
-        },
-      )!;
+      var summaryGrids = forecastData.forecastInGrids
+          .where((element) => (element ?? 0) < 0)
+          .toList();
+
+      if (summaryGrids.length > 0) {
+        summaryEnergy = summaryGrids.reduce(
+                (value, element) => (value ?? 0.0) + (element ?? 0.0)) ??
+            0;
+      }
+    }
+    summaryEnergy = -summaryEnergy;
+
+    if (summaryEnergy == 0) {
+      summaryEnergy = 0;
     }
 
     return GestureDetector(
@@ -1021,7 +1045,7 @@ class _ForecastEnergyWidgetListTileState
   @override
   Widget build(BuildContext context) {
     var dates = <DateTime>[];
-    for (var day = 0; day < 7; day++) {
+    for (var day = -1; day < 7; day++) {
       dates.add(DateTime.now().add(Duration(days: -day)));
     }
 

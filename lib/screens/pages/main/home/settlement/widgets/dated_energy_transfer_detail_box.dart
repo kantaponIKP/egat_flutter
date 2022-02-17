@@ -185,19 +185,27 @@ class _TitleFirstRow extends StatelessWidget {
 
     switch (direction) {
       case TransferDirection.CHOOSE_TO_BUY:
-        members.add(Text(AppLocalizations.of(context).translate('settlement-energyTransfer-chooseToBuy'),
+        members.add(Text(
+            AppLocalizations.of(context)
+                .translate('settlement-energyTransfer-chooseToBuy'),
             style: TextStyle(fontSize: 15, color: Color(0xFFF6645A))));
         break;
       case TransferDirection.BID_TO_BUY:
-        members.add(Text(AppLocalizations.of(context).translate('settlement-energyTransfer-bidToBuy'),
+        members.add(Text(
+            AppLocalizations.of(context)
+                .translate('settlement-energyTransfer-bidToBuy'),
             style: TextStyle(fontSize: 15, color: Color(0xFFF6645A))));
         break;
       case TransferDirection.OFFER_TO_SELL:
-        members.add(Text(AppLocalizations.of(context).translate('settlement-energyTransfer-offerToSell'),
+        members.add(Text(
+            AppLocalizations.of(context)
+                .translate('settlement-energyTransfer-offerToSell'),
             style: TextStyle(fontSize: 15, color: Color(0xFF99FF75))));
         break;
       case TransferDirection.OFFER_TO_SELL_BID:
-        members.add(Text(AppLocalizations.of(context).translate('settlement-energyTransfer-offerToSell'),
+        members.add(Text(
+            AppLocalizations.of(context)
+                .translate('settlement-energyTransfer-offerToSell'),
             style: TextStyle(fontSize: 15, color: Color(0xFF99FF75))));
         break;
     }
@@ -249,18 +257,18 @@ class _TitleSecondRow extends StatelessWidget {
     switch (status) {
       case EnergyTransferStatus.COMPLETED:
         displayColor = Color(0xFF99FF75);
-        displayStatus = AppLocalizations.of(context)
-              .translate('settlement-matched');
+        displayStatus =
+            AppLocalizations.of(context).translate('settlement-matched');
         break;
       case EnergyTransferStatus.SCHEDULED:
         displayColor = Color(0xFFF8E294);
-        displayStatus = AppLocalizations.of(context)
-              .translate('settlement-matched');
+        displayStatus =
+            AppLocalizations.of(context).translate('settlement-matched');
         break;
       default:
         displayColor = Color(0xFF99FF75);
-        displayStatus = AppLocalizations.of(context)
-              .translate('settlement-completed');
+        displayStatus =
+            AppLocalizations.of(context).translate('settlement-completed');
         break;
     }
 
@@ -268,8 +276,8 @@ class _TitleSecondRow extends StatelessWidget {
     if (targetName != null) {
       toTargetName = RichText(
         text: TextSpan(
-          text: '${AppLocalizations.of(context)
-              .translate('settlement-order-to')} ',
+          text:
+              '${AppLocalizations.of(context).translate('settlement-order-to')} ',
           style: TextStyle(
             color: Colors.white,
             fontSize: 12,
@@ -339,10 +347,16 @@ class _TitleSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var titleColor = const Color(0xFF473937);
+    if (direction == TransferDirection.OFFER_TO_SELL ||
+        direction == TransferDirection.CHOOSE_TO_BUY) {
+      titleColor = const Color(0xFF37453e);
+    }
+
     return GestureDetector(
       onTap: () => onExpansionChange?.call(!isExpanded),
       child: Container(
-        decoration: BoxDecoration(color: Color(0xFF3E3E3E)),
+        decoration: BoxDecoration(color: titleColor),
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 20),
           child: Column(

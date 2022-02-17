@@ -328,10 +328,15 @@ class _TitleSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var titleColor = const Color(0xFF473937);
+    if (marketType == MarketType.BILATERAL) {
+      titleColor = const Color(0xFF37453e);
+    }
+
     return GestureDetector(
       onTap: () => onExpansionChange?.call(!isExpanded),
       child: Container(
-        decoration: BoxDecoration(color: Color(0xFF3E3E3E)),
+        decoration: BoxDecoration(color: titleColor),
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 20),
           child: Column(

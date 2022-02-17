@@ -55,24 +55,6 @@ class CompletedChooseToBuyEnergyTransferInfoBox extends StatelessWidget {
           fontColor: Color(0xFF12875D),
         ),
         DatedEnergyDetailBoxItem(
-          name: 'Buyer imbalance amount',
-          value: '${tradeInfo.buyerImbalanceAmount.toStringAsFixed(3)} kWh',
-          fontSize: 13,
-          fontColor: Color(0xFFA10C09),
-        ),
-        DatedEnergyDetailBoxItem(
-          name: 'Buyer imbalance',
-          value: '${tradeInfo.buyerImbalance.toStringAsFixed(3)} THB',
-          fontSize: 13,
-          fontColor: Color(0xFFA10C09),
-        ),
-        DatedEnergyDetailBoxItem(
-          name:
-              AppLocalizations.of(context).translate('settlement-energyToBuy'),
-          value: '${tradeInfo.energyToBuy.toStringAsFixed(3)} kWh',
-          fontSize: 10,
-        ),
-        DatedEnergyDetailBoxItem(
           name:
               AppLocalizations.of(context).translate('settlement-energyTariff'),
           value: '${tradeInfo.energyTariff.toStringAsFixed(3)} THB/kWh',
@@ -83,6 +65,18 @@ class CompletedChooseToBuyEnergyTransferInfoBox extends StatelessWidget {
               AppLocalizations.of(context).translate('settlement-energyPrice'),
           value: '${tradeInfo.energyPrice.toStringAsFixed(3)} THB',
           fontSize: 10,
+        ),
+        DatedEnergyDetailBoxItem(
+          name: 'Buyer imbalance amount',
+          value: '${tradeInfo.buyerImbalanceAmount.toStringAsFixed(3)} kWh',
+          fontSize: 13,
+          fontColor: Color(0xFFA10C09),
+        ),
+        DatedEnergyDetailBoxItem(
+          name: 'Buyer imbalance',
+          value: '${tradeInfo.buyerImbalance.toStringAsFixed(3)} THB',
+          fontSize: 13,
+          fontColor: Color(0xFFA10C09),
         ),
         DatedEnergyDetailBoxItem(
           name: AppLocalizations.of(context)

@@ -63,7 +63,7 @@ class CompletedOfferToSellEnergyTransferInfoBox extends StatelessWidget {
         ),
         DatedEnergyDetailBoxItem(
           name: AppLocalizations.of(context).translate('settlement-sales'),
-          value: '${tradeInfo.sales.toStringAsFixed(3)} kWh',
+          value: '${tradeInfo.sales.toStringAsFixed(3)} THB',
           fontSize: 13,
           fontColor: Color(0xFFA10C09),
         ),
@@ -82,7 +82,7 @@ class CompletedOfferToSellEnergyTransferInfoBox extends StatelessWidget {
         ),
         DatedEnergyDetailBoxItem(
           name: AppLocalizations.of(context).translate('settlement-tradingFee'),
-          value: '${tradeInfo.tradingFee.toStringAsFixed(3)} THB/kWh',
+          value: '${tradeInfo.tradingFee.toStringAsFixed(3)} THB',
           fontSize: 10,
         ),
         DatedEnergyDetailBoxItem(

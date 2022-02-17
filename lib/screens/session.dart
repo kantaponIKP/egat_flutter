@@ -1,4 +1,27 @@
 import 'package:flutter/cupertino.dart';
+import 'package:get_it/get_it.dart';
+
+GetIt getIt = GetIt.instance;
+
+class GlobalLoginSession {
+  LoginSessionInfo? info;
+
+  GlobalLoginSession() {
+    info = null;
+  }
+
+  setAccessToken(LoginSessionInfo info) {
+    _setAccessToken(info);
+  }
+
+  setNoAccessToken() {
+    _setAccessToken(null);
+  }
+
+  _setAccessToken(LoginSessionInfo? session) {
+    info = session;
+  }
+}
 
 class LoginSessionInfo {
   final String accessToken;
@@ -13,7 +36,12 @@ class LoginSessionInfo {
 }
 
 class LoginSession extends ChangeNotifier {
-  LoginSessionInfo? info;
+  GlobalLoginSession _globalLoginSession = GlobalLoginSession();
+  LoginSession() {
+    _globalLoginSession = getIt.get<GlobalLoginSession>();
+  }
+
+  LoginSessionInfo? get info => _globalLoginSession.info;
 
   setAccessToken(LoginSessionInfo info) {
     _setAccessToken(info);
@@ -24,7 +52,11 @@ class LoginSession extends ChangeNotifier {
   }
 
   _setAccessToken(LoginSessionInfo? session) {
-    info = session;
+    if (session == null) {
+      _globalLoginSession.setNoAccessToken();
+    } else {
+      _globalLoginSession.setAccessToken(session);
+    }
 
     notifyListeners();
   }

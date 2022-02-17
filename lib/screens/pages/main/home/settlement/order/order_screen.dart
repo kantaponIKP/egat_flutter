@@ -116,6 +116,7 @@ class _OrderScreenState extends State<OrderScreen> {
                     _isBilateralSelected = !_isBilateralSelected;
                   });
                 },
+                color: const Color(0xFFabdbc3),
               ),
               _FilterCheckbox(
                 title: AppLocalizations.of(context)
@@ -126,6 +127,7 @@ class _OrderScreenState extends State<OrderScreen> {
                     _isPoolMarketSelected = !_isPoolMarketSelected;
                   });
                 },
+                color: const Color(0xFFcca19b),
               ),
             ],
           ),
@@ -138,11 +140,13 @@ class _OrderScreenState extends State<OrderScreen> {
 class _FilterCheckbox extends StatelessWidget {
   final String title;
   final bool isSelected;
+  final Color color;
   final void Function()? onTap;
 
   const _FilterCheckbox({
     required this.title,
     required this.isSelected,
+    required this.color,
     this.onTap,
     Key? key,
   }) : super(key: key);
@@ -153,7 +157,6 @@ class _FilterCheckbox extends StatelessWidget {
       children: [
         Checkbox(
           value: isSelected,
-          visualDensity: VisualDensity.compact,
           onChanged: onTap != null
               ? (_) {
                   onTap?.call();
@@ -165,7 +168,11 @@ class _FilterCheckbox extends StatelessWidget {
           child: Text(
             title,
             textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 13),
+            style: TextStyle(
+              fontSize: 13,
+              color: color,
+              fontWeight: FontWeight.w500,
+            ),
           ),
         ),
       ],
@@ -190,13 +197,14 @@ class _DataDisplaySection extends StatelessWidget {
     final infos = <TradeInfo>[...orderState.tradeInfos];
 
     if (!isBilateralSelected) {
-      infos.retainWhere((info) =>
+      infos.removeWhere((info) =>
           info is OpenOfferToSellTradeInfo ||
-          info is MatchedOfferToSellTradeInfoBox);
+          info is MatchedOfferToSellTradeInfo ||
+          info is MatchedChooseToBuyTradeInfo);
     }
 
     if (!isPoolMarketSelected) {
-      infos.retainWhere((info) =>
+      infos.removeWhere((info) =>
           info is MatchedBidToBuyTradeInfo ||
           info is MatchedOfferToSellBidTradeInfo);
     }

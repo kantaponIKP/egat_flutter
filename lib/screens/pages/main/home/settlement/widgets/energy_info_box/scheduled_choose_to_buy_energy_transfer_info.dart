@@ -50,12 +50,6 @@ class ScheduledChooseToBuyEnergyTransferInfoBox extends StatelessWidget {
         ),
         DatedEnergyDetailBoxItem(
           name:
-              AppLocalizations.of(context).translate('settlement-energyToBuy'),
-          value: '${tradeInfo.energyToBuy.toStringAsFixed(3)} kWh',
-          fontSize: 10,
-        ),
-        DatedEnergyDetailBoxItem(
-          name:
               AppLocalizations.of(context).translate('settlement-energyTariff'),
           value: '${tradeInfo.energyTariff.toStringAsFixed(3)} THB/kWh',
           fontSize: 10,

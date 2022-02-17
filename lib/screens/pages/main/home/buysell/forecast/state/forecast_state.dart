@@ -73,7 +73,7 @@ class ForecastState extends ChangeNotifier {
     final todayMidnight =
         DateTime(today.year, today.month, today.day).toLocal();
 
-    final day = dateMidnight.difference(todayMidnight).inDays.abs();
+    final day = -dateMidnight.difference(todayMidnight).inDays;
 
     if (!forecastDataOffsets.containsKey(day)) {
       return null;
