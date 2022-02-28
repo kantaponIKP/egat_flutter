@@ -75,7 +75,10 @@ class InvoiceScreen extends StatelessWidget {
   }
 
   _buildContent(BuildContext context, GetInvoiceResponse data) {
-    final toDateFormat = DateFormat('MMMM yyyy', AppLocalizations.of(context).getLocale().toString(),);
+    final toDateFormat = DateFormat(
+      'MMMM yyyy',
+      AppLocalizations.of(context).getLocale().toString(),
+    );
     final toDate = toDateFormat.format(data.issueDate);
 
     return Align(
@@ -294,7 +297,10 @@ class _InvoiceInfo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var issueDateFormat = DateFormat('dd/MMM/yyyy', AppLocalizations.of(context).getLocale().toString(),);
+    var issueDateFormat = DateFormat(
+      'dd/MMM/yyyy',
+      AppLocalizations.of(context).getLocale().toString(),
+    );
     var issueDateString = issueDateFormat.format(data.issueDate);
 
     return Padding(
@@ -455,6 +461,70 @@ class _ElectricUserInfo extends StatelessWidget {
   }
 }
 
+class _EnergySectionBase extends StatefulWidget {
+  final Widget title;
+  final List<Widget> contents;
+
+  _EnergySectionBase({
+    required this.title,
+    required this.contents,
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  State<_EnergySectionBase> createState() => __EnergySectionBaseState();
+}
+
+class __EnergySectionBaseState extends State<_EnergySectionBase> {
+  bool _expanded = false;
+
+  _switchExpanded() {
+    setState(() {
+      _expanded = !_expanded;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        GestureDetector(
+          onTap: _switchExpanded,
+          behavior: HitTestBehavior.opaque,
+          child: Column(
+            children: [
+              widget.title,
+              AnimatedRotation(
+                turns: _expanded ? 0.5 : 0,
+                duration: Duration(
+                  milliseconds: 200,
+                ),
+                child: Icon(
+                  Icons.keyboard_arrow_down,
+                  size: 24,
+                ),
+              )
+            ],
+          ),
+        ),
+        AnimatedSize(
+          duration: const Duration(milliseconds: 200),
+          clipBehavior: Clip.hardEdge,
+          child: SizedBox(
+            height: _expanded ? null : 0,
+            child: Column(
+              children: [
+                SizedBox(height: 8),
+                ...widget.contents,
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
 class _EnergyGridPaymentSection extends StatelessWidget {
   final GetInvoiceResponse data;
 
@@ -465,14 +535,13 @@ class _EnergyGridPaymentSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        _ElectricInfoHeader(
-          title: 'รายละเอียดค่าซื้อไฟฟ้าจาก Grid (Grid Used)',
-          unit1: 'kWh',
-          unit2: 'Baht',
-        ),
-        SizedBox(height: 8),
+    return _EnergySectionBase(
+      title: _ElectricInfoHeader(
+        title: 'รายละเอียดค่าซื้อไฟฟ้าจาก Grid (Grid Used)',
+        unit1: 'kWh',
+        unit2: 'Baht',
+      ),
+      contents: [
         _ElectricInfoItem(
           title: 'ค่าพลังงานไฟฟ้า (Grid Used)',
           value1: data.gridUsedUnit,
@@ -517,19 +586,13 @@ class _EnergyTradingPaymentSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        _ElectricInfoHeader(
-          title: 'รายละเอียดค่าซื้อขายพลังงานไฟฟ้า (Energy Trading Payment)',
-          unit1: 'kWh',
-          unit2: 'Baht',
-        ),
-        SizedBox(height: 8),
-        _ElectricInfoItem(
-          title: 'Net Energy Sales',
-          value1: data.netEnergySalesUnit,
-          value2: data.netEnergySalesBaht,
-        ),
+    return _EnergySectionBase(
+      title: _ElectricInfoHeader(
+        title: 'รายละเอียดค่าซื้อขายพลังงานไฟฟ้า (Energy Trading Payment)',
+        unit1: 'kWh',
+        unit2: 'Baht',
+      ),
+      contents: [
         _ElectricInfoItem(
           title: 'Net Energy Buys',
           value1: data.netEnergyBuyUnit,
@@ -594,14 +657,13 @@ class _EnergyWheelingChargePaymentSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        _ElectricInfoHeader(
-          title: 'รายละเอียดค่าใช้บริการหรือการเชื่อมต่อระบบโครงข่ายไฟฟ้า',
-          secondaryTitle: '(Wheeling Charge)',
-          unit2: 'Baht',
-        ),
-        SizedBox(height: 8),
+    return _EnergySectionBase(
+      title: _ElectricInfoHeader(
+        title: 'รายละเอียดค่าใช้บริการหรือการเชื่อมต่อระบบโครงข่ายไฟฟ้า',
+        secondaryTitle: '(Wheeling Charge)',
+        unit2: 'Baht',
+      ),
+      contents: [
         _ElectricInfoItem(
           title: 'ค่าบริการเสริมความมั่นคงของระบบไฟฟ้า (AS)',
           description: 'ส่วนลดค่าพลังงานไฟฟ้า Baht/kWh',
@@ -653,7 +715,10 @@ class _SummarySection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var toDateFormat = DateFormat('MMMM yyyy', AppLocalizations.of(context).getLocale().toString(),);
+    var toDateFormat = DateFormat(
+      'MMMM yyyy',
+      AppLocalizations.of(context).getLocale().toString(),
+    );
     var toDate = toDateFormat.format(data.issueDate);
 
     return _SummaryValue(
