@@ -121,7 +121,7 @@ class GetPreliminaryInvoiceResponse {
     assert(json['gridUsedUnit'] is num);
     assert(json['gridUsedBaht'] is num);
 
-    assert(json['gridServiceCharge'] is num);
+    // assert(json['gridServiceCharge'] is num);
     assert(json['gridFt'] is num);
     assert(json['gridDiscount'] is num);
     assert(json['gridNetWheelingChargeBeforeVat'] is num);
@@ -135,7 +135,7 @@ class GetPreliminaryInvoiceResponse {
     assert(json['wheelingChargeVat'] is num);
     assert(json['wheelingChargeNet'] is num);
 
-    assert(json['estimateNetPayment'] is num);
+    // assert(json['estimateNetPayment'] is num);
 
     return GetPreliminaryInvoiceResponse(
       electricUserName: json['electricUserName'],
@@ -170,7 +170,9 @@ class GetPreliminaryInvoiceResponse {
           (json['netEnergyTradingPayment'] as num).toDouble(),
       gridUsedUnit: (json['gridUsedUnit'] as num).toDouble(),
       gridUsedBaht: (json['gridUsedBaht'] as num).toDouble(),
-      gridServiceCharge: (json['gridServiceCharge'] as num).toDouble(),
+      gridServiceCharge: json['gridServiceCharge'] != null
+          ? (json['gridServiceCharge'] as num).toDouble()
+          : 0,
       gridFt: (json['gridFt'] as num).toDouble(),
       gridDiscount: (json['gridDiscount'] as num).toDouble(),
       gridNetWheelingChargeBeforeVat:
@@ -188,7 +190,9 @@ class GetPreliminaryInvoiceResponse {
           (json['wheelingChargeBeforeVat'] as num).toDouble(),
       wheelingChargeVat: (json['wheelingChargeVat'] as num).toDouble(),
       wheelingChargeNet: (json['wheelingChargeNet'] as num).toDouble(),
-      estimateNetPayment: (json['estimateNetPayment'] as num).toDouble(),
+      estimateNetPayment: json['estimateNetPayment'] != null
+          ? (json['estimateNetPayment'] as num).toDouble()
+          : 0,
     );
   }
 }
