@@ -24,6 +24,11 @@ class GetDailySettlementReportResponse {
   final double buyerImbalance;
   final double netEnergyPrice;
 
+  final double buyFromGrid;
+  final double sellToGrid;
+  final double buyFromGridAmount;
+  final double sellToGridAmount;
+
   final List<SettlementReportInfo> settlementReportInfos;
 
   const GetDailySettlementReportResponse({
@@ -45,6 +50,10 @@ class GetDailySettlementReportResponse {
     required this.sellerImbalance,
     required this.buyerImbalance,
     required this.netEnergyPrice,
+    required this.buyFromGrid,
+    required this.sellToGrid,
+    required this.buyFromGridAmount,
+    required this.sellToGridAmount,
     required this.settlementReportInfos,
   });
 
@@ -94,6 +103,10 @@ class GetDailySettlementReportResponse {
       sellerImbalance: (json['sellerImbalance'] as num).toDouble(),
       buyerImbalance: (json['buyerImbalance'] as num).toDouble(),
       netEnergyPrice: (json['netEnergyPrice'] as num).toDouble(),
+      buyFromGrid: (json['buyFromGrid'] as num).toDouble(),
+      sellToGrid: (json['sellToGrid'] as num).toDouble(),
+      buyFromGridAmount: (json['buyFromGridAmount'] as num).toDouble(),
+      sellToGridAmount: (json['sellToGridAmount'] as num).toDouble(),
       settlementReportInfos: (json['settlementReportInfos'] as List<dynamic>)
           .map((e) => SettlementReportInfo.fromJson(e))
           .toList(),

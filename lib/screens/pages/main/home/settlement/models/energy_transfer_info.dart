@@ -38,6 +38,12 @@ class EnergyTransferInfo {
       case 'OFFER_TO_SELL_BID':
         direction = TransferDirection.OFFER_TO_SELL_BID;
         break;
+      case 'GRID_BUY':
+        direction = TransferDirection.GRID_BUY;
+        break;
+      case 'GRID_SELL':
+        direction = TransferDirection.GRID_SELL;
+        break;
       default:
         throw Exception('Unknown direction: $directionString');
     }
@@ -85,6 +91,14 @@ class EnergyTransferInfo {
     if (direction == TransferDirection.OFFER_TO_SELL_BID &&
         status == EnergyTransferStatus.COMPLETED) {
       return CompletedOfferToSellBidEnergyTransferInfo.fromJson(json);
+    }
+    if (direction == TransferDirection.GRID_BUY &&
+        status == EnergyTransferStatus.SCHEDULED) {
+      return GridBuyInfo.fromJson(json);
+    }
+    if (direction == TransferDirection.GRID_SELL &&
+        status == EnergyTransferStatus.SCHEDULED) {
+      return GridSellInfo.fromJson(json);
     }
 
     throw Exception('Unknown trade info: $json');
@@ -650,6 +664,96 @@ class ScheduledOfferToSellEnergyTransferInfo extends EnergyTransferInfo {
       sellingPrice: json['sellingPrice'].toDouble(),
       netSales: json['netSales'].toDouble(),
       tradingFee: json['tradingFee'].toDouble(),
+      netEnergyPrice: json['netEnergyPrice'].toDouble(),
+    );
+  }
+}
+
+class GridBuyInfo extends EnergyTransferInfo {
+  final double usedAmount;
+  final double netBuy;
+  final double netEnergyPrice;
+
+  GridBuyInfo({
+    required DateTime date,
+    required String contractId,
+    required List<String> targetName,
+    required this.usedAmount,
+    required this.netBuy,
+    required this.netEnergyPrice,
+  }) : super(
+          direction: TransferDirection.GRID_BUY,
+          status: EnergyTransferStatus.SCHEDULED,
+          date: date,
+          contractId: contractId,
+          targetName: targetName,
+        );
+
+  factory GridBuyInfo.fromJson(
+    Map<String, dynamic> json,
+  ) {
+    assert(json['contractId'] is String);
+    assert(json['targetName'] is List);
+    assert(json['date'] is String);
+    assert(json['commitedAmount'] is num);
+    assert(json['sellingPrice'] is num);
+    assert(json['netSales'] is num);
+    assert(json['tradingFee'] is num);
+    assert(json['netEnergyPrice'] is num);
+
+    return GridBuyInfo(
+      contractId: json['contractId'] as String,
+      targetName: (json['targetName'] as List<dynamic>)
+          .map((e) => e.toString())
+          .toList(),
+      date: DateTime.parse(json['date']),
+      usedAmount: json['usedAmount'].toDouble(),
+      netBuy: json['netBuy'].toDouble(),
+      netEnergyPrice: json['netEnergyPrice'].toDouble(),
+    );
+  }
+}
+
+class GridSellInfo extends EnergyTransferInfo {
+  final double soldAmount;
+  final double netSell;
+  final double netEnergyPrice;
+
+  GridSellInfo({
+    required DateTime date,
+    required String contractId,
+    required List<String> targetName,
+    required this.soldAmount,
+    required this.netSell,
+    required this.netEnergyPrice,
+  }) : super(
+          direction: TransferDirection.GRID_BUY,
+          status: EnergyTransferStatus.SCHEDULED,
+          date: date,
+          contractId: contractId,
+          targetName: targetName,
+        );
+
+  factory GridSellInfo.fromJson(
+    Map<String, dynamic> json,
+  ) {
+    assert(json['contractId'] is String);
+    assert(json['targetName'] is List);
+    assert(json['date'] is String);
+    assert(json['commitedAmount'] is num);
+    assert(json['sellingPrice'] is num);
+    assert(json['netSales'] is num);
+    assert(json['tradingFee'] is num);
+    assert(json['netEnergyPrice'] is num);
+
+    return GridSellInfo(
+      contractId: json['contractId'] as String,
+      targetName: (json['targetName'] as List<dynamic>)
+          .map((e) => e.toString())
+          .toList(),
+      date: DateTime.parse(json['date']),
+      soldAmount: json['soldAmount'].toDouble(),
+      netSell: json['netSell'].toDouble(),
       netEnergyPrice: json['netEnergyPrice'].toDouble(),
     );
   }

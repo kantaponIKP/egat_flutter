@@ -26,6 +26,11 @@ class GetMonthlySettlementReportResponse {
   final double netEnergySalesPrice;
   final double netEnergyBuyPrice;
 
+  final double buyFromGrid;
+  final double sellToGrid;
+  final double buyFromGridAmount;
+  final double sellToGridAmount;
+
   const GetMonthlySettlementReportResponse({
     required this.completedContracts,
     required this.completedContractsShortTermBilateral,
@@ -47,6 +52,10 @@ class GetMonthlySettlementReportResponse {
     required this.wheelingCharge,
     required this.netEnergySalesPrice,
     required this.netEnergyBuyPrice,
+    required this.buyFromGrid,
+    required this.sellToGrid,
+    required this.buyFromGridAmount,
+    required this.sellToGridAmount,
   });
 
   factory GetMonthlySettlementReportResponse.fromJson(
@@ -72,6 +81,10 @@ class GetMonthlySettlementReportResponse {
     assert(json['wheelingCharge'] is num);
     assert(json['netEnergySalesPrice'] is num);
     assert(json['netEnergyBuyPrice'] is num);
+    assert(json['buyFromGrid'] is num);
+    assert(json['sellToGrid'] is num);
+    assert(json['buyFromGridAmount'] is num);
+    assert(json['sellToGridAmount'] is num);
 
     return GetMonthlySettlementReportResponse(
       completedContracts: (json['completedContracts'] as num).toDouble(),
@@ -100,6 +113,10 @@ class GetMonthlySettlementReportResponse {
       wheelingCharge: (json['wheelingCharge'] as num).toDouble(),
       netEnergySalesPrice: (json['netEnergySalesPrice'] as num).toDouble(),
       netEnergyBuyPrice: (json['netEnergyBuyPrice'] as num).toDouble(),
+      buyFromGrid: (json['buyFromGrid'] as num).toDouble(),
+      sellToGrid: (json['sellToGrid'] as num).toDouble(),
+      buyFromGridAmount: (json['buyFromGridAmount'] as num).toDouble(),
+      sellToGridAmount: (json['sellToGridAmount'] as num).toDouble(),
     );
   }
 }

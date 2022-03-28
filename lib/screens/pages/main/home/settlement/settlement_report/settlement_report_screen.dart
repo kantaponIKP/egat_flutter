@@ -514,6 +514,60 @@ class _MonthlyDataDisplaySection extends StatelessWidget {
                   text: TextSpan(
                     children: [
                       TextSpan(
+                        text: 'Buy from Grid amount',
+                      ),
+                    ],
+                  ),
+                ),
+                value:
+                    Text('${report.buyFromGridAmount.toStringAsFixed(2)} THB'),
+                textStyle: defaulTextStyle,
+              ),
+              CollapsableReportRow(
+                title: RichText(
+                  text: TextSpan(
+                    children: [
+                      TextSpan(
+                        text: 'Buy from Grid',
+                      ),
+                    ],
+                  ),
+                ),
+                value: Text('${report.buyFromGrid.toStringAsFixed(2)} THB'),
+                textStyle: defaulTextStyle,
+              ),
+              CollapsableReportRow(
+                title: RichText(
+                  text: TextSpan(
+                    children: [
+                      TextSpan(
+                        text: 'Sell to Grid amount',
+                      ),
+                    ],
+                  ),
+                ),
+                value:
+                    Text('${report.sellToGridAmount.toStringAsFixed(2)} THB'),
+                textStyle: defaulTextStyle,
+              ),
+              CollapsableReportRow(
+                title: RichText(
+                  text: TextSpan(
+                    children: [
+                      TextSpan(
+                        text: 'Sell to Grid',
+                      ),
+                    ],
+                  ),
+                ),
+                value: Text('${report.sellToGrid.toStringAsFixed(2)} THB'),
+                textStyle: defaulTextStyle,
+              ),
+              CollapsableReportRow(
+                title: RichText(
+                  text: TextSpan(
+                    children: [
+                      TextSpan(
                         text: "NET Sales",
                       ),
                     ],
@@ -594,6 +648,60 @@ class _MonthlyDataDisplaySection extends StatelessWidget {
                 ),
                 value: Text(
                     '${report.netEnergyBuyPrice.toStringAsFixed(2)} THB/kWh'),
+                textStyle: defaulTextStyle,
+              ),
+              CollapsableReportRow(
+                title: RichText(
+                  text: TextSpan(
+                    children: [
+                      TextSpan(
+                        text: 'Buy from Grid amount',
+                      ),
+                    ],
+                  ),
+                ),
+                value:
+                    Text('${report.buyFromGridAmount.toStringAsFixed(2)} THB'),
+                textStyle: defaulTextStyle,
+              ),
+              CollapsableReportRow(
+                title: RichText(
+                  text: TextSpan(
+                    children: [
+                      TextSpan(
+                        text: 'Buy from Grid',
+                      ),
+                    ],
+                  ),
+                ),
+                value: Text('${report.buyFromGrid.toStringAsFixed(2)} THB'),
+                textStyle: defaulTextStyle,
+              ),
+              CollapsableReportRow(
+                title: RichText(
+                  text: TextSpan(
+                    children: [
+                      TextSpan(
+                        text: 'Sell to Grid amount',
+                      ),
+                    ],
+                  ),
+                ),
+                value:
+                    Text('${report.sellToGridAmount.toStringAsFixed(2)} THB'),
+                textStyle: defaulTextStyle,
+              ),
+              CollapsableReportRow(
+                title: RichText(
+                  text: TextSpan(
+                    children: [
+                      TextSpan(
+                        text: 'Sell to Grid',
+                      ),
+                    ],
+                  ),
+                ),
+                value: Text('${report.sellToGrid.toStringAsFixed(2)} THB'),
                 textStyle: defaulTextStyle,
               ),
             ],

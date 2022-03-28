@@ -208,6 +208,28 @@ class _TitleFirstRow extends StatelessWidget {
                 .translate('settlement-energyTransfer-offerToSell'),
             style: TextStyle(fontSize: 15, color: Color(0xFF99FF75))));
         break;
+      case TransferDirection.GRID_SELL:
+        members.add(
+          Text(
+            'Sell to Grid',
+            style: TextStyle(
+              fontSize: 15,
+              color: Color(0xFF99FF75),
+            ),
+          ),
+        );
+        break;
+      case TransferDirection.GRID_BUY:
+        members.add(
+          Text(
+            'Buy from Grid',
+            style: TextStyle(
+              fontSize: 15,
+              color: Color(0xFFF6645A),
+            ),
+          ),
+        );
+        break;
     }
 
     if (contractId != null) {

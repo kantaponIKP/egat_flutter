@@ -52,7 +52,10 @@ class EnergyTransferGraph extends StatelessWidget {
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Text(AppLocalizations.of(context).translate('settlement-energyTransfer-completed'),),
+                child: Text(
+                  AppLocalizations.of(context)
+                      .translate('settlement-energyTransfer-completed'),
+                ),
               ),
               Container(
                 width: 10,
@@ -64,7 +67,10 @@ class EnergyTransferGraph extends StatelessWidget {
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Text(AppLocalizations.of(context).translate('settlement-energyTransfer-scheduled'),),
+                child: Text(
+                  AppLocalizations.of(context)
+                      .translate('settlement-energyTransfer-scheduled'),
+                ),
               ),
             ],
           ),

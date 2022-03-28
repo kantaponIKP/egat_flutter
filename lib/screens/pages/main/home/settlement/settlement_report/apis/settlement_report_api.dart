@@ -56,6 +56,10 @@ class SettlementReportApi {
       wheelingCharge: 1,
       netEnergySalesPrice: 1,
       netEnergyBuyPrice: 1,
+      buyFromGrid: 1,
+      sellToGrid: 1,
+      buyFromGridAmount: 1,
+      sellToGridAmount: 1,
     );
   }
 
@@ -105,6 +109,10 @@ class SettlementReportApi {
       netEnergyPrice: 1,
       buyerImbalance: 0,
       netBuy: 0,
+      buyFromGrid: 0,
+      sellToGrid: 0,
+      buyFromGridAmount: 0,
+      sellToGridAmount: 0,
       settlementReportInfos: [
         BilateralBuyerEnergyShortfallSettlementReportInfo(
           energyCommitted: 1,

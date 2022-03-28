@@ -1,5 +1,7 @@
 import 'package:egat_flutter/i18n/app_localizations.dart';
 import 'package:egat_flutter/screens/pages/main/home/settlement/models/contract_direction.dart';
+import 'package:egat_flutter/screens/pages/main/home/settlement/widgets/energy_info_box/grid_buy_energy_transfer_info.dart';
+import 'package:egat_flutter/screens/pages/main/home/settlement/widgets/energy_info_box/grid_sell_energy_transfer_info.dart';
 import 'package:egat_flutter/screens/pages/main/states/main_screen_title_state.dart';
 import 'package:egat_flutter/screens/widgets/loading_dialog.dart';
 import 'package:egat_flutter/screens/widgets/show_exception.dart';
@@ -99,6 +101,16 @@ class _DataDisplaySection extends StatelessWidget {
         ));
       } else if (tradeInfo is ScheduledOfferToSellEnergyTransferInfo) {
         boxes.add(ScheduledOfferToSellEnergyTransferInfoBox(
+          tradeInfo: tradeInfo,
+          defaultExpanded: defaultExpanded,
+        ));
+      } else if (tradeInfo is GridBuyInfo) {
+        boxes.add(GridBuyEnergyTransferInfoBox(
+          tradeInfo: tradeInfo,
+          defaultExpanded: defaultExpanded,
+        ));
+      } else if (tradeInfo is GridSellInfo) {
+        boxes.add(GridSellEnergyTransferInfoBox(
           tradeInfo: tradeInfo,
           defaultExpanded: defaultExpanded,
         ));
