@@ -37,7 +37,7 @@ class GridSellEnergyTransferInfoBox extends StatelessWidget {
     return DatedEnergyDetail(
       direction: TransferDirection.GRID_SELL,
       date: Text(dateText),
-      contractId: tradeInfo.contractId,
+      contractId: null,
       status: EnergyTransferStatus.COMPLETED,
       targetName: tradeInfo.targetName.join(', '),
       defaultExpanded: defaultExpanded,

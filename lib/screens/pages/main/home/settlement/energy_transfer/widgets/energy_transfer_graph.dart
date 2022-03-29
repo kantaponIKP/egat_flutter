@@ -140,6 +140,12 @@ class _BarGraphState extends State<_BarGraph> {
       } else if (data is ScheduledOfferToSellEnergyTransferInfo) {
         committedValue = data.commitedAmount;
         actualValue = 0;
+      } else if (data is GridBuyInfo) {
+        committedValue = 0;
+        actualValue = -data.netBuy;
+      } else if (data is GridSellInfo) {
+        committedValue = 0;
+        actualValue = -data.netSell;
       }
 
       committedData[diffHours] = committedData[diffHours] + committedValue;

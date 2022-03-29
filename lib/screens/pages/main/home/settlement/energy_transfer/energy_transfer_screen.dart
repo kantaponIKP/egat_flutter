@@ -35,9 +35,12 @@ class _DataDisplaySection extends StatelessWidget {
 
   final bool isPoolMarketSelected;
 
+  final bool isGridBuySellSelected;
+
   const _DataDisplaySection({
     required this.isBilateralSelected,
     required this.isPoolMarketSelected,
+    required this.isGridBuySellSelected,
     Key? key,
   }) : super(key: key);
 
@@ -59,6 +62,12 @@ class _DataDisplaySection extends StatelessWidget {
       infos.removeWhere((info) =>
           info.direction == TransferDirection.BID_TO_BUY ||
           info.direction == TransferDirection.OFFER_TO_SELL_BID);
+    }
+
+    if (!isGridBuySellSelected) {
+      infos.removeWhere((info) =>
+          info.direction == TransferDirection.GRID_BUY ||
+          info.direction == TransferDirection.GRID_SELL);
     }
 
     var defaultExpanded = true;
@@ -192,7 +201,7 @@ class _DateSelectionDropdown extends StatelessWidget {
     final selectedDate = selectedDateState.selectedDate;
 
     final now = DateTime.now();
-    final maxDate = DateTime(selectedDate.year, selectedDate.month, 0).day;
+    final maxDate = DateTime(selectedDate.year, selectedDate.month + 1, 0).day;
 
     final selectableDates = <DateTime>[];
     if (now.month == selectedDate.month && now.year == selectedDate.year) {
@@ -268,9 +277,11 @@ class _DateSelectionDropdown extends StatelessWidget {
 class _EnergyTransferScreenState extends State<EnergyTransferScreen> {
   bool _isBilateralSelected = true;
   bool _isPoolMarketSelected = true;
+  bool _isGridBuySellSelected = true;
 
   bool get isBilateralSelected => _isBilateralSelected;
   bool get isPoolMarketSelected => _isPoolMarketSelected;
+  bool get isGridBuySellSelected => _isGridBuySellSelected;
 
   @override
   Widget build(BuildContext context) {
@@ -322,6 +333,7 @@ class _EnergyTransferScreenState extends State<EnergyTransferScreen> {
                           child: _DataDisplaySection(
                             isBilateralSelected: isBilateralSelected,
                             isPoolMarketSelected: isPoolMarketSelected,
+                            isGridBuySellSelected: isGridBuySellSelected,
                           ),
                         ),
                       ],
@@ -368,6 +380,16 @@ class _EnergyTransferScreenState extends State<EnergyTransferScreen> {
                   });
                 },
                 color: const Color(0xFFcca19b),
+              ),
+              _FilterCheckbox(
+                title: 'Grid Buy/Sell',
+                isSelected: _isGridBuySellSelected,
+                onTap: () {
+                  setState(() {
+                    _isGridBuySellSelected = !_isGridBuySellSelected;
+                  });
+                },
+                color: const Color(0xFFFFFFFF),
               ),
             ],
           ),

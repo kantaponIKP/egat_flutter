@@ -374,6 +374,10 @@ class _TitleSection extends StatelessWidget {
         direction == TransferDirection.CHOOSE_TO_BUY) {
       titleColor = const Color(0xFF37453e);
     }
+    if (direction == TransferDirection.GRID_BUY ||
+        direction == TransferDirection.GRID_SELL) {
+      titleColor = const Color(0xFF3E3E3E);
+    }
 
     return GestureDetector(
       onTap: () => onExpansionChange?.call(!isExpanded),

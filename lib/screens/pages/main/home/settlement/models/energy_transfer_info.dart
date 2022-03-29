@@ -92,12 +92,10 @@ class EnergyTransferInfo {
         status == EnergyTransferStatus.COMPLETED) {
       return CompletedOfferToSellBidEnergyTransferInfo.fromJson(json);
     }
-    if (direction == TransferDirection.GRID_BUY &&
-        status == EnergyTransferStatus.SCHEDULED) {
+    if (direction == TransferDirection.GRID_BUY) {
       return GridBuyInfo.fromJson(json);
     }
-    if (direction == TransferDirection.GRID_SELL &&
-        status == EnergyTransferStatus.SCHEDULED) {
+    if (direction == TransferDirection.GRID_SELL) {
       return GridSellInfo.fromJson(json);
     }
 
@@ -695,10 +693,8 @@ class GridBuyInfo extends EnergyTransferInfo {
     assert(json['contractId'] is String);
     assert(json['targetName'] is List);
     assert(json['date'] is String);
-    assert(json['commitedAmount'] is num);
-    assert(json['sellingPrice'] is num);
-    assert(json['netSales'] is num);
-    assert(json['tradingFee'] is num);
+    assert(json['usedAmount'] is num);
+    assert(json['netBuy'] is num);
     assert(json['netEnergyPrice'] is num);
 
     return GridBuyInfo(
@@ -727,7 +723,7 @@ class GridSellInfo extends EnergyTransferInfo {
     required this.netSell,
     required this.netEnergyPrice,
   }) : super(
-          direction: TransferDirection.GRID_BUY,
+          direction: TransferDirection.GRID_SELL,
           status: EnergyTransferStatus.SCHEDULED,
           date: date,
           contractId: contractId,
@@ -740,10 +736,8 @@ class GridSellInfo extends EnergyTransferInfo {
     assert(json['contractId'] is String);
     assert(json['targetName'] is List);
     assert(json['date'] is String);
-    assert(json['commitedAmount'] is num);
-    assert(json['sellingPrice'] is num);
-    assert(json['netSales'] is num);
-    assert(json['tradingFee'] is num);
+    assert(json['soldAmount'] is num);
+    assert(json['netSell'] is num);
     assert(json['netEnergyPrice'] is num);
 
     return GridSellInfo(

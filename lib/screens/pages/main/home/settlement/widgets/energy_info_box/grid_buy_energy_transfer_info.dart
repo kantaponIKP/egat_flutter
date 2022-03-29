@@ -35,20 +35,20 @@ class GridBuyEnergyTransferInfoBox extends StatelessWidget {
         "${AppLocalizations.of(context).translate('settlement-deliveryTime')} $timeStartString-$timeEndString";
 
     return DatedEnergyDetail(
-      direction: TransferDirection.GRID_SELL,
+      direction: TransferDirection.GRID_BUY,
       date: Text(dateText),
-      contractId: tradeInfo.contractId,
+      contractId: null,
       status: EnergyTransferStatus.COMPLETED,
       targetName: tradeInfo.targetName.join(', '),
       defaultExpanded: defaultExpanded,
       items: [
         DatedEnergyDetailBoxItem(
-          name: 'Sold amount(Actual)',
+          name: 'Buy amount(Actual)',
           value: '${tradeInfo.usedAmount.toStringAsFixed(3)} kWh',
           fontSize: 13,
         ),
         DatedEnergyDetailBoxItem(
-          name: 'NET Sell',
+          name: 'NET Buy',
           value: '${tradeInfo.netBuy.toStringAsFixed(3)} THB',
           fontSize: 13,
         ),
