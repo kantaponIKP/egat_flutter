@@ -200,14 +200,14 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
               },
               validator: (value) {
                 if (value == null || value.trim().length == 0) {
-                  return "Required";
+                  return AppLocalizations.of(context).translate('validation-required');
                 } else if (value.length < 6) {
-                  return "Must be contain at least 6 digits";
+                  return AppLocalizations.of(context).translate('validation-mustBeContain-6digits');
                 }
                 return null;
               },
               keyboardType: TextInputType.visiblePassword,
-              maxLength: 24,
+              maxLength: 50,
             ),
           ),
           Container(
@@ -237,16 +237,16 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
               },
               validator: (value) {
                 if (value == null || value.trim().length == 0) {
-                  return "Required";
+                  return AppLocalizations.of(context).translate('validation-required');
                 } else if (value.length < 6) {
-                  return "Must be contain at least 6 digits";
+                  return AppLocalizations.of(context).translate('validation-mustBeContain-6digits');
                 } else if (!_isPasswordValid(value)) {
-                  return "Password must be including UPPER/lowercase and \nthe number";
+                  return AppLocalizations.of(context).translate('validation-password-MustBe');
                 }
                 return null;
               },
               keyboardType: TextInputType.visiblePassword,
-              maxLength: 24,
+              maxLength: 50,
             ),
           ),
           Container(
@@ -277,17 +277,17 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
               validator: (value) {
                 //TODO: bug??
                 if (value == null || value.trim().length == 0) {
-                  return "Required";
+                  return AppLocalizations.of(context).translate('validation-required');
                 } else if (value.length < 6) {
-                  return "Must be contain at least 6 digits";
+                  return AppLocalizations.of(context).translate('validation-mustBeContain-6digits');
                 } else if (value != _newPasswordController!.text) {
-                  return "Password doesn't match";
+                  return AppLocalizations.of(context).translate('validation-password-NotMatch');
                 } else {
                   return null;
                 }
               },
               keyboardType: TextInputType.visiblePassword,
-              maxLength: 24,
+              maxLength: 50,
             ),
           ),
         ],

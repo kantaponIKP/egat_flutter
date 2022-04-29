@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 
+import '../../login/state/login_model.dart';
 import 'states/main_screen_navigation_state.dart';
 import 'widgets/logo_appbar.dart';
 import 'widgets/navigation_menu_widget.dart';

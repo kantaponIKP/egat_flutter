@@ -76,7 +76,9 @@ class _LanguageButtonState extends State<LanguageButton> {
     } catch (e) {
       showException(context, e.toString());
     } finally {
-      await hideLoading();
+      Future.delayed(const Duration(milliseconds: 200), () async {
+        await hideLoading();
+      });
     }
   }
 }

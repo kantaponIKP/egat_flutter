@@ -166,7 +166,7 @@ class _MeterScreenState extends State<MeterScreen> {
                 labelText: '${AppLocalizations.of(context).translate('meter-name')}',
               ),
               keyboardType: TextInputType.text,
-              maxLength: 24,
+              maxLength: 50,
               onChanged: (newValue) {
                 _setValidated();
               },
@@ -237,7 +237,7 @@ class _MeterScreenState extends State<MeterScreen> {
                 ),
               ),
               keyboardType: TextInputType.text,
-              maxLength: 24,
+              maxLength: 255,
             ),
           ),
         ],

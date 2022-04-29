@@ -291,6 +291,7 @@ class EgatHomePage extends StatefulWidget {
 }
 
 class _EgatHomePageState extends State<EgatHomePage> {
+
   @override
   Widget build(BuildContext context) {
     return LoginScreen();

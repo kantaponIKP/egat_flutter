@@ -144,19 +144,16 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8.0),
       ),
-      child: InkWell(
-        onTap: () {},
-        child: SizedBox(
-          child: Center(
-              child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(children: [
-              _buildForm(context),
-              SizedBox(height: 32),
-              _buildChangePasswordButton(),
-            ]),
-          )),
-        ),
+      child: SizedBox(
+        child: Center(
+            child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(children: [
+            _buildForm(context),
+            SizedBox(height: 32),
+            _buildChangePasswordButton(),
+          ]),
+        )),
       ),
     );
   }
@@ -226,7 +223,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                 return null;
               },
               keyboardType: TextInputType.visiblePassword,
-              maxLength: 24,
+              maxLength: 50,
             ),
           ),
           Container(
@@ -265,7 +262,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                 return null;
               },
               keyboardType: TextInputType.visiblePassword,
-              maxLength: 24,
+              maxLength: 50,
             ),
           ),
           Container(
@@ -306,7 +303,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                 }
               },
               keyboardType: TextInputType.visiblePassword,
-              maxLength: 24,
+              maxLength: 50,
             ),
           ),
         ],

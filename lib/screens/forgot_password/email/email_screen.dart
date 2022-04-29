@@ -172,7 +172,7 @@ class _EmailScreenState extends State<EmailScreen> {
                 return null;
               },
               keyboardType: TextInputType.emailAddress,
-              maxLength: 24,
+              maxLength: 255,
             ),
           ),
         ],

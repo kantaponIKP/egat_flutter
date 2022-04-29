@@ -340,7 +340,7 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
                 return null;
               },
               keyboardType: TextInputType.emailAddress,
-              maxLength: 120,
+              maxLength: 255,
             ),
           ),
         ],

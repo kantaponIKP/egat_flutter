@@ -99,11 +99,13 @@
   "required": "จำเป็น",
   "confirm": "ยืนยัน",
 
+  "validation-email": "กรุณากรอกอีเมล",
+  "validation-password": "กรุณากรอกรหัสผ่าน",
   "validation-required": "จำเป็น",
   "validation-invalidEmailAddress": "อีเมลไม่ถูกต้อง",
-  "validation-mustBeContain-6digits": "ต้องเป็นตัวเลขอย่างน้อย 6 หลัก",
+  "validation-mustBeContain-6digits": "ต้องมีอย่างอย่างน้อย 6 ตัวอักษร",
   "validation-mustBeContain-8or10digits": "ต้องเป็นตัวเลข 8 หรือ 10 หลัก",
-  "validation-mustBeContain-10digits": "ต้องเป็นตัวเลข 6 หลัก",
+  "validation-mustBeContain-10digits": "ต้องเป็นตัวเลข 10 หลัก",
   "validation-password-MustBe": "รหัสผ่านต้องประกอบด้วย ตัวอักษรภาษาอังกฤษตัวใหญ่,\nตัวเล็ก และตัวเลข อย่างละ 1 ตัว",
   "validation-password-NotMatch": "รหัสผ่านไม่ตรงกัน",
 
@@ -135,10 +137,11 @@
   "error-timeoutError": "เกินเวลาที่กำหนด",
   "error-unauthorized": "ไม่ได้รับอนุญาตในการเข้าถึง",
   "error-sessionExpired": "หมดระยะเวลาทำการ กรุณาลองใหม่อีกครั้ง",
-  "error-conflict": "ข้อมูลถูกใช้แล้ว",
+  "error-conflict": "อีเมลหรือเบอร์โทรศัพท์ถูกใช้แล้ว",
   "error-passwordSameAsOldPassword": "รหัสผ่านใหม่ไม่สามารถซ้ำกับรหัสผ่านเก่า",
   "error-incorrectPassword": "รหัสผ่านไม่ถูกต้อง",
   "error-invalidSession": "เซสชั่นไม่ถูกต้อง",
+  "error-email-or-password-incorrect": "อีเมลหรือรหัสผ่านไม่ถูกต้อง",
 
   "bottomNavigation-home": "หน้าหลัก",
   "bottomNavigation-buySell": "ซื้อ/ขาย",

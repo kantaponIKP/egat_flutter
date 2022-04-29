@@ -295,21 +295,18 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8.0),
       ),
-      child: InkWell(
-        onTap: () {},
-        child: SizedBox(
-          child: Center(
-              child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(children: [
-              _buildForm(context),
-              SizedBox(height: 18),
-              _buildChangePasswordButton(),
-              SizedBox(height: 32),
-              _buildSubmitButton(),
-            ]),
-          )),
-        ),
+      child: SizedBox(
+        child: Center(
+            child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(children: [
+            _buildForm(context),
+            SizedBox(height: 18),
+            _buildChangePasswordButton(),
+            SizedBox(height: 32),
+            _buildSubmitButton(),
+          ]),
+        )),
       ),
     );
   }
@@ -383,7 +380,7 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
                 return null;
               },
               keyboardType: TextInputType.text,
-              maxLength: 120,
+              maxLength: 50,
             ),
           ),
           Container(
@@ -438,7 +435,7 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
                 return null;
               },
               keyboardType: TextInputType.emailAddress,
-              maxLength: 120,
+              maxLength: 255,
             ),
           ),
         ],

@@ -139,7 +139,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                 return null;
               },
               keyboardType: TextInputType.text,
-              maxLength: 120,
+              maxLength: 50,
             ),
           ),
           Container(
@@ -189,7 +189,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                 return null;
               },
               keyboardType: TextInputType.emailAddress,
-              maxLength: 24,
+              maxLength: 255,
             ),
           ),
           Container(
@@ -229,7 +229,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                 return null;
               },
               keyboardType: TextInputType.visiblePassword,
-              maxLength: 24,
+              maxLength: 50,
             ),
           ),
           Container(
@@ -259,8 +259,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
               },
               validator: (value) {
                 if (value == null || value.trim().length == 0) {
-                  return AppLocalizations.of(context)
-                      .translate('validation-required');
+                  return AppLocalizations.of(context).translate('validation-required');
                 } else if (value.length < 6) {
                   return AppLocalizations.of(context).translate('validation-mustBeContain-6digits');
                 } else if (value != _passwordController!.text) {
@@ -270,7 +269,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                 }
               },
               keyboardType: TextInputType.visiblePassword,
-              maxLength: 120,
+              maxLength: 50,
             ),
           ),
         ],

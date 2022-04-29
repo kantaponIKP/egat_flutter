@@ -154,7 +154,7 @@ class _LocationScreenState extends State<LocationScreen> {
                 ),
               ),
               keyboardType: TextInputType.text,
-              maxLength: 24,
+              maxLength: 255,
             ),
           ),
         ],

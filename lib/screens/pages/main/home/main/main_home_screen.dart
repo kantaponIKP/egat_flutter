@@ -1177,7 +1177,8 @@ class _SummaryBox extends StatelessWidget {
               children: [
                 Column(
                   children: [
-                    icon,
+                    FittedBox(
+                        child: SizedBox(height: 26, width: 55, child: icon)),
                     FittedBox(
                       child: Text(
                         "${value.toStringAsFixed(2)} $unit",

@@ -99,6 +99,8 @@
   "required": "Required",
   "confirm": "Confirm",
 
+  "validation-email": "Please enter your email",
+  "validation-password": "Please enter your password",
   "validation-required": "Required",
   "validation-invalidEmailAddress": "Invalid email address",
   "validation-mustBeContain-6digits": "Must be contain at least 6 digits",
@@ -135,10 +137,11 @@
   "error-timeoutError": "Request time out",
   "error-unauthorized": "Unauthorized",
   "error-sessionExpired": "Session expired",
-  "error-conflict": "Already used",
-  "error-passwordSameAsOldPassword": "Your new password cannot be the same as your current password",
+  "error-conflict": "Email or phone number already used",
+  "error-passwordSameAsOldPassword": "Your new password cannot be the same as your current password.",
   "error-incorrectPassword": "Incorrect password",
   "error-invalidSession": "Invalid session",
+  "error-email-or-password-incorrect": "Incorrect email or password.",
 
   "bottomNavigation-home": "Home",
   "bottomNavigation-buySell": "Buy/Sell",

@@ -48,7 +48,6 @@ class _SettingMainScreenState extends State<SettingMainScreen> {
     super.didChangeDependencies();
     _getReceiveNotificationFromState();
     _setTitle();
-    // _getPin();
   }
 
   void _setTitle() {
@@ -76,7 +75,6 @@ class _SettingMainScreenState extends State<SettingMainScreen> {
 
   Future<void> _getPin() async {
     PinState pinState = Provider.of<PinState>(context, listen: false);
-    // pinState.getPinFromStorage();
     pinState.getPinFromStorage();
   }
 
@@ -196,7 +194,9 @@ class _SettingMainScreenState extends State<SettingMainScreen> {
     } catch (e) {
       showException(context, e.toString());
     } finally {
-      await hideLoading();
+      Future.delayed(const Duration(milliseconds: 200), () async {
+        await hideLoading();
+      });
     }
 
     //   _setLanguage();
@@ -376,7 +376,6 @@ class _SettingMainScreenState extends State<SettingMainScreen> {
   }
 
   Widget _buildPaymentMethodsSection(constraints) {
-    //TODO: action
     return Column(
       children: [
         Align(
@@ -408,11 +407,6 @@ class _SettingMainScreenState extends State<SettingMainScreen> {
                     style: TextStyle(color: whiteColor.withAlpha(160)),
                   ),
                   trailing:
-                      // GestureDetector(
-                      //     onTap: () {
-                      //       onRemovePressed(context, index);
-                      //     },
-                      //     child:
                       IconButton(
                     icon: Icon(Icons.delete_outline),
                     color: redColor,
@@ -582,21 +576,24 @@ class _SettingMainScreenState extends State<SettingMainScreen> {
   }
 
   Widget _buildAddPayment() {
-    return SizedBox(
-      child: ElevatedButton(
-        onPressed: onAddPaymentPressed, // null return disabled
-        child: Container(
-          width: 120,
-          child:
-              Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
-            Text(AppLocalizations.of(context).translate('payment-addPayment'),
-                style: TextStyle(color: primaryColor)),
-            Icon(Icons.add_circle_outline, color: primaryColor, size: 16),
-          ]),
-        ), //TODO plus icon
-        style: ElevatedButton.styleFrom(
-          primary: surfaceGreyColor,
-          elevation: 0,
+    return Padding(
+      padding: const EdgeInsets.only(bottom:8.0),
+      child: SizedBox(
+        child: ElevatedButton(
+          onPressed: onAddPaymentPressed, // null return disabled
+          child: Container(
+            width: 120,
+            child:
+                Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+              Text(AppLocalizations.of(context).translate('payment-addPayment'),
+                  style: TextStyle(color: primaryColor)),
+              Icon(Icons.add_circle_outline, color: primaryColor, size: 16),
+            ]),
+          ),
+          style: ElevatedButton.styleFrom(
+            primary: surfaceGreyColor,
+            elevation: 0,
+          ),
         ),
       ),
     );

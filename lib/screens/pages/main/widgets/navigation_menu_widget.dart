@@ -64,8 +64,11 @@ class _NavigationMenuWidgetState extends State<NavigationMenuWidget> {
     if (Platform.isIOS) {
       logger.d(Platform.operatingSystem);
       showIOSActionSheet(context);
-    } else {
+    } else if(Platform.isAndroid) {
+      logger.d(Platform.operatingSystem);
       showAndriodActionSheet(context);
+    }else{
+      showException(context, "Error: Unsupported Platform");
     }
   }
 
@@ -320,36 +323,40 @@ class _NavigationMenuWidgetState extends State<NavigationMenuWidget> {
   }
 
   Widget _buildUserHeader(BuildContext context, UserInfo userInfo) {
-    return InkWell(
-      child: Container(
-        color: contentBgColor,
-        height: 120,
-        padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-        child: Padding(
-          padding: const EdgeInsets.only(top: 30),
-          child: Row(
-            children: [
-              _buildAvatar(),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
-                child: SizedBox(
-                  child: Center(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(userInfo.username, style: TextStyle(fontSize: 20)),
-                        Text(userInfo.email),
-                      ],
-                    ),
-                  ),
-                ),
-              )
-            ],
+    return Container(
+      color: contentBgColor,
+      height: 120,
+      padding: EdgeInsets.only(top: 40, bottom: 10, left: 10, right: 10),
+      child: Row(
+        children: [
+          _buildAvatar(),
+          Flexible(
+            child: Padding(
+              padding: const EdgeInsets.only(left:8.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Flexible(child: Text(userInfo.username, style: TextStyle(fontSize: 16),overflow: TextOverflow.ellipsis)),
+                  SizedBox(height: 4),
+                  Flexible(child: Text(userInfo.email, style: TextStyle(fontSize: 12), overflow: TextOverflow.ellipsis)),
+                ],
+              ),
+            ),
           ),
-        ),
+          // Padding(
+          //   padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
+          //   child: Column(
+          //     crossAxisAlignment: CrossAxisAlignment.start,
+          //     mainAxisAlignment: MainAxisAlignment.center,
+          //     children: [
+          //       Flexible(child: Text(userInfo.username, style: TextStyle(fontSize: 20))),
+          //       Text(userInfo.email),
+          //     ],
+          //   ),
+          // )
+        ],
       ),
-      onTap: () {},
     );
   }
 
@@ -473,6 +480,7 @@ class _NavigationMenuWidgetState extends State<NavigationMenuWidget> {
     } catch (e) {
       print(e);
       showIntlException(context, e);
+      mainScreenNavigation.setPageToSignOut();
     } finally {
       await hideLoading();
     }

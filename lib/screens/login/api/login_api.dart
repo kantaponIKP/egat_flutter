@@ -34,12 +34,19 @@ class LoginApi {
         intlMessage: "error-connectionError",
       );
     }
+    if (response.statusCode == 404) {
+      throw IntlException(
+        message: "ปฎิเสธ server ตอบกลับด้วยสถานะ ${response.statusCode}",
+        intlMessage: "error-email-or-password-incorrect",
+      );
+    }
     if (response.statusCode == 401) {
       throw IntlException(
         message: "ปฎิเสธ server ตอบกลับด้วยสถานะ ${response.statusCode}",
-        intlMessage: "error-incorrectPassword",
+        intlMessage: "error-email-or-password-incorrect",
       );
     }
+
     if (response.statusCode >= 300) {
       throw IntlException(
         message: "ปฎิเสธ server ตอบกลับด้วยสถานะ ${response.statusCode}",
@@ -78,7 +85,7 @@ class LoginApi {
     if (response.statusCode == 401) {
       throw IntlException(
         message: "ปฎิเสธ server ตอบกลับด้วยสถานะ ${response.statusCode}",
-        intlMessage: "error-incorrectPassword",
+        intlMessage: "error-sessionExpired",
       );
     }
     if (response.statusCode >= 300) {
@@ -102,7 +109,7 @@ class LoginApi {
 
     Response response;
     try {
-      response = await httpRequest.timeout(Duration(seconds: 60));
+      response = await httpRequest.timeout(Duration(seconds: 20));
     } on TimeoutException catch (_) {
       throw IntlException(
         message: "Time out",

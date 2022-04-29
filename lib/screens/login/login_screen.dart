@@ -23,40 +23,50 @@ class LoginScreen extends StatefulWidget {
   _LoginScreenState createState() => _LoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _LoginScreenState extends State<LoginScreen> with WidgetsBindingObserver {
   final _formKey = GlobalKey<FormState>();
   TextEditingController? _emailController;
   TextEditingController? _passwordController;
   bool _rememberMe = false;
   List<bool> isSelected = [true, false];
   bool _isPasswordObscure = true;
-  // bool _isLoginError = false;
-  bool _isFirst = true;
-  bool _isLogin = true;
+  bool _showSplashScreen = true;
+  AutovalidateMode autovalidateMode = AutovalidateMode.disabled;
 
   @override
   void initState() {
     super.initState();
     _emailController = TextEditingController();
     _passwordController = TextEditingController();
-    // _emailController!.text = "prosumer04@email.com";
+    // _emailController!.text = "prosumer19_perfectpark@email.com";
     // _passwordController!.text = "Str123";
-    // _autoLogin();
+    WidgetsBinding.instance!.addObserver(this);
+        WidgetsBinding.instance!.addPostFrameCallback((_) {
+      _setFontFamily();
+    });
+    _setIsLogin();
   }
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    if (_isFirst) {
-      setState(() {
-        _isFirst = false;
-      });
-      voidSetIsLogin();
-    }
+  void dispose() {
+    WidgetsBinding.instance!.removeObserver(this);
 
-    WidgetsBinding.instance!.addPostFrameCallback((_) {
-      _setFontFamily();
-    });
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    switch (state) {
+      case AppLifecycleState.resumed:
+        handleResume();
+        break;
+      case AppLifecycleState.inactive:
+        break;
+      case AppLifecycleState.paused:
+        break;
+      case AppLifecycleState.detached:
+        break;
+    }
   }
 
   void _setFontFamily() {
@@ -69,11 +79,21 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
-  Future<void> voidSetIsLogin() async {
-    bool isLogin = await _autoLogin();
-    setState(() {
-      _isLogin = isLogin;
-    });
+  Future<void> _setIsLogin() async {
+    try {
+      LoginModel login = Provider.of<LoginModel>(context, listen: false);
+      bool isRememberMe = await login.getRememberMe();
+      if (isRememberMe) {
+        if(await _autoLogin()){
+          goToMainPage();
+        }
+      }
+      setState(() {
+        _showSplashScreen = false;
+      });
+    } catch (e) {
+      showIntlException(context, e);
+    } finally {}
   }
 
   Widget buildSplashScreen(BuildContext context) {
@@ -161,7 +181,7 @@ class _LoginScreenState extends State<LoginScreen> {
           padding: EdgeInsets.only(top: 20.0),
         ),
         Text(
-          'Version 0.1.0',
+          'Version 0.2.1',
           softWrap: true,
           textAlign: TextAlign.center,
           style: TextStyle(
@@ -171,19 +191,9 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  // _navigatetoHome() {
-  //   Navigator.of(context).pushReplacement(
-  //     MaterialPageRoute(
-  //       builder: (BuildContext context) {
-  //         return buildLogin();
-  //       },
-  //     ),
-  //   );
-  // }
-
   @override
   Widget build(BuildContext context) {
-    if (_isLogin) {
+    if (_showSplashScreen) {
       return buildSplashScreen(context);
     } else {
       return Container(
@@ -193,18 +203,16 @@ class _LoginScreenState extends State<LoginScreen> {
             Colors.black,
           ])),
           child: Scaffold(
-            // appBar: AppBar(),
-            // drawer: NavigationMenuWidget(),
             backgroundColor: Colors.transparent,
             resizeToAvoidBottomInset: false,
             body: SafeArea(
-              child: _buildAction(context),
+              child: _buildLoginScreen(context),
             ),
           ));
     }
   }
 
-  Padding _buildAction(BuildContext context) {
+  Padding _buildLoginScreen(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(left: 32, right: 32, bottom: 16),
       child: LayoutBuilder(
@@ -223,7 +231,6 @@ class _LoginScreenState extends State<LoginScreen> {
                     _buildLogoImage(),
                     _buildForm(context),
                     _buildAdditionalSection(context),
-                    _buildAlertSection(context),
                     _buildLoginButton(context),
                   ]),
                   _buildRegisterButton(context),
@@ -237,46 +244,13 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Widget _buildLanguageButton(BuildContext context) {
-    AppLocale locale = Provider.of<AppLocale>(context);
     return LanguageButton();
   }
-  //   return Row(
-  //     mainAxisAlignment: MainAxisAlignment.end,
-  //     children: <Widget>[
-  //       Icon(Icons.language),
-  //       ToggleButtons(
-  //         renderBorder: false,
-  //         children: <Widget>[
-  //           Text('TH'),
-  //           Text('EN'),
-  //           // Text('TH', style: TextStyle(color: Theme.of(context).primaryColor)),
-  //         ],
-  //         onPressed: (int index) {
-  //           // appLanguage.changeLanguage(Locale("en"));
-  //           locale.changeLanguage(Locale("th"));
-  //           setState(() {
-  //             for (int buttonIndex = 0;
-  //                 buttonIndex < isSelected.length;
-  //                 buttonIndex++) {
-  //               if (buttonIndex == index) {
-  //                 isSelected[buttonIndex] = true;
-  //               } else {
-  //                 isSelected[buttonIndex] = false;
-  //               }
-  //             }
-  //           });
-
-  //         },
-  //         isSelected: isSelected,
-  //       ),
-  //     ],
-  //   );
-  // }
 
   Widget _buildForm(BuildContext context) {
     return Form(
       key: _formKey,
-      autovalidateMode: AutovalidateMode.onUserInteraction,
+      autovalidateMode: autovalidateMode,
       child: Column(
         children: [
           Container(
@@ -290,7 +264,11 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               validator: (value) {
                 if (value == null || value.trim().length == 0) {
-                  return null;
+                  return AppLocalizations.of(context)
+                      .translate('validation-email');
+                } else if (!_isEmailValid(value)) {
+                  return AppLocalizations.of(context)
+                      .translate('validation-invalidEmailAddress');
                 }
                 return null;
               },
@@ -321,12 +299,13 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               validator: (value) {
                 if (value == null || value.trim().length == 0) {
-                  return null;
+                  return AppLocalizations.of(context)
+                      .translate('validation-password');
                 }
                 return null;
               },
               keyboardType: TextInputType.visiblePassword,
-              maxLength: 24,
+              maxLength: 50,
             ),
           ),
         ],
@@ -377,16 +356,6 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Widget _buildAlertSection(BuildContext context) {
-    return Container(
-        // TODO
-        // alignment: Alignment.centerLeft,
-        // padding: const EdgeInsets.only(bottom: 8.0),
-        // child: Text('${AppLocalizations.of(context).translate('email-or-password-incorrect')}',
-        //     style: TextStyle(color: Theme.of(context).errorColor)),
-        );
-  }
-
   Widget _buildLoginButton(BuildContext context) {
     return SizedBox(
       width: double.infinity,
@@ -433,40 +402,31 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Future<bool> _autoLogin() async {
-    LoginModel login = Provider.of<LoginModel>(context, listen: true);
+  bool _isEmailValid(String email) {
+    return RegExp(
+            r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+        .hasMatch(email);
+  }
 
+  Future<bool> _autoLogin() async {
+    LoginModel login = Provider.of<LoginModel>(context, listen: false);
     try {
       await loading_clear_dialog.showLoading();
-      bool isRememberMe = await login.getRememberMe();
-
-      if (isRememberMe) {
-        setState(() {
-          _rememberMe = isRememberMe;
-        });
-        await login.updateRefreshToken();
-        await getPersonalInformation();
-
-        goToLoginPage();
-        return false;
-      }
+      await login.updateRefreshToken();
+      login.isLogin = true;
+      await getPersonalInformation();
     } catch (e) {
       showIntlException(context, e);
+      return false;
     } finally {
       await loading_clear_dialog.hideLoading();
     }
-    return false;
+    return true;
   }
 
   void _onRememberMeChanged(bool newValue) => setState(() {
         _rememberMe = newValue;
       });
-
-  bool _isError() {
-    LoginModel login = Provider.of<LoginModel>(context, listen: true);
-    // logger.d(login.isError);
-    return login.isError;
-  }
 
   void _onLogin() async {
     FocusScope.of(context).unfocus();
@@ -480,12 +440,29 @@ class _LoginScreenState extends State<LoginScreen> {
             password: _passwordController!.text,
             rememberMe: _rememberMe);
         await getPersonalInformation();
-        goToLoginPage();
+        goToMainPage();
       } catch (e) {
         showIntlException(context, e);
       } finally {
         await hideLoading();
       }
+    } else {
+      setState(() {
+        autovalidateMode = AutovalidateMode.onUserInteraction;
+      });
+    }
+  }
+
+  Future<void> handleResume() async {
+    var login = Provider.of<LoginModel>(context, listen: false);
+    try {
+      await loading_clear_dialog.showLoading();
+      await login.getRefreshToken();
+      await login.updateRefreshToken(checkLogin: true);
+    } catch (e) {
+      showIntlException(context, e);
+    } finally {
+      await loading_clear_dialog.hideLoading();
     }
   }
 
@@ -495,7 +472,7 @@ class _LoginScreenState extends State<LoginScreen> {
     await personalInfo.getPersonalInformation();
   }
 
-  void goToLoginPage() {
+  void goToMainPage() {
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (BuildContext context) {

@@ -193,7 +193,7 @@ class _PasswordScreenState extends State<PasswordScreen> {
                 return null;
               },
               keyboardType: TextInputType.visiblePassword,
-              maxLength: 24,
+              maxLength: 50,
             ),
           ),
           Container(
@@ -233,7 +233,7 @@ class _PasswordScreenState extends State<PasswordScreen> {
                 }
               },
               keyboardType: TextInputType.visiblePassword,
-              maxLength: 24,
+              maxLength: 50,
             ),
           ),
         ],

@@ -16,22 +16,27 @@ class LoginModel extends ChangeNotifier {
   bool isLogin = false;
 
   LoginModel({required this.loginSession}) {
-
-    _timer = Timer.periodic(Duration(seconds: 60), (timer) {
+    _timer = Timer.periodic(Duration(seconds: 30), (timer) {
       if (isLogin && loginSession.info != null) {
         updateRefreshToken();
       }
     });
   }
 
-  Future<void> updateRefreshToken() async {
+  Future<void> updateRefreshToken({bool checkLogin = false}) async {
+    if (checkLogin) {
+      if (!isLogin) {
+        return;
+      }
+    }
+    print('Old Session: ${loginSession.info!.refreshToken}');
     var response = await api.requestRefreshToken(
       RefreshTokenRequest(
         refreshToken: loginSession.info!.refreshToken,
       ),
     );
-
-    loginSession.setAccessToken(LoginSessionInfo(
+    print('New Session: ${response.refreshToken}');
+    await loginSession.setAccessToken(LoginSessionInfo(
         accessToken: response.accessToken!,
         userId: response.userId!,
         refreshToken: response.refreshToken!));
@@ -81,14 +86,20 @@ class LoginModel extends ChangeNotifier {
     bool rememberMe = rememberMeFromStorage.toLowerCase() == 'true';
 
     if (rememberMe == true) {
+      await getRefreshToken();
+    }
+    return rememberMe;
+  }
+
+  Future<bool> getRefreshToken() async {
+      final storage = new FlutterSecureStorage();
       String? refreshToken = await storage.read(key: 'refreshToken');
       if (refreshToken == null) {
         throw Exception('No refresh token');
       }
       loginSession.setAccessToken(LoginSessionInfo(
           accessToken: "", userId: "", refreshToken: refreshToken));
-    }
-    return rememberMe;
+      return true;
   }
 
   Future<void> processLogout() async {
@@ -108,6 +119,7 @@ class LoginModel extends ChangeNotifier {
 
   @override
   void dispose() {
+    print("Dispose refreshToken");
     isLogin = false;
     _timer.cancel();
     super.dispose();
