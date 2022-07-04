@@ -959,7 +959,7 @@ class _ForecastEnergyWidget extends StatelessWidget {
       summaryEnergy = 0;
     }
 
-    return GestureDetector(
+    return InkWell(
       onTap: () {
         forecastState.selectDate(date);
       },

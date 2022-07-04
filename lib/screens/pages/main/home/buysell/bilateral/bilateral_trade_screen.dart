@@ -90,7 +90,7 @@ class _BilateralTradeScreenState extends State<BilateralTradeScreen> {
                                   _DateSelectionDropdown(),
                                 ],
                               ),
-                              _ViewModeSelectionDropdown(
+                              _ViewModeSelectionButton(
                                 viewModeSelected: _viewModeSelected,
                                 onChange: (newItem) => setState(() {
                                   _viewModeSelected = newItem;
@@ -471,6 +471,50 @@ class _TradeItemList extends StatelessWidget {
 }
 
 typedef _ViewModeOnChangeCallback = Function(_ViewModeType newItem);
+
+class _ViewModeSelectionButton extends StatelessWidget {
+  final _ViewModeType viewModeSelected;
+
+  final _ViewModeOnChangeCallback onChange;
+
+  _ViewModeSelectionButton({
+    Key? key,
+    required this.viewModeSelected,
+    required this.onChange,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 35,
+      padding: EdgeInsets.symmetric(horizontal: 3),
+      decoration: BoxDecoration(
+        color: primaryColor,
+        borderRadius: BorderRadius.circular(5),
+      ),
+      child: Row(
+        children: [
+          ElevatedButton(
+            onPressed: viewModeSelected != _ViewModeType.OFFER_TO_SELL
+                ? () => onChange(_ViewModeType.OFFER_TO_SELL)
+                : null,
+            child: Text(
+              AppLocalizations.of(context).translate('trade-offerToSell'),
+            ),
+          ),
+          ElevatedButton(
+            onPressed: viewModeSelected != _ViewModeType.CHOOSE_TO_BUY
+                ? () => onChange(_ViewModeType.CHOOSE_TO_BUY)
+                : null,
+            child: Text(
+              AppLocalizations.of(context).translate('trade-chooseToBuy'),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
 
 class _ViewModeSelectionDropdown extends StatelessWidget {
   final _ViewModeType viewModeSelected;

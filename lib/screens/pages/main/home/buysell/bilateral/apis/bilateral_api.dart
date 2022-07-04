@@ -120,6 +120,8 @@ class BilateralApi {
       uri: url,
       accessToken: accessToken,
       body: requestJson,
+      retryMax: 1,
+      timeout: Duration(seconds: 30),
     );
 
     if (response.statusCode == 409) {
