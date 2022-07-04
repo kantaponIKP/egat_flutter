@@ -533,7 +533,8 @@ class _TransactionInput extends StatelessWidget {
                   ),
                   child: TextFormField(
                     controller: controller,
-                    keyboardType: TextInputType.number,
+                    keyboardType:
+                        TextInputType.numberWithOptions(decimal: true),
                     textAlign: TextAlign.end,
                     onChanged: (value) {
                       if (onChanged != null) {
