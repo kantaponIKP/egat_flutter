@@ -180,8 +180,7 @@ class _PoolMarketTradeScreenState extends State<PoolMarketTradeScreen> {
                                         child: Text(
                                           (items == "Bid to Buy")
                                               ? AppLocalizations.of(context)
-                                                  .translate(
-                                                      'trade-bidToBuy')
+                                                  .translate('trade-bidToBuy')
                                               : AppLocalizations.of(context)
                                                   .translate(
                                                       'trade-offerToSell'),
@@ -480,7 +479,7 @@ class _PoolMarketTradeScreenState extends State<PoolMarketTradeScreen> {
                                             EdgeInsets.symmetric(horizontal: 5),
                                         child: Text(
                                           (_offerInit == "Bid to Buy")
-                                              ? "${AppLocalizations.of(context).translate('trade-offers')}\n${AppLocalizations.of(context).translate('trade-toBuy')}"
+                                              ? "${AppLocalizations.of(context).translate('trade-offers')}\n${AppLocalizations.of(context).translate('trade-bidToBuy')}"
                                               : "${AppLocalizations.of(context).translate('trade-offers')}\n${AppLocalizations.of(context).translate('trade-toSell')}",
                                           style: TextStyle(
                                               color: (isMatched)
