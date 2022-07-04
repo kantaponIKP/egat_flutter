@@ -123,13 +123,13 @@ class _SummarySectionState extends State<_SummarySection> {
           title: AppLocalizations.of(context).translate('trade-tradingFee'),
           value: _tradingFee,
           unit: 'THB',
-          titleFontSize: (language == "th")? 12 : 15,
+          titleFontSize: (language == "th") ? 12 : 15,
         ),
         _SummaryValue(
           title: AppLocalizations.of(context).translate('trade-estimatedSales'),
           value: _estimatedSales,
           unit: 'THB',
-          titleFontSize: (language == "th")? 14 : 20,
+          titleFontSize: (language == "th") ? 14 : 20,
         ),
       ],
     );
@@ -500,7 +500,8 @@ class _TransactionInput extends StatelessWidget {
                   ),
                   child: TextFormField(
                     controller: controller,
-                    keyboardType: TextInputType.number,
+                    keyboardType:
+                        TextInputType.numberWithOptions(decimal: true),
                     textAlign: TextAlign.end,
                     onChanged: (value) {
                       if (onChanged != null) {
