@@ -151,49 +151,81 @@ class _PoolMarketTradeScreenState extends State<PoolMarketTradeScreen> {
                                 ],
                               ),
                               Container(
-                                height: 35,
-                                padding: EdgeInsets.symmetric(horizontal: 3),
-                                decoration: BoxDecoration(
-                                  color: primaryColor,
-                                  borderRadius: BorderRadius.circular(5),
-                                ),
-                                child: DropdownButton(
-                                  value: _offerInit,
-                                  icon: Icon(Icons.arrow_drop_down_rounded),
-                                  iconSize: 20,
-                                  iconEnabledColor: backgroundColor,
-                                  dropdownColor: primaryColor,
-                                  style: TextStyle(
-                                      fontSize: 18, color: backgroundColor),
-                                  alignment: Alignment.center,
-                                  borderRadius: BorderRadius.circular(20),
-                                  onChanged: (String? newValue) {
-                                    setState(() {
-                                      _offerInit = newValue!;
-                                      _getData(_date, _time);
-                                    });
-                                  },
-                                  items: offerItem.map(
-                                    (String items) {
-                                      return DropdownMenuItem(
-                                        value: items,
-                                        child: Text(
-                                          (items == "Bid to Buy")
-                                              ? AppLocalizations.of(context)
-                                                  .translate('trade-bidToBuy')
-                                              : AppLocalizations.of(context)
-                                                  .translate(
-                                                      'trade-offerToSell'),
-                                          style: TextStyle(fontSize: 14),
-                                        ),
-                                      );
-                                    },
-                                  ).toList(),
-                                  underline: DropdownButtonHideUnderline(
-                                    child: Container(),
+                                  height: 35,
+                                  padding: EdgeInsets.symmetric(horizontal: 3),
+                                  decoration: BoxDecoration(
+                                    color: primaryColor,
+                                    borderRadius: BorderRadius.circular(5),
                                   ),
-                                ),
-                              ),
+                                  child: Row(
+                                    children: [
+                                      ElevatedButton(
+                                        onPressed: _offerInit != "Offer to Sell"
+                                            ? () {
+                                                setState(() {
+                                                  _offerInit = "Offer to Sell";
+                                                  _getData(_date, _time);
+                                                });
+                                              }
+                                            : null,
+                                        child: Text(
+                                          AppLocalizations.of(context)
+                                              .translate('trade-offerToSell'),
+                                        ),
+                                      ),
+                                      ElevatedButton(
+                                        onPressed: _offerInit != "Bid to Buy"
+                                            ? () {
+                                                setState(() {
+                                                  _offerInit = "Bid to Buy";
+                                                  _getData(_date, _time);
+                                                });
+                                              }
+                                            : null,
+                                        child: Text(
+                                          AppLocalizations.of(context)
+                                              .translate('trade-bidToBuy'),
+                                        ),
+                                      ),
+                                    ],
+                                  )
+                                  // child: DropdownButton(
+                                  //   value: _offerInit,
+                                  //   icon: Icon(Icons.arrow_drop_down_rounded),
+                                  //   iconSize: 20,
+                                  //   iconEnabledColor: backgroundColor,
+                                  //   dropdownColor: primaryColor,
+                                  //   style: TextStyle(
+                                  //       fontSize: 18, color: backgroundColor),
+                                  //   alignment: Alignment.center,
+                                  //   borderRadius: BorderRadius.circular(20),
+                                  //   onChanged: (String? newValue) {
+                                  //     setState(() {
+                                  //       _offerInit = newValue!;
+                                  //       _getData(_date, _time);
+                                  //     });
+                                  //   },
+                                  //   items: offerItem.map(
+                                  //     (String items) {
+                                  //       return DropdownMenuItem(
+                                  //         value: items,
+                                  //         child: Text(
+                                  //           (items == "Bid to Buy")
+                                  //               ? AppLocalizations.of(context)
+                                  //                   .translate('trade-bidToBuy')
+                                  //               : AppLocalizations.of(context)
+                                  //                   .translate(
+                                  //                       'trade-offerToSell'),
+                                  //           style: TextStyle(fontSize: 14),
+                                  //         ),
+                                  //       );
+                                  //     },
+                                  //   ).toList(),
+                                  //   underline: DropdownButtonHideUnderline(
+                                  //     child: Container(),
+                                  //   ),
+                                  // ),
+                                  ),
                             ],
                           ),
                         ),

@@ -50,14 +50,15 @@ class LoginApi {
     return LoginResponse.fromJSON(response.body);
   }
 
-    Future<Response> requestLogout(LogoutRequest request) async {
+  Future<Response> requestLogout(LogoutRequest request) async {
     var url = Uri.parse(
       "$apiBaseUrlLogin/logout",
     );
 
     var requestJson = request.toJSON();
 
-    final httpRequest = httpPostJson(uri: url, body: requestJson, accessToken: request.accessToken);
+    final httpRequest = httpPostJson(
+        uri: url, body: requestJson, accessToken: request.accessToken);
 
     Response response;
     try {
@@ -91,7 +92,7 @@ class LoginApi {
     return response;
   }
 
-   Future<LoginResponse> requestRefreshToken(RefreshTokenRequest request) async {
+  Future<LoginResponse> requestRefreshToken(RefreshTokenRequest request) async {
     var url = Uri.parse(
       "$apiBaseUrlLogin/login/refresh-token",
     );
